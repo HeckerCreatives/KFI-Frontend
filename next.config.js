@@ -13,6 +13,7 @@ module.exports = {
   },
   output: 'export',
   swcMinify: true,
+  productionBrowserSourceMaps: true,
   transpilePackages: [
     '@ionic/react',
     '@ionic/core',
