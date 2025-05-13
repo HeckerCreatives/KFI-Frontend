@@ -32,6 +32,7 @@ const InputText = <T extends FieldValues>({ name, control, clearErrors, label, t
           </div>
 
           <IonInput
+            clearInput={type === 'search'}
             {...field}
             type={type}
             placeholder={placeholder}

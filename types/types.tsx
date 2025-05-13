@@ -20,6 +20,13 @@ export type TAccountFile = {
   detailed: boolean;
 };
 
+export type Loan = {
+  _id: string;
+  code: string;
+  description: string;
+  createdAt: string;
+};
+
 export type TFormError = {
   msgs: string[];
   path: string;
@@ -33,4 +40,11 @@ export type TErrorData = {
 export type TError = {
   error: TErrorData;
   message: string;
+};
+
+export type TTableFilter = {
+  limit: number;
+  page: number;
+  search?: string;
+  sort?: string;
 };

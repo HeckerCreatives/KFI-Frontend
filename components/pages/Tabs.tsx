@@ -32,7 +32,7 @@ import GroupAccount from './dashboard/group-account/GroupAccount';
 import CreateClient from './dashboard/client-master-file/CreateClient';
 import logo from '../assets/images/logo.png';
 import Image from 'next/image';
-import { cellular, chevronDownOutline, hammerOutline, settingsOutline } from 'ionicons/icons';
+import { cellular, chevronDownOutline, hammerOutline, logOut, settingsOutline } from 'ionicons/icons';
 import FileNavigation from '../ui/navs/FileNavigation';
 import TransactionNavigation from '../ui/navs/TransactionNavigation';
 import LoanRelease from './dashboard/transactions/loan-release/LoanRelease';
@@ -123,7 +123,11 @@ const Tabs = () => {
                 <span>Alex</span> <IonIcon className="text-[#FA6C2F] stroke w-4 h-4" icon={chevronDownOutline} />
               </IonButton>
               <IonPopover showBackdrop={false} trigger="click-trigger" triggerAction="click">
-                <IonContent class="ion-padding">Hello World!</IonContent>
+                <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
+                  <div className="flex items-center gap-2 text-sm text-slate-700 font-semibold hover:bg-slate-100 py-3 px-3 cursor-pointer active:bg-slate-200">
+                    <IonIcon icon={logOut} /> Logout
+                  </div>
+                </IonContent>
               </IonPopover>
             </div>
           </IonToolbar>

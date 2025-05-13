@@ -5,7 +5,7 @@ import FormIonItem from '../../../ui/utils/FormIonItem';
 import InputText from '../../../ui/forms/InputText';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginFormData, loginSchema } from '../../../../validations/login.schema';
-import { kfiAxios } from '../../../utils/axios';
+import kfiAxios from '../../../utils/axios';
 import checkError from '../../../utils/check-error';
 import { TErrorData, TFormError } from '../../../../types/types';
 import formErrorHandler from '../../../utils/form-error-handler';

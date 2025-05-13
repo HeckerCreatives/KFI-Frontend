@@ -61,7 +61,7 @@ const InputSelect = <T extends FieldValues>({
             )}
           >
             {options.map(option => (
-              <IonSelectOption key={option.value} value={option.value} className="">
+              <IonSelectOption key={option.value} value={option.value} className="text-sm [--min-height:0.5rem]">
                 {option.label}
               </IonSelectOption>
             ))}

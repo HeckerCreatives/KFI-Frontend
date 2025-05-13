@@ -7,8 +7,9 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import InputText from '../../../../ui/forms/InputText';
 import { LoanSetUpCodeFormData, loanSetUpCodeSchema } from '../../../../../validations/loan.schema';
+import { Loan } from '../../../../../types/types';
 
-const SetUpCodeLoan = ({ index }: { index: number }) => {
+const SetUpCodeLoan = ({ loan }: { loan: Loan }) => {
   const modal = useRef<HTMLIonModalElement>(null);
   const input = useRef<HTMLIonInputElement>(null);
 
@@ -40,7 +41,7 @@ const SetUpCodeLoan = ({ index }: { index: number }) => {
     <>
       <div className="text-end">
         <div
-          id={`update-set-code-modal-${index}`}
+          id={`update-set-code-modal-${loan._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={cogSharp} className="text-[1rem]" /> Set Up Code
@@ -48,7 +49,7 @@ const SetUpCodeLoan = ({ index }: { index: number }) => {
       </div>
       <IonModal
         ref={modal}
-        trigger={`update-set-code-modal-${index}`}
+        trigger={`update-set-code-modal-${loan._id}`}
         backdropDismiss={false}
         className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
       >

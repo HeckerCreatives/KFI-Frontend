@@ -1,23 +1,86 @@
-import { IonContent, IonPage, IonTitle } from '@ionic/react';
-import React from 'react';
+import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
 import CreateLoan from './modals/CreateLoan';
 import LoanFilter from './components/LoanFilter';
 import LoanActions from './components/LoanActions';
+import kfiAxios from '../../../utils/axios';
+import { Loan, TTableFilter } from '../../../../types/types';
+import TablePagination from '../../../ui/forms/TablePagination';
+import { TABLE_LIMIT } from '../../../utils/constants';
+import TableNoRows from '../../../ui/forms/TableNoRows';
+import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
+
+export type TLoan = {
+  loans: Loan[];
+  totalPages: number;
+  nextPage: boolean;
+  prevPage: boolean;
+  loading: boolean;
+};
 
 const Loans = () => {
-  const arrDummy: string[] = Array.from(Array(10)).fill('');
+  const [present] = useIonToast();
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchKey, setSearchKey] = useState<string>('');
+  const [sortKey, setSortKey] = useState<string>('');
+
+  const [data, setData] = useState<TLoan>({
+    loans: [],
+    loading: false,
+    totalPages: 0,
+    nextPage: false,
+    prevPage: false,
+  });
+
+  const getLoans = async (page: number, keyword: string = '', sort: string = '') => {
+    setData(prev => ({ ...prev, loading: true }));
+    try {
+      const filter: TTableFilter = { limit: TABLE_LIMIT, page };
+      if (keyword) filter.search = keyword;
+      if (sort) filter.sort = sort;
+      const result = await kfiAxios.get('/loan', { params: filter });
+      const { success, loans, hasPrevPage, hasNextPage, totalPages } = result.data;
+      if (success) {
+        setData(prev => ({
+          ...prev,
+          loans: loans,
+          totalPages: totalPages,
+          nextPage: hasNextPage,
+          prevPage: hasPrevPage,
+        }));
+        setCurrentPage(page);
+        setSearchKey(keyword);
+        setSortKey(sort);
+        return;
+      }
+    } catch (error) {
+      present({
+        message: 'Failed to get loan records. Please try again',
+        duration: 1000,
+      });
+    } finally {
+      setData(prev => ({ ...prev, loading: false }));
+    }
+  };
+
+  const handlePagination = (page: number) => getLoans(page, searchKey, sortKey);
+
+  useIonViewWillEnter(() => {
+    getLoans(currentPage);
+  });
 
   return (
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['All Files', 'Loan']} />
-          <div className="px-3 pb-3">
-            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateLoan />
-              <LoanFilter />
+          <div className="px-3 pb-3 flex-1">
+            <div className="flex items-center justify-center flex-wrap gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
+              <CreateLoan getLoans={getLoans} />
+              <LoanFilter getLoans={getLoans} />
             </div>
             <div className="relative overflow-auto">
               <Table>
@@ -29,19 +92,33 @@ const Loans = () => {
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
-                  {arrDummy.map((arr: string, i: number) => (
-                    <TableRow key={i}>
-                      <TableCell>BSK</TableCell>
-                      <TableCell>Buklod sa kinabukasan</TableCell>
-                      <TableCell>
-                        <LoanActions index={i} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {data.loading && <TableLoadingRow colspan={3} />}
+                  {!data.loading && data.loans.length < 1 && <TableNoRows label="No Loan Record Found" colspan={3} />}
+                  {!data.loading &&
+                    data.loans.length > 0 &&
+                    data.loans.map((loan: Loan) => (
+                      <TableRow key={loan._id}>
+                        <TableCell>{loan.code}</TableCell>
+                        <TableCell>{loan.description}</TableCell>
+                        <TableCell>
+                          <LoanActions
+                            loan={loan}
+                            setData={setData}
+                            getLoans={getLoans}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            searchKey={searchKey}
+                            sortKey={sortKey}
+                            rowLength={data.loans.length}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </div>
           </div>
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>

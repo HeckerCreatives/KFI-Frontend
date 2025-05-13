@@ -1,19 +1,35 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
-export const kfiAxios: AxiosInstance = axios.create();
+const kfiAxios: AxiosInstance = axios.create({
+  baseURL: 'http://localhost:5000/api/v1',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: true,
+});
 
-export const Request = async (request: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
+const Request = async (request: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
+  const token = localStorage.getItem('auth');
+  if (token && request.headers) {
+    request.headers.Authorization = `Bearer ${token}`;
+  }
   return request;
 };
 
-export const RequestError = async (error: AxiosError): Promise<never> => {
+const RequestError = async (error: AxiosError): Promise<never> => {
   return Promise.reject(error);
 };
 
-export const Response = (response: AxiosResponse): AxiosResponse => {
+const Response = (response: AxiosResponse): AxiosResponse => {
   return response;
 };
 
-export const ResponseError = async (error: AxiosError): Promise<never> => {
+const ResponseError = async (error: AxiosError): Promise<never> => {
   return Promise.reject(error);
 };
+
+kfiAxios.interceptors.request.use(Request, RequestError);
+kfiAxios.interceptors.response.use(Response, ResponseError);
+
+export default kfiAxios;
