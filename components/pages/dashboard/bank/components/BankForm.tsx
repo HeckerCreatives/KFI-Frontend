@@ -8,18 +8,28 @@ import { LoanFormData } from '../../../../../validations/loan.schema';
 
 type TForm = {
   form: UseFormReturn<LoanFormData>;
+  loading: boolean;
 };
 
-const BankForm = ({ form }: TForm) => {
+const BankForm = ({ form, loading }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
         <IonCol size="12" className="space-y-2">
           <FormIonItem>
-            <InputText name="code" control={form.control} clearErrors={form.clearErrors} label="Code" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              disabled={loading}
+              name="code"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Code"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
           <FormIonItem>
             <InputTextarea
+              disabled={loading}
               name="description"
               control={form.control}
               clearErrors={form.clearErrors}
