@@ -9,7 +9,6 @@ setupIonicReact({});
 
 const AppShell = () => {
   const isLoggedIn = localStorage.getItem('auth') ? true : false;
-  console.log(isLoggedIn);
 
   return (
     <IonApp>

@@ -7,15 +7,24 @@ import { NatureFormData } from '../../../../../validations/nature.schema';
 
 type TForm = {
   form: UseFormReturn<NatureFormData>;
+  loading: boolean;
 };
 
-const NatureForm = ({ form }: TForm) => {
+const NatureForm = ({ form, loading }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
         <IonCol size="12" className="space-y-2">
           <FormIonItem>
-            <InputText name="type" control={form.control} clearErrors={form.clearErrors} label="Business Type" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              disabled={loading}
+              name="type"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Nature"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
         </IonCol>
       </IonRow>

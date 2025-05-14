@@ -1,9 +1,7 @@
-import { IonButtons, IonContent, IonIcon, IonItem, IonPage, IonText, IonTitle, useIonAlert } from '@ionic/react';
+import { IonContent, IonPage } from '@ionic/react';
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import CreateChartOfAccount from './modals/CreateChartOfAccount';
-import UpdateChartOfAccount from './modals/UpdateChartOfAccount';
-import DeleteChartOfAccount from './modals/DeleteChartOfAccount';
 import ChartOfAccountFilter from './components/ChartOfAccountFilter';
 import PageTitle from '../../../ui/page/PageTitle';
 import ChartOfAccountActions from './components/ChartOfAccountActions';
@@ -26,10 +24,9 @@ const ChartOfAccount = () => {
                 <TableHeader>
                   <TableHeadRow>
                     <TableHead>Account Code</TableHead>
-                    <TableHead>Account Name</TableHead>
+                    <TableHead>Description</TableHead>
                     <TableHead>Classification</TableHead>
                     <TableHead>Nature of Account</TableHead>
-                    <TableHead>Closing Account</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableHeadRow>
                 </TableHeader>
@@ -39,7 +36,6 @@ const ChartOfAccount = () => {
                       <TableCell>1002</TableCell>
                       <TableCell>Cash on Hand</TableCell>
                       <TableCell>Assets</TableCell>
-                      <TableCell>Debit</TableCell>
                       <TableCell>Debit</TableCell>
                       <TableCell>
                         <ChartOfAccountActions index={i} />
