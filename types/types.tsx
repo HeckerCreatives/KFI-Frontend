@@ -34,6 +34,12 @@ export type Bank = {
   createdAt: string;
 };
 
+export type GroupAccount = {
+  _id: string;
+  code: string;
+  createdAt: string;
+};
+
 export type Center = {
   _id: string;
   centerNo: string;

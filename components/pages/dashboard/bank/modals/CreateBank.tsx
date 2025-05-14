@@ -55,13 +55,13 @@ const CreateBank = ({ getBanks }: CreateBankProps) => {
   return (
     <>
       <div className="text-end">
-        <IonButton fill="clear" id="create-loan-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        <IonButton fill="clear" id="create-bank-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
           + Add Record
         </IonButton>
       </div>
       <IonModal
         ref={modal}
-        trigger="create-loan-modal"
+        trigger="create-bank-modal"
         backdropDismiss={false}
         className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
       >

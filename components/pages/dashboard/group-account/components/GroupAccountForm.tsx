@@ -7,15 +7,24 @@ import { GroupAccountFormData } from '../../../../../validations/group-account.s
 
 type TForm = {
   form: UseFormReturn<GroupAccountFormData>;
+  loading: boolean;
 };
 
-const GroupAccountForm = ({ form }: TForm) => {
+const GroupAccountForm = ({ form, loading }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
         <IonCol size="12" className="space-y-2">
           <FormIonItem>
-            <InputText name="code" control={form.control} clearErrors={form.clearErrors} label="Code" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              disabled={loading}
+              name="code"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Code"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
         </IonCol>
       </IonRow>
