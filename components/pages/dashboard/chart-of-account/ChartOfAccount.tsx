@@ -42,10 +42,6 @@ const ChartOfAccount = () => {
                       <TableCell>Debit</TableCell>
                       <TableCell>Debit</TableCell>
                       <TableCell>
-                        {/* <IonButtons>
-                          <UpdateChartOfAccount index={i} />
-                          <DeleteChartOfAccount />
-                        </IonButtons> */}
                         <ChartOfAccountActions index={i} />
                       </TableCell>
                     </TableRow>

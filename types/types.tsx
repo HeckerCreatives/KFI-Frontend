@@ -27,6 +27,17 @@ export type Loan = {
   createdAt: string;
 };
 
+export type Center = {
+  _id: string;
+  centerNo: string;
+  description: string;
+  location: string;
+  centerChief: string;
+  treasurer: string;
+  acctOfficer: string;
+  createdAt: string;
+};
+
 export type TFormError = {
   msgs: string[];
   path: string;

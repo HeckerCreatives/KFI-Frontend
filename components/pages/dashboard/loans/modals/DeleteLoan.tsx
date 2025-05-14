@@ -37,7 +37,7 @@ const DeleteLoan = ({ loan, getLoans, searchkey, sortKey, currentPage, rowLength
       }
     } catch (error: any) {
       present({
-        message: 'Failed to get loan records. Please try again',
+        message: 'Failed to delete the loan record. Please try again',
         duration: 1000,
       });
     } finally {

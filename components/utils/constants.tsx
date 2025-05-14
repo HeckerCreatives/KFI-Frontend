@@ -1,1 +1,1 @@
-export const TABLE_LIMIT = 2;
+export const TABLE_LIMIT = 10;
