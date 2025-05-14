@@ -37,7 +37,7 @@ const CreateLoan = ({ getLoans }: CreateLoanProps) => {
     setLoading(true);
     try {
       const result = await kfiAxios.post('/loan', data);
-      const { success, loan } = result.data;
+      const { success } = result.data;
       if (success) {
         getLoans(1);
         dismiss();

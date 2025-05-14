@@ -27,6 +27,13 @@ export type Loan = {
   createdAt: string;
 };
 
+export type Supplier = {
+  _id: string;
+  code: string;
+  description: string;
+  createdAt: string;
+};
+
 export type Bank = {
   _id: string;
   code: string;
