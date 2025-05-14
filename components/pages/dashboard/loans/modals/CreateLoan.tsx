@@ -9,7 +9,6 @@ import kfiAxios from '../../../../utils/axios';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
-import { TLoan } from '../Loans';
 
 type CreateLoanProps = {
   getLoans: (page: number) => void;

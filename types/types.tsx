@@ -47,6 +47,12 @@ export type GroupAccount = {
   createdAt: string;
 };
 
+export type BusinessType = {
+  _id: string;
+  type: string;
+  createdAt: string;
+};
+
 export type Center = {
   _id: string;
   centerNo: string;

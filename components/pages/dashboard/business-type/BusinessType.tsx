@@ -1,23 +1,86 @@
-import { IonContent, IonPage, IonTitle } from '@ionic/react';
-import React from 'react';
+import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
 import CreateBusinessType from './modals/CreateBusinessType';
 import BusinessTypeFilter from './components/BusinessTypeFilter';
 import BusinessTypeActions from './components/BusinessTypeActions';
+import { BusinessType as BusinessTypeInt, TTableFilter } from '../../../../types/types';
+import { TABLE_LIMIT } from '../../../utils/constants';
+import kfiAxios from '../../../utils/axios';
+import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
+import TableNoRows from '../../../ui/forms/TableNoRows';
+import TablePagination from '../../../ui/forms/TablePagination';
+
+export type TBusinessType = {
+  businessTypes: BusinessTypeInt[];
+  totalPages: number;
+  nextPage: boolean;
+  prevPage: boolean;
+  loading: boolean;
+};
 
 const BusinessType = () => {
-  const arrDummy: string[] = Array.from(Array(10)).fill('');
+  const [present] = useIonToast();
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchKey, setSearchKey] = useState<string>('');
+  const [sortKey, setSortKey] = useState<string>('');
+
+  const [data, setData] = useState<TBusinessType>({
+    businessTypes: [],
+    loading: false,
+    totalPages: 0,
+    nextPage: false,
+    prevPage: false,
+  });
+
+  const getBusinessTypes = async (page: number, keyword: string = '', sort: string = '') => {
+    setData(prev => ({ ...prev, loading: true }));
+    try {
+      const filter: TTableFilter = { limit: TABLE_LIMIT, page };
+      if (keyword) filter.search = keyword;
+      if (sort) filter.sort = sort;
+      const result = await kfiAxios.get('/business-type', { params: filter });
+      const { success, businessTypes, hasPrevPage, hasNextPage, totalPages } = result.data;
+      if (success) {
+        setData(prev => ({
+          ...prev,
+          businessTypes: businessTypes,
+          totalPages: totalPages,
+          nextPage: hasNextPage,
+          prevPage: hasPrevPage,
+        }));
+        setCurrentPage(page);
+        setSearchKey(keyword);
+        setSortKey(sort);
+        return;
+      }
+    } catch (error) {
+      present({
+        message: 'Failed to get loan records. Please try again',
+        duration: 1000,
+      });
+    } finally {
+      setData(prev => ({ ...prev, loading: false }));
+    }
+  };
+
+  const handlePagination = (page: number) => getBusinessTypes(page, searchKey, sortKey);
+
+  useIonViewWillEnter(() => {
+    getBusinessTypes(currentPage);
+  });
 
   return (
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['All Files', 'Business Type']} />
-          <div className="px-3 pb-3">
+          <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateBusinessType />
-              <BusinessTypeFilter />
+              <CreateBusinessType getBusinessTypes={getBusinessTypes} />
+              <BusinessTypeFilter getBusinessTypes={getBusinessTypes} />
             </div>
             <div className="relative overflow-auto">
               <Table>
@@ -28,18 +91,32 @@ const BusinessType = () => {
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
-                  {arrDummy.map((arr: string, i: number) => (
-                    <TableRow key={i}>
-                      <TableCell>Agriculture</TableCell>
-                      <TableCell>
-                        <BusinessTypeActions index={i} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {data.loading && <TableLoadingRow colspan={3} />}
+                  {!data.loading && data.businessTypes.length < 1 && <TableNoRows label="No Business Type Record Found" colspan={3} />}
+                  {!data.loading &&
+                    data.businessTypes.length > 0 &&
+                    data.businessTypes.map((businessType: BusinessTypeInt) => (
+                      <TableRow key={businessType._id}>
+                        <TableCell>{businessType.type}</TableCell>
+                        <TableCell>
+                          <BusinessTypeActions
+                            businessType={businessType}
+                            setData={setData}
+                            getBusinessTypes={getBusinessTypes}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            searchKey={searchKey}
+                            sortKey={sortKey}
+                            rowLength={data.businessTypes.length}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </div>
           </div>
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>
