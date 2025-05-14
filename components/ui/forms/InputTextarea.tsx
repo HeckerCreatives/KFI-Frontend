@@ -34,7 +34,7 @@ const InputTextarea = <T extends FieldValues>({ name, control, clearErrors, labe
             rows={rows}
             {...field}
             placeholder={placeholder}
-            onIonChange={e => {
+            onIonInput={e => {
               field.onChange(e.detail.value);
               clearErrors(name);
             }}

@@ -53,6 +53,14 @@ export type BusinessType = {
   createdAt: string;
 };
 
+export type WeeklySavings = {
+  _id: string;
+  rangeAmountFrom: string;
+  rangeAmountTo: string;
+  weeklySavingsFund: string;
+  createdAt: string;
+};
+
 export type Nature = {
   _id: string;
   type: string;

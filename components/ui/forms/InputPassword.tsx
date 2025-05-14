@@ -42,7 +42,7 @@ const InputPassword = <T extends FieldValues>({ name, control, clearErrors, labe
               {...field}
               type={show ? 'text' : 'password'}
               placeholder={placeholder}
-              onIonChange={e => {
+              onIonInput={e => {
                 field.onChange(e.detail.value);
                 clearErrors(name);
               }}

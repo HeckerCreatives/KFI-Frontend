@@ -36,7 +36,7 @@ const InputText = <T extends FieldValues>({ name, control, clearErrors, label, t
             {...field}
             type={type}
             placeholder={placeholder}
-            onIonChange={e => {
+            onIonInput={e => {
               field.onChange(e.detail.value);
               clearErrors(name);
             }}
