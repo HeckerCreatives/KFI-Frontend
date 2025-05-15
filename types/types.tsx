@@ -21,6 +21,35 @@ export type ChartOfAccount = {
   detailed: boolean;
 };
 
+export interface ClientMasterFile {
+  acctNumber: string;
+  acctOfficer: string;
+  address: string;
+  age: string;
+  birthdate: string;
+  birthplace: string;
+  business: { _id: string; type: String };
+  center: { _id: string; centerNo: string };
+  city: string;
+  civilStatus: string;
+  createdAt: string;
+  dateRelease: string;
+  dateResigned: string;
+  groupNumber: string;
+  memberStatus: string;
+  mobileNo: string;
+  name: string;
+  newStatus: string;
+  parent: string;
+  position: string;
+  reason: string;
+  sex: string;
+  spouse: string;
+  telNo: string;
+  zipCode: string;
+  _id: string;
+}
+
 export type Loan = {
   _id: string;
   code: string;

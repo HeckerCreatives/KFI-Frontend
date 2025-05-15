@@ -1,0 +1,30 @@
+import z from 'zod';
+
+export const clientMasterFileSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  address: z.string().min(1, 'Address is required'),
+  city: z.string().min(1, 'City is required'),
+  zipCode: z.string().min(1, 'Zip code is required'),
+  telNo: z.string().min(1, 'Telephone No. is required'),
+  mobileNo: z.string().min(1, 'Mobile No. is required'),
+  birthdate: z.string().min(1, 'Birth Date is required'),
+  birthplace: z.string().min(1, 'Birth Place is required'),
+  age: z.string().min(1, 'Age is required'),
+  sex: z.string().min(1, 'Sex is required'),
+  spouse: z.string().min(1, 'Spouse is required'),
+  civilStatus: z.string().min(1, 'Civil Status is required'),
+  parent: z.string().min(1, 'Parent is required'),
+  memberStatus: z.string().min(1, 'Member status is required'),
+  groupNumber: z.string().min(1, 'Group No. is required'),
+  center: z.string().min(1, 'Center is required'),
+  acctOfficer: z.string().min(1, 'Account officer is required'),
+  dateRelease: z.string().min(1, 'Date release is required'),
+  business: z.string().min(1, 'Business is required'),
+  position: z.string().min(1, 'Position is required'),
+  acctNumber: z.string().min(1, 'Account No. is required'),
+  dateResigned: z.string().min(1, 'Date resigned is required'),
+  newStatus: z.string().min(1, 'New Status is required'),
+  reason: z.string().min(1, 'Reason is required'),
+});
+
+export type ClientMasterFileFormData = z.infer<typeof clientMasterFileSchema>;

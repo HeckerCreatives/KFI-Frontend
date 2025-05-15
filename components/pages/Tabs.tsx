@@ -29,7 +29,6 @@ import BusinessType from './dashboard/business-type/BusinessType';
 import BusinessFix from './dashboard/business-fix/BusinessFix';
 import Nature from './dashboard/nature/Nature';
 import GroupAccount from './dashboard/group-account/GroupAccount';
-import CreateClient from './dashboard/client-master-file/CreateClient';
 import logo from '../assets/images/logo.png';
 import Image from 'next/image';
 import { cellular, chevronDownOutline, hammerOutline, logOut, settingsOutline } from 'ionicons/icons';
@@ -138,7 +137,6 @@ const Tabs = () => {
             <Route path="/dashboard/chart-of-account" render={() => <ChartOfAccount />} exact={true} />
             <Route path="/dashboard/center" render={() => <Center />} exact={true} />
             <Route path="/dashboard/client-master-file" render={() => <ClientMasterFile />} exact={true} />
-            <Route path="/dashboard/client-master-file/new" render={() => <CreateClient />} exact={true} />
             <Route path="/dashboard/client-profile" render={() => <ClientProfile />} exact={true} />
             <Route path="/dashboard/loans" render={() => <Loans />} exact={true} />
             <Route path="/dashboard/bank" render={() => <Bank />} exact={true} />
