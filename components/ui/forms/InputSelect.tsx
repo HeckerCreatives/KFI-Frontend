@@ -19,6 +19,7 @@ type TFormInputSelect<T extends FieldValues> = {
   options: Option[];
   showLabel?: boolean;
   className?: string;
+  disabled?: boolean;
 };
 
 const InputSelect = <T extends FieldValues>({
@@ -31,6 +32,7 @@ const InputSelect = <T extends FieldValues>({
   options = [],
   showLabel = true,
   className,
+  disabled = false,
 }: TFormInputSelect<T>) => {
   return (
     <Controller
@@ -45,6 +47,7 @@ const InputSelect = <T extends FieldValues>({
             </IonLabel>
           )}
           <IonSelect
+            disabled={disabled}
             interface="popover"
             {...field}
             placeholder={placeholder}

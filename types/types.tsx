@@ -3,11 +3,12 @@ export type NavLink = {
   path: string;
 };
 
-export type TAccountFile = {
+export type ChartOfAccount = {
+  _id: string;
   code: string;
   description: string;
-  classification: 'A' | 'L' | 'E' | 'R' | 'C' | 'X' | '';
-  natureOfAccount: 'D' | 'C' | '';
+  classification: string;
+  nature: string;
   groupAccount: string;
   closingAccount: string;
   fsCode: string;

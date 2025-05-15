@@ -1,4 +1,4 @@
-import { IonCheckbox, IonItem, IonLabel, IonText } from '@ionic/react';
+import { IonCheckbox, IonText } from '@ionic/react';
 import classNames from 'classnames';
 import React from 'react';
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
@@ -9,9 +9,10 @@ type TFormInputCheckbox<T extends FieldValues> = {
   label?: string;
   required?: boolean;
   className?: string;
+  disabled?: boolean;
 };
 
-const InputCheckbox = <T extends FieldValues>({ name, control, label, required = false, className = '' }: TFormInputCheckbox<T>) => {
+const InputCheckbox = <T extends FieldValues>({ name, control, label, required = false, className = '', disabled = false }: TFormInputCheckbox<T>) => {
   return (
     <Controller
       name={name}
@@ -19,7 +20,9 @@ const InputCheckbox = <T extends FieldValues>({ name, control, label, required =
       render={({ field, fieldState: { error } }) => (
         <div className="w-full">
           <IonCheckbox
+            disabled={disabled}
             {...field}
+            checked={field.value}
             onIonChange={e => {
               field.onChange(e.detail.checked);
             }}

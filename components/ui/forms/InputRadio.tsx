@@ -59,7 +59,7 @@ const InputRadio = <T extends FieldValues>({
             )}
           >
             {options.map((option: TOptions) => (
-              <IonRadio key={option.value} value={option.value} labelPlacement="end" justify="start" className="![--color-checked:#FA6C2F]">
+              <IonRadio disabled={disabled} key={option.value} value={option.value} labelPlacement="end" justify="start" className="![--color-checked:#FA6C2F]">
                 {option.label}
               </IonRadio>
             ))}
