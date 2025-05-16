@@ -57,9 +57,13 @@ import Admin from './dashboard/admin/Admin';
 import { jwtDecode } from 'jwt-decode';
 import { AccessToken, ActionType, Permission } from '../../types/types';
 import { allFilesResource, manageAccountResource, transactionResource } from '../utils/constants';
+import Dashboard from './dashboard/home/Dashboard';
+import classNames from 'classnames';
+import { usePathname } from 'next/navigation';
 
 const Tabs = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const pathname = usePathname();
 
   const logout = () => {
     localStorage.removeItem('auth');
@@ -85,11 +89,14 @@ const Tabs = () => {
                 <Image alt="logo" src={logoNoBg} className="h-10 w-auto" />
               </div>
             </div>
-            <div className="space-y-2 px-3 mb-2 mt-5">
+            <div className="space-y-2 px-2.5 mb-2 mt-5">
               <IonMenuToggle autoHide={false} className="">
                 <IonItem
-                  routerLink="/dashboard"
-                  className="!text-[0.9rem] text-slate-500 [--padding-start:0rem] [--padding-end:0rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]"
+                  routerLink="/dashboard/home"
+                  className={classNames(
+                    '!text-[0.9rem] [--padding-start:0rem] [--min-height:2.25rem] [--border-color:transparent] space-x-2 text-slate-500 hover:[--color:#FA6C2F]',
+                    pathname === '/dashboard/home' && '!text-[#fa6c2f]',
+                  )}
                 >
                   <div className="flex items-center justify-start gap-2 px-3">
                     <IonIcon size="small" icon={homeOutline} />
@@ -151,7 +158,7 @@ const Tabs = () => {
         </IonHeader>
         <IonContent>
           <IonRouterOutlet>
-            <Route path="/dashboard" render={() => <Redirect to="/dashboard/chart-of-account" />} exact={true} />
+            <Route path="/dashboard/home" render={() => <Dashboard />} exact={true} />
             <Route path="/dashboard/admin" render={() => <Admin />} exact={true} />
             <Route path="/dashboard/chart-of-account" render={() => <ChartOfAccount />} exact={true} />
             <Route path="/dashboard/center" render={() => <Center />} exact={true} />

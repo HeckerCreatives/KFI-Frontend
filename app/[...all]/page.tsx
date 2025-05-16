@@ -8,7 +8,7 @@ export async function generateStaticParams() {
   return [
     // ...lists.map(list => ({ all: ['lists', list.id] })),
     { all: ['login'] },
-    { all: ['dashboard'] },
+    { all: ['dashboard', 'home'] },
     { all: ['dashboard', 'admin'] },
     { all: ['dashboard', 'chart-of-account'] },
     { all: ['dashboard', 'center'] },

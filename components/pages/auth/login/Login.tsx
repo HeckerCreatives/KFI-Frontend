@@ -32,7 +32,7 @@ const Login = () => {
       const { success, access } = result.data;
       if (success) {
         localStorage.setItem('auth', access);
-        router.push('/dashboard/chart-of-account');
+        router.push('/dashboard/home');
         if (isPlatform('capacitor')) {
           (window as any).location.reload(true);
         } else if (isPlatform('electron')) {
