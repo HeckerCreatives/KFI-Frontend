@@ -1,25 +1,25 @@
 import { IonAccordion, IonIcon, IonItem, IonLabel, IonList, IonMenuToggle } from '@ionic/react';
-import { fileTrayFullOutline } from 'ionicons/icons';
+import { fileTrayStackedOutline } from 'ionicons/icons';
 import React from 'react';
 import { AccessToken, NavLink, Permission } from '../../../types/types';
 import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
 import { jwtDecode } from 'jwt-decode';
 
-const TransactionNavigation = () => {
+const AllFiles = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
 
   const fileLinks: NavLink[] = [
-    { path: '/dashboard/loan-release', label: 'Loan Release', resource: 'loan release' },
-    { path: '/dashboard/expense-voucher', label: 'Expense Voucher', resource: 'expense voucher' },
-    { path: '/dashboard/journal-voucher', label: 'Journal Voucher', resource: 'journal voucher' },
-    { path: '/dashboard/official-receipt', label: 'Official Receipt', resource: 'official receipt' },
-    { path: '/dashboard/emergency-loan', label: 'Emergency Loan', resource: 'emergency loan' },
-    { path: '/dashboard/damayan-fund', label: 'Damayan Fund', resource: 'damayan fund' },
+    { path: '/dashboard/bank', label: 'Bank', resource: 'bank' },
+    { path: '/dashboard/business-type', label: 'Business Type', resource: 'business-type' },
+    { path: '/dashboard/center', label: 'Center', resource: 'center' },
+    { path: '/dashboard/loans', label: 'Loans', resource: 'loans' },
+    { path: '/dashboard/weekly-saving-table', label: 'Weekly Saving Table', resource: 'weekly saving table' },
+    { path: '/dashboard/supplier', label: 'Supplier', resource: 'supplier' },
   ];
   return (
-    <IonAccordion value="transactions" className="bg-transparent">
+    <IonAccordion value="allFiles" className="bg-transparent">
       <IonItem
         slot="header"
         className={classNames(
@@ -27,8 +27,8 @@ const TransactionNavigation = () => {
           fileLinks.find((link: NavLink) => pathname === link.path) && '!text-[#fa6c2f]',
         )}
       >
-        <IonIcon size="small" icon={fileTrayFullOutline} className="!text-inherit" />
-        <IonLabel className="text-sm">Transactions</IonLabel>
+        <IonIcon size="small" icon={fileTrayStackedOutline} className="!text-inherit" />
+        <IonLabel className="text-sm">All Files</IonLabel>
       </IonItem>
       <div slot="content">
         <IonList className="p-0">
@@ -54,4 +54,4 @@ const TransactionNavigation = () => {
   );
 };
 
-export default TransactionNavigation;
+export default AllFiles;

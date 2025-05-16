@@ -87,7 +87,7 @@ const UpdateChildren = ({ child, setData }: UpdateChildrenProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Client Master File - Edit Child" sub="All Files" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Client Master File - Edit Child" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

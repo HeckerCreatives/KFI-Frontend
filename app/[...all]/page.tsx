@@ -9,6 +9,7 @@ export async function generateStaticParams() {
     // ...lists.map(list => ({ all: ['lists', list.id] })),
     { all: ['login'] },
     { all: ['dashboard'] },
+    { all: ['dashboard', 'admin'] },
     { all: ['dashboard', 'chart-of-account'] },
     { all: ['dashboard', 'center'] },
     { all: ['dashboard', 'client-master-file'] },

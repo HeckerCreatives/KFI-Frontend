@@ -7,15 +7,15 @@ import {
   IonPage,
   IonButton,
   IonMenu,
-  IonTitle,
   IonSplitPane,
   IonPopover,
   IonIcon,
   IonItem,
   IonMenuToggle,
   IonLabel,
-  IonAccordion,
   IonAccordionGroup,
+  IonMenuButton,
+  isPlatform,
 } from '@ionic/react';
 import ChartOfAccount from './dashboard/chart-of-account/ChartOfAccount';
 import Center from './dashboard/center/Center';
@@ -29,10 +29,9 @@ import BusinessType from './dashboard/business-type/BusinessType';
 import BusinessFix from './dashboard/business-fix/BusinessFix';
 import Nature from './dashboard/nature/Nature';
 import GroupAccount from './dashboard/group-account/GroupAccount';
-import logo from '../assets/images/logo.png';
+import logoNoBg from '../assets/images/logo-nobg.png';
 import Image from 'next/image';
-import { cellular, chevronDownOutline, hammerOutline, logOut, settingsOutline } from 'ionicons/icons';
-import FileNavigation from '../ui/navs/FileNavigation';
+import { chevronDownOutline, hammerOutline, homeOutline, logOut, settingsOutline } from 'ionicons/icons';
 import TransactionNavigation from '../ui/navs/TransactionNavigation';
 import LoanRelease from './dashboard/transactions/loan-release/LoanRelease';
 import ExpenseVoucher from './dashboard/transactions/expense-voucher/ExpenseVoucher';
@@ -52,88 +51,108 @@ import DamayanFundReport from './dashboard/reports/damayan-fund/DamayanFundRepor
 import EmergencyLoanReport from './dashboard/reports/emergency-loan/EmergencyLoanReport';
 import LoanReleaseVsOrReport from './dashboard/reports/loan-release-vs-or/LoanReleaseVsOrReport';
 import ProjectionByDueDateReport from './dashboard/reports/projection-by-due-date/ProjectionByDueDateReport';
-import ReportsNavigation from '../ui/navs/ReportsNavigation';
+import ManageAccount from '../ui/navs/ManageAccount';
+import AllFiles from '../ui/navs/AllFiles';
+import Admin from './dashboard/admin/Admin';
+import { jwtDecode } from 'jwt-decode';
+import { AccessToken, ActionType, Permission } from '../../types/types';
+import { allFilesResource, manageAccountResource, transactionResource } from '../utils/constants';
 
 const Tabs = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+
+  const logout = () => {
+    localStorage.removeItem('auth');
+    if (isPlatform('capacitor')) {
+      (window as any).location.reload(true);
+    } else if (isPlatform('electron')) {
+      (window as any).ipcRenderer.send('reload-window');
+    } else {
+      (window as any).location.reload();
+    }
+  };
+
   return (
     <IonSplitPane when="lg" contentId="main-content" class="w-full">
-      <IonMenu contentId="main-content" class="lg:max-w-64">
+      <IonMenu contentId="main-content" menuId="main-content" class="lg:max-w-64">
         <IonHeader>
-          <IonToolbar>
-            <IonTitle>
-              <Image alt="logo" src={logo} className="h-10 w-auto" />
-            </IonTitle>
-          </IonToolbar>
+          <IonToolbar></IonToolbar>
         </IonHeader>
-        <IonContent className="[--background:#FFF0E3]">
+        <IonContent>
           <div>
-            <div>
-              <h6 className="text-slate-400 text-sm italic px-3 mb-0 mt-7">Navigation</h6>
+            <div className="h-40 bg-desktop bg-cover flex items-end">
+              <div className="w-full bg-slate-100/50 px-5 py-2">
+                <Image alt="logo" src={logoNoBg} className="h-10 w-auto" />
+              </div>
+            </div>
+            <div className="space-y-2 px-3 mb-2 mt-5">
               <IonMenuToggle autoHide={false} className="">
-                <IonItem routerLink="/dashboard" className="[--padding-start:0] [--min-height:2.25rem] text-[1rem] space-x-2 text-slate-500 hover:[--color:#FA6C2F]">
+                <IonItem
+                  routerLink="/dashboard"
+                  className="!text-[0.9rem] text-slate-500 [--padding-start:0rem] [--padding-end:0rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]"
+                >
                   <div className="flex items-center justify-start gap-2 px-3">
-                    <IonIcon size="small" icon={cellular} />
+                    <IonIcon size="small" icon={homeOutline} />
                     <IonLabel>Dashboard</IonLabel>
                   </div>
                 </IonItem>
               </IonMenuToggle>
             </div>
-            <FileNavigation />
-            <div>
-              <h6 className="text-slate-400 text-sm italic px-3 mb-0 mt-1">All Actions</h6>
-              <IonAccordionGroup>
-                <TransactionNavigation />
-                <ReportsNavigation />
-                <IonAccordion value="third">
-                  <IonItem slot="header" className="!text-[1rem] space-x-2 text-slate-500 [--padding-start:0.25rem] [--padding-end:0] hover:[--color:#FA6C2F]">
-                    <IonIcon size="small" icon={cellular} className="!text-inherit" />
-                    <IonLabel>General Ledger</IonLabel>
-                  </IonItem>
-                  <div className="ion-padding" slot="content">
-                    Third Content
-                  </div>
-                </IonAccordion>
-                <IonAccordion value="fourth">
-                  <IonItem slot="header" className="!text-[1rem] space-x-2 text-slate-500 [--padding-start:0.25rem] [--padding-end:0] hover:[--color:#FA6C2F]">
-                    <IonIcon size="small" icon={cellular} className="!text-inherit" />
-                    <IonLabel>Utilities</IonLabel>
-                  </IonItem>
-                  <div className="ion-padding" slot="content">
-                    Third Content
-                  </div>
-                </IonAccordion>
-              </IonAccordionGroup>
-            </div>
+            <IonAccordionGroup className="space-y-2 px-3">
+              {(token.role === 'superadmin' ||
+                token.permissions.some(
+                  (permission: Permission) =>
+                    manageAccountResource.includes(permission.resource) && (Object.keys(permission.actions) as ActionType[]).some(action => permission.actions[action]),
+                )) && <ManageAccount />}
+
+              {(token.role === 'superadmin' ||
+                token.permissions.some(
+                  (permission: Permission) =>
+                    allFilesResource.includes(permission.resource) && (Object.keys(permission.actions) as ActionType[]).some(action => permission.actions[action]),
+                )) && <AllFiles />}
+
+              {(token.role === 'superadmin' ||
+                token.permissions.some(
+                  (permission: Permission) =>
+                    transactionResource.includes(permission.resource) && (Object.keys(permission.actions) as ActionType[]).some(action => permission.actions[action]),
+                )) && <TransactionNavigation />}
+            </IonAccordionGroup>
           </div>
         </IonContent>
       </IonMenu>
       <IonPage id="main-content">
         <IonHeader>
-          <IonToolbar className="px-5 [--min-height:3.5rem]">
-            <div className="flex items-center justify-end gap-5">
-              <IonIcon icon={settingsOutline} className="w-7 h-7 text-[#FA6C2F] cursor-pointer" />
-              <IonIcon icon={hammerOutline} className="w-7 h-7 text-[#FA6C2F] cursor-pointer" />
-              <IonButton
-                fill="clear"
-                className="min-h-[3.5rem] max-w-40 border-x border-[#FA6C2F] px-1 !m-0 bg-[#FFF0E3] [--color:black] font-bold space-x-4 capitalize"
-                id="click-trigger"
-              >
-                <div className="w-10 h-10 bg-slate-300 rounded-full grid place-items-center">AL</div>
-                <span>Alex</span> <IonIcon className="text-[#FA6C2F] stroke w-4 h-4" icon={chevronDownOutline} />
-              </IonButton>
-              <IonPopover showBackdrop={false} trigger="click-trigger" triggerAction="click">
-                <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
-                  <div className="flex items-center gap-2 text-sm text-slate-700 font-semibold hover:bg-slate-100 py-3 px-3 cursor-pointer active:bg-slate-200">
-                    <IonIcon icon={logOut} /> Logout
-                  </div>
-                </IonContent>
-              </IonPopover>
+          <IonToolbar className="pe-5 ps-2 [--min-height:3.5rem]">
+            <div className="flex items-center justify-between">
+              <div>
+                <IonMenuButton menu="main-content" />
+              </div>
+              <div className="flex items-center justify-center gap-5">
+                <IonIcon icon={settingsOutline} className="w-7 h-7 text-[#FA6C2F] cursor-pointer" />
+                <IonIcon icon={hammerOutline} className="w-7 h-7 text-[#FA6C2F] cursor-pointer" />
+                <IonButton
+                  fill="clear"
+                  className="min-h-[3.5rem] min-w-40 border-x border-[#FA6C2F] px-1 !m-0 bg-[#FFF0E3] [--color:black] font-bold space-x-4 capitalize"
+                  id="click-trigger"
+                >
+                  <div className="w-10 h-10 bg-slate-300 rounded-full uppercase grid place-items-center min-w-10 min-h-10">{token.username.substring(0, 2)}</div>
+                  <span>{token.username}</span> <IonIcon className="text-[#FA6C2F] stroke w-4 h-4" icon={chevronDownOutline} />
+                </IonButton>
+                <IonPopover showBackdrop={false} trigger="click-trigger" triggerAction="click">
+                  <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
+                    <div onClick={logout} className="flex items-center gap-2 text-sm text-slate-700 font-semibold hover:bg-slate-100 py-3 px-3 cursor-pointer active:bg-slate-200">
+                      <IonIcon icon={logOut} /> Logout
+                    </div>
+                  </IonContent>
+                </IonPopover>
+              </div>
             </div>
           </IonToolbar>
         </IonHeader>
         <IonContent>
           <IonRouterOutlet>
             <Route path="/dashboard" render={() => <Redirect to="/dashboard/chart-of-account" />} exact={true} />
+            <Route path="/dashboard/admin" render={() => <Admin />} exact={true} />
             <Route path="/dashboard/chart-of-account" render={() => <ChartOfAccount />} exact={true} />
             <Route path="/dashboard/center" render={() => <Center />} exact={true} />
             <Route path="/dashboard/client-master-file" render={() => <ClientMasterFile />} exact={true} />

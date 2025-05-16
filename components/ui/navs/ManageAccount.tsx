@@ -1,34 +1,31 @@
 import { IonAccordion, IonIcon, IonItem, IonLabel, IonList, IonMenuToggle } from '@ionic/react';
-import { fileTrayFullOutline } from 'ionicons/icons';
+import { keyOutline } from 'ionicons/icons';
 import React from 'react';
 import { AccessToken, NavLink, Permission } from '../../../types/types';
 import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
 import { jwtDecode } from 'jwt-decode';
 
-const TransactionNavigation = () => {
+const ManageAccount = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
 
   const fileLinks: NavLink[] = [
-    { path: '/dashboard/loan-release', label: 'Loan Release', resource: 'loan release' },
-    { path: '/dashboard/expense-voucher', label: 'Expense Voucher', resource: 'expense voucher' },
-    { path: '/dashboard/journal-voucher', label: 'Journal Voucher', resource: 'journal voucher' },
-    { path: '/dashboard/official-receipt', label: 'Official Receipt', resource: 'official receipt' },
-    { path: '/dashboard/emergency-loan', label: 'Emergency Loan', resource: 'emergency loan' },
-    { path: '/dashboard/damayan-fund', label: 'Damayan Fund', resource: 'damayan fund' },
+    { path: '/dashboard/admin', label: 'Admin', resource: 'admin' },
+    { path: '/dashboard/client-master-file', label: 'Client Master File', resource: 'client master file' },
+    { path: '/dashboard/chart-of-account', label: 'Chart of Account', resource: 'chart of account' },
   ];
   return (
-    <IonAccordion value="transactions" className="bg-transparent">
+    <IonAccordion value="manageAccount" className="bg-transparent">
       <IonItem
         slot="header"
         className={classNames(
-          '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.5rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
+          '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.65rem] [--padding-end:0.65rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
           fileLinks.find((link: NavLink) => pathname === link.path) && '!text-[#fa6c2f]',
         )}
       >
-        <IonIcon size="small" icon={fileTrayFullOutline} className="!text-inherit" />
-        <IonLabel className="text-sm">Transactions</IonLabel>
+        <IonIcon size="small" icon={keyOutline} className="!text-inherit" />
+        <IonLabel className="text-sm">Manage Account</IonLabel>
       </IonItem>
       <div slot="content">
         <IonList className="p-0">
@@ -54,4 +51,4 @@ const TransactionNavigation = () => {
   );
 };
 
-export default TransactionNavigation;
+export default ManageAccount;

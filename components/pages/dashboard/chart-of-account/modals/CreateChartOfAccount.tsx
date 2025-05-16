@@ -72,7 +72,7 @@ const CreateChartOfAccount = ({ getChartOfAccounts }: CreateChartOfAccountProps)
       <IonModal ref={modal} trigger="create-coa-modal" backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Chart of Account - Add Record" sub="All Files" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Chart of Account - Add Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

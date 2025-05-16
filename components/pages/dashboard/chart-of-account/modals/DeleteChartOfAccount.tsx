@@ -63,7 +63,7 @@ const DeleteChartOfAccount = ({ chartAccount, getChartOfAccounts, searchkey, sor
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Chart Of Account - Delete Record" sub="All Files" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Chart Of Account - Delete Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

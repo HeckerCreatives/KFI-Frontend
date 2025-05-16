@@ -135,7 +135,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Client Master File - Edit Record" sub="All Actions" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Client Master File - Edit Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">

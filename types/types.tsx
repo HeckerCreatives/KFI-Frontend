@@ -1,6 +1,7 @@
 export type NavLink = {
   label: string;
   path: string;
+  resource: string;
 };
 
 export type ChartOfAccount = {
@@ -86,6 +87,40 @@ export type Bank = {
   code: string;
   description: string;
   createdAt: string;
+};
+
+export type Action = {
+  create: boolean;
+  update: boolean;
+  delete: boolean;
+  read: boolean;
+  print: boolean;
+  visible: boolean;
+};
+
+export type ActionType = 'create' | 'visible' | 'read' | 'update' | 'delete' | 'print';
+
+export type Permission = {
+  resource: string;
+  actions: Action;
+  _id: string;
+};
+
+export type AccessToken = {
+  _id: string;
+  username: string;
+  role: string;
+  permissions: Permission[];
+  exp: number;
+  iat: number;
+};
+
+export type User = {
+  _id: string;
+  name: string;
+  username: string;
+  createdAt: string;
+  permissions: Permission[];
 };
 
 export type GroupAccount = {

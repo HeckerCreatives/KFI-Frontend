@@ -39,7 +39,7 @@ const ViewChildrens = ({ client, setData }: ViewChildrensProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader title="Client Master File - View Children" sub="All Files" dismiss={dismiss} />
+            <ModalHeader title="Client Master File - View Children" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

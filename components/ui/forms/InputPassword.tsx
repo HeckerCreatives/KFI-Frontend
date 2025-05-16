@@ -12,9 +12,21 @@ type TFormInput<T extends FieldValues> = {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  className?: string;
+  containerClassName?: string;
 };
 
-const InputPassword = <T extends FieldValues>({ name, control, clearErrors, label, placeholder = '', required = false, disabled = false }: TFormInput<T>) => {
+const InputPassword = <T extends FieldValues>({
+  name,
+  control,
+  clearErrors,
+  label,
+  placeholder = '',
+  required = false,
+  disabled = false,
+  className = '',
+  containerClassName = '',
+}: TFormInput<T>) => {
   const [show, setShow] = useState(false);
 
   const toggleShow = (e: React.MouseEvent) => {
@@ -28,7 +40,7 @@ const InputPassword = <T extends FieldValues>({ name, control, clearErrors, labe
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <div className="w-full">
+        <div className="w-full space-y-0">
           <div className="flex justify-between">
             {label && (
               <IonLabel class="custom" className="!text-sm font-bold tracking-wide !text-slate-600">
@@ -37,7 +49,7 @@ const InputPassword = <T extends FieldValues>({ name, control, clearErrors, labe
             )}
             {label && required && <span className="text-slate-500 text-xs italic">Required</span>}
           </div>
-          <div className="relative my-1 shadow-md">
+          <div className={classNames('relative my-1', containerClassName)}>
             <IonInput
               {...field}
               type={show ? 'text' : 'password'}
@@ -49,8 +61,9 @@ const InputPassword = <T extends FieldValues>({ name, control, clearErrors, labe
               disabled={disabled}
               onIonBlur={field.onBlur}
               className={classNames(
-                'text-sm  ![--padding-start:0] !bg-white ![--padding-end:0] ![--highlight-color-focused:none] ![--padding-top:0] ![--padding-bottom:0] !px-3 !py-2',
+                'text-sm !bg-white ![--highlight-color-focused:none] ![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:1rem]',
                 error && '![--border-color:red] !border-red-600',
+                className,
               )}
             />
             <IonButton fill="clear" type="button" onClick={toggleShow} className="[--ripple-color:transparent] w-fit h-fit absolute top-[0.12rem] right-0.5 z-50">

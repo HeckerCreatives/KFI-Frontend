@@ -103,7 +103,7 @@ const UpdateChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOf
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Chart of Account - Edit Record" sub="All Files" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Chart of Account - Edit Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

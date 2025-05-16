@@ -75,7 +75,7 @@ const CreateBeneficiary = ({ client, setData }: CreateBeneficiaryProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Client Master File - Add Beneficiary" sub="All Files" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Client Master File - Add Beneficiary" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

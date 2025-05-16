@@ -87,7 +87,15 @@ const Login = () => {
                       />
                     </FormIonItem>
                     <FormIonItem>
-                      <InputPassword disabled={loading} name="password" required control={form.control} clearErrors={form.clearErrors} label="Password" />
+                      <InputPassword
+                        disabled={loading}
+                        name="password"
+                        required
+                        control={form.control}
+                        clearErrors={form.clearErrors}
+                        label="Password"
+                        className="!px-3 !py-2 shadow-lg mb-1 border-none"
+                      />
                     </FormIonItem>
                     <div className="text-end">
                       <IonButton disabled={loading} slot="end" type="submit" className="min-h-8 w-full !text-sm [--background:#FB5000] capitalize" strong={true}>

@@ -1,31 +1,31 @@
 import React, { useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import kfiAxios from '../../../../utils/axios';
-import { ClientMasterFile, TErrorData, TFormError } from '../../../../../types/types';
+import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
-import { add } from 'ionicons/icons';
-import { ChildrenFormData, childrenSchema } from '../../../../../validations/children.schema';
-import ChildrenForm from '../components/ChildrenForm';
-import { TClientMasterFile } from '../ClientMasterFile';
+import UserForm from '../components/UserForm';
+import { UserFormData, userSchema } from '../../../../../validations/user.schema';
 
-type CreateChildrenProps = {
-  client: ClientMasterFile;
-  setData: React.Dispatch<React.SetStateAction<TClientMasterFile>>;
+type CreateUserProps = {
+  getUsers: (page: number, keyword?: string, sort?: string) => void;
 };
 
-const CreateChildren = ({ client, setData }: CreateChildrenProps) => {
+const CreateUser = ({ getUsers }: CreateUserProps) => {
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
 
-  const form = useForm<ChildrenFormData>({
-    resolver: zodResolver(childrenSchema),
+  const form = useForm<UserFormData>({
+    resolver: zodResolver(userSchema),
     defaultValues: {
       name: '',
+      username: '',
+      password: '',
+      confirm_password: '',
     },
   });
 
@@ -34,19 +34,13 @@ const CreateChildren = ({ client, setData }: CreateChildrenProps) => {
     modal.current?.dismiss();
   }
 
-  async function onSubmit(data: ChildrenFormData) {
+  async function onSubmit(data: UserFormData) {
     setLoading(true);
     try {
-      const result = await kfiAxios.post('/children', { ...data, owner: client._id });
-      const { success, child } = result.data;
+      const result = await kfiAxios.post('/user', data);
+      const { success } = result.data;
       if (success) {
-        setData(prev => {
-          const clone = [...prev.clients];
-          const index = clone.findIndex((e: ClientMasterFile) => e._id === child.owner);
-          const isAdded = clone[index].children.find(e => e._id === child._id);
-          if (!isAdded) clone[index].children.push(child);
-          return { ...prev, clients: clone };
-        });
+        getUsers(1);
         dismiss();
         return;
       }
@@ -63,28 +57,28 @@ const CreateChildren = ({ client, setData }: CreateChildrenProps) => {
   return (
     <>
       <div className="text-end">
-        <IonButton fill="clear" id={`add-child-modal-${client._id}`} className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        <IonButton fill="clear" id="create-bank-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
           + Add Record
         </IonButton>
       </div>
       <IonModal
         ref={modal}
-        trigger={`add-child-modal-${client._id}`}
+        trigger="create-bank-modal"
         backdropDismiss={false}
         className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Client Master File - Add Children" sub="Manage Account" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="User - Add Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">
           <div>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <ChildrenForm form={form} loading={loading} />
+              <UserForm form={form} loading={loading} />
               <div className="text-end border-t mt-2 pt-1 space-x-2">
                 <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
-                  Save
+                  {loading ? 'Saving...' : 'Save'}
                 </IonButton>
                 <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
                   Cancel
@@ -98,4 +92,4 @@ const CreateChildren = ({ client, setData }: CreateChildrenProps) => {
   );
 };
 
-export default CreateChildren;
+export default CreateUser;
