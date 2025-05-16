@@ -21,6 +21,21 @@ export type ChartOfAccount = {
   detailed: boolean;
 };
 
+export type Beneficiary = {
+  createdAt: string;
+  name: string;
+  relationship: string;
+  owner: string;
+  _id: string;
+};
+
+export type Child = {
+  createdAt: string;
+  name: string;
+  owner: string;
+  _id: string;
+};
+
 export interface ClientMasterFile {
   acctNumber: string;
   acctOfficer: string;
@@ -48,6 +63,8 @@ export interface ClientMasterFile {
   telNo: string;
   zipCode: string;
   _id: string;
+  beneficiaries: Beneficiary[];
+  children: Child[];
 }
 
 export type Loan = {

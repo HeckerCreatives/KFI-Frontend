@@ -5,6 +5,8 @@ import { ClientMasterFile } from '../../../../../types/types';
 import { TClientMasterFile } from '../ClientMasterFile';
 import UpdateClientMasterFile from '../modals/UpdateClientMasterFile';
 import DeleteClientMasterFile from '../modals/DeleteClientMasterFile';
+import ViewBeneficiaries from '../modals/ViewBeneficiaries';
+import ViewChildrens from '../modals/ViewChildrens';
 
 type ClientMasterFileActionsProps = {
   client: ClientMasterFile;
@@ -23,10 +25,12 @@ const ClientMasterFileActions = ({ client, getClients, setData, currentPage, set
       <IonButton fill="clear" id={`cmf-${client._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
         <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
       </IonButton>
-      <IonPopover showBackdrop={false} trigger={`cmf-${client._id}`} triggerAction="click" className="[--max-width:10rem]">
+      <IonPopover showBackdrop={false} trigger={`cmf-${client._id}`} triggerAction="click" className="[--max-width:13rem]">
         <IonContent>
           <UpdateClientMasterFile client={client} setData={setData} />
           <DeleteClientMasterFile client={client} getClients={getClients} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+          <ViewBeneficiaries client={client} setData={setData} />
+          <ViewChildrens client={client} setData={setData} />
         </IonContent>
       </IonPopover>
     </>
