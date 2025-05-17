@@ -55,11 +55,12 @@ import ManageAccount from '../ui/navs/ManageAccount';
 import AllFiles from '../ui/navs/AllFiles';
 import Admin from './dashboard/admin/Admin';
 import { jwtDecode } from 'jwt-decode';
-import { AccessToken, ActionType, Permission } from '../../types/types';
+import { AccessToken } from '../../types/types';
 import { allFilesResource, manageAccountResource, transactionResource } from '../utils/constants';
 import Dashboard from './dashboard/home/Dashboard';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
+import { isVisible } from '../utils/permissions';
 
 const Tabs = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -106,23 +107,9 @@ const Tabs = () => {
               </IonMenuToggle>
             </div>
             <IonAccordionGroup className="space-y-2 px-3">
-              {(token.role === 'superadmin' ||
-                token.permissions.some(
-                  (permission: Permission) =>
-                    manageAccountResource.includes(permission.resource) && (Object.keys(permission.actions) as ActionType[]).some(action => permission.actions[action]),
-                )) && <ManageAccount />}
-
-              {(token.role === 'superadmin' ||
-                token.permissions.some(
-                  (permission: Permission) =>
-                    allFilesResource.includes(permission.resource) && (Object.keys(permission.actions) as ActionType[]).some(action => permission.actions[action]),
-                )) && <AllFiles />}
-
-              {(token.role === 'superadmin' ||
-                token.permissions.some(
-                  (permission: Permission) =>
-                    transactionResource.includes(permission.resource) && (Object.keys(permission.actions) as ActionType[]).some(action => permission.actions[action]),
-                )) && <TransactionNavigation />}
+              {isVisible(token.role, token.permissions, manageAccountResource) && <ManageAccount />}
+              {isVisible(token.role, token.permissions, allFilesResource) && <AllFiles />}
+              {isVisible(token.role, token.permissions, transactionResource) && <TransactionNavigation />}
             </IonAccordionGroup>
           </div>
         </IonContent>

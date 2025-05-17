@@ -5,12 +5,14 @@ import PageTitle from '../../../ui/page/PageTitle';
 import CreateBank from './modals/CreateBank';
 import BankFilter from './components/BankFilter';
 import BankActions from './components/BankActions';
-import { Bank as BankType, TTableFilter } from '../../../../types/types';
+import { AccessToken, Bank as BankType, Permission, TTableFilter } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
 import TablePagination from '../../../ui/forms/TablePagination';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction, haveActions } from '../../../utils/permissions';
 
 export type TBank = {
   banks: BankType[];
@@ -21,6 +23,7 @@ export type TBank = {
 };
 
 const Bank = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -79,7 +82,7 @@ const Bank = () => {
           <PageTitle pages={['All Files', 'Bank']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateBank getBanks={getBanks} />
+              <div>{canDoAction(token.role, token.permissions, 'bank', 'create') && <CreateBank getBanks={getBanks} />}</div>
               <BankFilter getBanks={getBanks} />
             </div>
             <div className="relative overflow-auto">
@@ -88,7 +91,7 @@ const Bank = () => {
                   <TableHeadRow>
                     <TableHead>Code</TableHead>
                     <TableHead>Description</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {haveActions(token.role, 'bank', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -100,18 +103,20 @@ const Bank = () => {
                       <TableRow key={bank._id}>
                         <TableCell>{bank.code}</TableCell>
                         <TableCell>{bank.description}</TableCell>
-                        <TableCell>
-                          <BankActions
-                            bank={bank}
-                            setData={setData}
-                            getBanks={getBanks}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            searchKey={searchKey}
-                            sortKey={sortKey}
-                            rowLength={data.banks.length}
-                          />
-                        </TableCell>
+                        {haveActions(token.role, 'bank', token.permissions, ['update', 'delete']) && (
+                          <TableCell>
+                            <BankActions
+                              bank={bank}
+                              setData={setData}
+                              getBanks={getBanks}
+                              currentPage={currentPage}
+                              setCurrentPage={setCurrentPage}
+                              searchKey={searchKey}
+                              sortKey={sortKey}
+                              rowLength={data.banks.length}
+                            />
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                 </TableBody>

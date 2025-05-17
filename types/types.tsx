@@ -119,6 +119,7 @@ export type User = {
   _id: string;
   name: string;
   username: string;
+  status: string;
   createdAt: string;
   permissions: Permission[];
 };

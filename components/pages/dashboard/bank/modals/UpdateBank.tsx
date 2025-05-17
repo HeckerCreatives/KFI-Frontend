@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon, useIonToast } from '@ionic/react';
 import { createSharp } from 'ionicons/icons';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,6 +13,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 
 const UpdateBank = ({ bank, setData }: { bank: Bank; setData: React.Dispatch<React.SetStateAction<TBank>> }) => {
+  const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -48,13 +49,17 @@ const UpdateBank = ({ bank, setData }: { bank: Bank; setData: React.Dispatch<Rea
           let clone = [...prev.banks];
           let index = clone.findIndex(e => e._id === result.data.bank._id);
           clone[index] = { ...result.data.bank };
+          present({
+            message: 'Successfully updated!.',
+            duration: 1000,
+          });
           return { ...prev, banks: clone };
         });
         dismiss();
         return;
       }
     } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
+      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
       const errors: TFormError[] | string = checkError(errs);
       const fields: string[] = Object.keys(form.formState.defaultValues as Object);
       formErrorHandler(errors, form.setError, fields);

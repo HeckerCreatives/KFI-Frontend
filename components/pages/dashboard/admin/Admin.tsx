@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonCheckbox, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
@@ -11,6 +11,8 @@ import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import UserFilter from './components/UserFilter';
 import UserActions from './components/UserActions';
+import { formatDateTable } from '../../../utils/date-utils';
+import BanUser from './modal/BanUser';
 
 export type TUser = {
   users: User[];
@@ -26,6 +28,7 @@ const Admin = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('');
+  const [selected, setSelected] = useState<string[]>([]);
 
   const [data, setData] = useState<TUser>({
     users: [],
@@ -72,6 +75,18 @@ const Admin = () => {
     getUsers(currentPage);
   });
 
+  const handleSelected = (e: CustomEvent) => {
+    if (e.detail.checked && !selected.includes(e.detail.value)) {
+      setSelected(prev => [...prev, e.detail.value]);
+    }
+
+    if (!e.detail.checked && selected.includes(e.detail.value)) {
+      setSelected(prev => prev.filter(sel => sel !== e.detail.value));
+    }
+  };
+
+  const refetch = () => getUsers(currentPage, searchKey, sortKey);
+
   return (
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
@@ -79,15 +94,20 @@ const Admin = () => {
           <PageTitle pages={['Manage Account', 'Admin']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateUser getUsers={getUsers} />
+              <div className="flex items-center gap-2">
+                <CreateUser getUsers={getUsers} />
+                <BanUser selected={selected} setSelected={setSelected} refetch={refetch} />
+              </div>
               <UserFilter getUsers={getUsers} />
             </div>
             <div className="relative overflow-auto">
               <Table>
                 <TableHeader>
                   <TableHeadRow>
-                    <TableHead>Name</TableHead>
+                    <TableHead className="!min-w-5 !max-w-5" />
                     <TableHead>Username</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created At</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableHeadRow>
                 </TableHeader>
@@ -98,8 +118,12 @@ const Admin = () => {
                     data.users.length > 0 &&
                     data.users.map((user: User) => (
                       <TableRow key={user._id}>
-                        <TableCell>{user.name}</TableCell>
+                        <TableCell className="!min-w-5 !max-w-5">
+                          <IonCheckbox value={user._id} onIonChange={handleSelected} />
+                        </TableCell>
                         <TableCell>{user.username}</TableCell>
+                        <TableCell className="capitalize">{user.status}</TableCell>
+                        <TableCell>{formatDateTable(user.createdAt)}</TableCell>
                         <TableCell>
                           <UserActions user={user} setData={setData} />
                         </TableCell>

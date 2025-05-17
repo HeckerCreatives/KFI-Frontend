@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
@@ -15,6 +15,7 @@ type CreateBankProps = {
 };
 
 const CreateBank = ({ getBanks }: CreateBankProps) => {
+  const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
@@ -39,11 +40,16 @@ const CreateBank = ({ getBanks }: CreateBankProps) => {
       const { success, loan } = result.data;
       if (success) {
         getBanks(1);
+        present({
+          message: 'Successfully added!.',
+          duration: 1000,
+        });
         dismiss();
+
         return;
       }
     } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
+      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
       const errors: TFormError[] | string = checkError(errs);
       const fields: string[] = Object.keys(form.formState.defaultValues as Object);
       formErrorHandler(errors, form.setError, fields);
@@ -74,6 +80,7 @@ const CreateBank = ({ getBanks }: CreateBankProps) => {
           <div>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <BankForm form={form} loading={loading} />
+
               <div className="text-end border-t mt-2 pt-1 space-x-2">
                 <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
                   {loading ? 'Saving...' : 'Save'}

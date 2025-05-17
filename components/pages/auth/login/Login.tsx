@@ -42,7 +42,7 @@ const Login = () => {
         }
       }
     } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
+      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
       const errors: TFormError[] | string = checkError(errs);
       const fields: string[] = Object.keys(form.formState.defaultValues as Object);
       formErrorHandler(errors, form.setError, fields);
@@ -97,6 +97,7 @@ const Login = () => {
                         className="!px-3 !py-2 shadow-lg mb-1 border-none"
                       />
                     </FormIonItem>
+                    {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
                     <div className="text-end">
                       <IonButton disabled={loading} slot="end" type="submit" className="min-h-8 w-full !text-sm [--background:#FB5000] capitalize" strong={true}>
                         {loading ? <IonSpinner name="lines-small" /> : 'Login'}

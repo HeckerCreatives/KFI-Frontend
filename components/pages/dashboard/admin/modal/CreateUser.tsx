@@ -58,7 +58,7 @@ const CreateUser = ({ getUsers }: CreateUserProps) => {
     <>
       <div className="text-end">
         <IonButton fill="clear" id="create-bank-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-          + Add Record
+          Create Account
         </IonButton>
       </div>
       <IonModal

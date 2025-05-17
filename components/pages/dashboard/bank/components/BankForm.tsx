@@ -38,6 +38,7 @@ const BankForm = ({ form, loading }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
+          {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
         </IonCol>
       </IonRow>
     </IonGrid>

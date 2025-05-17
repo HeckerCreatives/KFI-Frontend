@@ -36,8 +36,9 @@ const DeleteBank = ({ bank, getBanks, searchkey, sortKey, currentPage, rowLength
         return;
       }
     } catch (error: any) {
+      const message = error?.response?.data?.error || error?.response?.data?.msg;
       present({
-        message: 'Failed to delete the bank record. Please try again',
+        message: message || 'Failed to delete the bank record. Please try again',
         duration: 1000,
       });
     } finally {
