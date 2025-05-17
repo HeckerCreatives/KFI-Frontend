@@ -5,12 +5,14 @@ import CreateChartOfAccount from './modals/CreateChartOfAccount';
 import ChartOfAccountFilter from './components/ChartOfAccountFilter';
 import PageTitle from '../../../ui/page/PageTitle';
 import ChartOfAccountActions from './components/ChartOfAccountActions';
-import { ChartOfAccount as ChartOfAccountType, TTableFilter } from '../../../../types/types';
+import { AccessToken, ChartOfAccount as ChartOfAccountType, TTableFilter } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
 import TablePagination from '../../../ui/forms/TablePagination';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction, haveActions } from '../../../utils/permissions';
 
 export type TChartOfAccount = {
   chartOfAccounts: ChartOfAccountType[];
@@ -21,7 +23,7 @@ export type TChartOfAccount = {
 };
 
 const ChartOfAccount = () => {
-  const arrDummy: string[] = Array.from(Array(10)).fill('');
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
 
   const [present] = useIonToast();
 
@@ -81,7 +83,7 @@ const ChartOfAccount = () => {
           <PageTitle pages={['Manage Account', 'Chart of Account']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateChartOfAccount getChartOfAccounts={getChartOfAccounts} />
+              <div>{canDoAction(token.role, token.permissions, 'chart of account', 'create') && <CreateChartOfAccount getChartOfAccounts={getChartOfAccounts} />}</div>
               <ChartOfAccountFilter getChartOfAccounts={getChartOfAccounts} />
             </div>
             <div className="relative overflow-auto">
@@ -92,7 +94,7 @@ const ChartOfAccount = () => {
                     <TableHead>Description</TableHead>
                     <TableHead>Classification</TableHead>
                     <TableHead>Nature of Account</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {haveActions(token.role, 'chart of account', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -106,18 +108,20 @@ const ChartOfAccount = () => {
                         <TableCell>{chartAccount.description}</TableCell>
                         <TableCell>{chartAccount.classification}</TableCell>
                         <TableCell>{chartAccount.nature}</TableCell>
-                        <TableCell>
-                          <ChartOfAccountActions
-                            chartAccount={chartAccount}
-                            setData={setData}
-                            getChartOfAccounts={getChartOfAccounts}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            searchKey={searchKey}
-                            sortKey={sortKey}
-                            rowLength={data.chartOfAccounts.length}
-                          />
-                        </TableCell>
+                        {haveActions(token.role, 'chart of account', token.permissions, ['update', 'delete']) && (
+                          <TableCell>
+                            <ChartOfAccountActions
+                              chartAccount={chartAccount}
+                              setData={setData}
+                              getChartOfAccounts={getChartOfAccounts}
+                              currentPage={currentPage}
+                              setCurrentPage={setCurrentPage}
+                              searchKey={searchKey}
+                              sortKey={sortKey}
+                              rowLength={data.chartOfAccounts.length}
+                            />
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                 </TableBody>

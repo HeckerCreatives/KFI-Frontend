@@ -1,12 +1,14 @@
 import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
 import { ellipsisVertical } from 'ionicons/icons';
 import React from 'react';
-import { ClientMasterFile } from '../../../../../types/types';
+import { AccessToken, ClientMasterFile } from '../../../../../types/types';
 import { TClientMasterFile } from '../ClientMasterFile';
 import UpdateClientMasterFile from '../modals/UpdateClientMasterFile';
 import DeleteClientMasterFile from '../modals/DeleteClientMasterFile';
 import ViewBeneficiaries from '../modals/ViewBeneficiaries';
 import ViewChildrens from '../modals/ViewChildrens';
+import { canDoAction } from '../../../../utils/permissions';
+import { jwtDecode } from 'jwt-decode';
 
 type ClientMasterFileActionsProps = {
   client: ClientMasterFile;
@@ -20,6 +22,7 @@ type ClientMasterFileActionsProps = {
 };
 
 const ClientMasterFileActions = ({ client, getClients, setData, currentPage, setCurrentPage, searchKey, sortKey, rowLength }: ClientMasterFileActionsProps) => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   return (
     <>
       <IonButton fill="clear" id={`cmf-${client._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
@@ -27,10 +30,16 @@ const ClientMasterFileActions = ({ client, getClients, setData, currentPage, set
       </IonButton>
       <IonPopover showBackdrop={false} trigger={`cmf-${client._id}`} triggerAction="click" className="[--max-width:13rem]">
         <IonContent>
-          <UpdateClientMasterFile client={client} setData={setData} />
-          <DeleteClientMasterFile client={client} getClients={getClients} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
-          <ViewBeneficiaries client={client} setData={setData} />
-          <ViewChildrens client={client} setData={setData} />
+          {canDoAction(token.role, token.permissions, 'client master file', 'update') && (
+            <>
+              <UpdateClientMasterFile client={client} setData={setData} />
+              <ViewBeneficiaries client={client} setData={setData} />
+              <ViewChildrens client={client} setData={setData} />
+            </>
+          )}
+          {canDoAction(token.role, token.permissions, 'client master file', 'delete') && (
+            <DeleteClientMasterFile client={client} getClients={getClients} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+          )}
         </IonContent>
       </IonPopover>
     </>

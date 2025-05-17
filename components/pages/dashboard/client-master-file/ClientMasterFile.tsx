@@ -4,12 +4,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, Tabl
 import PageTitle from '../../../ui/page/PageTitle';
 import CreateClientMasterFile from './modals/CreateClientMasterFile';
 import ClientMasterFileFilter from './components/ClientMasterFileFilter';
-import { ClientMasterFile as ClientMasterFileType, TTableFilter } from '../../../../types/types';
+import { AccessToken, ClientMasterFile as ClientMasterFileType, TTableFilter } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
 import TablePagination from '../../../ui/forms/TablePagination';
 import { formatDateTable } from '../../../utils/date-utils';
 import ClientMasterFileActions from './components/ClientMasterFileActions';
+import { canDoAction, haveActions } from '../../../utils/permissions';
+import { jwtDecode } from 'jwt-decode';
 
 export type TClientMasterFile = {
   clients: ClientMasterFileType[];
@@ -20,6 +22,7 @@ export type TClientMasterFile = {
 };
 
 const ClientMasterFile = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -78,7 +81,7 @@ const ClientMasterFile = () => {
           <PageTitle pages={['Manage Account', 'Client Master File']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateClientMasterFile getClients={getClients} />
+              <div>{canDoAction(token.role, token.permissions, 'client master file', 'create') && <CreateClientMasterFile getClients={getClients} />}</div>
               <ClientMasterFileFilter getClients={getClients} />
             </div>
             <div className="relative overflow-auto">
@@ -108,7 +111,7 @@ const ClientMasterFile = () => {
                     <TableHead>Date Resigned</TableHead>
                     <TableHead>New Status</TableHead>
                     <TableHead>Reason</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {haveActions(token.role, 'client master file', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -139,18 +142,20 @@ const ClientMasterFile = () => {
                         <TableCell>{formatDateTable(client.dateResigned)}</TableCell>
                         <TableCell>{client.newStatus}</TableCell>
                         <TableCell>{client.reason}</TableCell>
-                        <TableCell>
-                          <ClientMasterFileActions
-                            client={client}
-                            getClients={getClients}
-                            setData={setData}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            searchKey={searchKey}
-                            sortKey={sortKey}
-                            rowLength={data.clients.length}
-                          />
-                        </TableCell>
+                        {haveActions(token.role, 'client master file', token.permissions, ['update', 'delete']) && (
+                          <TableCell>
+                            <ClientMasterFileActions
+                              client={client}
+                              getClients={getClients}
+                              setData={setData}
+                              currentPage={currentPage}
+                              setCurrentPage={setCurrentPage}
+                              searchKey={searchKey}
+                              sortKey={sortKey}
+                              rowLength={data.clients.length}
+                            />
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                 </TableBody>

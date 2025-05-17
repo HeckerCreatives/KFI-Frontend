@@ -3,8 +3,10 @@ import React from 'react';
 import UpdateChartOfAccount from '../modals/UpdateChartOfAccount';
 import DeleteChartOfAccount from '../modals/DeleteChartOfAccount';
 import { ellipsisVertical } from 'ionicons/icons';
-import { ChartOfAccount } from '../../../../../types/types';
+import { AccessToken, ChartOfAccount } from '../../../../../types/types';
 import { TChartOfAccount } from '../ChartOfAccount';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../../utils/permissions';
 
 type ChartOfAccountActionsProps = {
   chartAccount: ChartOfAccount;
@@ -18,6 +20,7 @@ type ChartOfAccountActionsProps = {
 };
 
 const ChartOfAccountActions = ({ chartAccount, setData, getChartOfAccounts, currentPage, setCurrentPage, searchKey, sortKey, rowLength }: ChartOfAccountActionsProps) => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   return (
     <>
       <IonButton fill="clear" id={`coa-${chartAccount._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
@@ -25,15 +28,17 @@ const ChartOfAccountActions = ({ chartAccount, setData, getChartOfAccounts, curr
       </IonButton>
       <IonPopover showBackdrop={false} trigger={`coa-${chartAccount._id}`} triggerAction="click" className="[--max-width:10rem]">
         <IonContent>
-          <UpdateChartOfAccount chartAccount={chartAccount} setData={setData} />
-          <DeleteChartOfAccount
-            chartAccount={chartAccount}
-            getChartOfAccounts={getChartOfAccounts}
-            searchkey={searchKey}
-            sortKey={sortKey}
-            currentPage={currentPage}
-            rowLength={rowLength}
-          />
+          {canDoAction(token.role, token.permissions, 'chart of account', 'update') && <UpdateChartOfAccount chartAccount={chartAccount} setData={setData} />}
+          {canDoAction(token.role, token.permissions, 'chart of account', 'delete') && (
+            <DeleteChartOfAccount
+              chartAccount={chartAccount}
+              getChartOfAccounts={getChartOfAccounts}
+              searchkey={searchKey}
+              sortKey={sortKey}
+              currentPage={currentPage}
+              rowLength={rowLength}
+            />
+          )}
         </IonContent>
       </IonPopover>
     </>
