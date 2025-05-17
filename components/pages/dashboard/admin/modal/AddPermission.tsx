@@ -72,7 +72,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="User - Manage Permissions" sub="Manage Account" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Admin - Manage Permissions" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content space-y-4">

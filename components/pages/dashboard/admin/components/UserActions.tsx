@@ -4,6 +4,7 @@ import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
 import { ellipsisVertical } from 'ionicons/icons';
 import { TUser } from '../Admin';
 import AddPermission from '../modal/AddPermission';
+import ChangePassword from '../modal/ChangePassword';
 
 type UserActionsProps = {
   user: User;
@@ -19,6 +20,7 @@ const UserActions = ({ user, setData }: UserActionsProps) => {
       <IonPopover showBackdrop={false} trigger={`user-${user._id}`} triggerAction="click" className="[--max-width:13rem]">
         <IonContent>
           <AddPermission user={user} setData={setData} />
+          <ChangePassword user={user} />
         </IonContent>
       </IonPopover>
     </>
