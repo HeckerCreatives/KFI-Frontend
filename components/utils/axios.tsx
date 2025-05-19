@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 const kfiAxios: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:5000/api/v1',
+ // baseURL: 'http://localhost:5000/api/v1',
+  baseURL: 'https://kfi-api.onrender.com/api/v1',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
