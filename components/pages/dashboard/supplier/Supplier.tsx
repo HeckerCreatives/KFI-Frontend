@@ -5,12 +5,14 @@ import PageTitle from '../../../ui/page/PageTitle';
 import CreateSupplier from './modals/CreateSupplier';
 import SupplierFilter from './components/SupplierFilter';
 import SupplierActions from './components/SupplierActions';
-import { Supplier as SupplierType, TTableFilter } from '../../../../types/types';
+import { AccessToken, Supplier as SupplierType, TTableFilter } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
 import TablePagination from '../../../ui/forms/TablePagination';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction, haveActions } from '../../../utils/permissions';
 
 export type TSupplier = {
   suppliers: SupplierType[];
@@ -21,6 +23,7 @@ export type TSupplier = {
 };
 
 const Supplier = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -79,7 +82,7 @@ const Supplier = () => {
           <PageTitle pages={['All Files', 'Supplier']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateSupplier getSuppliers={getSuppliers} />
+              <div>{canDoAction(token.role, token.permissions, 'supplier', 'create') && <CreateSupplier getSuppliers={getSuppliers} />}</div>
               <SupplierFilter getSuppliers={getSuppliers} />
             </div>
             <div className="relative overflow-auto">
@@ -88,7 +91,7 @@ const Supplier = () => {
                   <TableHeadRow>
                     <TableHead>Code</TableHead>
                     <TableHead>Description</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {haveActions(token.role, 'supplier', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -98,18 +101,20 @@ const Supplier = () => {
                     <TableRow key={supplier._id}>
                       <TableCell>{supplier.code}</TableCell>
                       <TableCell>{supplier.description}</TableCell>
-                      <TableCell>
-                        <SupplierActions
-                          supplier={supplier}
-                          setData={setData}
-                          getSuppliers={getSuppliers}
-                          currentPage={currentPage}
-                          setCurrentPage={setCurrentPage}
-                          searchKey={searchKey}
-                          sortKey={sortKey}
-                          rowLength={data.suppliers.length}
-                        />
-                      </TableCell>
+                      {haveActions(token.role, 'supplier', token.permissions, ['update', 'delete']) && (
+                        <TableCell>
+                          <SupplierActions
+                            supplier={supplier}
+                            setData={setData}
+                            getSuppliers={getSuppliers}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            searchKey={searchKey}
+                            sortKey={sortKey}
+                            rowLength={data.suppliers.length}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>

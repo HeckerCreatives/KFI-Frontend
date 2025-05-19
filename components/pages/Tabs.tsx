@@ -108,7 +108,7 @@ const Tabs = () => {
             </div>
             <IonAccordionGroup className="space-y-2 px-3">
               {isVisible(token.role, token.permissions, manageAccountResource) && <ManageAccount />}
-              {/* {isVisible(token.role, token.permissions, allFilesResource) && <AllFiles />} */}
+              {isVisible(token.role, token.permissions, allFilesResource) && <AllFiles />}
               {/* {isVisible(token.role, token.permissions, transactionResource) && <TransactionNavigation />} */}
             </IonAccordionGroup>
           </div>

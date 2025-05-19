@@ -5,13 +5,15 @@ import PageTitle from '../../../ui/page/PageTitle';
 import CreateWeeklySavingTable from './modals/CreateWeeklySavingTable';
 import WeeklySavingTableFilter from './components/WeeklySavingTableFilter';
 import WeeklySavingTableActions from './components/WeeklySavingTableActions';
-import { TTableFilter, WeeklySavings } from '../../../../types/types';
+import { AccessToken, TTableFilter, WeeklySavings } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
 import TablePagination from '../../../ui/forms/TablePagination';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import { formatNumber } from '../../../ui/utils/formatNumber';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction, haveActions } from '../../../utils/permissions';
 
 export type TWeeklySavingsTable = {
   savings: WeeklySavings[];
@@ -22,7 +24,7 @@ export type TWeeklySavingsTable = {
 };
 
 const WeeklySavingTable = () => {
-  const arrDummy: string[] = Array.from(Array(10)).fill('');
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
 
   const [present] = useIonToast();
 
@@ -82,7 +84,7 @@ const WeeklySavingTable = () => {
           <PageTitle pages={['All Files', 'Weekly Saving Table']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateWeeklySavingTable getWeeklySavings={getWeeklySavings} />
+              <div>{canDoAction(token.role, token.permissions, 'weekly saving table', 'create') && <CreateWeeklySavingTable getWeeklySavings={getWeeklySavings} />}</div>
               <WeeklySavingTableFilter getWeeklySavings={getWeeklySavings} />
             </div>
             <div className="relative overflow-auto">
@@ -92,7 +94,7 @@ const WeeklySavingTable = () => {
                     <TableHead>Range Amount From</TableHead>
                     <TableHead>Range Amount To</TableHead>
                     <TableHead>WSF</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {haveActions(token.role, 'weekly saving table', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -105,18 +107,20 @@ const WeeklySavingTable = () => {
                         <TableCell>{formatNumber(saving.rangeAmountFrom)}</TableCell>
                         <TableCell>{formatNumber(saving.rangeAmountTo)}</TableCell>
                         <TableCell>{formatNumber(saving.weeklySavingsFund)}</TableCell>
-                        <TableCell>
-                          <WeeklySavingTableActions
-                            saving={saving}
-                            setData={setData}
-                            getWeeklySavings={getWeeklySavings}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            searchKey={searchKey}
-                            sortKey={sortKey}
-                            rowLength={data.savings.length}
-                          />
-                        </TableCell>
+                        {haveActions(token.role, 'weekly saving table', token.permissions, ['update', 'delete']) && (
+                          <TableCell>
+                            <WeeklySavingTableActions
+                              saving={saving}
+                              setData={setData}
+                              getWeeklySavings={getWeeklySavings}
+                              currentPage={currentPage}
+                              setCurrentPage={setCurrentPage}
+                              searchKey={searchKey}
+                              sortKey={sortKey}
+                              rowLength={data.savings.length}
+                            />
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                 </TableBody>

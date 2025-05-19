@@ -3,8 +3,10 @@ import React from 'react';
 import { ellipsisVertical } from 'ionicons/icons';
 import UpdateSupplier from '../modals/UpdateSupplier';
 import DeleteSupplier from '../modals/DeleteSupplier';
-import { Supplier } from '../../../../../types/types';
+import { AccessToken, Supplier } from '../../../../../types/types';
 import { TSupplier } from '../Supplier';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../../utils/permissions';
 
 type SupplierActionsProps = {
   supplier: Supplier;
@@ -18,6 +20,8 @@ type SupplierActionsProps = {
 };
 
 const SupplierActions = ({ supplier, setData, currentPage, setCurrentPage, getSuppliers, searchKey, sortKey, rowLength }: SupplierActionsProps) => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+
   return (
     <>
       <IonButton fill="clear" id={`supplier-${supplier._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
@@ -25,8 +29,10 @@ const SupplierActions = ({ supplier, setData, currentPage, setCurrentPage, getSu
       </IonButton>
       <IonPopover showBackdrop={false} trigger={`supplier-${supplier._id}`} triggerAction="click" className="[--max-width:10rem]">
         <IonContent>
-          <UpdateSupplier supplier={supplier} setData={setData} />
-          <DeleteSupplier supplier={supplier} getSuppliers={getSuppliers} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+          {canDoAction(token.role, token.permissions, 'supplier', 'update') && <UpdateSupplier supplier={supplier} setData={setData} />}
+          {canDoAction(token.role, token.permissions, 'supplier', 'delete') && (
+            <DeleteSupplier supplier={supplier} getSuppliers={getSuppliers} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+          )}
         </IonContent>
       </IonPopover>
     </>

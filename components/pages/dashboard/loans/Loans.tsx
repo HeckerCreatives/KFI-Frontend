@@ -6,11 +6,13 @@ import CreateLoan from './modals/CreateLoan';
 import LoanFilter from './components/LoanFilter';
 import LoanActions from './components/LoanActions';
 import kfiAxios from '../../../utils/axios';
-import { Loan, TTableFilter } from '../../../../types/types';
+import { AccessToken, Loan, TTableFilter } from '../../../../types/types';
 import TablePagination from '../../../ui/forms/TablePagination';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction, haveActions } from '../../../utils/permissions';
 
 export type TLoan = {
   loans: Loan[];
@@ -21,6 +23,7 @@ export type TLoan = {
 };
 
 const Loans = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -79,7 +82,7 @@ const Loans = () => {
           <PageTitle pages={['All Files', 'Loan']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center flex-wrap gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateLoan getLoans={getLoans} />
+              <div>{canDoAction(token.role, token.permissions, 'loans', 'create') && <CreateLoan getLoans={getLoans} />}</div>
               <LoanFilter getLoans={getLoans} />
             </div>
             <div className="relative overflow-auto">
@@ -88,7 +91,7 @@ const Loans = () => {
                   <TableHeadRow>
                     <TableHead>Code</TableHead>
                     <TableHead>Description</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {haveActions(token.role, 'loans', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -100,18 +103,20 @@ const Loans = () => {
                       <TableRow key={loan._id}>
                         <TableCell>{loan.code}</TableCell>
                         <TableCell>{loan.description}</TableCell>
-                        <TableCell>
-                          <LoanActions
-                            loan={loan}
-                            setData={setData}
-                            getLoans={getLoans}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            searchKey={searchKey}
-                            sortKey={sortKey}
-                            rowLength={data.loans.length}
-                          />
-                        </TableCell>
+                        {haveActions(token.role, 'loans', token.permissions, ['update', 'delete']) && (
+                          <TableCell>
+                            <LoanActions
+                              loan={loan}
+                              setData={setData}
+                              getLoans={getLoans}
+                              currentPage={currentPage}
+                              setCurrentPage={setCurrentPage}
+                              searchKey={searchKey}
+                              sortKey={sortKey}
+                              rowLength={data.loans.length}
+                            />
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                 </TableBody>

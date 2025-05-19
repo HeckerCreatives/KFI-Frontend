@@ -12,7 +12,6 @@ const CreateLoanRelease = () => {
   const [active, setActive] = useState('form');
 
   const modal = useRef<HTMLIonModalElement>(null);
-  const input = useRef<HTMLIonInputElement>(null);
 
   const form = useForm<LoanReleaseFormData>({
     resolver: zodResolver(loanReleaseSchema),
@@ -36,10 +35,6 @@ const CreateLoanRelease = () => {
       interestRate: '',
     },
   });
-
-  function confirm() {
-    modal.current?.dismiss(input.current?.value, 'confirm');
-  }
 
   function dismiss() {
     form.reset();

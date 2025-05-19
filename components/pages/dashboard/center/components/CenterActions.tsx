@@ -4,8 +4,10 @@ import React from 'react';
 import { ellipsisVertical } from 'ionicons/icons';
 import UpdateCenter from '../modals/UpdateCenter';
 import DeleteCenter from '../modals/DeleteCenter';
-import { Center } from '../../../../../types/types';
+import { AccessToken, Center } from '../../../../../types/types';
 import { TCenter } from '../Center';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../../utils/permissions';
 
 type CenterActionsProps = {
   center: Center;
@@ -19,6 +21,7 @@ type CenterActionsProps = {
 };
 
 const CenterActions = ({ center, setData, getCenters, currentPage, setCurrentPage, searchKey, sortKey, rowLength }: CenterActionsProps) => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   return (
     <>
       <IonButton fill="clear" id={`center-${center._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
@@ -26,8 +29,10 @@ const CenterActions = ({ center, setData, getCenters, currentPage, setCurrentPag
       </IonButton>
       <IonPopover showBackdrop={false} trigger={`center-${center._id}`} triggerAction="click" className="[--max-width:10rem]">
         <IonContent>
-          <UpdateCenter center={center} setData={setData} />
-          <DeleteCenter center={center} getCenters={getCenters} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+          {canDoAction(token.role, token.permissions, 'center', 'update') && <UpdateCenter center={center} setData={setData} />}
+          {canDoAction(token.role, token.permissions, 'center', 'delete') && (
+            <DeleteCenter center={center} getCenters={getCenters} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+          )}
         </IonContent>
       </IonPopover>
     </>

@@ -71,7 +71,7 @@ const Login = () => {
               <div className="px-10 space-y-8">
                 <div>
                   <h6 className="text-xl font-bold m-0">Login</h6>
-                  <p>Lorem ipsum is simply dummy test of the print</p>
+                  <p>Please sign in to access your account and manage your services securely.</p>
                 </div>
                 <div>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">

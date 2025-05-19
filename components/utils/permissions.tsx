@@ -11,8 +11,12 @@ export const haveActions = (role: string, resource: string, permissions: Permiss
 export const canDoAction = (role: string, permissions: Permission[], resource: string, action: ActionType) =>
   role === 'superadmin' || permissions.find((permission: Permission) => permission.resource === resource && permission.actions[action]);
 
-export const isVisible = (role: string, permissions: Permission[], resources: string[]) =>
-  role === 'superadmin' ||
-  permissions.some(
-    (permission: Permission) => resources.includes(permission.resource) && (Object.keys(permission.actions) as ActionType[]).some(action => permission.actions[action]),
-  );
+export const isVisible = (role: string, permissions: Permission[], resources: string[]) => {
+  if (role === 'superadmin') return true;
+  if (
+    permissions.some(
+      (permission: Permission) => resources.includes(permission.resource) && (Object.keys(permission.actions) as ActionType[]).some(action => permission.actions.visible),
+    )
+  )
+    return true;
+};

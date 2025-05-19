@@ -5,12 +5,14 @@ import PageTitle from '../../../ui/page/PageTitle';
 import CreateBusinessType from './modals/CreateBusinessType';
 import BusinessTypeFilter from './components/BusinessTypeFilter';
 import BusinessTypeActions from './components/BusinessTypeActions';
-import { BusinessType as BusinessTypeInt, TTableFilter } from '../../../../types/types';
+import { AccessToken, BusinessType as BusinessTypeInt, TTableFilter } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import TablePagination from '../../../ui/forms/TablePagination';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction, haveActions } from '../../../utils/permissions';
 
 export type TBusinessType = {
   businessTypes: BusinessTypeInt[];
@@ -21,6 +23,7 @@ export type TBusinessType = {
 };
 
 const BusinessType = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -79,7 +82,7 @@ const BusinessType = () => {
           <PageTitle pages={['All Files', 'Business Type']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateBusinessType getBusinessTypes={getBusinessTypes} />
+              <div>{canDoAction(token.role, token.permissions, 'business type', 'create') && <CreateBusinessType getBusinessTypes={getBusinessTypes} />}</div>
               <BusinessTypeFilter getBusinessTypes={getBusinessTypes} />
             </div>
             <div className="relative overflow-auto">
@@ -87,7 +90,7 @@ const BusinessType = () => {
                 <TableHeader>
                   <TableHeadRow>
                     <TableHead>Business Type</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {haveActions(token.role, 'business type', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -98,18 +101,20 @@ const BusinessType = () => {
                     data.businessTypes.map((businessType: BusinessTypeInt) => (
                       <TableRow key={businessType._id}>
                         <TableCell>{businessType.type}</TableCell>
-                        <TableCell>
-                          <BusinessTypeActions
-                            businessType={businessType}
-                            setData={setData}
-                            getBusinessTypes={getBusinessTypes}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            searchKey={searchKey}
-                            sortKey={sortKey}
-                            rowLength={data.businessTypes.length}
-                          />
-                        </TableCell>
+                        {haveActions(token.role, 'business type', token.permissions, ['update', 'delete']) && (
+                          <TableCell>
+                            <BusinessTypeActions
+                              businessType={businessType}
+                              setData={setData}
+                              getBusinessTypes={getBusinessTypes}
+                              currentPage={currentPage}
+                              setCurrentPage={setCurrentPage}
+                              searchKey={searchKey}
+                              sortKey={sortKey}
+                              rowLength={data.businessTypes.length}
+                            />
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                 </TableBody>
