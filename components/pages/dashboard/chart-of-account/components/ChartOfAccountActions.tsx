@@ -2,7 +2,7 @@ import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
 import React from 'react';
 import UpdateChartOfAccount from '../modals/UpdateChartOfAccount';
 import DeleteChartOfAccount from '../modals/DeleteChartOfAccount';
-import { ellipsisVertical } from 'ionicons/icons';
+import { ellipsisVertical, print } from 'ionicons/icons';
 import { AccessToken, ChartOfAccount } from '../../../../../types/types';
 import { TChartOfAccount } from '../ChartOfAccount';
 import { jwtDecode } from 'jwt-decode';
@@ -38,6 +38,13 @@ const ChartOfAccountActions = ({ chartAccount, setData, getChartOfAccounts, curr
               currentPage={currentPage}
               rowLength={rowLength}
             />
+          )}
+          {canDoAction(token.role, token.permissions, 'chart of account', 'print') && (
+            <div className="text-end">
+              <div className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1">
+                <IonIcon icon={print} className="text-[1rem]" /> Print
+              </div>
+            </div>
           )}
         </IonContent>
       </IonPopover>

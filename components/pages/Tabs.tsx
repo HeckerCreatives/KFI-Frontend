@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import {
   IonRouterOutlet,
   IonHeader,
@@ -16,6 +16,7 @@ import {
   IonAccordionGroup,
   IonMenuButton,
   isPlatform,
+  IonAccordion,
 } from '@ionic/react';
 import ChartOfAccount from './dashboard/chart-of-account/ChartOfAccount';
 import Center from './dashboard/center/Center';
@@ -31,7 +32,7 @@ import Nature from './dashboard/nature/Nature';
 import GroupAccount from './dashboard/group-account/GroupAccount';
 import logoNoBg from '../assets/images/logo-nobg.png';
 import Image from 'next/image';
-import { chevronDownOutline, hammerOutline, homeOutline, logOut, settingsOutline } from 'ionicons/icons';
+import { chevronDownOutline, documentAttachOutline, documentOutline, hammerOutline, homeOutline, logOut, settingsOutline } from 'ionicons/icons';
 import TransactionNavigation from '../ui/navs/TransactionNavigation';
 import LoanRelease from './dashboard/transactions/loan-release/LoanRelease';
 import ExpenseVoucher from './dashboard/transactions/expense-voucher/ExpenseVoucher';
@@ -109,7 +110,43 @@ const Tabs = () => {
             <IonAccordionGroup className="space-y-2 px-3">
               {isVisible(token.role, token.permissions, manageAccountResource) && <ManageAccount />}
               {isVisible(token.role, token.permissions, allFilesResource) && <AllFiles />}
-              {/* {isVisible(token.role, token.permissions, transactionResource) && <TransactionNavigation />} */}
+              <IonAccordion value="reports" className="bg-transparent">
+                <IonItem
+                  slot="header"
+                  className={classNames(
+                    '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.5rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
+                  )}
+                >
+                  <IonIcon size="small" icon={documentOutline} className="!text-inherit" />
+                  <IonLabel className="text-sm">Reports</IonLabel>
+                </IonItem>
+                <div slot="content"></div>
+              </IonAccordion>
+              {isVisible(token.role, token.permissions, transactionResource) && <TransactionNavigation />}
+              <IonAccordion value="general ledger" className="bg-transparent">
+                <IonItem
+                  slot="header"
+                  className={classNames(
+                    '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.5rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
+                  )}
+                >
+                  <IonIcon size="small" icon={documentAttachOutline} className="!text-inherit" />
+                  <IonLabel className="text-sm">General Ledger</IonLabel>
+                </IonItem>
+                <div slot="content"></div>
+              </IonAccordion>
+              <IonAccordion value="utilities" className="bg-transparent">
+                <IonItem
+                  slot="header"
+                  className={classNames(
+                    '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.5rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
+                  )}
+                >
+                  <IonIcon size="small" icon={hammerOutline} className="!text-inherit" />
+                  <IonLabel className="text-sm">Utilities</IonLabel>
+                </IonItem>
+                <div slot="content"></div>
+              </IonAccordion>
             </IonAccordionGroup>
           </div>
         </IonContent>
@@ -122,8 +159,6 @@ const Tabs = () => {
                 <IonMenuButton menu="main-content" />
               </div>
               <div className="flex items-center justify-center gap-5">
-                <IonIcon icon={settingsOutline} className="w-7 h-7 text-[#FA6C2F] cursor-pointer" />
-                <IonIcon icon={hammerOutline} className="w-7 h-7 text-[#FA6C2F] cursor-pointer" />
                 <IonButton
                   fill="clear"
                   className="min-h-[3.5rem] min-w-40 border-x border-[#FA6C2F] px-1 !m-0 bg-[#FFF0E3] [--color:black] font-bold space-x-4 capitalize"
@@ -134,6 +169,9 @@ const Tabs = () => {
                 </IonButton>
                 <IonPopover showBackdrop={false} trigger="click-trigger" triggerAction="click">
                   <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
+                    <div className="flex items-center gap-2 text-sm text-slate-700 font-semibold hover:bg-slate-100 py-3 px-3 cursor-pointer active:bg-slate-200">
+                      <IonIcon icon={settingsOutline} /> Settings
+                    </div>
                     <div onClick={logout} className="flex items-center gap-2 text-sm text-slate-700 font-semibold hover:bg-slate-100 py-3 px-3 cursor-pointer active:bg-slate-200">
                       <IonIcon icon={logOut} /> Logout
                     </div>

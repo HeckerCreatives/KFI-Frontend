@@ -76,7 +76,7 @@ const UpdateBeneficiary = ({ beneficiary, setData }: UpdateBeneficiary) => {
         <div
           id={`update-beneficiary-modal-${beneficiary._id}`}
           className=" flex items-center w-fit text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-blue-600"
-          title="Update Beneficiary"
+          title="Edit Beneficiary"
         >
           <IonIcon icon={createSharp} className="text-[1rem]" />
         </div>

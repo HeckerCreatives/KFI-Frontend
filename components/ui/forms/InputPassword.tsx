@@ -52,6 +52,7 @@ const InputPassword = <T extends FieldValues>({
           <div className={classNames('relative my-1', containerClassName)}>
             <IonInput
               {...field}
+              aria-label={label || 'no label'}
               type={show ? 'text' : 'password'}
               placeholder={placeholder}
               onIonInput={e => {

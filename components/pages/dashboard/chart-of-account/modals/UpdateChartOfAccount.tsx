@@ -24,6 +24,7 @@ const UpdateChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOf
       classification: chartAccount.classification,
       nature: chartAccount.nature,
       groupAccount: chartAccount.groupAccount,
+      closingAccount: chartAccount.closingAccount,
       fsCode: chartAccount.fsCode,
       mainAcctNo: chartAccount.mainAcctNo,
       subAcctNo: chartAccount.subAcctNo,
@@ -43,6 +44,7 @@ const UpdateChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOf
         classification: chartAccount.classification,
         nature: chartAccount.nature,
         groupAccount: chartAccount.groupAccount,
+        closingAccount: chartAccount.closingAccount,
         fsCode: chartAccount.fsCode,
         mainAcctNo: chartAccount.mainAcctNo,
         subAcctNo: chartAccount.subAcctNo,
@@ -92,7 +94,7 @@ const UpdateChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOf
           id={`update-coa-modal-${chartAccount._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
-          <IonIcon icon={createSharp} className="text-[1rem]" /> Update
+          <IonIcon icon={createSharp} className="text-[1rem]" /> Edit
         </div>
       </div>
       <IonModal

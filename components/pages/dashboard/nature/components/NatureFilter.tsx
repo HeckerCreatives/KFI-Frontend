@@ -44,8 +44,8 @@ const NatureFilter = ({ getNatures }: NatureFilterProps) => {
               clearErrors={form.clearErrors}
               options={[
                 { label: 'Sort By', value: '' },
-                { label: 'Nature Ascending', value: 'type-asc' },
-                { label: 'Nature Descending', value: 'type-desc' },
+                { label: 'Nature A - Z', value: 'type-asc' },
+                { label: 'Nature Z - A', value: 'type-desc' },
               ]}
               className="!border-orange-500 rounded-md !w-full !py-1.5"
             />

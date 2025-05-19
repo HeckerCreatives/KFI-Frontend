@@ -44,10 +44,10 @@ const ClientMasterFileFilter = ({ getClients }: ClientMasterFileFilterProps) => 
               clearErrors={form.clearErrors}
               options={[
                 { label: 'Sort By', value: '' },
-                { label: 'Account No. Ascending', value: 'acctno-asc' },
-                { label: 'Account No. Descending', value: 'acctno-desc' },
-                { label: 'Name Ascending', value: 'name-asc' },
-                { label: 'Name Descending', value: 'name-desc' },
+                { label: 'Account No. A - Z', value: 'acctno-asc' },
+                { label: 'Account No. Z - A', value: 'acctno-desc' },
+                { label: 'Name A - Z', value: 'name-asc' },
+                { label: 'Name Z - A', value: 'name-desc' },
               ]}
               className="!border-orange-500 rounded-md !w-full !py-1.5"
             />

@@ -44,8 +44,8 @@ const BusinessTypeFilter = ({ getBusinessTypes }: BusinessTypeFilterProps) => {
               clearErrors={form.clearErrors}
               options={[
                 { label: 'Sort By', value: '' },
-                { label: 'Business Type Ascending', value: 'type-asc' },
-                { label: 'Business Type Descending', value: 'type-desc' },
+                { label: 'Business Type A - Z', value: 'type-asc' },
+                { label: 'Business Type Z - A', value: 'type-desc' },
               ]}
               className="!border-orange-500 rounded-md !w-full !py-1.5"
             />

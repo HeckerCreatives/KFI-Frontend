@@ -20,7 +20,7 @@ const UpdateCVLoanRelease = ({ index }: { index: number }) => {
           id={`update-cvNo-modal-${index}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
-          <IonIcon icon={caretUpCircle} className="text-[1rem]" /> Update CV #
+          <IonIcon icon={caretUpCircle} className="text-[1rem]" /> Edit CV #
         </div>
       </div>
       <IonModal
@@ -31,7 +31,7 @@ const UpdateCVLoanRelease = ({ index }: { index: number }) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader title="Transaction - Loan Release - Update CV#" sub="All Actions" dismiss={dismiss} />
+            <ModalHeader title="Transaction - Loan Release - Edit CV#" sub="All Actions" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !p-3">

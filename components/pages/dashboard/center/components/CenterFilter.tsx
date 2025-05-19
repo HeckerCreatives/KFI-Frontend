@@ -44,10 +44,10 @@ const CenterFilter = ({ getCenters }: CenterFilterProps) => {
               clearErrors={form.clearErrors}
               options={[
                 { label: 'Sort By', value: '' },
-                { label: 'Center No. Ascending', value: 'centerno-asc' },
-                { label: 'Center No. Descending', value: 'centerno-desc' },
-                { label: 'Description Ascending', value: 'description-asc' },
-                { label: 'Description Descending', value: 'description-desc' },
+                { label: 'Center No. A - Z', value: 'centerno-asc' },
+                { label: 'Center No. Z - A', value: 'centerno-desc' },
+                { label: 'Description A - Z', value: 'description-asc' },
+                { label: 'Description Z - A', value: 'description-desc' },
               ]}
               className="!border-orange-500 rounded-md !w-full !py-1.5"
             />

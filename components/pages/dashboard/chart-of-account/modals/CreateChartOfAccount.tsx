@@ -26,6 +26,7 @@ const CreateChartOfAccount = ({ getChartOfAccounts }: CreateChartOfAccountProps)
       classification: '',
       nature: '',
       groupAccount: '',
+      closingAccount: '',
       fsCode: '',
       mainAcctNo: '',
       subAcctNo: '',

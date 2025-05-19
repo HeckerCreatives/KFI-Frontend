@@ -35,6 +35,7 @@ const InputText = <T extends FieldValues>({ name, control, clearErrors, label, t
             clearInput={type === 'search'}
             {...field}
             type={type}
+            aria-label={label || 'no label'}
             placeholder={placeholder}
             onIonInput={e => {
               field.onChange(e.detail.value);

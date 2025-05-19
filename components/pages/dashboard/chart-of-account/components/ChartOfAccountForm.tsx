@@ -86,6 +86,17 @@ const ChartOfAccountForm = ({ form, loading }: TForm) => {
               placeholder="Type here"
             />
           </FormIonItem>
+          <FormIonItem>
+            <InputText
+              disabled={loading}
+              name="closingAccount"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Closing Account"
+              className="!px-2 !py-2 rounded-md"
+              placeholder="Type here"
+            />
+          </FormIonItem>
         </IonCol>
         <IonCol size="6" className="space-y-2">
           <FormIonItem>

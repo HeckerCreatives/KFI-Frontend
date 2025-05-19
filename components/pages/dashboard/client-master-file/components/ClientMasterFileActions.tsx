@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
-import { ellipsisVertical } from 'ionicons/icons';
+import { ellipsisVertical, print } from 'ionicons/icons';
 import React from 'react';
 import { AccessToken, ClientMasterFile } from '../../../../../types/types';
 import { TClientMasterFile } from '../ClientMasterFile';
@@ -39,6 +39,13 @@ const ClientMasterFileActions = ({ client, getClients, setData, currentPage, set
           )}
           {canDoAction(token.role, token.permissions, 'client master file', 'delete') && (
             <DeleteClientMasterFile client={client} getClients={getClients} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+          )}
+          {canDoAction(token.role, token.permissions, 'client master file', 'print') && (
+            <div className="text-end">
+              <div className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1">
+                <IonIcon icon={print} className="text-[1rem]" /> Print
+              </div>
+            </div>
           )}
         </IonContent>
       </IonPopover>

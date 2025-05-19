@@ -6,6 +6,7 @@ export const chartOfAccountSchema = z.object({
   classification: z.string().min(1, 'Classification is required'),
   nature: z.string().min(1, 'Nature of Account is required'),
   groupAccount: z.string().min(1, 'Group Account is required'),
+  closingAccount: z.string().min(1, 'Closing Account is required'),
   fsCode: z.string().min(1, 'FS Code is required'),
   mainAcctNo: z.string().min(1, 'Main Account No. is required'),
   subAcctNo: z.string().min(1, 'Sub Account No. is required'),

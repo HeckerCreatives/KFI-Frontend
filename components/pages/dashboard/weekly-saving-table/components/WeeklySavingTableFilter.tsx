@@ -41,10 +41,10 @@ const WeeklySavingTableFilter = ({ getWeeklySavings }: WeeklySavingFilterProps) 
               clearErrors={form.clearErrors}
               options={[
                 { label: 'Sort By', value: '' },
-                { label: 'Range Amount From Ascending', value: 'from-asc' },
-                { label: 'Range Amount From Descending', value: 'from-desc' },
-                { label: 'Range Amount To Ascending', value: 'to-asc' },
-                { label: 'Range Amount To Descending', value: 'to-desc' },
+                { label: 'Range Amount From A - Z', value: 'from-asc' },
+                { label: 'Range Amount From Z - A', value: 'from-desc' },
+                { label: 'Range Amount To A - Z', value: 'to-asc' },
+                { label: 'Range Amount To Z - A', value: 'to-desc' },
               ]}
               className="!border-orange-500 rounded-md !w-full !py-1.5"
             />

@@ -44,8 +44,8 @@ const GroupAccountFilter = ({ getGroupAccounts }: GroupAccountFilterProps) => {
               clearErrors={form.clearErrors}
               options={[
                 { label: 'Sort By', value: '' },
-                { label: 'Code Ascending', value: 'code-asc' },
-                { label: 'Code Descending', value: 'code-desc' },
+                { label: 'Code A - Z', value: 'code-asc' },
+                { label: 'Code Z - A', value: 'code-desc' },
               ]}
               className="!border-orange-500 rounded-md !w-full !py-1.5"
             />

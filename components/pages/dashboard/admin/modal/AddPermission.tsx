@@ -86,7 +86,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
                     <TableHead className="text-center">Visible</TableHead>
                     <TableHead className="text-center">Create</TableHead>
                     <TableHead className="text-center">Read</TableHead>
-                    <TableHead className="text-center">Update</TableHead>
+                    <TableHead className="text-center">Edit</TableHead>
                     <TableHead className="text-center">Delete</TableHead>
                     <TableHead className="text-center">Print</TableHead>
                   </TableHeadRow>
@@ -111,7 +111,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
                     <TableHead className="text-center">Visible</TableHead>
                     <TableHead className="text-center">Create</TableHead>
                     <TableHead className="text-center">Read</TableHead>
-                    <TableHead className="text-center">Update</TableHead>
+                    <TableHead className="text-center">Edit</TableHead>
                     <TableHead className="text-center">Delete</TableHead>
                     <TableHead className="text-center">Print</TableHead>
                   </TableHeadRow>
@@ -136,7 +136,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
                     <TableHead className="text-center">Visible</TableHead>
                     <TableHead className="text-center">Create</TableHead>
                     <TableHead className="text-center">Read</TableHead>
-                    <TableHead className="text-center">Update</TableHead>
+                    <TableHead className="text-center">Edit</TableHead>
                     <TableHead className="text-center">Delete</TableHead>
                     <TableHead className="text-center">Print</TableHead>
                   </TableHeadRow>

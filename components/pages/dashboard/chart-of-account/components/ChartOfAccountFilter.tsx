@@ -44,10 +44,10 @@ const ChartOfAccountFilter = ({ getChartOfAccounts }: ChartOfAccountFilterProps)
               clearErrors={form.clearErrors}
               options={[
                 { label: 'Sort By', value: '' },
-                { label: 'Code Ascending', value: 'code-asc' },
-                { label: 'Code Descending', value: 'code-desc' },
-                { label: 'Description Ascending', value: 'description-asc' },
-                { label: 'Description Descending', value: 'description-desc' },
+                { label: 'Code A - Z', value: 'code-asc' },
+                { label: 'Code Z - A', value: 'code-desc' },
+                { label: 'Description A - Z', value: 'description-asc' },
+                { label: 'Description Z - A', value: 'description-desc' },
               ]}
               className="!border-orange-500 rounded-md !w-full !py-1.5"
             />

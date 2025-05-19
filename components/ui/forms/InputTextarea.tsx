@@ -31,6 +31,7 @@ const InputTextarea = <T extends FieldValues>({ name, control, clearErrors, labe
             {label && required && <span className="text-slate-500 text-xs italic">Required</span>}
           </div>
           <IonTextarea
+            aria-label={label || 'no label'}
             rows={rows}
             {...field}
             placeholder={placeholder}

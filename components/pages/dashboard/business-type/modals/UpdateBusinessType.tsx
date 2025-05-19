@@ -66,7 +66,7 @@ const UpdateBusinessType = ({ businessType, setData }: { businessType: BusinessT
           id={`update-business-type-modal-${businessType._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
-          <IonIcon icon={createSharp} className="text-[1rem]" /> Update
+          <IonIcon icon={createSharp} className="text-[1rem]" /> Edit
         </div>
       </div>
       <IonModal

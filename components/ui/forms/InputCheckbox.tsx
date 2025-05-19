@@ -20,6 +20,7 @@ const InputCheckbox = <T extends FieldValues>({ name, control, label, required =
       render={({ field, fieldState: { error } }) => (
         <div className="w-full">
           <IonCheckbox
+            aria-label={label || 'no label'}
             disabled={disabled}
             {...field}
             checked={field.value}

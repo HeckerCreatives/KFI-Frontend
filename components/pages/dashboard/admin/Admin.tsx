@@ -112,8 +112,8 @@ const Admin = () => {
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
-                  {data.loading && <TableLoadingRow colspan={3} />}
-                  {!data.loading && data.users.length < 1 && <TableNoRows label="No User Account Found" colspan={3} />}
+                  {data.loading && <TableLoadingRow colspan={5} />}
+                  {!data.loading && data.users.length < 1 && <TableNoRows label="No User Account Found" colspan={5} />}
                   {!data.loading &&
                     data.users.length > 0 &&
                     data.users.map((user: User) => (

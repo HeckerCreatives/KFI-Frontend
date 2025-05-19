@@ -47,6 +47,7 @@ const InputSelect = <T extends FieldValues>({
             </IonLabel>
           )}
           <IonSelect
+            aria-label={label || 'no label'}
             disabled={disabled}
             interface="popover"
             {...field}

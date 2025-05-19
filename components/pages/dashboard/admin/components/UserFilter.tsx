@@ -44,10 +44,10 @@ const UserFilter = ({ getUsers }: UserFilterProps) => {
               clearErrors={form.clearErrors}
               options={[
                 { label: 'Sort By', value: '' },
-                { label: 'Name Ascending', value: 'name-asc' },
-                { label: 'Name Descending', value: 'name-desc' },
-                { label: 'Username Ascending', value: 'user-asc' },
-                { label: 'Username Descending', value: 'user-desc' },
+                { label: 'Name A - Z', value: 'name-asc' },
+                { label: 'Name Z - A', value: 'name-desc' },
+                { label: 'Username A - Z', value: 'user-asc' },
+                { label: 'Username Z - A', value: 'user-desc' },
               ]}
               className="!border-orange-500 rounded-md !w-full !py-1.5"
             />
