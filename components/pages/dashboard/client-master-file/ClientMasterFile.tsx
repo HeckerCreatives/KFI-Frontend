@@ -12,6 +12,8 @@ import { formatDateTable } from '../../../utils/date-utils';
 import ClientMasterFileActions from './components/ClientMasterFileActions';
 import { canDoAction, haveActions } from '../../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
+import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
+import TableNoRows from '../../../ui/forms/TableNoRows';
 
 export type TClientMasterFile = {
   clients: ClientMasterFileType[];
@@ -115,6 +117,8 @@ const ClientMasterFile = () => {
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
+                  {data.loading && <TableLoadingRow colspan={25} />}
+                  {!data.loading && data.clients.length < 1 && <TableNoRows label="No Center Record Found" colspan={25} />}
                   {!data.loading &&
                     data.clients.length > 0 &&
                     data.clients.map((client: ClientMasterFileType) => (
