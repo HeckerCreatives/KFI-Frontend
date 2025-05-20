@@ -10,7 +10,7 @@ import checkError from '../../../utils/check-error';
 import { TErrorData, TFormError } from '../../../../types/types';
 import formErrorHandler from '../../../utils/form-error-handler';
 import InputPassword from '../../../ui/forms/InputPassword';
-import logo from '../../../assets/images/logo.png';
+import logo from '../../../assets/images/logo-nobg.png';
 import Image from 'next/image';
 
 const Login = () => {
@@ -54,18 +54,17 @@ const Login = () => {
     <IonPage>
       <IonContent fullscreen>
         <div className="flex flex-col h-full text-slate-600">
-          <div className="min-h-16 w-full shadow-lg relative z-10 px-2 flex items-center">
-            <Image alt="logo" src={logo} className="h-12 w-auto" />
-          </div>
+          <div className="min-h-16 w-full shadow-lg relative z-10 px-2 flex items-center"></div>
           <div className="flex-1 grid grid-cols-12">
             <div className="hidden md:col-span-6 lg:col-span-7 xl:col-span-8 2xl:col-span-9 bg-desktop bg-cover md:flex md:items-center md:justify-end">
-              <h6 className="text-[3rem] lg:text-[4rem] font-bold text-slate-950 px-10">
+              {/* <h6 className="text-[3rem] lg:text-[4rem] font-bold text-slate-950 px-10">
                 Kaalalay
                 <br />
                 Foundation,
                 <br />
                 INC.
-              </h6>
+              </h6> */}
+              <Image alt="logo" src={logo} className="h-60 w-auto px-20" />
             </div>
             <div className="col-span-12 md:col-span-6 lg:col-span-5 xl:col-span-4 2xl:col-span-3 bg-[#FFF0E3] grid place-items-center">
               <div className="px-10 space-y-8">
@@ -83,7 +82,7 @@ const Login = () => {
                         control={form.control}
                         clearErrors={form.clearErrors}
                         label="Username"
-                        className="!px-3 !py-2 shadow-lg mb-1 border-none"
+                        className="!px-3 !py-0 shadow-lg mb-1 border-none"
                       />
                     </FormIonItem>
                     <FormIonItem>
@@ -94,7 +93,7 @@ const Login = () => {
                         control={form.control}
                         clearErrors={form.clearErrors}
                         label="Password"
-                        className="!px-3 !py-2 shadow-lg mb-1 border-none"
+                        className="!px-3 !py-0 shadow-lg mb-1 border-none"
                       />
                     </FormIonItem>
                     {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}

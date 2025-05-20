@@ -14,8 +14,8 @@ const AppShell = () => {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet id="main">
-          <Route path="/" render={() => (isLoggedIn ? <Redirect to="/dashboard/home" /> : <Login />)} />
-          <Route path="/dashboard/home" render={() => (isLoggedIn ? <Tabs /> : <Redirect to="/" />)} />
+          <Route path="/" render={() => (isLoggedIn ? <Redirect to="/dashboard" /> : <Login />)} />
+          <Route path="/dashboard" render={() => (isLoggedIn ? <Tabs /> : <Redirect to="/" />)} />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

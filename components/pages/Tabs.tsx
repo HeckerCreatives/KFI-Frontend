@@ -1,4 +1,4 @@
-import { Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 import {
   IonRouterOutlet,
   IonHeader,
@@ -62,6 +62,7 @@ import Dashboard from './dashboard/home/Dashboard';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { isVisible } from '../utils/permissions';
+import Link from 'next/link';
 
 const Tabs = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -183,6 +184,7 @@ const Tabs = () => {
         </IonHeader>
         <IonContent>
           <IonRouterOutlet>
+            <Route path="/dashboard" render={() => <Redirect to={'/dashboard/home'} />} exact={true} />
             <Route path="/dashboard/home" render={() => <Dashboard />} exact={true} />
             <Route path="/dashboard/admin" render={() => <Admin />} exact={true} />
             <Route path="/dashboard/chart-of-account" render={() => <ChartOfAccount />} exact={true} />
