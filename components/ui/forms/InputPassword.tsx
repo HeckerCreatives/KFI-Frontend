@@ -62,7 +62,7 @@ const InputPassword = <T extends FieldValues>({
               disabled={disabled}
               onIonBlur={field.onBlur}
               className={classNames(
-                'text-sm !bg-white ![--highlight-color-focused:none] ![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:1rem]',
+                'text-sm !bg-white ![--highlight-color-focused:none] ![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:1rem] !min-h-[1rem]',
                 error && '![--border-color:red] !border-red-600',
                 className,
               )}

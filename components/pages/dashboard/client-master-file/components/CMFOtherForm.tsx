@@ -7,6 +7,7 @@ import InputText from '../../../../ui/forms/InputText';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import useCenterOptions from '../../../../utils/custom/useCenterOptions';
 import useBusinessTypesOptions from '../../../../utils/custom/useBusinessTypesOptions';
+import CenterSelection from '../../../../ui/selections/CenterSelection';
 
 type TForm = {
   form: UseFormReturn<ClientMasterFileFormData>;
@@ -43,18 +44,21 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-          <FormIonItem>
-            <InputSelect
-              disabled={loading || centerLoading}
-              name="center"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Center"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-              options={centerOptions}
-            />
-          </FormIonItem>
+          <div>
+            <FormIonItem>
+              <InputSelect
+                disabled={loading || centerLoading}
+                name="center"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Center"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+                options={centerOptions}
+              />
+            </FormIonItem>
+            <CenterSelection />
+          </div>
           <FormIonItem>
             <InputText
               disabled={loading}

@@ -53,27 +53,20 @@ const Login = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
-        <div className="flex flex-col h-full text-slate-600">
-          <div className="min-h-16 w-full shadow-lg relative z-10 px-2 flex items-center"></div>
-          <div className="flex-1 grid grid-cols-12">
-            <div className="hidden md:col-span-6 lg:col-span-7 xl:col-span-8 2xl:col-span-9 bg-desktop bg-cover md:flex md:items-center md:justify-end">
-              {/* <h6 className="text-[3rem] lg:text-[4rem] font-bold text-slate-950 px-10">
-                Kaalalay
-                <br />
-                Foundation,
-                <br />
-                INC.
-              </h6> */}
-              <Image alt="logo" src={logo} className="h-60 w-auto px-20" />
-            </div>
-            <div className="col-span-12 md:col-span-6 lg:col-span-5 xl:col-span-4 2xl:col-span-3 bg-[#FFF0E3] grid place-items-center">
-              <div className="px-10 space-y-8">
+        <div className="w-full h-full bg-gradient-to-br from-[#F76B2E] via-[#FFF4DE] to-[#F76B2E] via-50% from-1% to-100%">
+          <div className="grid place-items-center h-full">
+            <div className=" bg-[#FFF0E3] grid place-items-center max-w-[40rem] rounded-2xl shadow-lg">
+              <div className="px-10 space-y-8 py-20">
                 <div>
+                  <div className="pb-8">
+                    <Image alt="logo" src={logo} className="h-20 w-auto mx-auto" />
+                  </div>
+
                   <h6 className="text-xl font-bold m-0">Login</h6>
                   <p>Please sign in to access your account and manage your services securely.</p>
                 </div>
                 <div>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                     <FormIonItem>
                       <InputText
                         disabled={loading}
@@ -81,8 +74,8 @@ const Login = () => {
                         required
                         control={form.control}
                         clearErrors={form.clearErrors}
-                        label="Username"
-                        className="!px-3 !py-0 shadow-lg mb-1 border-none"
+                        label="User's Code"
+                        className="!px-3 !py-2 shadow-lg mb-1 border-none"
                       />
                     </FormIonItem>
                     <FormIonItem>
@@ -93,7 +86,7 @@ const Login = () => {
                         control={form.control}
                         clearErrors={form.clearErrors}
                         label="Password"
-                        className="!px-3 !py-0 shadow-lg mb-1 border-none"
+                        className="!px-3 !py-2 shadow-lg mb-1 border-none"
                       />
                     </FormIonItem>
                     {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
@@ -107,7 +100,6 @@ const Login = () => {
               </div>
             </div>
           </div>
-          <div className="min-h-16 w-full relative z-10" />
         </div>
       </IonContent>
     </IonPage>

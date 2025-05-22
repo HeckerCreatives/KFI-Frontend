@@ -57,13 +57,13 @@ const CreateUser = ({ getUsers }: CreateUserProps) => {
   return (
     <>
       <div className="text-end">
-        <IonButton fill="clear" id="create-bank-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        <IonButton fill="clear" id="create-user-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
           Create Account
         </IonButton>
       </div>
       <IonModal
         ref={modal}
-        trigger="create-bank-modal"
+        trigger="create-user-modal"
         backdropDismiss={false}
         className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
       >

@@ -93,42 +93,9 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
         <div className="inner-content !px-0">
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div>
-              <div className="bg-slate-100 p-3 my-2">
-                <IonButton
-                  disabled={loading}
-                  type="button"
-                  fill="clear"
-                  onClick={() => setActive('personal')}
-                  className={classNames(
-                    'max-h-10 min-h-6 w-40 bg-white text-black shadow-lg capitalize font-semibold rounded-md',
-                    active === 'personal' && '!bg-[#FA6C2F] !text-white',
-                  )}
-                  strong
-                >
-                  Personal Info
-                </IonButton>
-                <IonButton
-                  disabled={loading}
-                  type="button"
-                  fill="clear"
-                  onClick={() => setActive('other')}
-                  className={classNames(
-                    'max-h-10 min-h-6 w-40 bg-white text-black shadow-lg capitalize font-semibold rounded-md',
-                    active === 'other' && '!bg-[#FA6C2F] !text-white',
-                  )}
-                  strong
-                >
-                  Others
-                </IonButton>
-              </div>
-              <div className={classNames(active !== 'personal' && 'hidden')}>
-                <CMFPersonalForm form={form} loading={loading} />
-              </div>
-              <div className={classNames(active !== 'other' && 'hidden')}>
-                <CMFOtherForm form={form} loading={loading} />
-              </div>
+              <CMFPersonalForm form={form} loading={loading} />
+              <CMFOtherForm form={form} loading={loading} />
               {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
-              {Object.keys(form.formState.errors).length > 0 && <div className="text-sm text-red-600 italic text-center">Please fill up all required information.</div>}
             </div>
             <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
               <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
