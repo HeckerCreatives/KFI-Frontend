@@ -62,7 +62,7 @@ const Login = () => {
                     <Image alt="logo" src={logo} className="h-20 w-auto mx-auto" />
                   </div>
 
-                  <h6 className="text-xl font-bold m-0">Login</h6>
+                  <h6 className="text-xl font-semibold m-0">Login</h6>
                   <p>Please sign in to access your account and manage your services securely.</p>
                 </div>
                 <div>

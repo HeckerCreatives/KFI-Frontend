@@ -259,7 +259,21 @@ body {
   box-shadow: 0px 0px 5px 5px #0099e0;
 }
 
+.btn-color {
+  @apply bg-[#FA6C2F];
+}
+
 /* Customs */
+
+.split-pane-collapsed {
+  --side-width: 0;
+}
+
+.split-pane-collapsed ion-menu {
+  min-width: 0 !important;
+  max-width: 0 !important;
+  border-right: none !important;
+}
 
 ion-modal.auto-height {
   --height: auto;

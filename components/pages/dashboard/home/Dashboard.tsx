@@ -1,8 +1,9 @@
 import { IonCol, IonContent, IonGrid, IonIcon, IonPage, IonRow } from '@ionic/react';
 import React from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
-import { cashOutline, peopleOutline, personAddOutline, personCircleOutline, personCircleSharp, personOutline, personRemoveOutline } from 'ionicons/icons';
+import { cashSharp, peopleSharp, personAddSharp, personRemoveSharp } from 'ionicons/icons';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
+import DashboardCard from './components/DashboardCard';
 
 const Dashboard = () => {
   const arrDummy: string[] = Array.from(Array(10)).fill('');
@@ -17,43 +18,10 @@ const Dashboard = () => {
             <div className="space-y-2">
               <div>
                 <div className="flex flex-wrap items-center justify-around gap-2">
-                  <div className="shadow-lg bg-[#F76B2E] p-4 flex-1 rounded-xl">
-                    <div className="flex items-center justify-between">
-                      <div className="text-[1rem] font-semibold text-slate-100 tracking-wider truncate">Total Members</div>
-                      <div className="min-w-6 min-h-6 p-2 grid place-items-center rounded-md bg-red-100">
-                        <IonIcon icon={peopleOutline} className="text-red-800 min-w-6 max-w-6 max-h-6 min-h-6" />
-                      </div>
-                    </div>
-                    <div className="text-3xl my-3 text-slate-100 font-semibold tracking-widest text-end">9,999,999</div>
-                  </div>
-                  <div className="shadow-lg bg-[#F76B2E] p-4 flex-1 rounded-xl">
-                    <div className="flex items-center justify-between">
-                      <div className="text-[1rem] font-semibold text-slate-100 tracking-wider truncate">Total Active Members</div>
-                      <div className="min-w-6 min-h-6 p-2 grid place-items-center rounded-md bg-green-100">
-                        <IonIcon icon={personAddOutline} className="text-green-800 min-w-5 max-w-5 max-h-5 min-h-5" />
-                      </div>
-                    </div>
-                    <div className="text-3xl my-3 text-slate-100 font-semibold tracking-widest text-end">9,999,999</div>
-                  </div>
-                  <div className="shadow-lg bg-[#F76B2E] p-4 flex-1 rounded-xl">
-                    <div className="flex items-center justify-between">
-                      <div className="text-[1rem] font-semibold text-slate-100 tracking-wider truncate">Total Inactive Members</div>
-                      <div className="min-w-6 min-h-6 p-2 grid place-items-center rounded-md bg-red-100">
-                        <IonIcon icon={personRemoveOutline} className="text-red-800 min-w-6 max-w-6 max-h-6 min-h-6" />
-                      </div>
-                    </div>
-                    <div className="text-3xl my-3 text-slate-100 font-semibold tracking-widest text-end">9,999,999</div>
-                  </div>
-
-                  <div className="shadow-lg bg-[#F76B2E] p-4 flex-1 rounded-xl">
-                    <div className="flex items-center justify-between">
-                      <div className="text-[1rem] font-semibold text-slate-100 tracking-wider truncate">Total Loan Amount</div>
-                      <div className="min-w-6 min-h-6 p-2 grid place-items-center rounded-md bg-orange-100">
-                        <IonIcon icon={cashOutline} className="text-orange-800 min-w-6 max-w-6 max-h-6 min-h-6" />
-                      </div>
-                    </div>
-                    <div className="text-3xl my-3 text-slate-100 font-semibold tracking-widest text-end">9,999,999</div>
-                  </div>
+                  <DashboardCard title="Total Members" value="9,999,999" icon={peopleSharp} />
+                  <DashboardCard title="Total Active Members" value="9,999,999" icon={personAddSharp} />
+                  <DashboardCard title="Total Inactive Members" value="9,999,999" icon={personRemoveSharp} />
+                  <DashboardCard title="Total Loan Amount" value="9,999,999" icon={cashSharp} />
                 </div>
               </div>
               <div className="bg-white shadow-lg rounded-sm px-3 pt-1 pb-2">

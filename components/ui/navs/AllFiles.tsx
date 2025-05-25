@@ -17,6 +17,9 @@ const AllFiles = () => {
     { path: '/dashboard/loans', label: 'Loans', resource: 'loans' },
     { path: '/dashboard/weekly-saving-table', label: 'Weekly Saving Table', resource: 'weekly saving table' },
     { path: '/dashboard/supplier', label: 'Supplier', resource: 'supplier' },
+    { path: '/dashboard/status', label: 'Status', resource: 'status' },
+    { path: '/dashboard/nature', label: 'Nature', resource: 'nature' },
+    { path: '/dashboard/group-account', label: 'Group Account', resource: 'group account' },
   ];
   return (
     <IonAccordion value="allFiles" className="bg-transparent">

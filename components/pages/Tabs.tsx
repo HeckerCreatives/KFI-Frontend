@@ -15,8 +15,8 @@ import {
   IonLabel,
   IonAccordionGroup,
   IonMenuButton,
-  isPlatform,
   IonAccordion,
+  isPlatform,
 } from '@ionic/react';
 import ChartOfAccount from './dashboard/chart-of-account/ChartOfAccount';
 import Center from './dashboard/center/Center';
@@ -62,11 +62,30 @@ import Dashboard from './dashboard/home/Dashboard';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { isVisible } from '../utils/permissions';
-import Link from 'next/link';
+import Status from './dashboard/status/Status';
+import { useEffect, useState } from 'react';
 
 const Tabs = () => {
+  const [isOpen, setIsOpen] = useState(true);
+
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
+
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const desktopMode = isPlatform('desktop') && window.innerWidth > 991;
+      setIsDesktop(desktopMode);
+      if (desktopMode) setIsOpen(true);
+    };
+
+    checkScreenSize();
+
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   const logout = () => {
     localStorage.removeItem('auth');
@@ -80,11 +99,8 @@ const Tabs = () => {
   };
 
   return (
-    <IonSplitPane when="lg" contentId="main-content" class="w-full">
-      <IonMenu contentId="main-content" menuId="main-content" class="lg:max-w-64">
-        <IonHeader>
-          <IonToolbar></IonToolbar>
-        </IonHeader>
+    <IonSplitPane when="lg" contentId="main-content" className={classNames('w-full transition-all duration-300 ease-in-out')} disabled={!isOpen}>
+      <IonMenu contentId="main-content" menuId="main-content" class="lg:max-w-64" disabled={isPlatform('desktop') && !isOpen}>
         <IonContent>
           <div>
             <div className="h-40 bg-desktop bg-cover flex items-end">
@@ -157,12 +173,13 @@ const Tabs = () => {
           <IonToolbar className="pe-5 ps-2 [--min-height:3.5rem]">
             <div className="flex items-center justify-between">
               <div>
-                <IonMenuButton menu="main-content" />
+                <IonMenuButton menu="main-content" autoHide={true} />
+                {isDesktop && <IonMenuButton autoHide={false} onClick={() => setIsOpen(prev => !prev)} />}
               </div>
               <div className="flex items-center justify-center gap-5">
                 <IonButton
                   fill="clear"
-                  className="min-h-[3.5rem] min-w-40 border-x border-[#FA6C2F] px-1 !m-0 bg-[#FFF0E3] [--color:black] font-bold space-x-4 capitalize"
+                  className="min-h-[3.5rem] min-w-40 border-[#FA6C2F] px-1 !m-0 bg-[#FFF0E3] [--color:black] font-bold space-x-4 capitalize"
                   id="click-trigger"
                 >
                   <div className="w-10 h-10 bg-slate-300 rounded-full uppercase grid place-items-center min-w-10 min-h-10">{token.username.substring(0, 2)}</div>
@@ -198,6 +215,7 @@ const Tabs = () => {
             <Route path="/dashboard/business-type" render={() => <BusinessType />} exact={true} />
             <Route path="/dashboard/business-fix" render={() => <BusinessFix />} exact={true} />
             <Route path="/dashboard/nature" render={() => <Nature />} exact={true} />
+            <Route path="/dashboard/status" render={() => <Status />} exact={true} />
             {/* Transactions */}
             <Route path="/dashboard/group-account" render={() => <GroupAccount />} exact={true} />
             <Route path="/dashboard/loan-release" render={() => <LoanRelease />} exact={true} />

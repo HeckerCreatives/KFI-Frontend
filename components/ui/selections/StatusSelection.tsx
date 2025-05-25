@@ -16,14 +16,14 @@ type Option = {
   description: string;
 };
 
-type CenterSelectionProps<T extends FieldValues> = {
+type StatusSelectionProps<T extends FieldValues> = {
   setValue: UseFormSetValue<T>;
   clearErrors: UseFormClearErrors<T>;
-  centerLabel: Path<T>;
-  centerValue: Path<T>;
+  statusLabel: Path<T>;
+  statusValue: Path<T>;
 };
 
-const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, setValue, clearErrors }: CenterSelectionProps<T>) => {
+const StatusSelection = <T extends FieldValues>({ statusLabel, statusValue, setValue, clearErrors }: StatusSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [datas, setDatas] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
@@ -41,10 +41,10 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, setV
     const value = ionInputRef.current?.value;
     setLoading(true);
     try {
-      const result = await kfiAxios.get('/center/selection', { params: { keyword: value } });
-      const { success, centers } = result.data;
+      const result = await kfiAxios.get('/status/selection', { params: { keyword: value } });
+      const { success, statuses } = result.data;
       if (success) {
-        setDatas(centers);
+        setDatas(statuses);
         return;
       }
     } catch (error) {
@@ -53,13 +53,13 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, setV
     }
   };
 
-  const handleSelectCenter = (center: Option) => {
-    const codeValue = center.code as PathValue<T, Path<T>>;
-    const idValue = center._id as PathValue<T, Path<T>>;
-    setValue(centerLabel as Path<T>, codeValue);
-    setValue(centerValue as Path<T>, idValue);
-    clearErrors(centerLabel);
-    clearErrors(centerValue);
+  const handleSelectStatus = (status: Option) => {
+    const codeValue = status.code as PathValue<T, Path<T>>;
+    const idValue = status._id as PathValue<T, Path<T>>;
+    setValue(statusLabel as Path<T>, codeValue);
+    setValue(statusValue as Path<T>, idValue);
+    clearErrors(statusLabel);
+    clearErrors(statusValue);
     setDatas([]);
     dismiss();
   };
@@ -74,7 +74,7 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, setV
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Center Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Status Selection" />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !p-2  border-2 !border-slate-100">
@@ -110,10 +110,10 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, setV
               </TableHeader>
               <TableBody>
                 {loading && <TableLoadingRow colspan={2} />}
-                {!loading && datas.length < 1 && <TableNoRows colspan={2} label="No center found" />}
+                {!loading && datas.length < 1 && <TableNoRows colspan={2} label="No status found" />}
                 {!loading &&
                   datas.map((data: Option) => (
-                    <TableRow onClick={() => handleSelectCenter(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
+                    <TableRow onClick={() => handleSelectStatus(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.code}</TableCell>
                       <TableCell className="">{data.description}</TableCell>
                     </TableRow>
@@ -127,4 +127,4 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, setV
   );
 };
 
-export default CenterSelection;
+export default StatusSelection;

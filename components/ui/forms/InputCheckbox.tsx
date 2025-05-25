@@ -28,7 +28,7 @@ const InputCheckbox = <T extends FieldValues>({ name, control, label, required =
               field.onChange(e.detail.checked);
             }}
             onIonBlur={field.onBlur}
-            className={classNames('text-sm w-full h-fit font-bold', error ? 'ion-invalid' : '', className)}
+            className={classNames('text-sm w-full h-fit font-semibold', error ? 'ion-invalid' : '', className)}
             justify="start"
             labelPlacement="end"
           >

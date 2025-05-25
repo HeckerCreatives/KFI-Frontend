@@ -17,13 +17,16 @@ export const clientMasterFileSchema = z.object({
   memberStatus: z.string().min(1, 'Member status is required'),
   groupNumber: z.string().min(1, 'Group No. is required'),
   center: z.string().min(1, 'Center is required'),
+  centerLabel: z.string().min(1, 'Center label is required'),
   acctOfficer: z.string().min(1, 'Account officer is required'),
   dateRelease: z.string().min(1, 'Date release is required'),
   business: z.string().min(1, 'Business is required'),
+  businessLabel: z.string().min(1, 'Business label is required'),
   position: z.string().min(1, 'Position is required'),
   acctNumber: z.string().min(1, 'Account No. is required'),
   dateResigned: z.string().min(1, 'Date resigned is required'),
   newStatus: z.string().min(1, 'New Status is required'),
+  newStatusLabel: z.string().min(1, 'New Status Label is required'),
   reason: z.string().min(1, 'Reason is required'),
 });
 

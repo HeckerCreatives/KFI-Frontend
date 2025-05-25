@@ -77,7 +77,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
         </IonHeader>
         <div className="inner-content space-y-4">
           <div>
-            <h6 className="font-bold m-0 mt-2">Manage Account</h6>
+            <h6 className="font-semibold m-0 mt-2">Manage Account</h6>
             <div className="relative overflow-auto">
               <Table>
                 <TableHeader>
@@ -102,7 +102,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
             </div>
           </div>
           <div>
-            <h6 className="font-bold m-0 mt-2">All Files</h6>
+            <h6 className="font-semibold m-0 mt-2">All Files</h6>
             <div className="relative overflow-auto">
               <Table>
                 <TableHeader>
@@ -127,7 +127,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
             </div>
           </div>
           <div>
-            <h6 className="font-bold m-0 mt-2">Transactions</h6>
+            <h6 className="font-semibold m-0 mt-2">Transactions</h6>
             <div className="relative overflow-auto">
               <Table>
                 <TableHeader>

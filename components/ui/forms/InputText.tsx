@@ -13,9 +13,21 @@ type TFormInput<T extends FieldValues> = {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  readOnly?: boolean;
 };
 
-const InputText = <T extends FieldValues>({ name, control, clearErrors, label, type = 'text', placeholder = '', required = false, disabled = false, className }: TFormInput<T>) => {
+const InputText = <T extends FieldValues>({
+  name,
+  control,
+  clearErrors,
+  label,
+  type = 'text',
+  placeholder = '',
+  required = false,
+  disabled = false,
+  className,
+  readOnly = false,
+}: TFormInput<T>) => {
   return (
     <Controller
       name={name}
@@ -24,7 +36,7 @@ const InputText = <T extends FieldValues>({ name, control, clearErrors, label, t
         <div className="w-full">
           <div className="flex justify-between">
             {label && (
-              <IonLabel class="custom" className="!text-sm font-bold tracking-wide !text-slate-600">
+              <IonLabel class="custom" className="!text-sm font-semibold tracking-wide !text-slate-600">
                 {label}
               </IonLabel>
             )}
@@ -48,6 +60,7 @@ const InputText = <T extends FieldValues>({ name, control, clearErrors, label, t
               error && '![--border-color:red] !border-red-600',
               className,
             )}
+            readonly={readOnly}
           />
 
           {error && (

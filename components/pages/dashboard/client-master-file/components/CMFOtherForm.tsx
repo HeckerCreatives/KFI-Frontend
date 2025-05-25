@@ -4,10 +4,9 @@ import { ClientMasterFileFormData } from '../../../../../validations/client-mast
 import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import InputText from '../../../../ui/forms/InputText';
-import InputSelect from '../../../../ui/forms/InputSelect';
-import useCenterOptions from '../../../../utils/custom/useCenterOptions';
-import useBusinessTypesOptions from '../../../../utils/custom/useBusinessTypesOptions';
 import CenterSelection from '../../../../ui/selections/CenterSelection';
+import BusinessTypeSelection from '../../../../ui/selections/BusinessTypeSelection';
+import StatusSelection from '../../../../ui/selections/StatusSelection';
 
 type TForm = {
   form: UseFormReturn<ClientMasterFileFormData>;
@@ -15,9 +14,6 @@ type TForm = {
 };
 
 const CMFOtherForm = ({ form, loading }: TForm) => {
-  const { data: centerOptions, loading: centerLoading } = useCenterOptions();
-  const { data: businessOptions, loading: businessLoading } = useBusinessTypesOptions();
-
   return (
     <IonGrid>
       <IonRow>
@@ -44,20 +40,20 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-          <div>
-            <FormIonItem>
-              <InputSelect
-                disabled={loading || centerLoading}
-                name="center"
+          <div className="flex items-end gap-2 flex-nowrap">
+            <FormIonItem className="flex-1">
+              <InputText
+                disabled={loading}
+                name="centerLabel"
                 control={form.control}
                 clearErrors={form.clearErrors}
                 label="Center"
-                placeholder="Type here"
+                placeholder="Click find to search a center"
                 className="!px-2 !py-2 rounded-md"
-                options={centerOptions}
+                readOnly
               />
             </FormIonItem>
-            <CenterSelection />
+            <CenterSelection centerLabel="centerLabel" centerValue="center" setValue={form.setValue} clearErrors={form.clearErrors} />
           </div>
           <FormIonItem>
             <InputText
@@ -82,18 +78,21 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-          <FormIonItem>
-            <InputSelect
-              disabled={loading || businessLoading}
-              name="business"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Business"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-              options={businessOptions}
-            />
-          </FormIonItem>
+          <div className="flex items-end gap-2 flex-nowrap">
+            <FormIonItem className="flex-1">
+              <InputText
+                disabled={loading}
+                name="businessLabel"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Business"
+                placeholder="Click find to search a business"
+                className="!px-2 !py-2 rounded-md"
+                readOnly
+              />
+            </FormIonItem>
+            <BusinessTypeSelection businessTypeLabel="businessLabel" businessTypeValue="business" setValue={form.setValue} clearErrors={form.clearErrors} />
+          </div>
         </IonCol>
         <IonCol size="6" className="space-y-2">
           <FormIonItem>
@@ -130,17 +129,21 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="newStatus"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="New Status"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-            />
-          </FormIonItem>
+          <div className="flex items-end gap-2 flex-nowrap">
+            <FormIonItem className="flex-1">
+              <InputText
+                disabled={loading}
+                name="newStatusLabel"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="New Status"
+                placeholder="Click find to search a status"
+                className="!px-2 !py-2 rounded-md"
+              />
+            </FormIonItem>
+            <StatusSelection statusLabel="newStatusLabel" statusValue="newStatus" setValue={form.setValue} clearErrors={form.clearErrors} />
+          </div>
+
           <FormIonItem>
             <InputText
               disabled={loading}

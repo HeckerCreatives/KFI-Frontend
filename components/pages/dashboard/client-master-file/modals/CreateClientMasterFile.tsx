@@ -41,9 +41,11 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
       memberStatus: '',
       groupNumber: '',
       center: '',
+      centerLabel: '',
       acctOfficer: '',
       dateRelease: '',
       business: '',
+      businessLabel: '',
       position: '',
       acctNumber: '',
       dateResigned: '',
@@ -80,7 +82,7 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
   return (
     <>
       <div className="text-end lg:mt-1">
-        <IonButton fill="clear" id="create-cmf-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        <IonButton fill="clear" id="create-cmf-modal" className="max-h-10 min-h-6 btn-color text-white capitalize font-semibold rounded-md" strong>
           + Add Record
         </IonButton>
       </div>

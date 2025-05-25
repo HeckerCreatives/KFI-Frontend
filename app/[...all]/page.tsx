@@ -23,8 +23,10 @@ export async function generateStaticParams() {
     { all: ['dashboard', 'business-type'] },
     { all: ['dashboard', 'business-fix'] },
     { all: ['dashboard', 'nature'] },
-    // Transactions
+    { all: ['dashboard', 'status'] },
     { all: ['dashboard', 'group-account'] },
+    // Transactions
+
     { all: ['dashboard', 'loan-release'] },
     { all: ['dashboard', 'expense-voucher'] },
     { all: ['dashboard', 'journal-voucher'] },

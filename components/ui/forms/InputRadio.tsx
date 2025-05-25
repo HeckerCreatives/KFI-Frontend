@@ -39,7 +39,7 @@ const InputRadio = <T extends FieldValues>({
         <div className="w-full">
           <div className="flex justify-between">
             {label && (
-              <IonLabel class="custom" className="!text-sm font-bold tracking-wide !text-slate-600">
+              <IonLabel class="custom" className="!text-sm font-semibold tracking-wide !text-slate-600">
                 {label}
               </IonLabel>
             )}

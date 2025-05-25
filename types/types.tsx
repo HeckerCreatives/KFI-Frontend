@@ -150,6 +150,13 @@ export type Nature = {
   createdAt: string;
 };
 
+export type Status = {
+  _id: string;
+  code: string;
+  description: string;
+  createdAt: string;
+};
+
 export type Center = {
   _id: string;
   centerNo: string;
