@@ -52,11 +52,11 @@ const BusinessTypeSelection = <T extends FieldValues>({ businessTypeLabel, busin
     }
   };
 
-  const handleSelectCenter = (businessType: Option) => {
+  const handleSelectBusinessType = (businessType: Option) => {
     const typeValue = businessType.type as PathValue<T, Path<T>>;
     const idValue = businessType._id as PathValue<T, Path<T>>;
-    setValue(businessTypeLabel as Path<T>, typeValue);
-    setValue(businessTypeValue as Path<T>, idValue);
+    setValue(businessTypeLabel as Path<T>, typeValue as any);
+    setValue(businessTypeValue as Path<T>, idValue as any);
     clearErrors(businessTypeLabel);
     clearErrors(businessTypeValue);
     setDatas([]);
@@ -111,7 +111,7 @@ const BusinessTypeSelection = <T extends FieldValues>({ businessTypeLabel, busin
                 {!loading && datas.length < 1 && <TableNoRows colspan={2} label="No business type found" />}
                 {!loading &&
                   datas.map((data: Option) => (
-                    <TableRow onClick={() => handleSelectCenter(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
+                    <TableRow onClick={() => handleSelectBusinessType(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.type}</TableCell>
                     </TableRow>
                   ))}

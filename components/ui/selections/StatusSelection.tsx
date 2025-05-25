@@ -56,8 +56,8 @@ const StatusSelection = <T extends FieldValues>({ statusLabel, statusValue, setV
   const handleSelectStatus = (status: Option) => {
     const codeValue = status.code as PathValue<T, Path<T>>;
     const idValue = status._id as PathValue<T, Path<T>>;
-    setValue(statusLabel as Path<T>, codeValue);
-    setValue(statusValue as Path<T>, idValue);
+    setValue(statusLabel as Path<T>, codeValue as any);
+    setValue(statusValue as Path<T>, idValue as any);
     clearErrors(statusLabel);
     clearErrors(statusValue);
     setDatas([]);

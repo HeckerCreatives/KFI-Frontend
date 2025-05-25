@@ -56,8 +56,8 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, setV
   const handleSelectCenter = (center: Option) => {
     const codeValue = center.code as PathValue<T, Path<T>>;
     const idValue = center._id as PathValue<T, Path<T>>;
-    setValue(centerLabel as Path<T>, codeValue);
-    setValue(centerValue as Path<T>, idValue);
+    setValue(centerLabel as Path<T>, codeValue as any);
+    setValue(centerValue as Path<T>, idValue as any);
     clearErrors(centerLabel);
     clearErrors(centerValue);
     setDatas([]);
