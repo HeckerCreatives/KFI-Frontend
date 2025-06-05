@@ -14,6 +14,8 @@ import { canDoAction, haveActions } from '../../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
+import PrintAllClient from './modals/PrintAllClient';
+import ExportAllClient from './modals/ExportAllClient';
 
 export type TClientMasterFile = {
   clients: ClientMasterFileType[];
@@ -62,7 +64,7 @@ const ClientMasterFile = () => {
       }
     } catch (error) {
       present({
-        message: 'Failed to get client master file records. Please try again',
+        message: 'Failed to get client records. Please try again',
         duration: 1000,
       });
     } finally {
@@ -83,7 +85,11 @@ const ClientMasterFile = () => {
           <PageTitle pages={['Manage Account', 'Clients']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <div>{canDoAction(token.role, token.permissions, 'client master file', 'create') && <CreateClientMasterFile getClients={getClients} />}</div>
+              <div className="flex">
+                {canDoAction(token.role, token.permissions, 'client', 'create') && <CreateClientMasterFile getClients={getClients} />}
+                <PrintAllClient />
+                <ExportAllClient />
+              </div>
               <ClientMasterFileFilter getClients={getClients} />
             </div>
             <div className="relative overflow-auto">
@@ -92,28 +98,16 @@ const ClientMasterFile = () => {
                   <TableHeadRow>
                     <TableHead>Account No.</TableHead>
                     <TableHead>Name</TableHead>
+                    <TableHead>Group No.</TableHead>
+                    <TableHead>Center No.</TableHead>
+                    <TableHead>Account Officer</TableHead>
+                    <TableHead>New Status</TableHead>
                     <TableHead>Address</TableHead>
                     <TableHead>City</TableHead>
                     <TableHead>Zip Code</TableHead>
                     <TableHead>Telephone No.</TableHead>
                     <TableHead>Mobile No.</TableHead>
-                    <TableHead>Birth Date</TableHead>
-                    <TableHead>Birth Place</TableHead>
-                    <TableHead>Spouse</TableHead>
-                    <TableHead>Civil Status</TableHead>
-                    <TableHead>Age</TableHead>
-                    <TableHead>Parent</TableHead>
-                    <TableHead>Member Status</TableHead>
-                    <TableHead>Group No.</TableHead>
-                    <TableHead>Center No.</TableHead>
-                    <TableHead>Account Officer</TableHead>
-                    <TableHead>Date Release</TableHead>
-                    <TableHead>Business</TableHead>
-                    <TableHead>Position</TableHead>
-                    <TableHead>Date Resigned</TableHead>
-                    <TableHead>New Status</TableHead>
-                    <TableHead>Reason</TableHead>
-                    {haveActions(token.role, 'client master file', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                    {haveActions(token.role, 'client', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -125,28 +119,16 @@ const ClientMasterFile = () => {
                       <TableRow key={client._id}>
                         <TableCell>{client.acctNumber}</TableCell>
                         <TableCell>{client.name}</TableCell>
+                        <TableCell>{client.groupNumber.code}</TableCell>
+                        <TableCell>{client.center.centerNo}</TableCell>
+                        <TableCell>{client.acctOfficer}</TableCell>
+                        <TableCell>{client.newStatus}</TableCell>
                         <TableCell>{client.address}</TableCell>
                         <TableCell>{client.city}</TableCell>
                         <TableCell>{client.zipCode}</TableCell>
                         <TableCell>{client.telNo}</TableCell>
                         <TableCell>{client.mobileNo}</TableCell>
-                        <TableCell>{formatDateTable(client.birthdate)}</TableCell>
-                        <TableCell>{client.birthplace}</TableCell>
-                        <TableCell>{client.spouse}</TableCell>
-                        <TableCell>{client.civilStatus}</TableCell>
-                        <TableCell>{client.age}</TableCell>
-                        <TableCell>{client.parent}</TableCell>
-                        <TableCell>{client.memberStatus}</TableCell>
-                        <TableCell>{client.groupNumber}</TableCell>
-                        <TableCell>{client.center.centerNo}</TableCell>
-                        <TableCell>{client.acctOfficer}</TableCell>
-                        <TableCell>{formatDateTable(client.dateRelease)}</TableCell>
-                        <TableCell>{client.business.type}</TableCell>
-                        <TableCell>{client.position}</TableCell>
-                        <TableCell>{formatDateTable(client.dateResigned)}</TableCell>
-                        <TableCell>{client.newStatus}</TableCell>
-                        <TableCell>{client.reason}</TableCell>
-                        {haveActions(token.role, 'client master file', token.permissions, ['update', 'delete']) && (
+                        {haveActions(token.role, 'client', token.permissions, ['update', 'delete']) && (
                           <TableCell>
                             <ClientMasterFileActions
                               client={client}

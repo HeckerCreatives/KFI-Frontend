@@ -9,6 +9,8 @@ import ViewBeneficiaries from '../modals/ViewBeneficiaries';
 import ViewChildrens from '../modals/ViewChildrens';
 import { canDoAction } from '../../../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
+import PrintClient from '../modals/PrintClient';
+import ExportClient from '../modals/ExportClient';
 
 type ClientMasterFileActionsProps = {
   client: ClientMasterFile;
@@ -30,23 +32,18 @@ const ClientMasterFileActions = ({ client, getClients, setData, currentPage, set
       </IonButton>
       <IonPopover showBackdrop={false} trigger={`cmf-${client._id}`} triggerAction="click" className="[--max-width:13rem]">
         <IonContent>
-          {canDoAction(token.role, token.permissions, 'client master file', 'update') && (
+          {canDoAction(token.role, token.permissions, 'client', 'update') && (
             <>
               <UpdateClientMasterFile client={client} setData={setData} />
               <ViewBeneficiaries client={client} setData={setData} />
               <ViewChildrens client={client} setData={setData} />
             </>
           )}
-          {canDoAction(token.role, token.permissions, 'client master file', 'delete') && (
+          {canDoAction(token.role, token.permissions, 'client', 'delete') && (
             <DeleteClientMasterFile client={client} getClients={getClients} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
           )}
-          {canDoAction(token.role, token.permissions, 'client master file', 'print') && (
-            <div className="text-end">
-              <div className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1">
-                <IonIcon icon={print} className="text-[1rem]" /> Print
-              </div>
-            </div>
-          )}
+          {canDoAction(token.role, token.permissions, 'client', 'print') && <PrintClient client={client} />}
+          {canDoAction(token.role, token.permissions, 'client', 'print') && <ExportClient client={client} />}
         </IonContent>
       </IonPopover>
     </>

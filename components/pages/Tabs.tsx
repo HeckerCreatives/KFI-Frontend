@@ -175,7 +175,7 @@ const Tabs = () => {
             <Route path="/dashboard/admin" render={() => <Admin />} exact={true} />
             <Route path="/dashboard/chart-of-account" render={() => <ChartOfAccount />} exact={true} />
             <Route path="/dashboard/center" render={() => <Center />} exact={true} />
-            <Route path="/dashboard/client-master-file" render={() => <ClientMasterFile />} exact={true} />
+            <Route path="/dashboard/client" render={() => <ClientMasterFile />} exact={true} />
             <Route path="/dashboard/client-profile" render={() => <ClientProfile />} exact={true} />
             <Route path="/dashboard/product" render={() => <Loans />} exact={true} />
             <Route path="/dashboard/bank" render={() => <Bank />} exact={true} />

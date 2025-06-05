@@ -43,14 +43,14 @@ export interface ClientMasterFile {
   age: string;
   birthdate: string;
   birthplace: string;
-  business: { _id: string; type: String };
+  business: { _id: string; type: string };
   center: { _id: string; centerNo: string };
   city: string;
   civilStatus: string;
   createdAt: string;
   dateRelease: string;
   dateResigned: string;
-  groupNumber: string;
+  groupNumber: GroupAccount;
   memberStatus: string;
   mobileNo: string;
   name: string;

@@ -39,7 +39,7 @@ const ViewBeneficiaries = ({ client, setData }: ViewBeneficiariesProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader title="Client Master File - View Beneficiaries" sub="Manage Account" dismiss={dismiss} />
+            <ModalHeader title="Client - View Beneficiaries" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

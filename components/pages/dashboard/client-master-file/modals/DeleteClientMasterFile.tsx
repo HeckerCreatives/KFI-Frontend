@@ -37,7 +37,7 @@ const DeleteClientMasterFile = ({ client, getClients, searchkey, sortKey, curren
       }
     } catch (error: any) {
       present({
-        message: 'Failed to delete the client master file record. Please try again',
+        message: 'Failed to delete the client record. Please try again',
         duration: 1000,
       });
     } finally {
@@ -63,7 +63,7 @@ const DeleteClientMasterFile = ({ client, getClients, searchkey, sortKey, curren
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Client Master File - Delete Record" sub="Manage Account" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Client - Delete Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

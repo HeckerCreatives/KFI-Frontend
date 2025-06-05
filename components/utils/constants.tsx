@@ -1,6 +1,6 @@
 export const TABLE_LIMIT = 15;
 
-export const manageAccountResource: string[] = ['client master file', 'chart of account'];
+export const manageAccountResource: string[] = ['client', 'chart of account'];
 
 export const allFilesResource: string[] = ['bank', 'business type', 'center', 'loans', 'weekly saving table', 'supplier'];
 

@@ -40,6 +40,7 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
       parent: '',
       memberStatus: '',
       groupNumber: '',
+      groupNumberLabel: '',
       center: '',
       centerLabel: '',
       acctOfficer: '',
@@ -81,7 +82,7 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
 
   return (
     <>
-      <div className="text-end lg:mt-1">
+      <div className="text-end">
         <IonButton fill="clear" id="create-cmf-modal" className="max-h-10 min-h-6 btn-color text-white capitalize font-semibold rounded-md" strong>
           + Add Record
         </IonButton>
@@ -89,7 +90,7 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
       <IonModal ref={modal} trigger="create-cmf-modal" backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Client Master File - Add Record" sub="Manage Account" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Client - Add Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">

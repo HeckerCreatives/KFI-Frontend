@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon } from '@ionic/react';
 import { useForm } from 'react-hook-form';
-import classNames from 'classnames';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import CMFPersonalForm from '../components/CMFPersonalForm';
 import CMFOtherForm from '../components/CMFOtherForm';
@@ -22,7 +21,6 @@ type UpdateClientMasterFileProps = {
 
 const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps) => {
   const [loading, setLoading] = useState(false);
-  const [active, setActive] = useState('personal');
 
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -43,12 +41,14 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
       civilStatus: client.civilStatus,
       parent: client.parent,
       memberStatus: client.memberStatus,
-      groupNumber: client.groupNumber,
+      groupNumber: client.groupNumber?._id,
+      groupNumberLabel: client.groupNumber?.code,
       center: client.center._id,
       centerLabel: client.center.centerNo,
       acctOfficer: client.acctOfficer,
       dateRelease: formatDateInput(client.dateRelease),
       business: client.business._id,
+      businessLabel: client.business.type,
       position: client.position,
       acctNumber: client.acctNumber,
       dateResigned: formatDateInput(client.dateResigned),
@@ -74,12 +74,14 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         civilStatus: client.civilStatus,
         parent: client.parent,
         memberStatus: client.memberStatus,
-        groupNumber: client.groupNumber,
+        groupNumber: client.groupNumber?._id,
+        groupNumberLabel: client.groupNumber?.code,
         center: client.center._id,
         centerLabel: client.center.centerNo,
         acctOfficer: client.acctOfficer,
         dateRelease: formatDateInput(client.dateRelease),
         business: client.business._id,
+        businessLabel: client.business.type,
         position: client.position,
         acctNumber: client.acctNumber,
         dateResigned: formatDateInput(client.dateResigned),
@@ -137,7 +139,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Client Master File - Edit Record" sub="Manage Account" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Client - Edit Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">
