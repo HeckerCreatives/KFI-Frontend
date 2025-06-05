@@ -16,7 +16,7 @@ export async function generateStaticParams() {
     { all: ['dashboard', 'client-master-file'] },
     { all: ['dashboard', 'client-master-file', 'new'] },
     { all: ['dashboard', 'client-profile'] },
-    { all: ['dashboard', 'loans'] },
+    { all: ['dashboard', 'product'] },
     { all: ['dashboard', 'bank'] },
     { all: ['dashboard', 'weekly-saving-table'] },
     { all: ['dashboard', 'supplier'] },

@@ -1,39 +1,23 @@
 import { IonAccordion, IonAccordionGroup, IonIcon, IonItem, IonLabel, IonList, IonMenuToggle } from '@ionic/react';
-import { fileTrayFullOutline } from 'ionicons/icons';
+import { documentTextOutline } from 'ionicons/icons';
 import React from 'react';
 import { AccessToken, NavLink, Permission } from '../../../types/types';
 import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
 import { jwtDecode } from 'jwt-decode';
 
-const TransactionNavigation = () => {
+const DiagnosticsNav = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
 
   const fileLinks: NavLink[] = [
-    { path: '/dashboard/loan-release', label: 'Loan Release', resource: 'loan release' },
-    {
-      path: '',
-      label: 'Voucher',
-      resource: '',
-      children: [
-        { path: '/dashboard/expense-voucher', label: 'Expense Voucher', resource: 'expense voucher' },
-        { path: '/dashboard/journal-voucher', label: 'Journal Voucher', resource: 'journal voucher' },
-      ],
-    },
-    {
-      path: '',
-      label: 'Receipt',
-      resource: '',
-      children: [
-        { path: '', label: 'Acknowledgement', resource: '' },
-        { path: '', label: 'Release', resource: '' },
-      ],
-    },
+    { path: '', label: 'Unbalance Entries', resource: '' },
+    { path: '', label: 'Login Logs', resource: '' },
+    { path: '', label: 'Action Logs', resource: '' },
   ];
 
   return (
-    <IonAccordion value="transactions" className="bg-transparent">
+    <IonAccordion value="diagnotics" className="bg-transparent">
       <IonItem
         slot="header"
         className={classNames(
@@ -41,8 +25,8 @@ const TransactionNavigation = () => {
           fileLinks.find((link: NavLink) => pathname === link.path) && '!text-[#fa6c2f]',
         )}
       >
-        <IonIcon size="small" icon={fileTrayFullOutline} className="!text-inherit" />
-        <IonLabel className="text-sm">Transactions</IonLabel>
+        <IonIcon size="small" icon={documentTextOutline} className="!text-inherit" />
+        <IonLabel className="text-sm">Diagnostics</IonLabel>
       </IonItem>
       <div slot="content">
         <IonList className="p-0">
@@ -51,11 +35,11 @@ const TransactionNavigation = () => {
               (token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === link.resource && e.actions.visible)) &&
               (link.children ? (
                 <IonAccordionGroup>
-                  <IonAccordion value={link.label} className="bg-transparent">
+                  <IonAccordion value="transactions" className="bg-transparent">
                     <IonItem
                       slot="header"
                       className={classNames(
-                        '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:1rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
+                        '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.5rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
                         fileLinks.find((link: NavLink) => pathname === link.path) && '!text-[#fa6c2f]',
                       )}
                     >
@@ -103,4 +87,4 @@ const TransactionNavigation = () => {
   );
 };
 
-export default TransactionNavigation;
+export default DiagnosticsNav;

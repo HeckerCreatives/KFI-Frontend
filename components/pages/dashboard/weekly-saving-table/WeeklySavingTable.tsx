@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
@@ -14,6 +14,8 @@ import TableNoRows from '../../../ui/forms/TableNoRows';
 import { formatNumber } from '../../../ui/utils/formatNumber';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction, haveActions } from '../../../utils/permissions';
+import PrintAllWeeklySavingsTable from './modals/PrintAllWeeklySavingsTable';
+import ExportAllWeeklySavingsTable from './modals/ExportAllWeeklySavingsTable';
 
 export type TWeeklySavingsTable = {
   savings: WeeklySavings[];
@@ -81,10 +83,13 @@ const WeeklySavingTable = () => {
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
-          <PageTitle pages={['All Files', 'Weekly Saving Table']} />
+          <PageTitle pages={['System', 'Weekly Savings']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <div>{canDoAction(token.role, token.permissions, 'weekly saving table', 'create') && <CreateWeeklySavingTable getWeeklySavings={getWeeklySavings} />}</div>
+              <div>
+                <PrintAllWeeklySavingsTable />
+                <ExportAllWeeklySavingsTable />
+              </div>
               <WeeklySavingTableFilter getWeeklySavings={getWeeklySavings} />
             </div>
             <div className="relative overflow-auto">

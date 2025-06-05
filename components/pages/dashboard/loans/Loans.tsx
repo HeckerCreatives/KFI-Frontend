@@ -79,7 +79,7 @@ const Loans = () => {
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
-          <PageTitle pages={['All Files', 'Loan']} />
+          <PageTitle pages={['System', 'Loan Product', 'Product']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center flex-wrap gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
               <div>{canDoAction(token.role, token.permissions, 'loans', 'create') && <CreateLoan getLoans={getLoans} />}</div>
@@ -90,19 +90,17 @@ const Loans = () => {
                 <TableHeader>
                   <TableHeadRow>
                     <TableHead>Code</TableHead>
-                    <TableHead>Description</TableHead>
                     {haveActions(token.role, 'loans', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
                   {data.loading && <TableLoadingRow colspan={3} />}
-                  {!data.loading && data.loans.length < 1 && <TableNoRows label="No Loan Record Found" colspan={3} />}
+                  {!data.loading && data.loans.length < 1 && <TableNoRows label="No Product Record Found" colspan={3} />}
                   {!data.loading &&
                     data.loans.length > 0 &&
                     data.loans.map((loan: Loan) => (
                       <TableRow key={loan._id}>
                         <TableCell>{loan.code}</TableCell>
-                        <TableCell>{loan.description}</TableCell>
                         {haveActions(token.role, 'loans', token.permissions, ['update', 'delete']) && (
                           <TableCell>
                             <LoanActions

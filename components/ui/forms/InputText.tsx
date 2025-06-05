@@ -34,14 +34,14 @@ const InputText = <T extends FieldValues>({
       control={control}
       render={({ field, fieldState: { error } }) => (
         <div className="w-full">
-          <div className="flex justify-between">
-            {label && (
+          {label && (
+            <div className="flex justify-between">
               <IonLabel class="custom" className="!text-sm font-semibold tracking-wide !text-slate-600">
                 {label}
               </IonLabel>
-            )}
-            {label && required && <span className="text-slate-500 text-xs italic">Required</span>}
-          </div>
+              {label && required && <span className="text-slate-500 text-xs italic">Required</span>}
+            </div>
+          )}
 
           <IonInput
             clearInput={type === 'search'}

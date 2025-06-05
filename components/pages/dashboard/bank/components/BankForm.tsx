@@ -4,10 +4,10 @@ import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import InputText from '../../../../ui/forms/InputText';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import InputTextarea from '../../../../ui/forms/InputTextarea';
-import { LoanFormData } from '../../../../../validations/loan.schema';
+import { BankFormData } from '../../../../../validations/bank.schema';
 
 type TForm = {
-  form: UseFormReturn<LoanFormData>;
+  form: UseFormReturn<BankFormData>;
   loading: boolean;
 };
 

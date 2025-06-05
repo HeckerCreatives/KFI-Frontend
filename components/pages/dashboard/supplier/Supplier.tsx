@@ -79,7 +79,7 @@ const Supplier = () => {
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
-          <PageTitle pages={['All Files', 'Supplier']} />
+          <PageTitle pages={['System', 'Business', 'Supplier']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
               <div>{canDoAction(token.role, token.permissions, 'supplier', 'create') && <CreateSupplier getSuppliers={getSuppliers} />}</div>

@@ -1,7 +1,14 @@
+export type SubNavLink = {
+  label: string;
+  path: string;
+  resource: string;
+};
+
 export type NavLink = {
   label: string;
   path: string;
   resource: string;
+  children?: SubNavLink[];
 };
 
 export type ChartOfAccount = {
@@ -10,16 +17,8 @@ export type ChartOfAccount = {
   description: string;
   classification: string;
   nature: string;
-  groupAccount: string;
-  closingAccount: string;
-  fsCode: string;
-  mainAcctNo: string;
-  subAcctNo: string;
-  branchCode: string;
-  sequence: string;
-  parent: string;
-  indention: string;
-  detailed: boolean;
+  deptStatus: string;
+  groupOfAccount?: GroupAccount;
 };
 
 export type Beneficiary = {
@@ -68,11 +67,21 @@ export interface ClientMasterFile {
   children: Child[];
 }
 
+export type LoanCode = {
+  _id?: string;
+  loan?: string;
+  module: string;
+  loanType: string;
+  acctCode: ChartOfAccount;
+  sortOrder: string;
+  createdAt?: string;
+};
+
 export type Loan = {
   _id: string;
   code: string;
-  description: string;
-  createdAt: string;
+  loanCodes: LoanCode[];
+  createdAt?: string;
 };
 
 export type Supplier = {

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import LoanForm from '../components/LoanForm';
-import { LoanFormData, loanSchema } from '../../../../../validations/loan.schema';
+import { ProductLoanFormData, productSchema } from '../../../../../validations/loan.schema';
 import kfiAxios from '../../../../utils/axios';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { TErrorData, TFormError } from '../../../../../types/types';
@@ -19,11 +19,18 @@ const CreateLoan = ({ getLoans }: CreateLoanProps) => {
 
   const modal = useRef<HTMLIonModalElement>(null);
 
-  const form = useForm<LoanFormData>({
-    resolver: zodResolver(loanSchema),
+  const form = useForm<ProductLoanFormData>({
+    resolver: zodResolver(productSchema),
     defaultValues: {
       code: '',
-      description: '',
+      loanCodes: [
+        {
+          module: '',
+          loanType: '',
+          acctCode: '',
+          sortOrder: '',
+        },
+      ],
     },
   });
 
@@ -32,7 +39,7 @@ const CreateLoan = ({ getLoans }: CreateLoanProps) => {
     modal.current?.dismiss();
   }
 
-  async function onSubmit(data: LoanFormData) {
+  async function onSubmit(data: ProductLoanFormData) {
     setLoading(true);
     try {
       const result = await kfiAxios.post('/loan', data);
@@ -63,11 +70,11 @@ const CreateLoan = ({ getLoans }: CreateLoanProps) => {
         ref={modal}
         trigger="create-loan-modal"
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Loan - Add Record" sub="All Files" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Product - Add Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

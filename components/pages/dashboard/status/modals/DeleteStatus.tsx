@@ -1,12 +1,12 @@
 import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import { trashBin } from 'ionicons/icons';
 import React, { useRef, useState } from 'react';
-import { Loan } from '../../../../../types/types';
+import { Status } from '../../../../../types/types';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import kfiAxios from '../../../../utils/axios';
 
 type DeleteStatusProps = {
-  status: Loan;
+  status: Status;
   getStatuses: (page: number, keyword?: string, sort?: string) => void;
   searchkey: string;
   sortKey: string;

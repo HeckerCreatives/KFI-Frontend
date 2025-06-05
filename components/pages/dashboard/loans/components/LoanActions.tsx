@@ -1,10 +1,8 @@
 import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
 import React from 'react';
-
 import { ellipsisVertical } from 'ionicons/icons';
 import UpdateLoan from '../modals/UpdateLoan';
 import DeleteLoan from '../modals/DeleteLoan';
-import SetUpCodeLoan from '../modals/SetUpCodeLoan';
 import { AccessToken, Loan } from '../../../../../types/types';
 import { TLoan } from '../Loans';
 import { jwtDecode } from 'jwt-decode';

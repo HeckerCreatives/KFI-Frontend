@@ -1,10 +1,8 @@
 import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
-import CreateChartOfAccount from './modals/CreateChartOfAccount';
 import ChartOfAccountFilter from './components/ChartOfAccountFilter';
 import PageTitle from '../../../ui/page/PageTitle';
-import ChartOfAccountActions from './components/ChartOfAccountActions';
 import { AccessToken, ChartOfAccount as ChartOfAccountType, TTableFilter } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
@@ -12,7 +10,9 @@ import TablePagination from '../../../ui/forms/TablePagination';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import { jwtDecode } from 'jwt-decode';
-import { canDoAction, haveActions } from '../../../utils/permissions';
+import PrintAllChartOfAccount from './modals/PrintAllChartOfAccount';
+import ExportAllChartOfAccount from './modals/ExportAllChartOfAccount';
+import ChartOfAccountActions from './components/ChartOfAccountActions';
 
 export type TChartOfAccount = {
   chartOfAccounts: ChartOfAccountType[];
@@ -80,10 +80,13 @@ const ChartOfAccount = () => {
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
-          <PageTitle pages={['Manage Account', 'Chart of Account']} />
+          <PageTitle pages={['System', 'Loan Products', 'Chart of Account']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <div>{canDoAction(token.role, token.permissions, 'chart of account', 'create') && <CreateChartOfAccount getChartOfAccounts={getChartOfAccounts} />}</div>
+              <div>
+                <PrintAllChartOfAccount />
+                <ExportAllChartOfAccount />
+              </div>
               <ChartOfAccountFilter getChartOfAccounts={getChartOfAccounts} />
             </div>
             <div className="relative overflow-auto">
@@ -94,7 +97,8 @@ const ChartOfAccount = () => {
                     <TableHead>Description</TableHead>
                     <TableHead>Classification</TableHead>
                     <TableHead>Nature of Account</TableHead>
-                    {haveActions(token.role, 'chart of account', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                    <TableHead>Department Status</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -108,20 +112,19 @@ const ChartOfAccount = () => {
                         <TableCell>{chartAccount.description}</TableCell>
                         <TableCell>{chartAccount.classification}</TableCell>
                         <TableCell>{chartAccount.nature}</TableCell>
-                        {haveActions(token.role, 'chart of account', token.permissions, ['update', 'delete']) && (
-                          <TableCell>
-                            <ChartOfAccountActions
-                              chartAccount={chartAccount}
-                              setData={setData}
-                              getChartOfAccounts={getChartOfAccounts}
-                              currentPage={currentPage}
-                              setCurrentPage={setCurrentPage}
-                              searchKey={searchKey}
-                              sortKey={sortKey}
-                              rowLength={data.chartOfAccounts.length}
-                            />
-                          </TableCell>
-                        )}
+                        <TableCell>{chartAccount.deptStatus}</TableCell>
+                        <TableCell>
+                          <ChartOfAccountActions
+                            chartAccount={chartAccount}
+                            setData={setData}
+                            getChartOfAccounts={getChartOfAccounts}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            searchKey={searchKey}
+                            sortKey={sortKey}
+                            rowLength={data.chartOfAccounts.length}
+                          />
+                        </TableCell>
                       </TableRow>
                     ))}
                 </TableBody>

@@ -1,4 +1,4 @@
-export const TABLE_LIMIT = 10;
+export const TABLE_LIMIT = 15;
 
 export const manageAccountResource: string[] = ['client master file', 'chart of account'];
 

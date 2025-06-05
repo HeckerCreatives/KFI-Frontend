@@ -13,6 +13,8 @@ import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import { canDoAction, haveActions } from '../../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
+import PrintAllCenter from './modals/PrintAllCenter';
+import ExportAllCenter from './modals/ExportAllCenter';
 
 export type TCenter = {
   centers: CenterType[];
@@ -79,10 +81,14 @@ const Center = () => {
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
-          <PageTitle pages={['All Files', 'Center']} />
+          <PageTitle pages={['System', 'Center']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <div>{canDoAction(token.role, token.permissions, 'center', 'create') && <CreateCenter getCenters={getCenters} />}</div>
+              <div className="flex items-center">
+                {canDoAction(token.role, token.permissions, 'center', 'create') && <CreateCenter getCenters={getCenters} />}
+                <PrintAllCenter />
+                <ExportAllCenter />
+              </div>
               <CenterFilter getCenters={getCenters} />
             </div>
             <div className="relative overflow-auto">

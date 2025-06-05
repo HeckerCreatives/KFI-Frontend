@@ -30,7 +30,9 @@ const UpdateGroupAccount = ({ groupAccount, setData }: UpdateGroupAccountProps) 
 
   useEffect(() => {
     if (groupAccount) {
-      form.reset({ code: groupAccount.code });
+      form.reset({
+        code: groupAccount.code,
+      });
     }
   }, [groupAccount, form.reset]);
 

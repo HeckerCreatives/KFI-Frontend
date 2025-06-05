@@ -53,7 +53,7 @@ import EmergencyLoanReport from './dashboard/reports/emergency-loan/EmergencyLoa
 import LoanReleaseVsOrReport from './dashboard/reports/loan-release-vs-or/LoanReleaseVsOrReport';
 import ProjectionByDueDateReport from './dashboard/reports/projection-by-due-date/ProjectionByDueDateReport';
 import ManageAccount from '../ui/navs/ManageAccount';
-import AllFiles from '../ui/navs/AllFiles';
+import AllFiles from '../ui/navs/SystemNav';
 import Admin from './dashboard/admin/Admin';
 import { jwtDecode } from 'jwt-decode';
 import { AccessToken } from '../../types/types';
@@ -64,6 +64,9 @@ import { usePathname } from 'next/navigation';
 import { isVisible } from '../utils/permissions';
 import Status from './dashboard/status/Status';
 import { useEffect, useState } from 'react';
+import GeneralLedgerNav from '../ui/navs/GeneralLedgerNav';
+import SystemNav from '../ui/navs/SystemNav';
+import DiagnosticsNav from '../ui/navs/DiagnosticsNav';
 
 const Tabs = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -126,44 +129,10 @@ const Tabs = () => {
             </div>
             <IonAccordionGroup className="space-y-2 px-3">
               {isVisible(token.role, token.permissions, manageAccountResource) && <ManageAccount />}
-              {isVisible(token.role, token.permissions, allFilesResource) && <AllFiles />}
-              <IonAccordion value="reports" className="bg-transparent">
-                <IonItem
-                  slot="header"
-                  className={classNames(
-                    '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.5rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
-                  )}
-                >
-                  <IonIcon size="small" icon={documentOutline} className="!text-inherit" />
-                  <IonLabel className="text-sm">Reports</IonLabel>
-                </IonItem>
-                <div slot="content"></div>
-              </IonAccordion>
               {isVisible(token.role, token.permissions, transactionResource) && <TransactionNavigation />}
-              <IonAccordion value="general ledger" className="bg-transparent">
-                <IonItem
-                  slot="header"
-                  className={classNames(
-                    '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.5rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
-                  )}
-                >
-                  <IonIcon size="small" icon={documentAttachOutline} className="!text-inherit" />
-                  <IonLabel className="text-sm">General Ledger</IonLabel>
-                </IonItem>
-                <div slot="content"></div>
-              </IonAccordion>
-              <IonAccordion value="utilities" className="bg-transparent">
-                <IonItem
-                  slot="header"
-                  className={classNames(
-                    '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.5rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
-                  )}
-                >
-                  <IonIcon size="small" icon={hammerOutline} className="!text-inherit" />
-                  <IonLabel className="text-sm">Utilities</IonLabel>
-                </IonItem>
-                <div slot="content"></div>
-              </IonAccordion>
+              <GeneralLedgerNav />
+              <SystemNav />
+              <DiagnosticsNav />
             </IonAccordionGroup>
           </div>
         </IonContent>
@@ -208,7 +177,7 @@ const Tabs = () => {
             <Route path="/dashboard/center" render={() => <Center />} exact={true} />
             <Route path="/dashboard/client-master-file" render={() => <ClientMasterFile />} exact={true} />
             <Route path="/dashboard/client-profile" render={() => <ClientProfile />} exact={true} />
-            <Route path="/dashboard/loans" render={() => <Loans />} exact={true} />
+            <Route path="/dashboard/product" render={() => <Loans />} exact={true} />
             <Route path="/dashboard/bank" render={() => <Bank />} exact={true} />
             <Route path="/dashboard/weekly-saving-table" render={() => <WeeklySavingTable />} exact={true} />
             <Route path="/dashboard/supplier" render={() => <Supplier />} exact={true} />

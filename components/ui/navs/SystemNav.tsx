@@ -1,39 +1,41 @@
 import { IonAccordion, IonAccordionGroup, IonIcon, IonItem, IonLabel, IonList, IonMenuToggle } from '@ionic/react';
-import { fileTrayFullOutline } from 'ionicons/icons';
+import { desktopOutline } from 'ionicons/icons';
 import React from 'react';
 import { AccessToken, NavLink, Permission } from '../../../types/types';
 import { usePathname } from 'next/navigation';
 import classNames from 'classnames';
 import { jwtDecode } from 'jwt-decode';
 
-const TransactionNavigation = () => {
+const SystemNav = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
 
   const fileLinks: NavLink[] = [
-    { path: '/dashboard/loan-release', label: 'Loan Release', resource: 'loan release' },
     {
       path: '',
-      label: 'Voucher',
+      label: 'Loan Product',
       resource: '',
       children: [
-        { path: '/dashboard/expense-voucher', label: 'Expense Voucher', resource: 'expense voucher' },
-        { path: '/dashboard/journal-voucher', label: 'Journal Voucher', resource: 'journal voucher' },
+        { path: '/dashboard/group-account', label: 'Group Of Account', resource: '' },
+        { path: '/dashboard/chart-of-account', label: 'Chart Of Account', resource: '' },
+        { path: '/dashboard/product', label: 'Product', resource: '' },
       ],
     },
+    { path: '/dashboard/center', label: 'Center', resource: '' },
+    { path: '/dashboard/bank', label: 'Bank', resource: '' },
+    { path: '/dashboard/weekly-saving-table', label: 'Weekly Savings', resource: '' },
     {
       path: '',
-      label: 'Receipt',
+      label: 'Business',
       resource: '',
       children: [
-        { path: '', label: 'Acknowledgement', resource: '' },
-        { path: '', label: 'Release', resource: '' },
+        { path: '/dashboard/business-type', label: 'Type', resource: '' },
+        { path: '/dashboard/supplier', label: 'Supplier', resource: '' },
       ],
     },
   ];
-
   return (
-    <IonAccordion value="transactions" className="bg-transparent">
+    <IonAccordion value="allFiles" className="bg-transparent">
       <IonItem
         slot="header"
         className={classNames(
@@ -41,8 +43,8 @@ const TransactionNavigation = () => {
           fileLinks.find((link: NavLink) => pathname === link.path) && '!text-[#fa6c2f]',
         )}
       >
-        <IonIcon size="small" icon={fileTrayFullOutline} className="!text-inherit" />
-        <IonLabel className="text-sm">Transactions</IonLabel>
+        <IonIcon size="small" icon={desktopOutline} className="!text-inherit" />
+        <IonLabel className="text-sm">System</IonLabel>
       </IonItem>
       <div slot="content">
         <IonList className="p-0">
@@ -51,7 +53,7 @@ const TransactionNavigation = () => {
               (token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === link.resource && e.actions.visible)) &&
               (link.children ? (
                 <IonAccordionGroup>
-                  <IonAccordion value={link.label} className="bg-transparent">
+                  <IonAccordion value="transactions" className="bg-transparent">
                     <IonItem
                       slot="header"
                       className={classNames(
@@ -103,4 +105,4 @@ const TransactionNavigation = () => {
   );
 };
 
-export default TransactionNavigation;
+export default SystemNav;

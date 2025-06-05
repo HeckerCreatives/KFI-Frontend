@@ -1,28 +1,86 @@
-import { IonAccordion, IonIcon, IonLabel, IonList } from '@ionic/react';
-import { listCircle } from 'ionicons/icons';
+import { IonAccordion, IonAccordionGroup, IonIcon, IonItem, IonLabel, IonList, IonMenuToggle } from '@ionic/react';
+import { documentAttachOutline } from 'ionicons/icons';
 import React from 'react';
+import { AccessToken, NavLink, Permission } from '../../../types/types';
+import { usePathname } from 'next/navigation';
+import classNames from 'classnames';
+import { jwtDecode } from 'jwt-decode';
 
 const GeneralLedgerNav = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const pathname = usePathname();
+
+  const fileLinks: NavLink[] = [
+    { path: '', label: 'Audit Trail', resource: '' },
+    { path: '', label: 'Financial Statement', resource: '' },
+    { path: '', label: 'Trial Balance', resource: '' },
+  ];
+
   return (
-    <IonAccordion value="general-ledger" className="">
-      <div
+    <IonAccordion value="general-ledger" className="bg-transparent">
+      <IonItem
         slot="header"
-        className="px-4 flex items-center gap-2 py-2 cursor-pointer text-sm font-semibold border-b border-gray-400/50 bg-[#b44e1d] hover:text-slate-800 text-slate-100 hover:bg-[#FFE4C9]"
+        className={classNames(
+          '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.5rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
+          fileLinks.find((link: NavLink) => pathname === link.path) && '!text-[#fa6c2f]',
+        )}
       >
-        <IonIcon icon={listCircle} className="!text-inherit" />
-        <IonLabel color="dark" className="!text-inherit">
-          General Ledger
-        </IonLabel>
-      </div>
+        <IonIcon size="small" icon={documentAttachOutline} className="!text-inherit" />
+        <IonLabel className="text-sm">General Ledger</IonLabel>
+      </IonItem>
       <div slot="content">
         <IonList className="p-0">
-          {/* {fileLinks.map(link => (
-                <IonMenuToggle key={link.path}>
-                  <IonItem routerLink="/chart-of-account">
+          {fileLinks.map(
+            link =>
+              (token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === link.resource && e.actions.visible)) &&
+              (link.children ? (
+                <IonAccordionGroup>
+                  <IonAccordion value="transactions" className="bg-transparent">
+                    <IonItem
+                      slot="header"
+                      className={classNames(
+                        '!text-[0.9rem] space-x-2 text-slate-500 [--padding-start:0.5rem] [--padding-end:0.5rem] hover:[--color:#FA6C2F] [--border-color:transparent] [--background:transparent]',
+                        fileLinks.find((link: NavLink) => pathname === link.path) && '!text-[#fa6c2f]',
+                      )}
+                    >
+                      <IonLabel className="text-sm">{link.label}</IonLabel>
+                    </IonItem>
+                    <div slot="content">
+                      <IonList className="p-0">
+                        {link.children.map(
+                          subLink =>
+                            (token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === subLink.resource && e.actions.visible)) && (
+                              <IonMenuToggle key={subLink.path} autoHide={false}>
+                                <IonItem
+                                  routerLink={subLink.path}
+                                  className={classNames(
+                                    '!text-[0.9rem] [--padding-start:1.5rem] [--min-height:2.25rem] [--border-color:transparent] space-x-2 text-slate-500 hover:[--color:#FA6C2F]',
+                                    pathname === subLink.path && '!text-[#fa6c2f]',
+                                  )}
+                                >
+                                  <IonLabel>{subLink.label}</IonLabel>
+                                </IonItem>
+                              </IonMenuToggle>
+                            ),
+                        )}
+                      </IonList>
+                    </div>
+                  </IonAccordion>
+                </IonAccordionGroup>
+              ) : (
+                <IonMenuToggle key={link.path} autoHide={false}>
+                  <IonItem
+                    routerLink={link.path}
+                    className={classNames(
+                      '!text-[0.9rem] [--padding-start:1rem] [--min-height:2.25rem] [--border-color:transparent] space-x-2 text-slate-500 hover:[--color:#FA6C2F]',
+                      pathname === link.path && '!text-[#fa6c2f]',
+                    )}
+                  >
                     <IonLabel>{link.label}</IonLabel>
                   </IonItem>
                 </IonMenuToggle>
-              ))} */}
+              )),
+          )}
         </IonList>
       </div>
     </IonAccordion>

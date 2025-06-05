@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon } from '@ionic/react';
-import { createSharp } from 'ionicons/icons';
+import { link } from 'ionicons/icons';
 import { useForm } from 'react-hook-form';
-import ChartOfAccountForm from '../components/ChartOfAccountForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChartOfAccountFormData, chartOfAccountSchema } from '../../../../../validations/chart-of-account.schema';
 import ModalHeader from '../../../../ui/page/ModalHeader';
@@ -11,48 +10,28 @@ import { TChartOfAccount } from '../ChartOfAccount';
 import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import FormIonItem from '../../../../ui/utils/FormIonItem';
+import InputText from '../../../../ui/forms/InputText';
+import GroupOfAccountSelection from '../../../../ui/selections/GroupOfAccountSelection';
+import ChartOfAccountCard from '../components/ChartOfAccountCard';
 
-const UpdateChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAccount; setData: React.Dispatch<React.SetStateAction<TChartOfAccount>> }) => {
+const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAccount; setData: React.Dispatch<React.SetStateAction<TChartOfAccount>> }) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
 
   const form = useForm<ChartOfAccountFormData>({
     resolver: zodResolver(chartOfAccountSchema),
     defaultValues: {
-      code: chartAccount.code,
-      description: chartAccount.description,
-      classification: chartAccount.classification,
-      nature: chartAccount.nature,
-      groupAccount: chartAccount.groupAccount,
-      closingAccount: chartAccount.closingAccount,
-      fsCode: chartAccount.fsCode,
-      mainAcctNo: chartAccount.mainAcctNo,
-      subAcctNo: chartAccount.subAcctNo,
-      branchCode: chartAccount.branchCode,
-      sequence: chartAccount.sequence,
-      parent: chartAccount.parent,
-      indention: chartAccount.indention,
-      detailed: chartAccount.detailed,
+      groupAccount: '',
+      groupAccountLabel: '',
     },
   });
 
   useEffect(() => {
     if (chartAccount) {
       form.reset({
-        code: chartAccount.code,
-        description: chartAccount.description,
-        classification: chartAccount.classification,
-        nature: chartAccount.nature,
-        groupAccount: chartAccount.groupAccount,
-        closingAccount: chartAccount.closingAccount,
-        fsCode: chartAccount.fsCode,
-        mainAcctNo: chartAccount.mainAcctNo,
-        subAcctNo: chartAccount.subAcctNo,
-        branchCode: chartAccount.branchCode,
-        sequence: chartAccount.sequence,
-        parent: chartAccount.parent,
-        indention: chartAccount.indention,
-        detailed: chartAccount.detailed,
+        groupAccount: chartAccount?.groupOfAccount?._id,
+        groupAccountLabel: chartAccount?.groupOfAccount?.code,
       });
     }
   }, [chartAccount, form.reset]);
@@ -65,7 +44,7 @@ const UpdateChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOf
   async function onSubmit(data: ChartOfAccountFormData) {
     setLoading(true);
     try {
-      const result = await kfiAxios.put(`/chart-of-account/${chartAccount._id}`, data);
+      const result = await kfiAxios.patch(`/chart-of-account/link/${chartAccount._id}`, { groupOfAccount: data.groupAccount });
       const { success } = result.data;
       if (success) {
         setData(prev => {
@@ -94,7 +73,7 @@ const UpdateChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOf
           id={`update-coa-modal-${chartAccount._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
-          <IonIcon icon={createSharp} className="text-[1rem]" /> Edit
+          <IonIcon icon={link} className="text-[1rem]" /> Link to Group Account
         </div>
       </div>
       <IonModal
@@ -105,16 +84,36 @@ const UpdateChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOf
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Chart of Account - Edit Record" sub="Manage Account" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Chart of Account - Link to Group Account" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">
-          <div>
+          <div className="space-y-3">
+            <ChartOfAccountCard label="Account Code" value={chartAccount.code} />
+            <ChartOfAccountCard label="Description" value={chartAccount.description} />
+            <ChartOfAccountCard label="Classification" value={chartAccount.classification} />
+            <ChartOfAccountCard label="Nature of Account" value={chartAccount.nature} />
+            <ChartOfAccountCard label="Department Status" value={chartAccount.deptStatus} />
+
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <ChartOfAccountForm form={form} loading={loading} />
+              <div className="flex items-start gap-2 flex-nowrap">
+                <FormIonItem className="w-full">
+                  <InputText
+                    disabled={loading}
+                    name="groupAccountLabel"
+                    control={form.control}
+                    clearErrors={form.clearErrors}
+                    label="Group of Account"
+                    placeholder="Click find to search a group of account"
+                    className="!px-2 !py-2 rounded-md "
+                    readOnly
+                  />
+                </FormIonItem>
+                <GroupOfAccountSelection groupOfAccountLabel="groupAccountLabel" groupOfAccountValue="groupAccount" setValue={form.setValue} clearErrors={form.clearErrors} />
+              </div>
               <div className="text-end border-t mt-2 pt-1 space-x-2">
                 <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
-                  {loading ? 'Saving...' : 'Save'}
+                  {loading ? 'Linking...' : 'Link'}
                 </IonButton>
                 <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
                   Cancel
@@ -128,4 +127,4 @@ const UpdateChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOf
   );
 };
 
-export default UpdateChartOfAccount;
+export default LinkChartOfAccount;
