@@ -81,7 +81,7 @@ const UpdateSupplier = ({ supplier, setData }: { supplier: Supplier; setData: Re
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Supplier - Edit Record" sub="All Files" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Supplier - Edit Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

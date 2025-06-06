@@ -77,7 +77,7 @@ const UpdateBusinessType = ({ businessType, setData }: { businessType: BusinessT
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Business Type - Edit Record" sub="All Files" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Business Type - Edit Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

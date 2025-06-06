@@ -88,7 +88,7 @@ const UpdateWeeklySavingTable = ({ saving, setData }: UpdateWeeklySavingTablePro
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Weekly Saving Table - Edit Record" sub="All Files" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Weekly Saving Table - Edit Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

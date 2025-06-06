@@ -1,9 +1,17 @@
 export const TABLE_LIMIT = 15;
 
-export const manageAccountResource: string[] = ['client', 'chart of account'];
+export const manageAccountResource: string[] = ['admin', 'clients'];
+
+export const transactionResource: string[] = ['loan release', 'expense voucher', 'journal voucher', 'acknowledgement', 'release'];
+
+export const generalLedgerResource: string[] = ['audit trail', 'financial statement', 'trial balance'];
+
+export const systemResource: string[] = ['group of account', 'chart of account', 'product', 'center', 'bank', 'weekly savings', 'business type', 'business supplier'];
+
+export const diagnosticsResource: string[] = ['unbalance entries', 'login logs', 'action logs'];
+
+export const actions: string[] = ['visible', 'create', 'read', 'updated', 'delete', 'print', 'export'];
+
+// ENDED
 
 export const allFilesResource: string[] = ['bank', 'business type', 'center', 'loans', 'weekly saving table', 'supplier'];
-
-export const transactionResource: string[] = ['loan release', 'journal voucher', 'expense voucher', 'emergency loan', 'damayan fund', 'official receipt'];
-
-export const actions: string[] = ['visible', 'create', 'read', 'updated', 'delete', 'print'];

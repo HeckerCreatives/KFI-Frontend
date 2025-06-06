@@ -63,7 +63,7 @@ const DeleteSupplier = ({ supplier, getSuppliers, searchkey, sortKey, currentPag
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Supplier - Delete Record" sub="All Files" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Supplier - Delete Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

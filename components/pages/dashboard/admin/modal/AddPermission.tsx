@@ -4,10 +4,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { Permission, User } from '../../../../../types/types';
 import { TUser } from '../Admin';
-import { Table, TableBody, TableHead, TableHeader, TableHeadRow } from '../../../../ui/table/Table';
-import UserTableRow from '../components/UserTableRow';
 import kfiAxios from '../../../../utils/axios';
-import { allFilesResource, manageAccountResource, transactionResource } from '../../../../utils/constants';
+import ManageAccountPermission from '../components/permissions/ManageAccountPermission';
+import TransactionPermission from '../components/permissions/TransactionPermission';
+import GeneralLedgerPermission from '../components/permissions/GeneralLedgerPermission';
+import SystemPermission from '../components/permissions/SystemPermission';
+import DiagnosticsPermission from '../components/permissions/DiagnosticsPermission';
 
 type AddPermissionProps = {
   user: User;
@@ -76,81 +78,11 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
           </IonToolbar>
         </IonHeader>
         <div className="inner-content space-y-4">
-          <div>
-            <h6 className="font-semibold m-0 mt-2">Manage Account</h6>
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow className="border-b-0 bg-slate-100">
-                    <TableHead className="max-w-32">Page</TableHead>
-                    <TableHead className="text-center">Visible</TableHead>
-                    <TableHead className="text-center">Create</TableHead>
-                    <TableHead className="text-center">Read</TableHead>
-                    <TableHead className="text-center">Edit</TableHead>
-                    <TableHead className="text-center">Delete</TableHead>
-                    <TableHead className="text-center">Print</TableHead>
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {permissions
-                    .filter((e: Permission) => manageAccountResource.includes(e.resource))
-                    .map((permission: Permission) => (
-                      <UserTableRow key={permission._id} permission={permission} setPermissions={setPermissions} />
-                    ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-          <div>
-            <h6 className="font-semibold m-0 mt-2">All Files</h6>
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow className="border-b-0 bg-slate-100">
-                    <TableHead className="max-w-32">Page</TableHead>
-                    <TableHead className="text-center">Visible</TableHead>
-                    <TableHead className="text-center">Create</TableHead>
-                    <TableHead className="text-center">Read</TableHead>
-                    <TableHead className="text-center">Edit</TableHead>
-                    <TableHead className="text-center">Delete</TableHead>
-                    <TableHead className="text-center">Print</TableHead>
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {permissions
-                    .filter((e: Permission) => allFilesResource.includes(e.resource))
-                    .map((permission: Permission) => (
-                      <UserTableRow key={permission._id} permission={permission} setPermissions={setPermissions} />
-                    ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-          <div>
-            <h6 className="font-semibold m-0 mt-2">Transactions</h6>
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow className="border-b-0 bg-slate-100">
-                    <TableHead className="max-w-32">Page</TableHead>
-                    <TableHead className="text-center">Visible</TableHead>
-                    <TableHead className="text-center">Create</TableHead>
-                    <TableHead className="text-center">Read</TableHead>
-                    <TableHead className="text-center">Edit</TableHead>
-                    <TableHead className="text-center">Delete</TableHead>
-                    <TableHead className="text-center">Print</TableHead>
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {permissions
-                    .filter((e: Permission) => transactionResource.includes(e.resource))
-                    .map((permission: Permission) => (
-                      <UserTableRow key={permission._id} permission={permission} setPermissions={setPermissions} />
-                    ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
+          <ManageAccountPermission permissions={permissions} setPermissions={setPermissions} />
+          <TransactionPermission permissions={permissions} setPermissions={setPermissions} />
+          <GeneralLedgerPermission permissions={permissions} setPermissions={setPermissions} />
+          <SystemPermission permissions={permissions} setPermissions={setPermissions} />
+          <DiagnosticsPermission permissions={permissions} setPermissions={setPermissions} />
           <div className="text-end border-t pt-1 space-x-2">
             <IonButton onClick={handleAddPermission} disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
               {loading ? 'Saving...' : 'Save'}

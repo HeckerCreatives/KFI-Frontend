@@ -104,6 +104,7 @@ export type Action = {
   delete: boolean;
   read: boolean;
   print: boolean;
+  export: boolean;
   visible: boolean;
 };
 

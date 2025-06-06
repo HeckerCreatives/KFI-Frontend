@@ -9,17 +9,22 @@ type UserTableRowProps = {
 };
 
 interface IonChangeEventDetail {
-  value: 'create' | 'visible' | 'read' | 'update' | 'delete' | 'print';
+  value: 'create' | 'visible' | 'read' | 'update' | 'delete' | 'print' | 'export';
   checked: boolean;
 }
 
 const UserTableRow = ({ permission, setPermissions }: UserTableRowProps) => {
   const handleChecked = (e: CustomEvent<IonChangeEventDetail>) => {
     const { checked, value } = e.detail;
+
     setPermissions(prev => {
       let clone = [...prev];
       let index = clone.findIndex(e => e._id === permission._id && e.resource === permission.resource);
-      clone[index].actions[`${value}`] = checked;
+      if (value === 'visible' && !checked) {
+        clone[index].actions = { visible: false, create: false, read: false, update: false, delete: false, print: false, export: false };
+      } else {
+        clone[index].actions[`${value}`] = checked;
+      }
       return clone;
     });
   };
@@ -44,6 +49,9 @@ const UserTableRow = ({ permission, setPermissions }: UserTableRowProps) => {
       </TableCell>
       <TableCell className="text-center">
         <IonCheckbox checked={permission.actions.print} value="print" onIonChange={handleChecked} />
+      </TableCell>
+      <TableCell className="text-center">
+        <IonCheckbox checked={permission.actions.export} value="print" onIonChange={handleChecked} />
       </TableCell>
     </TableRow>
   );

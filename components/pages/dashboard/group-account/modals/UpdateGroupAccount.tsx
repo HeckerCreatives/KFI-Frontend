@@ -84,7 +84,7 @@ const UpdateGroupAccount = ({ groupAccount, setData }: UpdateGroupAccountProps) 
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader title="Group Account - Edit Record" sub="All Files" dismiss={dismiss} />
+            <ModalHeader title="Group Account - Edit Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">
