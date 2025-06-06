@@ -26,8 +26,8 @@ const TransactionNavigation = () => {
       label: 'Receipt',
       resource: '',
       children: [
-        { path: '', label: 'Acknowledgement', resource: '' },
-        { path: '', label: 'Release', resource: '' },
+        { path: '/dashboard/acknowledgement', label: 'Acknowledgement', resource: 'acknowledgement' },
+        { path: '/dashboard/release', label: 'Release', resource: 'release' },
       ],
     },
   ];

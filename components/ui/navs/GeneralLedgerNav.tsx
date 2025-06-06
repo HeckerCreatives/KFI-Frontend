@@ -11,9 +11,9 @@ const GeneralLedgerNav = () => {
   const pathname = usePathname();
 
   const fileLinks: NavLink[] = [
-    { path: '', label: 'Audit Trail', resource: '' },
-    { path: '', label: 'Financial Statement', resource: '' },
-    { path: '', label: 'Trial Balance', resource: '' },
+    { path: '/dashboard/audit-trail', label: 'Audit Trail', resource: 'audit trail' },
+    { path: '/dashboard/financial-statement', label: 'Financial Statement', resource: 'financial statement' },
+    { path: '/dashboard/trial-balance', label: 'Trial Balance', resource: 'trial balance' },
   ];
 
   return (

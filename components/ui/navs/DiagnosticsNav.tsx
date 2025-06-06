@@ -11,9 +11,9 @@ const DiagnosticsNav = () => {
   const pathname = usePathname();
 
   const fileLinks: NavLink[] = [
-    { path: '', label: 'Unbalance Entries', resource: '' },
-    { path: '', label: 'Login Logs', resource: '' },
-    { path: '', label: 'Action Logs', resource: '' },
+    { path: '/dashboard/unbalance-entries', label: 'Unbalance Entries', resource: 'unbalance entries' },
+    { path: '/dashboard/login-logs', label: 'Login Logs', resource: 'login logs' },
+    { path: '/dashboard/action-logs', label: 'Action Logs', resource: 'action logs' },
   ];
 
   return (

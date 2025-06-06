@@ -20,14 +20,11 @@ import {
 import ChartOfAccount from './dashboard/chart-of-account/ChartOfAccount';
 import Center from './dashboard/center/Center';
 import ClientMasterFile from './dashboard/client-master-file/ClientMasterFile';
-import ClientProfile from './dashboard/client-profile/ClientProfile';
 import Loans from './dashboard/loans/Loans';
 import Bank from './dashboard/bank/Bank';
 import WeeklySavingTable from './dashboard/weekly-saving-table/WeeklySavingTable';
 import Supplier from './dashboard/supplier/Supplier';
 import BusinessType from './dashboard/business-type/BusinessType';
-import BusinessFix from './dashboard/business-fix/BusinessFix';
-import Nature from './dashboard/nature/Nature';
 import GroupAccount from './dashboard/group-account/GroupAccount';
 import logoNoBg from '../assets/images/logo-nobg.png';
 import Image from 'next/image';
@@ -36,21 +33,6 @@ import TransactionNavigation from '../ui/navs/TransactionNavigation';
 import LoanRelease from './dashboard/transactions/loan-release/LoanRelease';
 import ExpenseVoucher from './dashboard/transactions/expense-voucher/ExpenseVoucher';
 import JournalVoucher from './dashboard/transactions/journal-voucher/JournalVoucher';
-import OfficialReceipt from './dashboard/transactions/official-receipt/OfficialReceipt';
-import EmergencyLoan from './dashboard/transactions/emergency-loan/EmergencyLoan';
-import DamayanFund from './dashboard/transactions/damayan-fund/DamayanFund';
-import StatementOfAccountReport from './dashboard/reports/statement-of-account/StatementOfAccountReport';
-import ClientProfileReport from './dashboard/reports/client-profile/ClientProfileReport';
-import CenterReport from './dashboard/reports/center/CenterReport';
-import WeeklyCollectionReport from './dashboard/reports/weekly-collection/WeeklyCollectionReport';
-import JournalVoucherReport from './dashboard/reports/journal-voucher/JournalVoucherReport';
-import ExpenseVoucherReport from './dashboard/reports/expense-voucher/ExpenseVoucherReport';
-import OfficialReceiptReport from './dashboard/reports/official-receipt/OfficialReceiptReport';
-import LoanReleaseReport from './dashboard/reports/loan-release/LoanReleaseReport';
-import DamayanFundReport from './dashboard/reports/damayan-fund/DamayanFundReport';
-import EmergencyLoanReport from './dashboard/reports/emergency-loan/EmergencyLoanReport';
-import LoanReleaseVsOrReport from './dashboard/reports/loan-release-vs-or/LoanReleaseVsOrReport';
-import ProjectionByDueDateReport from './dashboard/reports/projection-by-due-date/ProjectionByDueDateReport';
 import ManageAccount from '../ui/navs/ManageAccount';
 import Admin from './dashboard/admin/Admin';
 import { jwtDecode } from 'jwt-decode';
@@ -60,11 +42,18 @@ import Dashboard from './dashboard/home/Dashboard';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { isVisible } from '../utils/permissions';
-import Status from './dashboard/status/Status';
 import { useEffect, useState } from 'react';
 import GeneralLedgerNav from '../ui/navs/GeneralLedgerNav';
 import SystemNav from '../ui/navs/SystemNav';
 import DiagnosticsNav from '../ui/navs/DiagnosticsNav';
+import Acknowledgement from './dashboard/acknowledgement/Acknowledgement';
+import Release from './dashboard/release/Release';
+import AuditTrail from './dashboard/audit-trail/AuditTrail';
+import FinancialStatement from './dashboard/financial-statement/FinancialStatement';
+import TrialBalance from './dashboard/trial-balance/TrialBalance';
+import UnbalanceEntries from './dashboard/unbalance-entries/UnbalanceEntries';
+import LoginLogs from './dashboard/login-logs/LoginLogs';
+import ActionLogs from './dashboard/action-logs/ActionLogs';
 
 const Tabs = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -172,40 +161,45 @@ const Tabs = () => {
           <IonRouterOutlet>
             <Route path="/dashboard" render={() => <Redirect to={'/dashboard/home'} />} exact={true} />
             <Route path="/dashboard/home" render={() => <Dashboard />} exact={true} />
+
+            {/* Manage Account */}
             <Route path="/dashboard/admin" render={() => <Admin />} exact={true} />
-            <Route path="/dashboard/chart-of-account" render={() => <ChartOfAccount />} exact={true} />
-            <Route path="/dashboard/center" render={() => <Center />} exact={true} />
             <Route path="/dashboard/client" render={() => <ClientMasterFile />} exact={true} />
-            <Route path="/dashboard/client-profile" render={() => <ClientProfile />} exact={true} />
-            <Route path="/dashboard/product" render={() => <Loans />} exact={true} />
-            <Route path="/dashboard/bank" render={() => <Bank />} exact={true} />
-            <Route path="/dashboard/weekly-saving-table" render={() => <WeeklySavingTable />} exact={true} />
-            <Route path="/dashboard/supplier" render={() => <Supplier />} exact={true} />
-            <Route path="/dashboard/business-type" render={() => <BusinessType />} exact={true} />
-            <Route path="/dashboard/business-fix" render={() => <BusinessFix />} exact={true} />
-            <Route path="/dashboard/nature" render={() => <Nature />} exact={true} />
-            <Route path="/dashboard/status" render={() => <Status />} exact={true} />
+            {/* Manage Account Ends */}
+
             {/* Transactions */}
-            <Route path="/dashboard/group-account" render={() => <GroupAccount />} exact={true} />
             <Route path="/dashboard/loan-release" render={() => <LoanRelease />} exact={true} />
             <Route path="/dashboard/expense-voucher" render={() => <ExpenseVoucher />} exact={true} />
             <Route path="/dashboard/journal-voucher" render={() => <JournalVoucher />} exact={true} />
-            <Route path="/dashboard/official-receipt" render={() => <OfficialReceipt />} exact={true} />
-            <Route path="/dashboard/emergency-loan" render={() => <EmergencyLoan />} exact={true} />
-            <Route path="/dashboard/damayan-fund" render={() => <DamayanFund />} exact={true} />
-            {/* Reports */}
-            <Route path="/dashboard/soa-report" render={() => <StatementOfAccountReport />} exact={true} />
-            <Route path="/dashboard/cp-report" render={() => <ClientProfileReport />} exact={true} />
-            <Route path="/dashboard/center-report" render={() => <CenterReport />} exact={true} />
-            <Route path="/dashboard/wc-report" render={() => <WeeklyCollectionReport />} exact={true} />
-            <Route path="/dashboard/jv-report" render={() => <JournalVoucherReport />} exact={true} />
-            <Route path="/dashboard/ev-report" render={() => <ExpenseVoucherReport />} exact={true} />
-            <Route path="/dashboard/or-report" render={() => <OfficialReceiptReport />} exact={true} />
-            <Route path="/dashboard/lr-report" render={() => <LoanReleaseReport />} exact={true} />
-            <Route path="/dashboard/df-report" render={() => <DamayanFundReport />} exact={true} />
-            <Route path="/dashboard/el-report" render={() => <EmergencyLoanReport />} exact={true} />
-            <Route path="/dashboard/lrvor-report" render={() => <LoanReleaseVsOrReport />} exact={true} />
-            <Route path="/dashboard/pbd-report" render={() => <ProjectionByDueDateReport />} exact={true} />
+            <Route path="/dashboard/acknowledgement" render={() => <Acknowledgement />} exact={true} />
+            <Route path="/dashboard/release" render={() => <Release />} exact={true} />
+            {/* Transactions Ends */}
+
+            {/* General Ledger */}
+            <Route path="/dashboard/audit-trail" render={() => <AuditTrail />} exact={true} />
+            <Route path="/dashboard/financial-statement" render={() => <FinancialStatement />} exact={true} />
+            <Route path="/dashboard/trial-balance" render={() => <TrialBalance />} exact={true} />
+            {/* General Ledger Ends */}
+
+            {/* System */}
+            <Route path="/dashboard/group-of-account" render={() => <GroupAccount />} exact={true} />
+            <Route path="/dashboard/chart-of-account" render={() => <ChartOfAccount />} exact={true} />
+            <Route path="/dashboard/product" render={() => <Loans />} exact={true} />
+            <Route path="/dashboard/center" render={() => <Center />} exact={true} />
+            <Route path="/dashboard/bank" render={() => <Bank />} exact={true} />
+            <Route path="/dashboard/weekly-savings" render={() => <WeeklySavingTable />} exact={true} />
+            <Route path="/dashboard/business-type" render={() => <BusinessType />} exact={true} />
+            <Route path="/dashboard/business-supplier" render={() => <Supplier />} exact={true} />
+            {/* System Ends */}
+
+            {/* Diagnostics */}
+            <Route path="/dashboard/unbalance-entries" render={() => <UnbalanceEntries />} exact={true} />
+            <Route path="/dashboard/login-logs" render={() => <LoginLogs />} exact={true} />
+            <Route path="/dashboard/action-logs" render={() => <ActionLogs />} exact={true} />
+            {/* Diagnostics Ends */}
+
+            {/* <Route path="/dashboard/nature" render={() => <Nature />} exact={true} />
+            <Route path="/dashboard/status" render={() => <Status />} exact={true} /> */}
           </IonRouterOutlet>
         </IonContent>
       </IonPage>
