@@ -51,7 +51,7 @@ const UserTableRow = ({ permission, setPermissions }: UserTableRowProps) => {
         <IonCheckbox checked={permission.actions.print} value="print" onIonChange={handleChecked} />
       </TableCell>
       <TableCell className="text-center">
-        <IonCheckbox checked={permission.actions.export} value="print" onIonChange={handleChecked} />
+        <IonCheckbox checked={permission.actions.export} value="export" onIonChange={handleChecked} />
       </TableCell>
     </TableRow>
   );

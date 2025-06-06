@@ -15,7 +15,6 @@ import {
   IonLabel,
   IonAccordionGroup,
   IonMenuButton,
-  IonAccordion,
   isPlatform,
 } from '@ionic/react';
 import ChartOfAccount from './dashboard/chart-of-account/ChartOfAccount';
@@ -32,7 +31,7 @@ import Nature from './dashboard/nature/Nature';
 import GroupAccount from './dashboard/group-account/GroupAccount';
 import logoNoBg from '../assets/images/logo-nobg.png';
 import Image from 'next/image';
-import { chevronDownOutline, documentAttachOutline, documentOutline, hammerOutline, homeOutline, logOut, settingsOutline } from 'ionicons/icons';
+import { chevronDownOutline, homeOutline, logOut, settingsOutline } from 'ionicons/icons';
 import TransactionNavigation from '../ui/navs/TransactionNavigation';
 import LoanRelease from './dashboard/transactions/loan-release/LoanRelease';
 import ExpenseVoucher from './dashboard/transactions/expense-voucher/ExpenseVoucher';
@@ -53,11 +52,10 @@ import EmergencyLoanReport from './dashboard/reports/emergency-loan/EmergencyLoa
 import LoanReleaseVsOrReport from './dashboard/reports/loan-release-vs-or/LoanReleaseVsOrReport';
 import ProjectionByDueDateReport from './dashboard/reports/projection-by-due-date/ProjectionByDueDateReport';
 import ManageAccount from '../ui/navs/ManageAccount';
-import AllFiles from '../ui/navs/SystemNav';
 import Admin from './dashboard/admin/Admin';
 import { jwtDecode } from 'jwt-decode';
 import { AccessToken } from '../../types/types';
-import { allFilesResource, manageAccountResource, transactionResource } from '../utils/constants';
+import { diagnosticsResource, generalLedgerResource, manageAccountResource, systemResource, transactionResource } from '../utils/constants';
 import Dashboard from './dashboard/home/Dashboard';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
@@ -101,6 +99,8 @@ const Tabs = () => {
     }
   };
 
+  console.log(token.permissions);
+
   return (
     <IonSplitPane when="lg" contentId="main-content" className={classNames('w-full transition-all duration-300 ease-in-out')} disabled={!isOpen}>
       <IonMenu contentId="main-content" menuId="main-content" class="lg:max-w-64" disabled={isPlatform('desktop') && !isOpen}>
@@ -130,9 +130,9 @@ const Tabs = () => {
             <IonAccordionGroup className="space-y-2 px-3">
               {isVisible(token.role, token.permissions, manageAccountResource) && <ManageAccount />}
               {isVisible(token.role, token.permissions, transactionResource) && <TransactionNavigation />}
-              <GeneralLedgerNav />
-              <SystemNav />
-              <DiagnosticsNav />
+              {isVisible(token.role, token.permissions, generalLedgerResource) && <GeneralLedgerNav />}
+              {isVisible(token.role, token.permissions, systemResource) && <SystemNav />}
+              {isVisible(token.role, token.permissions, diagnosticsResource) && <DiagnosticsNav />}
             </IonAccordionGroup>
           </div>
         </IonContent>

@@ -12,7 +12,7 @@ const ManageAccount = () => {
 
   const fileLinks: NavLink[] = [
     { path: '/dashboard/admin', label: 'Admin', resource: 'admin' },
-    { path: '/dashboard/client', label: 'Clients', resource: 'client' },
+    { path: '/dashboard/client', label: 'Clients', resource: 'clients' },
   ];
   return (
     <IonAccordion value="manageAccount" className="bg-transparent">
