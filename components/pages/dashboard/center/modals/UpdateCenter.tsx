@@ -40,7 +40,7 @@ const UpdateCenter = ({ center, setData }: { center: Center; setData: React.Disp
         acctOfficer: center.acctOfficer,
       });
     }
-  }, [center, form.reset]);
+  }, [center, form]);
 
   function dismiss() {
     form.reset();

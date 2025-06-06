@@ -31,16 +31,12 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
         code: loan.code,
       });
     }
-  }, [loan, form.reset]);
+  }, [loan, form]);
 
   function dismiss() {
     form.reset();
     modal.current?.dismiss();
   }
-
-  useEffect(() => {
-    console.log(form.formState.errors);
-  }, [form.formState.errors]);
 
   async function onSubmit(data: UpdateProductLoanFormData) {
     setLoading(true);

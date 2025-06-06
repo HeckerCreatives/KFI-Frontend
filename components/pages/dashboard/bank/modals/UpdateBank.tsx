@@ -32,7 +32,7 @@ const UpdateBank = ({ bank, setData }: { bank: Bank; setData: React.Dispatch<Rea
         description: bank.description,
       });
     }
-  }, [bank, form.reset]);
+  }, [bank, form]);
 
   function dismiss() {
     form.reset();

@@ -34,7 +34,7 @@ const UpdateGroupAccount = ({ groupAccount, setData }: UpdateGroupAccountProps) 
         code: groupAccount.code,
       });
     }
-  }, [groupAccount, form.reset]);
+  }, [groupAccount, form]);
 
   function dismiss() {
     form.reset();

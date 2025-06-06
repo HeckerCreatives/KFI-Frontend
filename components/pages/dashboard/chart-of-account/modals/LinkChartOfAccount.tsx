@@ -34,7 +34,7 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
         groupAccountLabel: chartAccount?.groupOfAccount?.code,
       });
     }
-  }, [chartAccount, form.reset]);
+  }, [chartAccount, form]);
 
   function dismiss() {
     form.reset();

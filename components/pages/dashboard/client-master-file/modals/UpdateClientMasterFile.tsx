@@ -89,7 +89,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         reason: client.reason,
       });
     }
-  }, [client, form.reset]);
+  }, [client, form]);
 
   function dismiss() {
     form.reset();

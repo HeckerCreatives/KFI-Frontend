@@ -31,7 +31,7 @@ const UpdateSupplier = ({ supplier, setData }: { supplier: Supplier; setData: Re
         description: supplier.description,
       });
     }
-  }, [supplier, form.reset]);
+  }, [supplier, form]);
 
   function dismiss() {
     form.reset();

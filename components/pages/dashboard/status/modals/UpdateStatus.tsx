@@ -31,7 +31,7 @@ const UpdateStatus = ({ status, setData }: { status: Status; setData: React.Disp
         description: status.description,
       });
     }
-  }, [status, form.reset]);
+  }, [status, form]);
 
   function dismiss() {
     form.reset();

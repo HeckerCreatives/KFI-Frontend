@@ -32,7 +32,7 @@ const UpdateNature = ({ nature, setData }: UpdateNatureProps) => {
     if (nature) {
       form.reset({ type: nature.type });
     }
-  }, [nature, form.reset]);
+  }, [nature, form]);
 
   function dismiss() {
     form.reset();

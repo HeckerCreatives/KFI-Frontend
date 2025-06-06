@@ -35,7 +35,7 @@ const UpdateChildren = ({ child, setData }: UpdateChildrenProps) => {
         name: child.name,
       });
     }
-  }, [child, form.reset]);
+  }, [child, form]);
 
   function dismiss() {
     form.reset();

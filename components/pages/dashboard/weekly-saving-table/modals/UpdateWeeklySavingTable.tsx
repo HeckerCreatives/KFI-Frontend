@@ -38,7 +38,7 @@ const UpdateWeeklySavingTable = ({ saving, setData }: UpdateWeeklySavingTablePro
         weeklySavingsFund: `${saving.weeklySavingsFund}`,
       });
     }
-  }, [saving, form.reset]);
+  }, [saving, form]);
 
   function dismiss() {
     form.reset();

@@ -27,7 +27,7 @@ const UpdateBusinessType = ({ businessType, setData }: { businessType: BusinessT
     if (businessType) {
       form.reset({ type: businessType.type });
     }
-  }, [businessType, form.reset]);
+  }, [businessType, form]);
 
   function dismiss() {
     form.reset();

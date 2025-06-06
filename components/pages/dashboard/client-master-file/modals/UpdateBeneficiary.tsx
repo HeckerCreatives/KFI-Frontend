@@ -37,7 +37,7 @@ const UpdateBeneficiary = ({ beneficiary, setData }: UpdateBeneficiary) => {
         relationship: beneficiary.relationship,
       });
     }
-  }, [beneficiary, form.reset]);
+  }, [beneficiary, form]);
 
   function dismiss() {
     form.reset();

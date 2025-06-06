@@ -88,8 +88,6 @@ const Tabs = () => {
     }
   };
 
-  console.log(token.permissions);
-
   return (
     <IonSplitPane when="lg" contentId="main-content" className={classNames('w-full transition-all duration-300 ease-in-out')} disabled={!isOpen}>
       <IonMenu contentId="main-content" menuId="main-content" class="lg:max-w-64" disabled={isPlatform('desktop') && !isOpen}>
