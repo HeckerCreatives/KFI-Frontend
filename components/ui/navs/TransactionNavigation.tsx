@@ -15,7 +15,7 @@ const TransactionNavigation = () => {
     {
       path: '',
       label: 'Voucher',
-      resource: '',
+      resource: ['expense voucher', 'journal voucher'],
       children: [
         { path: '/dashboard/expense-voucher', label: 'Expense Voucher', resource: 'expense voucher' },
         { path: '/dashboard/journal-voucher', label: 'Journal Voucher', resource: 'journal voucher' },
@@ -24,7 +24,7 @@ const TransactionNavigation = () => {
     {
       path: '',
       label: 'Receipt',
-      resource: '',
+      resource: ['acknowledgement', 'release'],
       children: [
         { path: '/dashboard/acknowledgement', label: 'Acknowledgement', resource: 'acknowledgement' },
         { path: '/dashboard/release', label: 'Release', resource: 'release' },
@@ -57,10 +57,10 @@ const TransactionNavigation = () => {
       <div slot="content">
         <IonList className="p-0">
           {fileLinks.map(
-            link =>
-              (token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === link.resource && e.actions.visible)) &&
+            (link, i) =>
+              (token.role === 'superadmin' || token.permissions.find((e: Permission) => link.resource.includes(e.resource) && e.actions.visible)) &&
               (link.children ? (
-                <IonAccordionGroup>
+                <IonAccordionGroup key={`transaction-link-${i}`}>
                   <IonAccordion value={link.label} className="bg-transparent">
                     <IonItem
                       slot="header"

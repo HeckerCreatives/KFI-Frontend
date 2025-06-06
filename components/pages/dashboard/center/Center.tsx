@@ -86,8 +86,8 @@ const Center = () => {
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
               <div className="flex items-center">
                 {canDoAction(token.role, token.permissions, 'center', 'create') && <CreateCenter getCenters={getCenters} />}
-                <PrintAllCenter />
-                <ExportAllCenter />
+                {canDoAction(token.role, token.permissions, 'center', 'print') && <PrintAllCenter />}
+                {canDoAction(token.role, token.permissions, 'center', 'export') && <ExportAllCenter />}
               </div>
               <CenterFilter getCenters={getCenters} />
             </div>

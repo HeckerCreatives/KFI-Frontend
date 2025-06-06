@@ -10,7 +10,7 @@ export const systemResource: string[] = ['group of account', 'chart of account',
 
 export const diagnosticsResource: string[] = ['unbalance entries', 'login logs', 'action logs'];
 
-export const actions: string[] = ['visible', 'create', 'read', 'updated', 'delete', 'print', 'export'];
+export const actions: string[] = ['visible', 'create', 'view', 'updated', 'delete', 'print', 'export'];
 
 // ENDED
 

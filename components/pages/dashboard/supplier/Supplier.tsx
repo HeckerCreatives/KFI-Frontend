@@ -82,7 +82,7 @@ const Supplier = () => {
           <PageTitle pages={['System', 'Business', 'Supplier']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <div>{canDoAction(token.role, token.permissions, 'supplier', 'create') && <CreateSupplier getSuppliers={getSuppliers} />}</div>
+              <div>{canDoAction(token.role, token.permissions, 'business supplier', 'create') && <CreateSupplier getSuppliers={getSuppliers} />}</div>
               <SupplierFilter getSuppliers={getSuppliers} />
             </div>
             <div className="relative overflow-auto">
@@ -91,7 +91,7 @@ const Supplier = () => {
                   <TableHeadRow>
                     <TableHead>Code</TableHead>
                     <TableHead>Description</TableHead>
-                    {haveActions(token.role, 'supplier', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                    {haveActions(token.role, 'business supplier', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -101,7 +101,7 @@ const Supplier = () => {
                     <TableRow key={supplier._id}>
                       <TableCell>{supplier.code}</TableCell>
                       <TableCell>{supplier.description}</TableCell>
-                      {haveActions(token.role, 'supplier', token.permissions, ['update', 'delete']) && (
+                      {haveActions(token.role, 'business supplier', token.permissions, ['update', 'delete']) && (
                         <TableCell>
                           <SupplierActions
                             supplier={supplier}

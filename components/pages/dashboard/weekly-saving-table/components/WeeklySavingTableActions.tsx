@@ -29,8 +29,8 @@ const WeeklySavingTableActions = ({ saving, setData, getWeeklySavings, currentPa
       </IonButton>
       <IonPopover showBackdrop={false} trigger={`wst-${saving._id}`} triggerAction="click" className="[--max-width:10rem]">
         <IonContent>
-          {canDoAction(token.role, token.permissions, 'weekly saving table', 'update') && <UpdateWeeklySavingTable saving={saving} setData={setData} />}
-          {canDoAction(token.role, token.permissions, 'weekly saving table', 'delete') && (
+          {canDoAction(token.role, token.permissions, 'weekly savings', 'update') && <UpdateWeeklySavingTable saving={saving} setData={setData} />}
+          {canDoAction(token.role, token.permissions, 'weekly savings', 'delete') && (
             <DeleteWeeklySavingTable saving={saving} getWeeklySavings={getWeeklySavings} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
           )}
         </IonContent>

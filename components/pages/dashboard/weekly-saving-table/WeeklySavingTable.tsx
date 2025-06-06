@@ -87,8 +87,8 @@ const WeeklySavingTable = () => {
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
               <div>
-                <PrintAllWeeklySavingsTable />
-                <ExportAllWeeklySavingsTable />
+                {canDoAction(token.role, token.permissions, 'weekly savings', 'print') && <PrintAllWeeklySavingsTable />}
+                {canDoAction(token.role, token.permissions, 'weekly savings', 'export') && <ExportAllWeeklySavingsTable />}
               </div>
               <WeeklySavingTableFilter getWeeklySavings={getWeeklySavings} />
             </div>
@@ -99,7 +99,7 @@ const WeeklySavingTable = () => {
                     <TableHead>Range Amount From</TableHead>
                     <TableHead>Range Amount To</TableHead>
                     <TableHead>WSF</TableHead>
-                    {haveActions(token.role, 'weekly saving table', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                    {haveActions(token.role, 'weekly savings', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -112,7 +112,7 @@ const WeeklySavingTable = () => {
                         <TableCell>{formatNumber(saving.rangeAmountFrom)}</TableCell>
                         <TableCell>{formatNumber(saving.rangeAmountTo)}</TableCell>
                         <TableCell>{formatNumber(saving.weeklySavingsFund)}</TableCell>
-                        {haveActions(token.role, 'weekly saving table', token.permissions, ['update', 'delete']) && (
+                        {haveActions(token.role, 'weekly savings', token.permissions, ['update', 'delete']) && (
                           <TableCell>
                             <WeeklySavingTableActions
                               saving={saving}

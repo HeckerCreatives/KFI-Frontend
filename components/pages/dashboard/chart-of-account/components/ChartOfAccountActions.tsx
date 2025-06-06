@@ -26,7 +26,7 @@ const ChartOfAccountActions = ({ chartAccount, setData, getChartOfAccounts, curr
         <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
       </IonButton>
       <IonPopover showBackdrop={false} trigger={`coa-${chartAccount._id}`} triggerAction="click" className="[--max-width:13rem]">
-        <IonContent>{canDoAction(token.role, token.permissions, 'chart of account', 'print') && <LinkChartOfAccount chartAccount={chartAccount} setData={setData} />}</IonContent>
+        <IonContent>{canDoAction(token.role, token.permissions, 'chart of account', 'update') && <LinkChartOfAccount chartAccount={chartAccount} setData={setData} />}</IonContent>
       </IonPopover>
     </>
   );

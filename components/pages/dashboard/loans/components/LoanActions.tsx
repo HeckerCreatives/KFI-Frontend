@@ -7,6 +7,7 @@ import { AccessToken, Loan } from '../../../../../types/types';
 import { TLoan } from '../Loans';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../../utils/permissions';
+import ViewLoanCodes from '../modals/ViewLoanCodes';
 
 type LoanActionsProps = {
   loan: Loan;
@@ -27,13 +28,13 @@ const LoanActions = ({ loan, setData, currentPage, setCurrentPage, getLoans, sea
       <IonButton fill="clear" id={`loan-${loan._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
         <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
       </IonButton>
-      <IonPopover showBackdrop={false} trigger={`loan-${loan._id}`} triggerAction="click" className="[--max-width:10rem]">
+      <IonPopover showBackdrop={false} trigger={`loan-${loan._id}`} triggerAction="click" className="[--max-width:12rem]">
         <IonContent>
-          {canDoAction(token.role, token.permissions, 'loans', 'update') && <UpdateLoan loan={loan} setData={setData} />}
-          {canDoAction(token.role, token.permissions, 'loans', 'delete') && (
+          {canDoAction(token.role, token.permissions, 'product', 'visible') && <ViewLoanCodes loan={loan} />}
+          {canDoAction(token.role, token.permissions, 'product', 'update') && <UpdateLoan loan={loan} setData={setData} />}
+          {canDoAction(token.role, token.permissions, 'product', 'delete') && (
             <DeleteLoan loan={loan} getLoans={getLoans} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
           )}
-          {/* <SetUpCodeLoan loan={loan} /> */}
         </IonContent>
       </IonPopover>
     </>

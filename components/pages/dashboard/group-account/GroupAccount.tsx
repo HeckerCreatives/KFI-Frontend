@@ -5,12 +5,14 @@ import PageTitle from '../../../ui/page/PageTitle';
 import CreateGroupAccount from './modals/CreateGroupAccount';
 import GroupAccountFilter from './components/GroupAccountFilter';
 import GroupAccountActions from './components/GroupAccountActions';
-import { GroupAccount as GroupAccountType, TTableFilter } from '../../../../types/types';
+import { AccessToken, GroupAccount as GroupAccountType, TTableFilter } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
 import TablePagination from '../../../ui/forms/TablePagination';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction, haveActions } from '../../../utils/permissions';
 
 export type TGroupAccount = {
   groupAccounts: GroupAccountType[];
@@ -21,6 +23,7 @@ export type TGroupAccount = {
 };
 
 const GroupAccount = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -79,7 +82,7 @@ const GroupAccount = () => {
           <PageTitle pages={['System', 'Loan Products', 'Group Account']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateGroupAccount getGroupAccounts={getGroupAccounts} />
+              <div>{canDoAction(token.role, token.permissions, 'group of account', 'create') && <CreateGroupAccount getGroupAccounts={getGroupAccounts} />}</div>
               <GroupAccountFilter getGroupAccounts={getGroupAccounts} />
             </div>
             <div className="relative overflow-auto">
@@ -87,7 +90,7 @@ const GroupAccount = () => {
                 <TableHeader>
                   <TableHeadRow>
                     <TableHead>Group Account</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {haveActions(token.role, 'group of account', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -98,18 +101,20 @@ const GroupAccount = () => {
                     data.groupAccounts.map((groupAccount: GroupAccountType) => (
                       <TableRow key={groupAccount._id}>
                         <TableCell>{groupAccount.code}</TableCell>
-                        <TableCell>
-                          <GroupAccountActions
-                            groupAccount={groupAccount}
-                            setData={setData}
-                            getGroupAccounts={getGroupAccounts}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            searchKey={searchKey}
-                            sortKey={sortKey}
-                            rowLength={data.groupAccounts.length}
-                          />
-                        </TableCell>
+                        {haveActions(token.role, 'group of account', token.permissions, ['update', 'delete']) && (
+                          <TableCell>
+                            <GroupAccountActions
+                              groupAccount={groupAccount}
+                              setData={setData}
+                              getGroupAccounts={getGroupAccounts}
+                              currentPage={currentPage}
+                              setCurrentPage={setCurrentPage}
+                              searchKey={searchKey}
+                              sortKey={sortKey}
+                              rowLength={data.groupAccounts.length}
+                            />
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                 </TableBody>

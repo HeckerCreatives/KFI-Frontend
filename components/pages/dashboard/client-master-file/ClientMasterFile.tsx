@@ -86,9 +86,9 @@ const ClientMasterFile = () => {
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
               <div className="flex">
-                {canDoAction(token.role, token.permissions, 'client', 'create') && <CreateClientMasterFile getClients={getClients} />}
-                <PrintAllClient />
-                <ExportAllClient />
+                {canDoAction(token.role, token.permissions, 'clients', 'create') && <CreateClientMasterFile getClients={getClients} />}
+                {canDoAction(token.role, token.permissions, 'clients', 'print') && <PrintAllClient />}
+                {canDoAction(token.role, token.permissions, 'clients', 'export') && <ExportAllClient />}
               </div>
               <ClientMasterFileFilter getClients={getClients} />
             </div>
@@ -107,7 +107,7 @@ const ClientMasterFile = () => {
                     <TableHead>Zip Code</TableHead>
                     <TableHead>Telephone No.</TableHead>
                     <TableHead>Mobile No.</TableHead>
-                    {haveActions(token.role, 'client', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                    {haveActions(token.role, 'clients', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -128,7 +128,7 @@ const ClientMasterFile = () => {
                         <TableCell>{client.zipCode}</TableCell>
                         <TableCell>{client.telNo}</TableCell>
                         <TableCell>{client.mobileNo}</TableCell>
-                        {haveActions(token.role, 'client', token.permissions, ['update', 'delete']) && (
+                        {haveActions(token.role, 'clients', token.permissions, ['update', 'delete', 'visible']) && (
                           <TableCell>
                             <ClientMasterFileActions
                               client={client}

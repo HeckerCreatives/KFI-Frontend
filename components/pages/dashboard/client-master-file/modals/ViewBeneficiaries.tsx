@@ -1,13 +1,15 @@
 import { IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react';
 import { person } from 'ionicons/icons';
 import React, { useRef } from 'react';
-import { Beneficiary, ClientMasterFile } from '../../../../../types/types';
+import { AccessToken, Beneficiary, ClientMasterFile } from '../../../../../types/types';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
 import { TClientMasterFile } from '../ClientMasterFile';
 import CreateBeneficiary from './CreateBeneficiary';
 import DeleteBeneficiary from './DeleteBeneficiary';
 import UpdateBeneficiary from './UpdateBeneficiary';
+import { canDoAction } from '../../../../utils/permissions';
+import { jwtDecode } from 'jwt-decode';
 
 type ViewBeneficiariesProps = {
   client: ClientMasterFile;
@@ -15,6 +17,7 @@ type ViewBeneficiariesProps = {
 };
 
 const ViewBeneficiaries = ({ client, setData }: ViewBeneficiariesProps) => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const modal = useRef<HTMLIonModalElement>(null);
 
   function dismiss() {
@@ -43,9 +46,7 @@ const ViewBeneficiaries = ({ client, setData }: ViewBeneficiariesProps) => {
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">
-          <div className="py-1">
-            <CreateBeneficiary client={client} setData={setData} />
-          </div>
+          <div className="py-1">{canDoAction(token.role, token.permissions, 'clients', 'update') && <CreateBeneficiary client={client} setData={setData} />}</div>
           {client.beneficiaries.length < 1 && <div className="text-center text-slate-700 text-sm py-3">No Beneficiary Found</div>}
           {client.beneficiaries.length > 0 && (
             <div className="relative overflow-auto">
@@ -54,7 +55,7 @@ const ViewBeneficiaries = ({ client, setData }: ViewBeneficiariesProps) => {
                   <TableHeadRow className="border-b-0 bg-slate-100">
                     <TableHead>Beneficiary Name</TableHead>
                     <TableHead>Relationship</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {canDoAction(token.role, token.permissions, 'clients', 'update') && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -62,12 +63,14 @@ const ViewBeneficiaries = ({ client, setData }: ViewBeneficiariesProps) => {
                     <TableRow key={beneficiary._id} className="border-b-0 hover:!bg-transparent">
                       <TableCell className="border-4 border-slate-100">{beneficiary.name}</TableCell>
                       <TableCell className="border-4 border-slate-100">{beneficiary.relationship}</TableCell>
-                      <TableCell className="border-4 border-slate-100">
-                        <div className="flex items-center gap-2">
-                          <UpdateBeneficiary beneficiary={beneficiary} setData={setData} />
-                          <DeleteBeneficiary beneficiary={beneficiary} setData={setData} />
-                        </div>
-                      </TableCell>
+                      {canDoAction(token.role, token.permissions, 'clients', 'update') && (
+                        <TableCell className="border-4 border-slate-100">
+                          <div className="flex items-center gap-2">
+                            <UpdateBeneficiary beneficiary={beneficiary} setData={setData} />
+                            <DeleteBeneficiary beneficiary={beneficiary} setData={setData} />
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>

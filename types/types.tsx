@@ -7,7 +7,7 @@ export type SubNavLink = {
 export type NavLink = {
   label: string;
   path: string;
-  resource: string;
+  resource: string | string[];
   children?: SubNavLink[];
 };
 
@@ -102,13 +102,13 @@ export type Action = {
   create: boolean;
   update: boolean;
   delete: boolean;
-  read: boolean;
+  view: boolean;
   print: boolean;
   export: boolean;
   visible: boolean;
 };
 
-export type ActionType = 'create' | 'visible' | 'read' | 'update' | 'delete' | 'print';
+export type ActionType = 'create' | 'visible' | 'view' | 'update' | 'delete' | 'print' | 'export';
 
 export type Permission = {
   resource: string;

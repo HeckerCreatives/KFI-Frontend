@@ -14,7 +14,7 @@ const SystemNav = () => {
     {
       path: '',
       label: 'Loan Product',
-      resource: '',
+      resource: ['group of account', 'chart of account', 'product'],
       children: [
         { path: '/dashboard/group-of-account', label: 'Group Of Account', resource: 'group of account' },
         { path: '/dashboard/chart-of-account', label: 'Chart Of Account', resource: 'chart of account' },
@@ -27,7 +27,7 @@ const SystemNav = () => {
     {
       path: '',
       label: 'Business',
-      resource: '',
+      resource: ['business type', 'business supplier'],
       children: [
         { path: '/dashboard/business-type', label: 'Type', resource: 'business type' },
         { path: '/dashboard/business-supplier', label: 'Supplier', resource: 'business supplier' },
@@ -60,10 +60,10 @@ const SystemNav = () => {
       <div slot="content">
         <IonList className="p-0">
           {fileLinks.map(
-            link =>
-              (token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === link.resource && e.actions.visible)) &&
+            (link, i) =>
+              (token.role === 'superadmin' || token.permissions.find((e: Permission) => link.resource.includes(e.resource) && e.actions.visible)) &&
               (link.children ? (
-                <IonAccordionGroup>
+                <IonAccordionGroup key={`system-link-${i}`}>
                   <IonAccordion value="transactions" className="bg-transparent">
                     <IonItem
                       slot="header"

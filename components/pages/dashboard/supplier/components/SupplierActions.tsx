@@ -29,8 +29,8 @@ const SupplierActions = ({ supplier, setData, currentPage, setCurrentPage, getSu
       </IonButton>
       <IonPopover showBackdrop={false} trigger={`supplier-${supplier._id}`} triggerAction="click" className="[--max-width:10rem]">
         <IonContent>
-          {canDoAction(token.role, token.permissions, 'supplier', 'update') && <UpdateSupplier supplier={supplier} setData={setData} />}
-          {canDoAction(token.role, token.permissions, 'supplier', 'delete') && (
+          {canDoAction(token.role, token.permissions, 'business supplier', 'update') && <UpdateSupplier supplier={supplier} setData={setData} />}
+          {canDoAction(token.role, token.permissions, 'business supplier', 'delete') && (
             <DeleteSupplier supplier={supplier} getSuppliers={getSuppliers} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
           )}
         </IonContent>

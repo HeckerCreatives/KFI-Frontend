@@ -32,18 +32,19 @@ const ClientMasterFileActions = ({ client, getClients, setData, currentPage, set
       </IonButton>
       <IonPopover showBackdrop={false} trigger={`cmf-${client._id}`} triggerAction="click" className="[--max-width:13rem]">
         <IonContent>
-          {canDoAction(token.role, token.permissions, 'client', 'update') && (
+          {canDoAction(token.role, token.permissions, 'clients', 'update') && <UpdateClientMasterFile client={client} setData={setData} />}
+          {canDoAction(token.role, token.permissions, 'clients', 'visible') && (
             <>
-              <UpdateClientMasterFile client={client} setData={setData} />
               <ViewBeneficiaries client={client} setData={setData} />
               <ViewChildrens client={client} setData={setData} />
             </>
           )}
-          {canDoAction(token.role, token.permissions, 'client', 'delete') && (
+
+          {canDoAction(token.role, token.permissions, 'clients', 'delete') && (
             <DeleteClientMasterFile client={client} getClients={getClients} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
           )}
-          {canDoAction(token.role, token.permissions, 'client', 'print') && <PrintClient client={client} />}
-          {canDoAction(token.role, token.permissions, 'client', 'print') && <ExportClient client={client} />}
+          {canDoAction(token.role, token.permissions, 'clients', 'print') && <PrintClient client={client} />}
+          {canDoAction(token.role, token.permissions, 'clients', 'export') && <ExportClient client={client} />}
         </IonContent>
       </IonPopover>
     </>

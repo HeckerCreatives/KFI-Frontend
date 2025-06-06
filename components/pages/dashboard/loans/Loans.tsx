@@ -82,7 +82,7 @@ const Loans = () => {
           <PageTitle pages={['System', 'Loan Product', 'Product']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center flex-wrap gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <div>{canDoAction(token.role, token.permissions, 'loans', 'create') && <CreateLoan getLoans={getLoans} />}</div>
+              <div>{canDoAction(token.role, token.permissions, 'product', 'create') && <CreateLoan getLoans={getLoans} />}</div>
               <LoanFilter getLoans={getLoans} />
             </div>
             <div className="relative overflow-auto">
@@ -90,7 +90,7 @@ const Loans = () => {
                 <TableHeader>
                   <TableHeadRow>
                     <TableHead>Code</TableHead>
-                    {haveActions(token.role, 'loans', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                    {haveActions(token.role, 'product', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -101,7 +101,7 @@ const Loans = () => {
                     data.loans.map((loan: Loan) => (
                       <TableRow key={loan._id}>
                         <TableCell>{loan.code}</TableCell>
-                        {haveActions(token.role, 'loans', token.permissions, ['update', 'delete']) && (
+                        {haveActions(token.role, 'product', token.permissions, ['update', 'delete', 'visible']) && (
                           <TableCell>
                             <LoanActions
                               loan={loan}
