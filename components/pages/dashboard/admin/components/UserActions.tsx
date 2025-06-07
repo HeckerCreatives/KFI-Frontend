@@ -5,6 +5,7 @@ import { ellipsisVertical, list, logIn } from 'ionicons/icons';
 import { TUser } from '../Admin';
 import AddPermission from '../modal/AddPermission';
 import ChangePassword from '../modal/ChangePassword';
+import ActivityLogs from '../modal/ActivityLogs';
 
 type UserActionsProps = {
   user: User;
@@ -21,14 +22,7 @@ const UserActions = ({ user, setData }: UserActionsProps) => {
         <IonContent>
           <AddPermission user={user} setData={setData} />
           <ChangePassword user={user} />
-          <div className="text-end">
-            <div
-              id={`update-permissions-modal-${user._id}`}
-              className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
-            >
-              <IonIcon icon={list} className="text-[1rem]" /> Activity Logs
-            </div>
-          </div>
+          <ActivityLogs user={user} />
           <div className="text-end">
             <div
               id={`update-permissions-modal-${user._id}`}

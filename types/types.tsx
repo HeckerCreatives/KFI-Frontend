@@ -108,6 +108,16 @@ export type Action = {
   visible: boolean;
 };
 
+export type Activity = {
+  _id: string;
+  author: string;
+  username: string;
+  activity: string;
+  resource: string;
+  dataId: string;
+  createdAt: string;
+};
+
 export type ActionType = 'create' | 'visible' | 'view' | 'update' | 'delete' | 'print' | 'export';
 
 export type Permission = {
