@@ -30,9 +30,6 @@ import logoNoBg from '../assets/images/logo-nobg.png';
 import Image from 'next/image';
 import { chevronDownOutline, homeOutline, logOut, settingsOutline } from 'ionicons/icons';
 import TransactionNavigation from '../ui/navs/TransactionNavigation';
-import LoanRelease from './dashboard/transactions/loan-release/LoanRelease';
-import ExpenseVoucher from './dashboard/transactions/expense-voucher/ExpenseVoucher';
-import JournalVoucher from './dashboard/transactions/journal-voucher/JournalVoucher';
 import ManageAccount from '../ui/navs/ManageAccount';
 import Admin from './dashboard/admin/Admin';
 import { jwtDecode } from 'jwt-decode';
@@ -54,6 +51,9 @@ import TrialBalance from './dashboard/trial-balance/TrialBalance';
 import UnbalanceEntries from './dashboard/unbalance-entries/UnbalanceEntries';
 import LoginLogs from './dashboard/login-logs/LoginLogs';
 import ActionLogs from './dashboard/action-logs/ActionLogs';
+import LoanRelease from './dashboard/loan-release/LoanRelease';
+import ExpenseVoucher from './dashboard/expense-voucher/ExpenseVoucher';
+import JournalVoucher from './dashboard/journal-voucher/JournalVoucher';
 
 const Tabs = () => {
   const [isOpen, setIsOpen] = useState(true);
