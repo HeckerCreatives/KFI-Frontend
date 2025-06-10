@@ -1,16 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import LoanReleaseFormTable from '../components/LoanReleaseFormTable';
-import classNames from 'classnames';
 import LoanReleaseForm from '../components/LoanReleaseForm';
 import { LoanReleaseFormData, loanReleaseSchema } from '../../../../../validations/loan-release.schema';
 
 const CreateLoanRelease = () => {
-  const [active, setActive] = useState('form');
-
   const modal = useRef<HTMLIonModalElement>(null);
 
   const form = useForm<LoanReleaseFormData>({
@@ -18,6 +15,7 @@ const CreateLoanRelease = () => {
     defaultValues: {
       cvNo: '',
       center: '',
+      centerLabel: '',
       name: '',
       refNumber: '',
       remarks: '',

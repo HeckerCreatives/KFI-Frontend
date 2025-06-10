@@ -5,8 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, Tabl
 import CreateLoanRelease from './modals/CreateLoanRelease';
 import LoanReleaseActions from './components/LoanReleaseActions';
 import LoanReleaseFilter from './components/LoanReleaseFilter';
+import { jwtDecode } from 'jwt-decode';
+import { AccessToken } from '../../../../types/types';
+import { canDoAction, haveActions } from '../../../utils/permissions';
 
 const LoanRelease = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const arrDummy: string[] = Array.from(Array(10)).fill('');
   return (
     <IonPage className="">
@@ -15,7 +19,7 @@ const LoanRelease = () => {
           <PageTitle pages={['Transaction', 'Loan Release']} />
           <div className="px-3 pb-3">
             <div className="flex flex-col lg:flex-row lg:items-start items-start gap-2 justify-center bg-white p-3 rounded-2xl shadow-lg mt-3 mb-4">
-              <CreateLoanRelease />
+              <div>{canDoAction(token.role, token.permissions, 'loan release', 'create') && <CreateLoanRelease />}</div>
               <LoanReleaseFilter />
             </div>
             <div className="relative overflow-auto">
@@ -29,7 +33,7 @@ const LoanRelease = () => {
                     <TableHead>CHK. No.</TableHead>
                     <TableHead>Amount</TableHead>
                     <TableHead>Encoded By</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -42,9 +46,11 @@ const LoanRelease = () => {
                       <TableCell>20005245-46</TableCell>
                       <TableCell>18,340.00</TableCell>
                       <TableCell>EVD</TableCell>
-                      <TableCell>
-                        <LoanReleaseActions index={i} />
-                      </TableCell>
+                      {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible']) && (
+                        <TableCell>
+                          <LoanReleaseActions index={i} />
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>

@@ -1,5 +1,4 @@
-import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import { arrowBackCircle, caretForwardOutline } from 'ionicons/icons';
+import { IonButton, IonHeader, IonInput, IonModal, IonToolbar } from '@ionic/react';
 import React, { useRef, useState } from 'react';
 import SelectionHeader from './SelectionHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../table/Table';
@@ -77,7 +76,7 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, setV
             <SelectionHeader dismiss={dismiss} disabled={loading} title="Center Selection" />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !p-2  border-2 !border-slate-100">
+        <div className="inner-content !p-2  border-2 !border-slate-400">
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">
               <div className="flex items-center min-w-20">
