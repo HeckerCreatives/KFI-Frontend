@@ -91,6 +91,46 @@ export type Supplier = {
   createdAt: string;
 };
 
+export type Entry = {
+  _id: string;
+  acctCode: { _id: string; code: string; description: string };
+  center: { _id: string; centerNo: string; description: string };
+  client: { _id: string; name: string };
+  particular: string;
+  checkNo: string;
+  credit: number | null;
+  debit: number | null;
+  cycle: number | null;
+  interest: number | null;
+  product: { _id: string; code: string };
+  transaction: string;
+  createdAt: string;
+};
+
+export type Transaction = {
+  _id: string;
+  acctMonth: number;
+  acctYear: number;
+  amount: number;
+  bank: { _id: string; code: string; description: string };
+  center: { _id: string; centerNo: string; description: string };
+  checkDate: string;
+  checkNo: string;
+  code: string;
+  cycle: number;
+  date: string;
+  encodedBy: { username: string };
+  entries: any[];
+  interest: number;
+  loan: { _id: string; code: string };
+  noOfWeeks: number;
+  refNo: string;
+  remarks: string;
+  createdAt: string;
+  type: string;
+  isEduc: boolean;
+};
+
 export type Bank = {
   _id: string;
   code: string;

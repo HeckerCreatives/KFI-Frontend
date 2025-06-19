@@ -55,6 +55,7 @@ const InputSelect = <T extends FieldValues>({
             onIonChange={e => {
               field.onChange(e.detail.value);
               clearErrors(name);
+              clearErrors('root');
             }}
             labelPlacement="stacked"
             onIonBlur={field.onBlur}

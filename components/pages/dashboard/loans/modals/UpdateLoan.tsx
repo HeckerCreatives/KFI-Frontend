@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon } from '@ionic/react';
-import { createSharp } from 'ionicons/icons';
+import { createSharp, save } from 'ionicons/icons';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
@@ -86,22 +86,34 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
         </IonHeader>
         <div className="inner-content">
           <div>
-            <FormIonItem>
-              <InputText
+            <div className="flex items-start gap-2">
+              <FormIonItem className="flex-1">
+                <InputText
+                  disabled={loading}
+                  name="code"
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  label="Code"
+                  placeholder="Type here"
+                  className="!px-2 !py-2 rounded-md"
+                />
+              </FormIonItem>
+              <IonButton
+                onClick={form.handleSubmit(onSubmit)}
                 disabled={loading}
-                name="code"
-                control={form.control}
-                clearErrors={form.clearErrors}
-                label="Code"
-                placeholder="Type here"
-                className="!px-2 !py-2 rounded-md"
-              />
-            </FormIonItem>
-            <UpdateLoanCodes loan={loan} setData={setData} />
-            <div className="text-end border-t mt-2 pt-1 space-x-2">
-              <IonButton disabled={loading} color="tertiary" type="button" onClick={form.handleSubmit(onSubmit)} className="!text-sm capitalize" strong={true}>
-                {loading ? 'Saving...' : 'Save'}
+                type="button"
+                title="Save changes"
+                fill="clear"
+                className="max-h-10 min-h-10 mt-5 !p-0 bg-green-600 text-white capitalize font-semibold rounded-md m-0"
+                strong
+              >
+                <IonIcon icon={save} className="text-sm" />
               </IonButton>
+            </div>
+
+            <UpdateLoanCodes loan={loan} setData={setData} />
+
+            <div className="text-end border-t mt-2 pt-1 space-x-2">
               <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
                 Cancel
               </IonButton>

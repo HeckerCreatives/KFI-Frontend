@@ -298,3 +298,8 @@ ion-modal.auto-height .ion-page .inner-content {
 ion-accordion-group ion-accordion .ion-accordion-toggle-icon {
   font-size: 15px;
 }
+
+ion-modal.modal-default.show-modal:last-of-type {
+  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4) !important;
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.32) !important;
+}

@@ -1,4 +1,5 @@
-import { IonButton, IonHeader, IonInput, IonModal, IonToolbar } from '@ionic/react';
+import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonToolbar } from '@ionic/react';
+import { arrowBackCircle, caretForwardOutline } from 'ionicons/icons';
 import React, { useRef, useState } from 'react';
 import SelectionHeader from './SelectionHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../table/Table';
@@ -12,29 +13,16 @@ import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } fro
 type Option = {
   _id: string;
   code: string;
-  description: string;
-  nature: string;
-  classification: string;
-  deptStatus: string;
 };
 
-type ChartOfAccountSelectionProps<T extends FieldValues> = {
+type LoanSelectionProps<T extends FieldValues> = {
   setValue: UseFormSetValue<T>;
   clearErrors: UseFormClearErrors<T>;
-  chartOfAccountDescription?: Path<T>;
-  chartOfAccountLabel: Path<T>;
-  chartOfAccountValue: Path<T>;
-  className?: string;
+  loanLabel: Path<T>;
+  loanValue: Path<T>;
 };
 
-const ChartOfAccountSelection = <T extends FieldValues>({
-  chartOfAccountLabel,
-  chartOfAccountValue,
-  setValue,
-  clearErrors,
-  className = '',
-  chartOfAccountDescription,
-}: ChartOfAccountSelectionProps<T>) => {
+const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, clearErrors }: LoanSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [datas, setDatas] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
@@ -42,6 +30,7 @@ const ChartOfAccountSelection = <T extends FieldValues>({
 
   function dismiss() {
     setIsOpen(false);
+    setDatas([]);
   }
 
   const handleOpen = () => {
@@ -52,10 +41,10 @@ const ChartOfAccountSelection = <T extends FieldValues>({
     const value = ionInputRef.current?.value;
     setLoading(true);
     try {
-      const result = await kfiAxios.get('/chart-of-account/selection', { params: { keyword: value } });
-      const { success, chartOfAccounts } = result.data;
+      const result = await kfiAxios.get('/loan/selection', { params: { keyword: value } });
+      const { success, loans } = result.data;
       if (success) {
-        setDatas(chartOfAccounts);
+        setDatas(loans);
         return;
       }
     } catch (error) {
@@ -64,35 +53,30 @@ const ChartOfAccountSelection = <T extends FieldValues>({
     }
   };
 
-  const handleSelectCenter = (chartOfAccount: Option) => {
-    const codeValue = chartOfAccountDescription ? chartOfAccount.code : (`${chartOfAccount.code} - ${chartOfAccount.description}` as PathValue<T, Path<T>>);
-    const idValue = chartOfAccount._id as PathValue<T, Path<T>>;
-    if (chartOfAccountDescription) {
-      setValue(chartOfAccountDescription as Path<T>, chartOfAccount.description as any);
-      clearErrors(chartOfAccountDescription);
-    }
-    setValue(chartOfAccountLabel as Path<T>, codeValue as any);
-    setValue(chartOfAccountValue as Path<T>, idValue as any);
-    clearErrors(chartOfAccountLabel);
-    clearErrors(chartOfAccountValue);
-    setDatas([]);
+  const handleSelectBusinessType = (loan: Option) => {
+    const typeValue = loan.code as PathValue<T, Path<T>>;
+    const idValue = loan._id as PathValue<T, Path<T>>;
+    setValue(loanLabel as Path<T>, typeValue as any);
+    setValue(loanValue as Path<T>, idValue as any);
+    clearErrors(loanLabel);
+    clearErrors(loanValue);
     dismiss();
   };
 
   return (
     <>
       <div className="text-end">
-        <IonButton onClick={handleOpen} fill="clear" className={classNames('max-h-10 min-h-10 btn-color text-white capitalize font-semibold rounded-md m-0', className)} strong>
+        <IonButton onClick={handleOpen} fill="clear" className="max-h-10 min-h-10 btn-color text-white capitalize font-semibold rounded-md m-0" strong>
           Find
         </IonButton>
       </div>
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Chart Of Account Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Type Selection" />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !p-2  border-2 !border-slate-400">
+        <div className="inner-content !p-2  border-2 !border-slate-100">
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">
               <div className="flex items-center min-w-20">
@@ -120,23 +104,15 @@ const ChartOfAccountSelection = <T extends FieldValues>({
               <TableHeader>
                 <TableHeadRow className="border-b-0 bg-slate-100">
                   <TableHead className="!py-2">Code</TableHead>
-                  <TableHead className="!py-2">Description</TableHead>
-                  <TableHead className="!py-2">Nature Of Account</TableHead>
-                  <TableHead className="!py-2">Classification</TableHead>
-                  <TableHead className="!py-2">Department Status</TableHead>
                 </TableHeadRow>
               </TableHeader>
               <TableBody>
                 {loading && <TableLoadingRow colspan={2} />}
-                {!loading && datas.length < 1 && <TableNoRows colspan={5} label="No chart of account found" />}
+                {!loading && datas.length < 1 && <TableNoRows colspan={2} label="No loan type found" />}
                 {!loading &&
                   datas.map((data: Option) => (
-                    <TableRow onClick={() => handleSelectCenter(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
+                    <TableRow onClick={() => handleSelectBusinessType(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.code}</TableCell>
-                      <TableCell className="">{data.description}</TableCell>
-                      <TableCell className="">{data.nature}</TableCell>
-                      <TableCell className="">{data.classification}</TableCell>
-                      <TableCell className="">{data.deptStatus}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -148,4 +124,4 @@ const ChartOfAccountSelection = <T extends FieldValues>({
   );
 };
 
-export default ChartOfAccountSelection;
+export default LoanSelection;

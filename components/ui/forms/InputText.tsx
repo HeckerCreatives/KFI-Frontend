@@ -52,6 +52,7 @@ const InputText = <T extends FieldValues>({
             onIonInput={e => {
               field.onChange(e.detail.value);
               clearErrors(name);
+              clearErrors('root');
             }}
             disabled={disabled}
             onIonBlur={field.onBlur}

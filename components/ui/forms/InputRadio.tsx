@@ -51,6 +51,7 @@ const InputRadio = <T extends FieldValues>({
             onIonChange={e => {
               field.onChange(e.detail.value);
               clearErrors(name);
+              clearErrors('root');
             }}
             className={classNames(
               'text-sm !bg-white ![--highlight-color-focused:none] ![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] ![--min-height:1rem] grid grid-cols-2',

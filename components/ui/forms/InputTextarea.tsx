@@ -38,6 +38,7 @@ const InputTextarea = <T extends FieldValues>({ name, control, clearErrors, labe
             onIonInput={e => {
               field.onChange(e.detail.value);
               clearErrors(name);
+              clearErrors('root');
             }}
             disabled={disabled}
             onIonBlur={field.onBlur}

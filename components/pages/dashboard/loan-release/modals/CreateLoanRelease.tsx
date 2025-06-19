@@ -1,14 +1,24 @@
-import React, { useRef } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect, useRef, useState } from 'react';
+import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast } from '@ionic/react';
+import { FieldError, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import LoanReleaseFormTable from '../components/LoanReleaseFormTable';
 import LoanReleaseForm from '../components/LoanReleaseForm';
-import { LoanReleaseFormData, loanReleaseSchema } from '../../../../../validations/loan-release.schema';
+import { EntryFormData, LoanReleaseFormData, loanReleaseSchema } from '../../../../../validations/loan-release.schema';
+import kfiAxios from '../../../../utils/axios';
+import { TErrorData, TFormError } from '../../../../../types/types';
+import checkError from '../../../../utils/check-error';
+import formErrorHandler from '../../../../utils/form-error-handler';
 
-const CreateLoanRelease = () => {
+type CreateLoanReleaseProps = {
+  getTransactions: (page: number, keyword?: string, sort?: string) => void;
+};
+
+const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
+  const [present] = useIonToast();
   const modal = useRef<HTMLIonModalElement>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<LoanReleaseFormData>({
     resolver: zodResolver(loanReleaseSchema),
@@ -22,15 +32,18 @@ const CreateLoanRelease = () => {
       date: '',
       acctMonth: '',
       acctYear: '',
-      payee: '',
       noOfWeeks: '',
       typeOfLoan: '',
+      typeOfLoanLabel: '',
       checkNo: '',
       checkDate: '',
       bankCode: '',
+      bankCodeLabel: '',
       amount: '',
       cycle: '',
       interestRate: '',
+      isEduc: false,
+      entries: [],
     },
   });
 
@@ -39,14 +52,44 @@ const CreateLoanRelease = () => {
     modal.current?.dismiss();
   }
 
-  function onSubmit(data: LoanReleaseFormData) {
-    console.log(data);
+  async function onSubmit(data: LoanReleaseFormData) {
+    const glEntries = data.entries.filter((entry: EntryFormData) => entry.debit !== '' || entry.credit !== '' || entry.checkNo !== '' || entry.cycle !== '');
+    if (glEntries.length < 1) {
+      form.setError('entries', { message: 'Atleast 1 entry is required' });
+      return;
+    }
+    data.entries = glEntries;
+    setLoading(true);
+    try {
+      const result = await kfiAxios.post('transaction/loan-release', data);
+      const { success } = result.data;
+      if (success) {
+        getTransactions(1);
+        present({
+          message: 'Loan release successfully added.',
+          duration: 1000,
+        });
+        dismiss();
+        return;
+      }
+      present({
+        message: 'Failed to add a new loan release. Please try again.',
+        duration: 1000,
+      });
+    } catch (error: any) {
+      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+      const errors: TFormError[] | string = checkError(errs);
+      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+      formErrorHandler(errors, form.setError, fields);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <>
-      <div className="text-end lg:mt-1">
-        <IonButton fill="clear" id="create-loanRelease-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+      <div className="text-end">
+        <IonButton fill="clear" id="create-loanRelease-modal" className="max-h-10 min-h-9 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
           + Add Record
         </IonButton>
       </div>
@@ -54,30 +97,28 @@ const CreateLoanRelease = () => {
         ref={modal}
         trigger="create-loanRelease-modal"
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader title="Transaction - Loan Release - Add Record" sub="All Actions" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Transaction - Loan Release - Add Record" sub="All Actions" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">
-          <div>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div>
-                <LoanReleaseForm form={form} />
-                <LoanReleaseFormTable />
-              </div>
-              <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
-                <IonButton color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
-                  Save
-                </IonButton>
-                <IonButton onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
-                  Cancel
-                </IonButton>
-              </div>
-            </form>
-          </div>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="mb-3">
+              <LoanReleaseForm form={form} loading={loading} />
+              <LoanReleaseFormTable form={form} />
+            </div>
+            <div className="text-end space-x-1 px-2">
+              <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
+                {loading ? 'Saving...' : 'Save'}
+              </IonButton>
+              <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
+                Cancel
+              </IonButton>
+            </div>
+          </form>
         </div>
       </IonModal>
     </>

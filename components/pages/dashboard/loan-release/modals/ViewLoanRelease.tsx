@@ -69,7 +69,7 @@ const ViewLoanRelease = ({ index }: { index: number }) => {
               </IonCol>
             </IonRow>
           </IonGrid>
-          <LoanReleaseFormTable />
+          {/* <LoanReleaseFormTable /> */}
         </div>
       </IonModal>
     </>
