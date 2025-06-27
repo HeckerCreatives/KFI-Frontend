@@ -1,6 +1,6 @@
 import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
 import React from 'react';
-import { ellipsisVertical, print } from 'ionicons/icons';
+import { ellipsisVertical, fileTrayFullOutline, fileTrayFullSharp, print } from 'ionicons/icons';
 import UpdateLoanRelease from '../modals/UpdateLoanRelease';
 import DeleteLoanRelease from '../modals/DeleteLoanRelease';
 import UpdateCVLoanRelease from '../modals/UpdateCVLoanRelease';
@@ -9,6 +9,8 @@ import { AccessToken, Transaction } from '../../../../../types/types';
 import { TData } from '../LoanRelease';
 import { canDoAction } from '../../../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
+import PrintLoanRelease from '../modals/PrintLoanRelease';
+import ExportLoanRelease from '../modals/ExportLoanRelease';
 
 type LoanReleaseActionsProps = {
   transaction: Transaction;
@@ -33,7 +35,7 @@ const LoanReleaseActions = ({ transaction, setData, getTransactions, searchKey, 
       </IonButton>
       <IonPopover showBackdrop={false} trigger={`loanRelease-${transaction._id}`} triggerAction="click" className="[--max-width:11rem]">
         <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
-          {/* <ViewLoanRelease transaction={transaction} /> */}
+          <ViewLoanRelease transaction={transaction} />
           {canDoAction(token.role, token.permissions, 'loan release', 'update') && <UpdateLoanRelease transaction={transaction} setData={setData} />}
           {canDoAction(token.role, token.permissions, 'loan release', 'delete') && (
             <DeleteLoanRelease
@@ -45,12 +47,9 @@ const LoanReleaseActions = ({ transaction, setData, getTransactions, searchKey, 
               rowLength={rowLength}
             />
           )}
-          {/* <div
-            id={`present-alert-${transaction._id}`}
-            className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
-          >
-            <IonIcon icon={print} className="text-[1rem]" /> Print
-          </div> */}
+          {canDoAction(token.role, token.permissions, 'loan release', 'print') && <PrintLoanRelease transaction={transaction} />}
+          {canDoAction(token.role, token.permissions, 'loan release', 'export') && <ExportLoanRelease transaction={transaction} />}
+
           {/* <UpdateCVLoanRelease transaction={index} /> */}
         </IonContent>
       </IonPopover>

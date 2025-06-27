@@ -1,32 +1,34 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { IonModal, IonHeader, IonToolbar, IonIcon, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonText } from '@ionic/react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { eye } from 'ionicons/icons';
-import LoanReleaseFormTable from '../components/LoanReleaseFormTable';
 import LoanReleaseViewCard from '../components/LoanReleaseViewCard';
+import { Entry, Transaction } from '../../../../../types/types';
+import { formatDateTable } from '../../../../utils/date-utils';
+import { formatNumber } from '../../../../ui/utils/formatNumber';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
+import ViewEntries from '../components/ViewEntries';
 
-const ViewLoanRelease = ({ index }: { index: number }) => {
-  const arrDummy: string[] = Array.from(Array(10)).fill('');
+const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
 
   function dismiss() {
-    modal.current?.dismiss();
+    setIsOpen(false);
   }
 
   return (
     <>
-      <div className="text-end">
-        <div
-          id={`view-leanRelease-modal-${index}`}
-          className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
-        >
-          <IonIcon icon={eye} className="text-[1rem]" /> View
-        </div>
+      <div
+        onClick={() => setIsOpen(true)}
+        className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
+      >
+        <IonIcon icon={eye} className="text-[1rem]" /> View
       </div>
       <IonModal
-        ref={modal}
-        trigger={`view-leanRelease-modal-${index}`}
+        isOpen={isOpen}
+        trigger={`view-leanRelease-modal-${transaction._id}`}
         backdropDismiss={false}
         className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
       >
@@ -39,37 +41,39 @@ const ViewLoanRelease = ({ index }: { index: number }) => {
           <IonGrid>
             <IonRow>
               <IonCol size="6" className="space-y-2">
-                <LoanReleaseViewCard label="CV#" value="CV#25564" />
-                <LoanReleaseViewCard label="Center Code" value="413" />
-                <LoanReleaseViewCard label="Name" value="ALITE-Kristine T. Bartican" />
-                <LoanReleaseViewCard label="Reference Number" value="" />
-                <LoanReleaseViewCard label="Remark" value="Loan release to CV#413-ALITE-Kristine T. Bartican" />
-                <LoanReleaseViewCard label="Date" value="04/01/2025" />
+                <LoanReleaseViewCard label="CV#" value={`CV#${transaction.code}`} />
+                <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} />
+                <LoanReleaseViewCard label="Name" value={transaction.center.description} />
+                <LoanReleaseViewCard label="Reference Number" value={transaction.refNo} />
+                <LoanReleaseViewCard label="Remark" value={transaction.remarks} />
+                <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} />
                 <IonGrid className="ion-no-padding">
                   <IonRow className="gap-2">
                     <IonCol>
-                      <LoanReleaseViewCard label="Account Month" value="4" />
+                      <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} />
                     </IonCol>
                     <IonCol>
-                      <LoanReleaseViewCard label="Account Year" value="2025" />
+                      <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} />
                     </IonCol>
                   </IonRow>
                 </IonGrid>
-                <LoanReleaseViewCard label="User" value="EVD" />
+                <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} />
               </IonCol>
               <IonCol size="6" className="space-y-2">
-                <LoanReleaseViewCard label="Number of Weeks" value="25" />
-                <LoanReleaseViewCard label="Type of Loan" value="IC" />
-                <LoanReleaseViewCard label="Check Number" value="20005244" />
-                <LoanReleaseViewCard label="Check Date" value="04/01/2025" />
-                <LoanReleaseViewCard label="Bank Code" value="PNB" />
-                <LoanReleaseViewCard label="Amount" value="13,290.00" />
-                <LoanReleaseViewCard label="Cycle" value="2" />
-                <LoanReleaseViewCard label="Interest Rate" value="24" />
+                <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} />
+                <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} />
+                <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} />
+                <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} />
+                <LoanReleaseViewCard label="Bank Code" value={transaction.bank.description} />
+                <LoanReleaseViewCard label="Amount" value={`${formatNumber(transaction.amount)}`} />
+                <LoanReleaseViewCard label="Cycle" value={`${transaction.cycle}`} />
+                <LoanReleaseViewCard label="Interest Rate" value={`${transaction.interest}`} />
               </IonCol>
             </IonRow>
           </IonGrid>
-          {/* <LoanReleaseFormTable /> */}
+          <div>
+            <ViewEntries isOpen={isOpen} transaction={transaction} />
+          </div>
         </div>
       </IonModal>
     </>

@@ -101,8 +101,8 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
             </div>
             <div className="mt-6">
               <ChartOfAccountSelection
-                chartOfAccountLabel="client"
-                chartOfAccountValue="clientId"
+                chartOfAccountLabel="acctCode"
+                chartOfAccountValue="acctCodeId"
                 chartOfAccountDescription="description"
                 clearErrors={form.clearErrors}
                 setValue={form.setValue}

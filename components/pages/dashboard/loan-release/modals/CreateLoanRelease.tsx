@@ -89,7 +89,12 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
   return (
     <>
       <div className="text-end">
-        <IonButton fill="clear" id="create-loanRelease-modal" className="max-h-10 min-h-9 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        <IonButton
+          fill="clear"
+          id="create-loanRelease-modal"
+          className="max-h-10 min-h-6 min-w-32 max-w-32 w-32 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+          strong
+        >
           + Add Record
         </IonButton>
       </div>
