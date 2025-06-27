@@ -52,7 +52,7 @@ const PrintAllLoanRelease = () => {
       setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
     } catch (error: any) {
       present({
-        message: 'Failed to print the center records. Please try again',
+        message: 'Failed to print the loan release records. Please try again',
         duration: 1000,
       });
     } finally {

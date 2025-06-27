@@ -45,7 +45,7 @@ const ExportLoanRelease = ({ transaction }: { transaction: Transaction }) => {
       window.URL.revokeObjectURL(url);
     } catch (error: any) {
       present({
-        message: 'Failed to export the center records. Please try again',
+        message: 'Failed to export the loan release records. Please try again',
         duration: 1000,
       });
     } finally {
@@ -77,7 +77,7 @@ const ExportLoanRelease = ({ transaction }: { transaction: Transaction }) => {
             <PrintExportOptionForm form={form} loading={loading} />
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold">
-                {loading ? 'Printing Loan Release...' : 'Print Loan Release'}
+                {loading ? 'Exporting Loan Release...' : 'Export Loan Release'}
               </IonButton>
             </div>
           </form>
