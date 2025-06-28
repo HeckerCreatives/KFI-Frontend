@@ -69,7 +69,7 @@ const ViewExpenseVoucher = ({ index }: { index: number }) => {
               </IonCol>
             </IonRow>
           </IonGrid>
-          <LoanReleaseFormTable />
+          {/* <LoanReleaseFormTable  form={form}/> */}
         </div>
       </IonModal>
     </>

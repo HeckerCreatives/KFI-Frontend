@@ -18,23 +18,19 @@ const UpdateExpenseVoucher = ({ index }: { index: number }) => {
   const form = useForm<ExpenseVoucherFormData>({
     resolver: zodResolver(expenseVoucherSchema),
     defaultValues: {
-      cvNo: '',
-      center: '',
-      name: '',
-      refNumber: '',
+      code: '',
+      supplier: '',
+      supplierId: '',
+      refNo: '',
       remarks: '',
       date: '',
       acctMonth: '',
       acctYear: '',
-      payee: '',
-      noOfWeeks: '',
-      typeOfLoan: '',
       checkNo: '',
       checkDate: '',
-      bankCode: '',
+      bank: '',
+      bankLabel: '',
       amount: '',
-      cycle: '',
-      interestRate: '',
     },
   });
 
@@ -106,7 +102,7 @@ const UpdateExpenseVoucher = ({ index }: { index: number }) => {
                   <LoanReleaseForm form={form} />
                 </div>
                 <div className={classNames('px-3', active !== 'table' && 'hidden')}>
-                  <LoanReleaseFormTable />
+                  <LoanReleaseFormTable form={form} />
                 </div>
               </div>
               <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
