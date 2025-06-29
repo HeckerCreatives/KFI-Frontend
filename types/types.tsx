@@ -107,6 +107,36 @@ export type Entry = {
   createdAt: string;
 };
 
+export type ExpenseVoucherEntry = {
+  _id: string;
+  expenseVoucher: string;
+  particular: string;
+  acctCode: { _id: string; code: string; description: string };
+  credit: number | null;
+  debit: number | null;
+  cvForRecompute: string;
+  createdAt: string;
+};
+
+export type ExpenseVoucher = {
+  _id: string;
+  acctMonth: number;
+  acctYear: number;
+  amount: number;
+  bankCode: { _id: string; code: string; description: string };
+  supplier: { _id: string; code: string; description: string };
+  checkDate: string;
+  checkNo: string;
+  code: string;
+  cycle: number;
+  date: string;
+  encodedBy: { username: string };
+  entries: any[];
+  refNo: string;
+  remarks: string;
+  createdAt: string;
+};
+
 export type Transaction = {
   _id: string;
   acctMonth: number;

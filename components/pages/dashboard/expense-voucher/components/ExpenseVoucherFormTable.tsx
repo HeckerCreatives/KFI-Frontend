@@ -9,15 +9,17 @@ import TableNoRows from '../../../../ui/forms/TableNoRows';
 
 type ExpenseVoucherFormTableProps = {
   form: UseFormReturn<ExpenseVoucherFormData>;
+  loading?: boolean;
 };
 
-const ExpenseVoucherFormTable = ({ form }: ExpenseVoucherFormTableProps) => {
+const ExpenseVoucherFormTable = ({ form, loading = false }: ExpenseVoucherFormTableProps) => {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'entries',
   });
 
   const addEntry = () => {
+    form.clearErrors('entries');
     append({ particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0', cvForRecompute: '' });
   };
 
@@ -27,6 +29,11 @@ const ExpenseVoucherFormTable = ({ form }: ExpenseVoucherFormTableProps) => {
 
   return (
     <div className="px-2">
+      <div className="text-start">
+        <IonButton disabled={loading} onClick={addEntry} type="button" fill="clear" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+          + Add Entries
+        </IonButton>
+      </div>
       <div className="relative overflow-auto">
         <Table>
           <TableHeader>
@@ -43,16 +50,13 @@ const ExpenseVoucherFormTable = ({ form }: ExpenseVoucherFormTableProps) => {
           <TableBody>
             {fields.length < 1 && <TableNoRows label="No Entry Added Yet" colspan={7} />}
             {fields.length > 0 &&
-              fields.map((field: EntryFormData & { id: string }, index: number) => <EVFormTableDoc key={field.id} index={index} entry={field} remove={deleteEntry} form={form} />)}
+              fields.map((field: EntryFormData & { id: string }, index: number) => (
+                <EVFormTableDoc key={field.id} index={index} entry={field} remove={deleteEntry} form={form} loading={loading} />
+              ))}
           </TableBody>
         </Table>
       </div>
       {form.formState.errors.entries && <div className="text-red-600 text-xs text-center my-2">{form.formState.errors.entries.message}</div>}
-      <div className="text-start my-2">
-        <IonButton onClick={addEntry} type="button" fill="clear" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-          + Add Entries
-        </IonButton>
-      </div>
     </div>
   );
 };

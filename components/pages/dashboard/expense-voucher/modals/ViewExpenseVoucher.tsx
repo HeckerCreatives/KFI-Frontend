@@ -1,75 +1,72 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { IonModal, IonHeader, IonToolbar, IonIcon, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonText } from '@ionic/react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { eye } from 'ionicons/icons';
-import LoanReleaseFormTable from '../components/ExpenseVoucherFormTable';
 import ExpenseVoucherViewCard from '../components/ExpenseVoucherViewCard';
+import { ExpenseVoucher } from '../../../../../types/types';
+import { formatDateTable } from '../../../../utils/date-utils';
+import { formatNumber } from '../../../../ui/utils/formatNumber';
+import ViewExpenseVoucherEntries from '../components/ViewExpenseVoucherEntries';
 
-const ViewExpenseVoucher = ({ index }: { index: number }) => {
-  const arrDummy: string[] = Array.from(Array(10)).fill('');
+type ViewExpenseVoucherType = {
+  expenseVoucher: ExpenseVoucher;
+};
+
+const ViewExpenseVoucher = ({ expenseVoucher }: ViewExpenseVoucherType) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
 
   function dismiss() {
-    modal.current?.dismiss();
+    setIsOpen(false);
   }
 
   return (
     <>
       <div className="text-end">
         <div
-          id={`view-expenseVoucher-modal-${index}`}
+          onClick={() => setIsOpen(true)}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={eye} className="text-[1rem]" /> View
         </div>
       </div>
-      <IonModal
-        ref={modal}
-        trigger={`view-expenseVoucher-modal-${index}`}
-        backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
-      >
+      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader title="Transaction - Expense Voucher - View Record" sub="All Actions" dismiss={dismiss} />
+            <ModalHeader title="Expense Voucher - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-6 !py-5">
           <IonGrid>
             <IonRow>
               <IonCol size="6" className="space-y-2">
-                <ExpenseVoucherViewCard label="CV#" value="CV#25564" />
-                <ExpenseVoucherViewCard label="Center Code" value="413" />
-                <ExpenseVoucherViewCard label="Name" value="ALITE-Kristine T. Bartican" />
-                <ExpenseVoucherViewCard label="Reference Number" value="" />
-                <ExpenseVoucherViewCard label="Remark" value="Loan release to CV#413-ALITE-Kristine T. Bartican" />
-                <ExpenseVoucherViewCard label="Date" value="04/01/2025" />
+                <ExpenseVoucherViewCard label="EV#" value={`EV#${expenseVoucher.code}`} />
+                <ExpenseVoucherViewCard label="Supplier" value={expenseVoucher.supplier.description} />
+                <ExpenseVoucherViewCard label="Reference Number" value={expenseVoucher.refNo} />
+                <ExpenseVoucherViewCard label="Remark" value={expenseVoucher.remarks} />
+                <ExpenseVoucherViewCard label="Date" value={formatDateTable(expenseVoucher.date)} />
+                <ExpenseVoucherViewCard label="User" value={expenseVoucher.encodedBy.username} />
+              </IonCol>
+              <IonCol size="6" className="space-y-2">
                 <IonGrid className="ion-no-padding">
                   <IonRow className="gap-2">
                     <IonCol>
-                      <ExpenseVoucherViewCard label="Account Month" value="4" />
+                      <ExpenseVoucherViewCard label="Account Month" value={`${expenseVoucher.acctMonth}`} />
                     </IonCol>
                     <IonCol>
-                      <ExpenseVoucherViewCard label="Account Year" value="2025" />
+                      <ExpenseVoucherViewCard label="Account Year" value={`${expenseVoucher.acctYear}`} />
                     </IonCol>
                   </IonRow>
                 </IonGrid>
-                <ExpenseVoucherViewCard label="User" value="EVD" />
-              </IonCol>
-              <IonCol size="6" className="space-y-2">
-                <ExpenseVoucherViewCard label="Number of Weeks" value="25" />
-                <ExpenseVoucherViewCard label="Type of Loan" value="IC" />
-                <ExpenseVoucherViewCard label="Check Number" value="20005244" />
-                <ExpenseVoucherViewCard label="Check Date" value="04/01/2025" />
-                <ExpenseVoucherViewCard label="Bank Code" value="PNB" />
-                <ExpenseVoucherViewCard label="Amount" value="13,290.00" />
-                <ExpenseVoucherViewCard label="Cycle" value="2" />
-                <ExpenseVoucherViewCard label="Interest Rate" value="24" />
+                <ExpenseVoucherViewCard label="Check Number" value={expenseVoucher.checkNo} />
+                <ExpenseVoucherViewCard label="Check Date" value={formatDateTable(expenseVoucher.checkDate)} />
+                <ExpenseVoucherViewCard label="Bank Code" value={expenseVoucher.bankCode.description} />
+                <ExpenseVoucherViewCard label="Amount" value={`${formatNumber(expenseVoucher.amount)}`} />
               </IonCol>
             </IonRow>
           </IonGrid>
-          {/* <LoanReleaseFormTable  form={form}/> */}
+          <ViewExpenseVoucherEntries expenseVoucher={expenseVoucher} isOpen={isOpen} />
         </div>
       </IonModal>
     </>

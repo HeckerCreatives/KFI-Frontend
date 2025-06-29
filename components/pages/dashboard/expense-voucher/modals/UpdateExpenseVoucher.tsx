@@ -1,22 +1,31 @@
-import React, { useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon } from '@ionic/react';
+import React, { useEffect, useState } from 'react';
+import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon, useIonToast } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
-import LoanReleaseFormTable from '../components/ExpenseVoucherFormTable';
-import classNames from 'classnames';
-import LoanReleaseForm from '../components/ExpenseVoucherForm';
 import { createSharp } from 'ionicons/icons';
-import { ExpenseVoucherFormData, expenseVoucherSchema } from '../../../../../validations/expense-voucher.schema';
+import { ExpenseVoucherFormData, expenseVoucherSchema, UpdateExpenseVoucherFormData, updateExpenseVoucherSchema } from '../../../../../validations/expense-voucher.schema';
+import { ExpenseVoucher, TErrorData, TFormError } from '../../../../../types/types';
+import { TData } from '../ExpenseVoucher';
+import { formatDateInput } from '../../../../utils/date-utils';
+import ExpenseVoucherForm from '../components/ExpenseVoucherForm';
+import UpdateExpenseVoucherEntries from '../components/UpdateExpenseVoucherEntries';
+import kfiAxios from '../../../../utils/axios';
+import checkError from '../../../../utils/check-error';
+import formErrorHandler from '../../../../utils/form-error-handler';
 
-const UpdateExpenseVoucher = ({ index }: { index: number }) => {
-  const [active, setActive] = useState('form');
+type UpdateExpenseVoucherProps = {
+  expenseVoucher: ExpenseVoucher;
+  setData: React.Dispatch<React.SetStateAction<TData>>;
+};
 
-  const modal = useRef<HTMLIonModalElement>(null);
-  const input = useRef<HTMLIonInputElement>(null);
+const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherProps) => {
+  const [present] = useIonToast();
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const form = useForm<ExpenseVoucherFormData>({
-    resolver: zodResolver(expenseVoucherSchema),
+  const form = useForm<UpdateExpenseVoucherFormData>({
+    resolver: zodResolver(updateExpenseVoucherSchema),
     defaultValues: {
       code: '',
       supplier: '',
@@ -34,86 +43,92 @@ const UpdateExpenseVoucher = ({ index }: { index: number }) => {
     },
   });
 
-  function confirm() {
-    modal.current?.dismiss(input.current?.value, 'confirm');
-  }
+  useEffect(() => {
+    if (expenseVoucher) {
+      form.reset({
+        code: expenseVoucher.code,
+        supplier: `${expenseVoucher.supplier.code} - ${expenseVoucher.supplier.description}`,
+        supplierId: expenseVoucher.supplier._id,
+        refNo: expenseVoucher.refNo,
+        remarks: expenseVoucher.remarks,
+        date: formatDateInput(expenseVoucher.date),
+        acctMonth: `${expenseVoucher.acctMonth}`,
+        acctYear: `${expenseVoucher.acctYear}`,
+        checkNo: `${expenseVoucher.checkNo}`,
+        checkDate: formatDateInput(expenseVoucher.checkDate),
+        bank: expenseVoucher.bankCode._id,
+        bankLabel: `${expenseVoucher.bankCode.code} - ${expenseVoucher.bankCode.description}`,
+        amount: `${expenseVoucher.amount}`,
+      });
+    }
+  }, [expenseVoucher, form]);
 
   function dismiss() {
     form.reset();
-    modal.current?.dismiss();
+    setIsOpen(false);
   }
 
-  function onSubmit(data: ExpenseVoucherFormData) {
-    console.log(data);
+  async function onSubmit(data: UpdateExpenseVoucherFormData) {
+    setLoading(true);
+    try {
+      const result = await kfiAxios.put(`expense-voucher/${expenseVoucher._id}`, data);
+      const { success, expenseVoucher: updatedExpenseVoucher } = result.data;
+      if (success) {
+        setData(prev => {
+          const index = prev.expenseVouchers.findIndex(expenseVoucher => expenseVoucher._id === updatedExpenseVoucher._id);
+          if (index < 0) return prev;
+          prev.expenseVouchers[index] = { ...updatedExpenseVoucher };
+          return { ...prev };
+        });
+        present({
+          message: 'Expense voucher successfully updated.',
+          duration: 1000,
+        });
+        return;
+      }
+      present({
+        message: 'Failed to update the expense voucher',
+        duration: 1000,
+      });
+    } catch (error: any) {
+      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+      const errors: TFormError[] | string = checkError(errs);
+      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+      formErrorHandler(errors, form.setError, fields);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <>
       <div className="text-end">
         <div
-          id={`update-expenseVoucher-modal-${index}`}
+          onClick={() => setIsOpen(true)}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={createSharp} className="text-[1rem]" /> Edit
         </div>
       </div>
-      <IonModal
-        ref={modal}
-        trigger={`update-expenseVoucher-modal-${index}`}
-        backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
-      >
+      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader title="Transaction - Expense Voucher - Edit Record" sub="All Actions" dismiss={dismiss} />
+            <ModalHeader title="Expense Voucher - Edit Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">
-          <div>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div>
-                <div className="bg-slate-100 p-3 my-2">
-                  <IonButton
-                    type="button"
-                    fill="clear"
-                    onClick={() => setActive('form')}
-                    className={classNames(
-                      'max-h-10 min-h-6 w-40 bg-white text-black shadow-lg capitalize font-semibold rounded-md',
-                      active === 'form' && '!bg-[#FA6C2F] !text-white',
-                    )}
-                    strong
-                  >
-                    Fill-up
-                  </IonButton>
-                  <IonButton
-                    type="button"
-                    fill="clear"
-                    onClick={() => setActive('table')}
-                    className={classNames(
-                      'max-h-10 min-h-6 w-40 bg-white text-black shadow-lg capitalize font-semibold rounded-md',
-                      active === 'table' && '!bg-[#FA6C2F] !text-white',
-                    )}
-                    strong
-                  >
-                    Table
-                  </IonButton>
-                </div>
-                <div className={classNames(active !== 'form' && 'hidden')}>
-                  <LoanReleaseForm form={form} />
-                </div>
-                <div className={classNames('px-3', active !== 'table' && 'hidden')}>
-                  <LoanReleaseFormTable form={form} />
-                </div>
-              </div>
-              <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
-                <IonButton color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
-                  Save
-                </IonButton>
-                <IonButton onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
-                  Cancel
-                </IonButton>
-              </div>
-            </form>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div>
+              <ExpenseVoucherForm form={form} loading={loading} />
+            </div>
+            <div className="text-end space-x-1 px-2 pb-2">
+              <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
+                {loading ? 'Saving...' : 'Save Changes'}
+              </IonButton>
+            </div>
+          </form>
+          <div className="border-t border-t-slate-400 mx-2 pt-5">
+            <UpdateExpenseVoucherEntries isOpen={isOpen} expenseVoucher={expenseVoucher} />
           </div>
         </div>
       </IonModal>

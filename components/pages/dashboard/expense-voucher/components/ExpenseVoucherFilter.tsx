@@ -12,7 +12,11 @@ type TSearch = {
   dateFrom: string;
 };
 
-const ExpenseVoucherFilter = () => {
+type ExpenseVoucherFilterProps = {
+  getExpenseVouchers: (page: number, keyword?: string, sort?: string, from?: string, to?: string) => void;
+};
+
+const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps) => {
   const form = useForm<TSearch>({
     defaultValues: {
       code: '',
@@ -23,68 +27,66 @@ const ExpenseVoucherFilter = () => {
   });
 
   const onSubmit = (data: TSearch) => {
-    console.log(data);
+    if (data.code !== '' || data.sort !== '' || data.dateFrom !== '' || data.dateTo !== '') {
+      getExpenseVouchers(1, data.code, data.sort, data.dateTo, data.dateFrom);
+    } else {
+      getExpenseVouchers(1);
+    }
   };
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center">
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center justify-end gap-2 flex-wrap w-full">
-        <FormIonItem className="min-w-56 flex-1">
-          <InputSelect
-            label="Sort By"
-            name="sort"
-            showLabel={false}
-            placeholder="Sort By"
-            control={form.control}
-            clearErrors={form.clearErrors}
-            options={[
-              { label: 'Code', value: 'code' },
-              { label: 'Description', value: 'description' },
-            ]}
-            className="!border-orange-500 rounded-md"
-          />
-        </FormIonItem>
-        <div className="flex items-center gap-2 flex-1 min-w-56">
-          <div className="max-h-10 min-h-8 grid place-items-center bg-[#FA6C2F] text-white capitalize font-semibold rounded-md px-3">Date From</div>
-          <FormIonItem className="flex-1">
-            <InputText
-              name="dateFrom"
-              placeholder="Type here"
-              type="date"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              className="!px-3 !py-1 !min-h-[1rem] rounded-md !border-orange-500"
-            />
-          </FormIonItem>
-        </div>
-        <div className="flex items-center gap-2 flex-1 min-w-56">
-          <div className="max-h-10 min-h-8 grid place-items-center bg-[#FA6C2F] text-white capitalize font-semibold rounded-md px-3">Date To</div>
-          <FormIonItem className="flex-1">
-            <InputText
-              name="dateTo"
-              placeholder="Type here"
-              type="date"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              className="!px-3 !py-1 !min-h-[1rem] rounded-md !border-orange-500"
-            />
-          </FormIonItem>
-        </div>
-        <FormIonItem className=" flex-1 min-w-56">
-          <InputText
-            name="code"
-            placeholder="Type here"
-            type="search"
-            control={form.control}
-            clearErrors={form.clearErrors}
-            className="!px-3 !py-1 !min-h-[1.44rem] rounded-md !border-orange-500"
-          />
-        </FormIonItem>
-        <IonButton type="submit" fill="clear" id="create-coa-modal" className="max-h-10 min-h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-          Search
-        </IonButton>
-      </form>
-    </div>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex items-start flex-wrap gap-2">
+      <FormIonItem className="flex-1 min-w-32">
+        <InputSelect
+          label="Sort By"
+          name="sort"
+          placeholder="Sort By"
+          control={form.control}
+          clearErrors={form.clearErrors}
+          options={[
+            { label: 'Sort By', value: '' },
+            { label: 'Code A - Z', value: 'code-asc' },
+            { label: 'Code Z - A', value: 'code-desc' },
+          ]}
+          className="!border-orange-500 rounded-md !w-full !py-[0.35rem]"
+        />
+      </FormIonItem>
+
+      <FormIonItem className="flex-1 min-w-32">
+        <InputText
+          label="Date From"
+          name="dateFrom"
+          type="date"
+          control={form.control}
+          clearErrors={form.clearErrors}
+          className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500"
+        />
+      </FormIonItem>
+      <FormIonItem className="flex-1 min-w-32">
+        <InputText
+          name="dateTo"
+          label="Date To"
+          type="date"
+          control={form.control}
+          clearErrors={form.clearErrors}
+          className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500"
+        />
+      </FormIonItem>
+      <FormIonItem className="flex-1 min-w-32">
+        <InputText
+          name="code"
+          label="Keyword"
+          placeholder="Type here"
+          type="search"
+          control={form.control}
+          clearErrors={form.clearErrors}
+          className="!px-3 !py-0.5 !min-h-[1rem] rounded-md !border-orange-500"
+        />
+      </FormIonItem>
+      <IonButton type="submit" fill="clear" className="max-h-10 min-h-[2.3rem] mt-5 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        Search
+      </IonButton>
+    </form>
   );
 };
 

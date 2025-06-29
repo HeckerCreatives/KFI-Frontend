@@ -15,14 +15,15 @@ type EVFormTableDocProps = {
   entry: EntryFormData & { id: string };
   remove: (index: number) => void;
   form: UseFormReturn<ExpenseVoucherFormData>;
+  loading?: boolean;
 };
 
-const EVFormTableDoc = ({ index, entry, remove, form }: EVFormTableDocProps) => {
+const EVFormTableDoc = ({ index, entry, remove, form, loading = false }: EVFormTableDocProps) => {
   return (
     <TableRow className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2">
       <TableCell>
         <FormIonItem>
-          <InputText control={form.control} name={`entries.${index}.particular`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
+          <InputText disabled={loading} control={form.control} name={`entries.${index}.particular`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
         </FormIonItem>
       </TableCell>
       <TableCell>
