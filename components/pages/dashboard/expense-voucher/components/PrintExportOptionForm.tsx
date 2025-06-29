@@ -1,11 +1,11 @@
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import InputRadio from '../../../../ui/forms/InputRadio';
-import { LoanReleaseOptionFormData } from '../modals/prints/ExportExpenseVoucher';
+import { ExpenseVoucherOptionFormData } from '../modals/prints/PrintExpenseVoucher';
 
 type PrintExportFilterFormProps = {
   loading: boolean;
-  form: UseFormReturn<LoanReleaseOptionFormData>;
+  form: UseFormReturn<ExpenseVoucherOptionFormData>;
 };
 
 const PrintExportOptionForm = ({ form, loading }: PrintExportFilterFormProps) => {
