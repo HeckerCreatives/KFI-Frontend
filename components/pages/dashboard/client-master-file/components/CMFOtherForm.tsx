@@ -30,9 +30,10 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-          <div className="flex items-end gap-2 flex-nowrap">
+          <div className="flex items-start gap-2 flex-nowrap">
             <FormIonItem className="flex-1">
               <InputText
+                readOnly
                 disabled={loading}
                 name="groupNumberLabel"
                 control={form.control}
@@ -42,9 +43,11 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>
-            <GroupOfAccountSelection groupOfAccountLabel="groupNumberLabel" groupOfAccountValue="groupNumber" setValue={form.setValue} clearErrors={form.clearErrors} />
+            <div className="mt-5">
+              <GroupOfAccountSelection groupOfAccountLabel="groupNumberLabel" groupOfAccountValue="groupNumber" setValue={form.setValue} clearErrors={form.clearErrors} />
+            </div>
           </div>
-          <div className="flex items-end gap-2 flex-nowrap">
+          <div className="flex items-start gap-2 flex-nowrap">
             <FormIonItem className="flex-1">
               <InputText
                 disabled={loading}
@@ -57,7 +60,9 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
                 readOnly
               />
             </FormIonItem>
-            <CenterSelection centerLabel="centerLabel" centerValue="center" setValue={form.setValue} clearErrors={form.clearErrors} />
+            <div className="mt-5">
+              <CenterSelection centerLabel="centerLabel" centerValue="center" setValue={form.setValue} clearErrors={form.clearErrors} />
+            </div>
           </div>
           <FormIonItem>
             <InputText
@@ -80,9 +85,10 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
               label="Date Release"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              max="9999-12-31"
             />
           </FormIonItem>
-          <div className="flex items-end gap-2 flex-nowrap">
+          <div className="flex items-start gap-2 flex-nowrap">
             <FormIonItem className="flex-1">
               <InputText
                 disabled={loading}
@@ -95,7 +101,9 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
                 readOnly
               />
             </FormIonItem>
-            <BusinessTypeSelection businessTypeLabel="businessLabel" businessTypeValue="business" setValue={form.setValue} clearErrors={form.clearErrors} />
+            <div className="mt-5">
+              <BusinessTypeSelection businessTypeLabel="businessLabel" businessTypeValue="business" setValue={form.setValue} clearErrors={form.clearErrors} />
+            </div>
           </div>
         </IonCol>
         <IonCol size="6" className="space-y-2">
@@ -131,6 +139,7 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
               label="Date Resigned"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              max="9999-12-31"
             />
           </FormIonItem>
 

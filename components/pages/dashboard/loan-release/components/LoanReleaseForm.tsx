@@ -104,6 +104,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               label="Date"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              max="9999-12-31"
             />
           </FormIonItem>
           <IonGrid className="ion-no-padding">
@@ -152,6 +153,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
           <div className="flex items-start gap-2">
             <FormIonItem className="flex-1">
               <InputText
+                readOnly
                 disabled={loading}
                 name="typeOfLoanLabel"
                 control={form.control}
@@ -186,6 +188,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               label="Check Date"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              max="9999-12-31"
             />
           </FormIonItem>
           <div className="flex items-start gap-2 flex-nowrap">

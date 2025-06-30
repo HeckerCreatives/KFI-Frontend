@@ -60,6 +60,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
           control={form.control}
           clearErrors={form.clearErrors}
           className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500"
+          max="9999-12-31"
         />
       </FormIonItem>
       <FormIonItem className="flex-1 min-w-32">
@@ -70,6 +71,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
           control={form.control}
           clearErrors={form.clearErrors}
           className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500"
+          max="9999-12-31"
         />
       </FormIonItem>
       <FormIonItem className="flex-1 min-w-32">

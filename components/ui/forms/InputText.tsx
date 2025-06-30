@@ -14,6 +14,7 @@ type TFormInput<T extends FieldValues> = {
   disabled?: boolean;
   className?: string;
   readOnly?: boolean;
+  max?: string;
 };
 
 const InputText = <T extends FieldValues>({
@@ -27,6 +28,7 @@ const InputText = <T extends FieldValues>({
   disabled = false,
   className,
   readOnly = false,
+  max = '',
 }: TFormInput<T>) => {
   return (
     <Controller
@@ -62,6 +64,7 @@ const InputText = <T extends FieldValues>({
               className,
             )}
             readonly={readOnly}
+            max={max}
           />
 
           {error && (

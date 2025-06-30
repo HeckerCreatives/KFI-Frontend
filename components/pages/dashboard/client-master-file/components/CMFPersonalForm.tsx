@@ -78,7 +78,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     control={form.control}
                     clearErrors={form.clearErrors}
                     label="Telephone No."
-                    placeholder="Type here"
+                    placeholder="Type here (523XXXX)"
                     className="!px-2 !py-2 rounded-md"
                   />
                 </FormIonItem>
@@ -91,7 +91,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     control={form.control}
                     clearErrors={form.clearErrors}
                     label="Mobile"
-                    placeholder="Type here"
+                    placeholder="Type here (+639XXXXXXXXX)"
                     className="!px-2 !py-2 rounded-md"
                   />
                 </FormIonItem>
@@ -108,6 +108,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
               type="date"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              max="9999-12-31"
             />
           </FormIonItem>
           <FormIonItem>

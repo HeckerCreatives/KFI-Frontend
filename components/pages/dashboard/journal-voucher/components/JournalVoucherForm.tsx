@@ -77,6 +77,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
               label="Date"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              max="9999-12-31"
             />
           </FormIonItem>
         </IonCol>
@@ -132,6 +133,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
               label="Check Date"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              max="9999-12-31"
             />
           </FormIonItem>
           <div className="flex items-start gap-2 flex-nowrap">
