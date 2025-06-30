@@ -19,7 +19,15 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
       <IonRow>
         <IonCol size="6" className="space-y-2">
           <FormIonItem>
-            <InputText name="code" control={form.control} clearErrors={form.clearErrors} label="EV#" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              disabled={loading}
+              name="code"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="EV#"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
           <div className="flex items-start gap-2 flex-nowrap">
             <FormIonItem className="flex-1">
@@ -38,13 +46,38 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
             </div>
           </div>
           <FormIonItem>
-            <InputText name="refNo" control={form.control} clearErrors={form.clearErrors} label="Reference Number" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              name="refNo"
+              disabled={loading}
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Reference Number"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
           <FormIonItem>
-            <InputTextarea name="remarks" control={form.control} clearErrors={form.clearErrors} label="Remark" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputTextarea
+              name="remarks"
+              disabled={loading}
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Remark"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
           <FormIonItem>
-            <InputText name="date" type="date" control={form.control} clearErrors={form.clearErrors} label="Date" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              name="date"
+              type="date"
+              disabled={loading}
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Date"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
         </IonCol>
         <IonCol size="6" className="space-y-2">
@@ -54,6 +87,7 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
                 <FormIonItem>
                   <InputText
                     name="acctMonth"
+                    disabled={loading}
                     control={form.control}
                     clearErrors={form.clearErrors}
                     label="Account Month"
@@ -66,6 +100,7 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
                 <FormIonItem>
                   <InputText
                     name="acctYear"
+                    disabled={loading}
                     control={form.control}
                     clearErrors={form.clearErrors}
                     label="Account Year"
@@ -77,12 +112,21 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
             </IonRow>
           </IonGrid>
           <FormIonItem>
-            <InputText name="checkNo" control={form.control} clearErrors={form.clearErrors} label="Check Number" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              name="checkNo"
+              disabled={loading}
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Check Number"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
           <FormIonItem>
             <InputText
               name="checkDate"
               type="date"
+              disabled={loading}
               control={form.control}
               clearErrors={form.clearErrors}
               label="Check Date"

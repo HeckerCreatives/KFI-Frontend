@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
@@ -7,104 +7,91 @@ import classNames from 'classnames';
 import { JournalVoucherFormData, journalVoucherSchema } from '../../../../../validations/journal-voucher.schema';
 import JournalVoucherForm from '../components/JournalVoucherForm';
 import JournalVoucherFormTable from '../components/JournalVoucherFormTable';
+import kfiAxios from '../../../../utils/axios';
+import { TErrorData, TFormError } from '../../../../../types/types';
+import checkError from '../../../../utils/check-error';
+import formErrorHandler from '../../../../utils/form-error-handler';
 
-const CreateJournalVoucher = () => {
-  const [active, setActive] = useState('form');
+type CreateJournalVoucherProps = {
+  getJournalVouchers: (page: number, keyword?: string, sort?: string) => void;
+};
 
-  const modal = useRef<HTMLIonModalElement>(null);
-  const input = useRef<HTMLIonInputElement>(null);
+const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps) => {
+  const [present] = useIonToast();
+  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<JournalVoucherFormData>({
     resolver: zodResolver(journalVoucherSchema),
     defaultValues: {
-      cvNo: '',
-      center: '',
-      name: '',
-      refNumber: '',
-      remarks: '',
+      code: '',
+      supplier: '',
+      supplierId: '',
+      refNo: '',
       date: '',
       acctMonth: '',
       acctYear: '',
-      payee: '',
-      noOfWeeks: '',
-      typeOfLoan: '',
       checkNo: '',
       checkDate: '',
-      bankCode: '',
+      bank: '',
+      bankLabel: '',
       amount: '',
-      cycle: '',
-      interestRate: '',
+      remarks: '',
+      entries: [],
+      mode: 'create',
     },
   });
 
-  function confirm() {
-    modal.current?.dismiss(input.current?.value, 'confirm');
-  }
-
   function dismiss() {
     form.reset();
-    setActive('form');
-    modal.current?.dismiss();
+    setIsOpen(false);
   }
 
-  function onSubmit(data: JournalVoucherFormData) {
-    console.log(data);
+  async function onSubmit(data: JournalVoucherFormData) {
+    setLoading(true);
+    try {
+      const result = await kfiAxios.post('journal-voucher', data);
+      const { success } = result.data;
+      if (success) {
+        getJournalVouchers(1);
+        present({
+          message: 'Journal voucher successfully added.',
+          duration: 1000,
+        });
+        dismiss();
+        return;
+      }
+      present({
+        message: 'Failed to add a new journal voucher. Please try again.',
+        duration: 1000,
+      });
+    } catch (error: any) {
+      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+      const errors: TFormError[] | string = checkError(errs);
+      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+      formErrorHandler(errors, form.setError, fields);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <>
-      <div className="text-end lg:mt-1">
-        <IonButton fill="clear" id="create-journalVoucher-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-          + Add Record
-        </IonButton>
-      </div>
-      <IonModal
-        ref={modal}
-        trigger="create-journalVoucher-modal"
-        backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
-      >
+      <IonButton fill="clear" onClick={() => setIsOpen(true)} className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        + Add Record
+      </IonButton>
+      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader title="Transaction - Journal Voucher - Add Record" sub="All Actions" dismiss={dismiss} />
+            <ModalHeader title="Journal Voucher - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">
           <div>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div>
-                <div className="bg-slate-100 p-3 my-2">
-                  <IonButton
-                    type="button"
-                    fill="clear"
-                    onClick={() => setActive('form')}
-                    className={classNames(
-                      'max-h-10 min-h-6 w-40 bg-white text-black shadow-lg capitalize font-semibold rounded-md',
-                      active === 'form' && '!bg-[#FA6C2F] !text-white',
-                    )}
-                    strong
-                  >
-                    Fill-up
-                  </IonButton>
-                  <IonButton
-                    type="button"
-                    fill="clear"
-                    onClick={() => setActive('table')}
-                    className={classNames(
-                      'max-h-10 min-h-6 w-40 bg-white text-black shadow-lg capitalize font-semibold rounded-md',
-                      active === 'table' && '!bg-[#FA6C2F] !text-white',
-                    )}
-                    strong
-                  >
-                    Table
-                  </IonButton>
-                </div>
-                <div className={classNames(active !== 'form' && 'hidden')}>
-                  <JournalVoucherForm form={form} />
-                </div>
-                <div className={classNames('px-3', active !== 'table' && 'hidden')}>
-                  <JournalVoucherFormTable />
-                </div>
+                <JournalVoucherForm form={form} loading={loading} />
+                <JournalVoucherFormTable form={form} loading={loading} />
               </div>
               <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
                 <IonButton color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>

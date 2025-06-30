@@ -15,8 +15,6 @@ type ViewExpenseVoucherType = {
 const ViewExpenseVoucher = ({ expenseVoucher }: ViewExpenseVoucherType) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const modal = useRef<HTMLIonModalElement>(null);
-
   function dismiss() {
     setIsOpen(false);
   }

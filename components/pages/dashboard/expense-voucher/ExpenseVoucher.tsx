@@ -97,9 +97,9 @@ const ExpenseVoucher = () => {
                 <ExpenseVoucherFilter getExpenseVouchers={getExpenseVouchers} />
               </div>
               <div className="w-full flex items-start">
-                <div>{canDoAction(token.role, token.permissions, 'loan release', 'create') && <CreateExpenseVoucher getExpenseVouchers={getExpenseVouchers} />}</div>
-                <div>{canDoAction(token.role, token.permissions, 'loan release', 'print') && <PrintAllExpenseVoucher />}</div>
-                <div>{canDoAction(token.role, token.permissions, 'loan release', 'export') && <ExportAllExpenseVoucher />}</div>
+                <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'create') && <CreateExpenseVoucher getExpenseVouchers={getExpenseVouchers} />}</div>
+                <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'print') && <PrintAllExpenseVoucher />}</div>
+                <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'export') && <ExportAllExpenseVoucher />}</div>
               </div>
             </div>
             <div className="relative overflow-auto">
@@ -112,7 +112,7 @@ const ExpenseVoucher = () => {
                     <TableHead>CHK. No.</TableHead>
                     <TableHead>Amount</TableHead>
                     <TableHead>Encoded By</TableHead>
-                    {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                    {haveActions(token.role, 'expense voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -127,7 +127,7 @@ const ExpenseVoucher = () => {
                         <TableCell>{expenseVoucher.checkNo}</TableCell>
                         <TableCell>{formatNumber(expenseVoucher.amount)}</TableCell>
                         <TableCell>{expenseVoucher.encodedBy.username}</TableCell>
-                        {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                        {haveActions(token.role, 'expense voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                           <TableCell>
                             <ExpenseVoucherActions
                               expenseVoucher={expenseVoucher}

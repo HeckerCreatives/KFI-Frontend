@@ -4,40 +4,90 @@ import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import InputText from '../../../../ui/forms/InputText';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import { JournalVoucherFormData } from '../../../../../validations/journal-voucher.schema';
+import SupplierSelection from '../../../../ui/selections/SupplierSelection';
+import InputTextarea from '../../../../ui/forms/InputTextarea';
+import BankSelection from '../../../../ui/selections/BankSelection';
 
 type TForm = {
   form: UseFormReturn<JournalVoucherFormData>;
+  loading?: boolean;
 };
 
-const JournalVoucherForm = ({ form }: TForm) => {
+const JournalVoucherForm = ({ form, loading }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
         <IonCol size="6" className="space-y-2">
           <FormIonItem>
-            <InputText name="cvNo" control={form.control} clearErrors={form.clearErrors} label="CV#" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              disabled={loading}
+              name="code"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="JV#"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
+          </FormIonItem>
+          <div className="flex items-start gap-2 flex-nowrap">
+            <FormIonItem className="flex-1">
+              <InputText
+                readOnly
+                name="supplier"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Supplier"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+              />
+            </FormIonItem>
+            <div className="mt-5">
+              <SupplierSelection supplierLabel="supplier" supplierValue="supplierId" setValue={form.setValue} clearErrors={form.clearErrors} />
+            </div>
+          </div>
+          <FormIonItem>
+            <InputText
+              name="refNo"
+              disabled={loading}
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Reference Number"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
           <FormIonItem>
-            <InputText name="center" control={form.control} clearErrors={form.clearErrors} label="Center Code" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputTextarea
+              name="remarks"
+              disabled={loading}
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Remark"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
           <FormIonItem>
-            <InputText name="name" control={form.control} clearErrors={form.clearErrors} label="Name" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              name="date"
+              type="date"
+              disabled={loading}
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Date"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
-          <FormIonItem>
-            <InputText name="refNumber" control={form.control} clearErrors={form.clearErrors} label="Reference Number" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
-          </FormIonItem>
-          <FormIonItem>
-            <InputText name="remarks" control={form.control} clearErrors={form.clearErrors} label="Remark" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
-          </FormIonItem>
-          <FormIonItem>
-            <InputText name="date" type="date" control={form.control} clearErrors={form.clearErrors} label="Date" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
-          </FormIonItem>
+        </IonCol>
+        <IonCol size="6" className="space-y-2">
           <IonGrid className="ion-no-padding">
             <IonRow className="gap-2">
               <IonCol>
                 <FormIonItem>
                   <InputText
                     name="acctMonth"
+                    disabled={loading}
                     control={form.control}
                     clearErrors={form.clearErrors}
                     label="Account Month"
@@ -50,6 +100,7 @@ const JournalVoucherForm = ({ form }: TForm) => {
                 <FormIonItem>
                   <InputText
                     name="acctYear"
+                    disabled={loading}
                     control={form.control}
                     clearErrors={form.clearErrors}
                     label="Account Year"
@@ -61,18 +112,15 @@ const JournalVoucherForm = ({ form }: TForm) => {
             </IonRow>
           </IonGrid>
           <FormIonItem>
-            <InputText name="payee" control={form.control} clearErrors={form.clearErrors} label="User" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
-          </FormIonItem>
-        </IonCol>
-        <IonCol size="6" className="space-y-2">
-          <FormIonItem>
-            <InputText name="noOfWeeks" control={form.control} clearErrors={form.clearErrors} label="Number of Weeks" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
-          </FormIonItem>
-          <FormIonItem>
-            <InputText name="typeOfLoan" control={form.control} clearErrors={form.clearErrors} label="Type of Loan" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
-          </FormIonItem>
-          <FormIonItem>
-            <InputText name="checkNo" control={form.control} clearErrors={form.clearErrors} label="Check Number" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              name="checkNo"
+              disabled={loading}
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Check Number"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
           <FormIonItem>
             <InputText
@@ -80,22 +128,39 @@ const JournalVoucherForm = ({ form }: TForm) => {
               type="date"
               control={form.control}
               clearErrors={form.clearErrors}
+              disabled={loading}
               label="Check Date"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
+          <div className="flex items-start gap-2 flex-nowrap">
+            <FormIonItem className="flex-1">
+              <InputText
+                disabled={loading}
+                name="bankLabel"
+                readOnly
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Bank Code"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+              />
+            </FormIonItem>
+            <div className="mt-5">
+              <BankSelection bankLabel="bankLabel" bankValue="bank" setValue={form.setValue} clearErrors={form.clearErrors} />
+            </div>
+          </div>
           <FormIonItem>
-            <InputText name="bankCode" control={form.control} clearErrors={form.clearErrors} label="Bank Code" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
-          </FormIonItem>
-          <FormIonItem>
-            <InputText name="amount" control={form.control} clearErrors={form.clearErrors} label="Amount" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
-          </FormIonItem>
-          <FormIonItem>
-            <InputText name="cycle" control={form.control} clearErrors={form.clearErrors} label="Cycle" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
-          </FormIonItem>
-          <FormIonItem>
-            <InputText name="interestRate" control={form.control} clearErrors={form.clearErrors} label="Interest Rate" placeholder="Type here" className="!px-2 !py-2 rounded-md" />
+            <InputText
+              name="amount"
+              disabled={loading}
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Amount"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
           </FormIonItem>
         </IonCol>
       </IonRow>
