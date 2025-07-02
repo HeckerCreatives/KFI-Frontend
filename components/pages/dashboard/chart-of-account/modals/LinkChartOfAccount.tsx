@@ -109,7 +109,9 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
                     readOnly
                   />
                 </FormIonItem>
-                <GroupOfAccountSelection groupOfAccountLabel="groupAccountLabel" groupOfAccountValue="groupAccount" setValue={form.setValue} clearErrors={form.clearErrors} />
+                <div className="mt-5">
+                  <GroupOfAccountSelection groupOfAccountLabel="groupAccountLabel" groupOfAccountValue="groupAccount" setValue={form.setValue} clearErrors={form.clearErrors} />
+                </div>
               </div>
               <div className="text-end border-t mt-2 pt-1 space-x-2">
                 <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>

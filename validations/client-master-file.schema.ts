@@ -5,7 +5,7 @@ export const clientMasterFileSchema = z.object({
   address: z.string().min(1, 'Address is required'),
   city: z.string().min(1, 'City is required'),
   zipCode: z.string().min(1, 'Zip code is required'),
-  telNo: z.string().min(1, 'Telephone No. is required'),
+  telNo: z.string().optional().or(z.literal('')),
   mobileNo: z.string().min(1, 'Mobile No. is required'),
   birthdate: z.string().min(1, 'Birth Date is required'),
   birthplace: z.string().min(1, 'Birth Place is required'),
