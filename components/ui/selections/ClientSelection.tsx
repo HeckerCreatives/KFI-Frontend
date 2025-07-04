@@ -14,10 +14,11 @@ type Option = {
   _id: string;
   name: string;
   acctNumber: string;
+  center: { centerNo: string };
 };
 
 export type TClient = {
-  clients: { _id: string; acctNumber: string; name: string }[];
+  clients: Option[];
   totalPages: number;
   nextPage: boolean;
   prevPage: boolean;
@@ -29,17 +30,17 @@ type ClientSelectionProps<T extends FieldValues> = {
   clearErrors: UseFormClearErrors<T>;
   clientLabel: Path<T>;
   clientValue: Path<T>;
+  clientParticular?: Path<T>;
   className?: string;
   center?: string;
 };
 
-const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setValue, clearErrors, className = '', center = '' }: ClientSelectionProps<T>) => {
+const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setValue, clearErrors, className = '', center = '', clientParticular }: ClientSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const ionInputRef = useRef<HTMLIonInputElement>(null);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchKey, setSearchKey] = useState<string>('');
 
   const [data, setData] = useState<TClient>({
     clients: [],
@@ -74,7 +75,6 @@ const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setV
           prevPage: hasPrevPage,
         }));
         setCurrentPage(page);
-        setSearchKey(value as string);
         return;
       }
     } catch (error) {
@@ -86,11 +86,14 @@ const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setV
   const handleSelectClient = (client: Option) => {
     const clientName = client.name as PathValue<T, Path<T>>;
     const clientId = client._id as PathValue<T, Path<T>>;
+    const particular = `${client.center.centerNo} - ${client.name}`;
 
     setValue(clientLabel as Path<T>, clientName as any);
     setValue(clientValue as Path<T>, clientId as any);
+    clientParticular && setValue(clientParticular as Path<T>, particular as any);
     clearErrors(clientLabel);
     clearErrors(clientValue);
+    clientParticular && clearErrors(clientParticular);
     setData({
       clients: [],
       loading: false,
@@ -113,7 +116,7 @@ const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setV
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Chart Of Account Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Client Selection" />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !p-2  border-2 !border-slate-400">

@@ -30,6 +30,7 @@ const TransactionNavigation = () => {
         { path: '/dashboard/release', label: 'Release', resource: 'release' },
       ],
     },
+    { path: '/dashboard/emergency-loan', label: 'Emergency Loan', resource: 'emergency loan' },
   ];
 
   const isActivePath = (currentPath: string, navLinks: NavLink[]): boolean => {

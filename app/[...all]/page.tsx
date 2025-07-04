@@ -21,6 +21,7 @@ export async function generateStaticParams() {
     { all: ['dashboard', 'journal-voucher'] },
     { all: ['dashboard', 'acknowledgement'] },
     { all: ['dashboard', 'release'] },
+    { all: ['dashboard', 'emergency-loan'] },
 
     // General Ledger
     { all: ['dashboard', 'audit-trail'] },

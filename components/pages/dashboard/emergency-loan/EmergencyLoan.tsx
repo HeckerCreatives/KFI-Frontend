@@ -2,33 +2,31 @@ import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/re
 import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
-import CreateJournalVoucher from './modals/CreateJournalVoucher';
-import JournalVoucherFilter from './components/JournalVoucherFilter';
-import JournalVoucherActions from './components/JournalVoucherActions';
-import kfiAxios from '../../../utils/axios';
-import { AccessToken, JournalVoucher as JournalVoucherType, TTableFilter } from '../../../../types/types';
-import { TABLE_LIMIT } from '../../../utils/constants';
-import { jwtDecode } from 'jwt-decode';
 import { canDoAction, haveActions } from '../../../utils/permissions';
+import { AccessToken, EmergencyLoan as EmergencyLoanType, TTableFilter } from '../../../../types/types';
+import { jwtDecode } from 'jwt-decode';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import { formatDateTable } from '../../../utils/date-utils';
-import { formatNumber } from '../../../ui/utils/formatNumber';
-import PrintAllJournalVoucher from './modals/prints/PrintAllJournalVoucher';
-import ExportAllJournalVoucher from './modals/prints/ExportAllJournalVoucher';
+import { formatMoney } from '../../../utils/number';
 import TablePagination from '../../../ui/forms/TablePagination';
+import EmergencyLoanFilter from './components/EmergencyLoanFilter';
+import CreateEmergencyLoan from './modals/CreateEmergencyLoan';
+import { TABLE_LIMIT } from '../../../utils/constants';
+import kfiAxios from '../../../utils/axios';
+import EmergencyLoanActions from './components/EmergencyLoanActions';
+import PrintAllEmergencyLoan from './modals/prints/PrintAllEmergencyLoan';
+import ExportAllEmergencyLoan from './modals/prints/ExportAllEmergencyLoan';
 
 export type TData = {
-  journalVouchers: JournalVoucherType[];
+  emergencyLoans: EmergencyLoanType[];
   totalPages: number;
   nextPage: boolean;
   prevPage: boolean;
   loading: boolean;
 };
 
-const JournalVoucher = () => {
-  const arrDummy: string[] = Array.from(Array(10)).fill('');
-
+const EmergencyLoan = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
 
   const [present] = useIonToast();
@@ -40,14 +38,14 @@ const JournalVoucher = () => {
   const [to, setTo] = useState<string>('');
 
   const [data, setData] = useState<TData>({
-    journalVouchers: [],
+    emergencyLoans: [],
     loading: false,
     totalPages: 0,
     nextPage: false,
     prevPage: false,
   });
 
-  const getJournalVouchers = async (page: number, keyword: string = '', sort: string = '', to: string = '', from: string = '') => {
+  const getEmergencyLoans = async (page: number, keyword: string = '', sort: string = '', to: string = '', from: string = '') => {
     setData(prev => ({ ...prev, loading: true }));
     try {
       const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
@@ -56,12 +54,12 @@ const JournalVoucher = () => {
       if (to) filter.to = to;
       if (from) filter.from = from;
 
-      const result = await kfiAxios.get('/journal-voucher', { params: filter });
-      const { success, journalVouchers, hasPrevPage, hasNextPage, totalPages } = result.data;
+      const result = await kfiAxios.get('/emergency-loan', { params: filter });
+      const { success, emergencyLoans, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({
           ...prev,
-          journalVouchers: journalVouchers,
+          emergencyLoans,
           totalPages: totalPages,
           nextPage: hasNextPage,
           prevPage: hasPrevPage,
@@ -83,59 +81,60 @@ const JournalVoucher = () => {
     }
   };
 
-  const handlePagination = (page: number) => getJournalVouchers(page, searchKey, sortKey);
+  const handlePagination = (page: number) => getEmergencyLoans(page, searchKey, sortKey);
 
   useIonViewWillEnter(() => {
-    getJournalVouchers(currentPage);
+    getEmergencyLoans(currentPage);
   });
 
   return (
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
-          <PageTitle pages={['Transaction', 'Journal Voucher']} />
-
+          <PageTitle pages={['Transaction', 'Emergency Loan']} />
           <div className="px-3 pb-3 flex-1">
             <div className=" bg-white p-3 rounded-2xl shadow-lg mt-3 mb-4 flex flex-col items-end">
               <div className="w-full flex items-end">
-                <JournalVoucherFilter getJournalVouchers={getJournalVouchers} />
+                <EmergencyLoanFilter getEmergencyLoans={getEmergencyLoans} />
               </div>
               <div className="w-full flex items-start">
-                <div>{canDoAction(token.role, token.permissions, 'journal voucher', 'create') && <CreateJournalVoucher getJournalVouchers={getJournalVouchers} />}</div>
-                <div>{canDoAction(token.role, token.permissions, 'journal voucher', 'print') && <PrintAllJournalVoucher />}</div>
-                <div>{canDoAction(token.role, token.permissions, 'journal voucher', 'export') && <ExportAllJournalVoucher />}</div>
+                <div>{canDoAction(token.role, token.permissions, 'emergency loan', 'create') && <CreateEmergencyLoan getEmergencyLoans={getEmergencyLoans} />}</div>
+                <div>{canDoAction(token.role, token.permissions, 'emergency loan', 'print') && <PrintAllEmergencyLoan />}</div>
+                <div>{canDoAction(token.role, token.permissions, 'emergency loan', 'export') && <ExportAllEmergencyLoan />}</div>
               </div>
             </div>
+
             <div className="relative overflow-auto">
               <Table>
                 <TableHeader>
                   <TableHeadRow>
-                    <TableHead>Doc. No.</TableHead>
+                    <TableHead>CV Number</TableHead>
                     <TableHead>Date</TableHead>
                     <TableHead>Bank</TableHead>
                     <TableHead>CHK. No.</TableHead>
                     <TableHead>Amount</TableHead>
                     <TableHead>Encoded By</TableHead>
-                    {haveActions(token.role, 'journal voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                    {haveActions(token.role, 'emergency loan', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
                   {data.loading && <TableLoadingRow colspan={8} />}
-                  {!data.loading && data.journalVouchers.length < 1 && <TableNoRows label="No Journal Voucher Record Found" colspan={8} />}
+                  {!data.loading && data.emergencyLoans.length < 1 && <TableNoRows label="No Emergency Loan Record Found" colspan={8} />}
                   {!data.loading &&
-                    data.journalVouchers.map((journalVoucher: JournalVoucherType, i: number) => (
-                      <TableRow key={journalVoucher._id}>
-                        <TableCell>JV#{journalVoucher.code}</TableCell>
-                        <TableCell>{formatDateTable(journalVoucher.date)}</TableCell>
-                        <TableCell>{journalVoucher.bankCode.description}</TableCell>
-                        <TableCell>{journalVoucher.checkNo}</TableCell>
-                        <TableCell>{formatNumber(journalVoucher.amount)}</TableCell>
-                        <TableCell>{journalVoucher.encodedBy.username}</TableCell>
-                        {haveActions(token.role, 'expense voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                    data.emergencyLoans.length > 0 &&
+                    data.emergencyLoans.map((emergencyLoan: EmergencyLoanType, i: number) => (
+                      <TableRow key={emergencyLoan._id}>
+                        <TableCell>CV#{emergencyLoan.code}</TableCell>
+                        <TableCell>{formatDateTable(emergencyLoan.date)}</TableCell>
+                        <TableCell>{emergencyLoan.bankCode.description}</TableCell>
+                        <TableCell>{emergencyLoan.checkNo}</TableCell>
+                        <TableCell>{formatMoney(emergencyLoan.amount)}</TableCell>
+                        <TableCell>{emergencyLoan.encodedBy.username}</TableCell>
+                        {haveActions(token.role, 'emergency loan', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                           <TableCell>
-                            <JournalVoucherActions
-                              journalVoucher={journalVoucher}
-                              getJournalVouchers={getJournalVouchers}
+                            <EmergencyLoanActions
+                              emergencyLoan={emergencyLoan}
+                              getEmergencyLoans={getEmergencyLoans}
                               setData={setData}
                               searchKey={searchKey}
                               sortKey={sortKey}
@@ -143,7 +142,7 @@ const JournalVoucher = () => {
                               from={from}
                               currentPage={currentPage}
                               setCurrentPage={setCurrentPage}
-                              rowLength={data.journalVouchers.length}
+                              rowLength={data.emergencyLoans.length}
                             />
                           </TableCell>
                         )}
@@ -160,4 +159,4 @@ const JournalVoucher = () => {
   );
 };
 
-export default JournalVoucher;
+export default EmergencyLoan;

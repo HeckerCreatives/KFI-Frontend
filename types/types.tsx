@@ -107,6 +107,28 @@ export type Entry = {
   createdAt: string;
 };
 
+export type Acknowledgement = {
+  _id: string;
+  emergencyLoan: string;
+  client: { _id: string; name: string; center: { _id: string; centerNo: string } };
+  particular: string;
+  acctCode: { _id: string; code: string; description: string };
+  credit: number;
+  debit: number;
+  createdAt: string;
+};
+
+export type EmergencyLoanEntry = {
+  _id: string;
+  emergencyLoan: string;
+  client: { _id: string; name: string; center: { _id: string; centerNo: string } };
+  particular: string;
+  acctCode: { _id: string; code: string; description: string };
+  credit: number;
+  debit: number;
+  createdAt: string;
+};
+
 export type ExpenseVoucherEntry = {
   _id: string;
   expenseVoucher: string;
@@ -165,6 +187,22 @@ export type JournalVoucher = {
   refNo: string;
   remarks: string;
   createdAt: string;
+};
+
+export type EmergencyLoan = {
+  _id: string;
+  code: string;
+  supplier: { _id: string; code: string; description: string };
+  refNo: string;
+  remarks: string;
+  date: string;
+  acctMonth: number;
+  acctYear: number;
+  checkNo: string;
+  checkDate: string;
+  bankCode: { _id: string; code: string; description: string };
+  amount: number;
+  encodedBy: { username: string };
 };
 
 export type Transaction = {

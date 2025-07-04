@@ -1,0 +1,85 @@
+import React, { useState } from 'react';
+import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast } from '@ionic/react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import ModalHeader from '../../../../ui/page/ModalHeader';
+import { AcknowledgementFormData, acknowledgementSchema } from '../../../../../validations/acknowledgement.schema';
+import AcknowledgementForm from '../components/AcknowledgementForm';
+import AcknowledgementFormTable from '../components/AcknowledgementFormTable';
+
+type CreateAcknowledgementProps = {
+  getAcknowledgements: (page: number, keyword?: string, sort?: string) => void;
+};
+
+const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementProps) => {
+  const [present] = useIonToast();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const form = useForm<AcknowledgementFormData>({
+    resolver: zodResolver(acknowledgementSchema),
+    defaultValues: {
+      code: '',
+      supplier: '',
+      supplierLabel: '',
+      refNumber: '',
+      remarks: '',
+      date: '',
+      acctMonth: '',
+      acctYear: '',
+      checkNo: '',
+      checkDate: '',
+      bankCode: '',
+      bankCodeLabel: '',
+      amount: '',
+      mode: 'create',
+    },
+  });
+
+  function dismiss() {
+    form.reset();
+    setIsOpen(false);
+  }
+
+  async function onSubmit(data: AcknowledgementFormData) {}
+
+  return (
+    <>
+      <div className="text-end">
+        <IonButton
+          fill="clear"
+          onClick={() => setIsOpen(true)}
+          className="max-h-10 min-h-6 min-w-32 max-w-32 w-32 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+          strong
+        >
+          + Add Record
+        </IonButton>
+      </div>
+      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]">
+        <IonHeader>
+          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+            <ModalHeader disabled={loading} title="Acknowledgement - Add Record" sub="Transaction" dismiss={dismiss} />
+          </IonToolbar>
+        </IonHeader>
+        <div className="inner-content !px-0">
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="mb-3">
+              <AcknowledgementForm form={form} loading={loading} />
+              <AcknowledgementFormTable form={form} />
+            </div>
+            <div className="text-end space-x-1 px-2">
+              <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
+                {loading ? 'Saving...' : 'Save'}
+              </IonButton>
+              <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
+                Cancel
+              </IonButton>
+            </div>
+          </form>
+        </div>
+      </IonModal>
+    </>
+  );
+};
+
+export default CreateAcknowledgement;

@@ -8,6 +8,7 @@ import kfiAxios from '../../utils/axios';
 import TableLoadingRow from '../forms/TableLoadingRow';
 import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
+import TablePagination from '../forms/TablePagination';
 
 type Option = {
   _id: string;
@@ -16,6 +17,14 @@ type Option = {
   nature: string;
   classification: string;
   deptStatus: string;
+};
+
+export type TClient = {
+  chartOfAccounts: Option[];
+  totalPages: number;
+  nextPage: boolean;
+  prevPage: boolean;
+  loading: boolean;
 };
 
 type ChartOfAccountSelectionProps<T extends FieldValues> = {
@@ -36,9 +45,19 @@ const ChartOfAccountSelection = <T extends FieldValues>({
   chartOfAccountDescription,
 }: ChartOfAccountSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [datas, setDatas] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
+
   const ionInputRef = useRef<HTMLIonInputElement>(null);
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const [data, setData] = useState<TClient>({
+    chartOfAccounts: [],
+    loading: false,
+    totalPages: 0,
+    nextPage: false,
+    prevPage: false,
+  });
 
   function dismiss() {
     setIsOpen(false);
@@ -48,14 +67,22 @@ const ChartOfAccountSelection = <T extends FieldValues>({
     setIsOpen(true);
   };
 
-  const handleSearch = async () => {
-    const value = ionInputRef.current?.value;
+  const handleSearch = async (page: number) => {
+    const value = ionInputRef.current?.value || '';
     setLoading(true);
     try {
-      const result = await kfiAxios.get('/chart-of-account/selection', { params: { keyword: value } });
-      const { success, chartOfAccounts } = result.data;
+      const filter: any = { keyword: value, page, limit: 15 };
+      const result = await kfiAxios.get('chart-of-account/selection', { params: filter });
+      const { success, chartOfAccounts, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
-        setDatas(chartOfAccounts);
+        setData(prev => ({
+          ...prev,
+          chartOfAccounts,
+          totalPages: totalPages,
+          nextPage: hasNextPage,
+          prevPage: hasPrevPage,
+        }));
+        setCurrentPage(page);
         return;
       }
     } catch (error) {
@@ -75,9 +102,17 @@ const ChartOfAccountSelection = <T extends FieldValues>({
     setValue(chartOfAccountValue as Path<T>, idValue as any);
     clearErrors(chartOfAccountLabel);
     clearErrors(chartOfAccountValue);
-    setDatas([]);
+    setData({
+      chartOfAccounts: [],
+      loading: false,
+      totalPages: 0,
+      nextPage: false,
+      prevPage: false,
+    });
     dismiss();
   };
+
+  const handlePagination = (page: number) => handleSearch(page);
 
   return (
     <>
@@ -86,7 +121,7 @@ const ChartOfAccountSelection = <T extends FieldValues>({
           Find
         </IonButton>
       </div>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
+      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:80%] md:[--width:100%] lg:[--max-width:80%] lg:[--width:80%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
             <SelectionHeader dismiss={dismiss} disabled={loading} title="Chart Of Account Selection" />
@@ -109,7 +144,13 @@ const ChartOfAccountSelection = <T extends FieldValues>({
                     )}
                   />
                 </FormIonItem>
-                <IonButton onClick={handleSearch} type="button" fill="clear" className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                <IonButton
+                  onClick={() => handleSearch(1)}
+                  type="button"
+                  fill="clear"
+                  className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                  strong
+                >
                   {loading ? 'Finding...' : 'Find'}
                 </IonButton>
               </div>
@@ -128,9 +169,9 @@ const ChartOfAccountSelection = <T extends FieldValues>({
               </TableHeader>
               <TableBody>
                 {loading && <TableLoadingRow colspan={2} />}
-                {!loading && datas.length < 1 && <TableNoRows colspan={5} label="No chart of account found" />}
+                {!loading && data.chartOfAccounts.length < 1 && <TableNoRows colspan={5} label="No chart of account found" />}
                 {!loading &&
-                  datas.map((data: Option) => (
+                  data.chartOfAccounts.map((data: Option) => (
                     <TableRow onClick={() => handleSelectCenter(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.code}</TableCell>
                       <TableCell className="">{data.description}</TableCell>
@@ -142,6 +183,7 @@ const ChartOfAccountSelection = <T extends FieldValues>({
               </TableBody>
             </Table>
           </div>
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonModal>
     </>

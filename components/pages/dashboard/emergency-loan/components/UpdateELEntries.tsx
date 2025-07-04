@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
-import { Entry, Transaction, TTableFilter } from '../../../../../types/types';
+import { EmergencyLoan, EmergencyLoanEntry, ExpenseVoucher, ExpenseVoucherEntry, TTableFilter } from '../../../../../types/types';
 import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
 import { useIonToast } from '@ionic/react';
 import TablePagination from '../../../../ui/forms/TablePagination';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
-import UpdateEntry from '../modals/entries/UpdateEntry';
-import DeleteEntry from '../modals/entries/DeleteEntry';
-import AddEntry from '../modals/entries/AddEntry';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
+import AddEntry from '../modals/entries/AddEntry';
+import UpdateEntry from '../modals/entries/UpdateEntry';
+import DeleteEntry from '../modals/entries/DeleteEntry';
 
-export type TData = {
-  entries: Entry[];
+export type TELData = {
+  entries: EmergencyLoanEntry[];
   totalPages: number;
   nextPage: boolean;
   prevPage: boolean;
   loading: boolean;
 };
 
-type ViewEntriesProps = {
+type UpdateELEntriesProps = {
   isOpen: boolean;
-  transaction: Transaction;
+  emergencyLoan: EmergencyLoan;
 };
 
-const ViewEntries = ({ isOpen, transaction }: ViewEntriesProps) => {
+const UpdateELEntries = ({ isOpen, emergencyLoan }: UpdateELEntriesProps) => {
   const [present] = useIonToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const [data, setData] = useState<TData>({
+  const [data, setData] = useState<TELData>({
     entries: [],
     loading: false,
     totalPages: 0,
@@ -41,8 +41,7 @@ const ViewEntries = ({ isOpen, transaction }: ViewEntriesProps) => {
     setData(prev => ({ ...prev, loading: true }));
     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-
-      const result = await kfiAxios.get(`/transaction/loan-release/entries/${transaction._id}`, { params: filter });
+      const result = await kfiAxios.get(`/emergency-loan/entries/${emergencyLoan._id}`, { params: filter });
       const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({
@@ -75,38 +74,36 @@ const ViewEntries = ({ isOpen, transaction }: ViewEntriesProps) => {
 
   return (
     <div className="pb-2">
+      <AddEntry emergencyLoanId={emergencyLoan._id} getEntries={getEntries} />
       <div className="relative overflow-auto">
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4">
-              <TableHead>Line</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>
               <TableHead>Acct. Code</TableHead>
               <TableHead>Description</TableHead>
               <TableHead className="text-center">Debit</TableHead>
               <TableHead className="text-center">Credit</TableHead>
-              <TableHead>Interest</TableHead>
-              <TableHead>Cycle</TableHead>
-              <TableHead>Check No.</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableHeadRow>
           </TableHeader>
           <TableBody>
             {data.loading && <TableLoadingRow colspan={11} />}
             {!data.loading && data.entries.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
             {!data.loading &&
-              data.entries.map((entry: Entry, index: number) => (
+              data.entries.map((entry: EmergencyLoanEntry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2">
-                  <TableCell className="text-center">{(currentPage - 1) * TABLE_LIMIT + (index + 1)}</TableCell>
-                  <TableCell>{entry?.client?.name}</TableCell>
-                  <TableCell>{entry?.particular}</TableCell>
+                  <TableCell>{entry?.client?.name || ''}</TableCell>
+                  <TableCell>{entry.particular || ''}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>
                   <TableCell>{entry?.acctCode?.description}</TableCell>
                   <TableCell className="text-end">{formatNumber(entry?.debit as number)}</TableCell>
                   <TableCell className="text-end">{formatNumber(entry?.credit as number)}</TableCell>
-                  <TableCell className="text-center">{entry?.interest ? `${entry?.interest}%` : ''}</TableCell>
-                  <TableCell className="text-center">{entry?.cycle}</TableCell>
-                  <TableCell className="text-center">{entry?.checkNo}</TableCell>
+                  <TableCell className="text-center space-x-1">
+                    <UpdateEntry entry={entry} setData={setData} />
+                    <DeleteEntry entry={entry} getEntries={getEntries} rowLength={data.entries.length} currentPage={currentPage} />
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -119,4 +116,4 @@ const ViewEntries = ({ isOpen, transaction }: ViewEntriesProps) => {
   );
 };
 
-export default ViewEntries;
+export default UpdateELEntries;

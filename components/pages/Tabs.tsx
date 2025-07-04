@@ -54,6 +54,7 @@ import ActionLogs from './dashboard/action-logs/ActionLogs';
 import LoanRelease from './dashboard/loan-release/LoanRelease';
 import ExpenseVoucher from './dashboard/expense-voucher/ExpenseVoucher';
 import JournalVoucher from './dashboard/journal-voucher/JournalVoucher';
+import EmergencyLoan from './dashboard/emergency-loan/EmergencyLoan';
 
 const Tabs = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -171,6 +172,7 @@ const Tabs = () => {
             <Route path="/dashboard/journal-voucher" render={() => <JournalVoucher />} exact={true} />
             <Route path="/dashboard/acknowledgement" render={() => <Acknowledgement />} exact={true} />
             <Route path="/dashboard/release" render={() => <Release />} exact={true} />
+            <Route path="/dashboard/emergency-loan" render={() => <EmergencyLoan />} exact={true} />
             {/* Transactions Ends */}
 
             {/* General Ledger */}
