@@ -31,6 +31,7 @@ const TransactionNavigation = () => {
       ],
     },
     { path: '/dashboard/emergency-loan', label: 'Emergency Loan', resource: 'emergency loan' },
+    { path: '/dashboard/damayan-fund', label: 'Damayan Fund', resource: 'damayan fund' },
   ];
 
   const isActivePath = (currentPath: string, navLinks: NavLink[]): boolean => {

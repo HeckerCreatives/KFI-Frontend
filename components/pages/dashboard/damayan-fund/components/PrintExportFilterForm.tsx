@@ -5,13 +5,12 @@ import { UseFormReturn } from 'react-hook-form';
 import InputRadio from '../../../../ui/forms/InputRadio';
 import { IonIcon } from '@ionic/react';
 import { close } from 'ionicons/icons';
-import JournalVoucherSelection from '../../../../ui/selections/JournalVoucherSelection';
-import { EmergencyLoanFilterFormData } from '../modals/prints/PrintAllEmergencyLoan';
-import EmergencyLoanSelection from '../../../../ui/selections/EmergencyLoanSelection';
+import { DamayanFundFilterFormData } from '../modals/prints/PrintAllDamayanFund';
+import DamayanFundSelection from '../../../../ui/selections/DamayanFundSelection';
 
 type PrintExportFilterFormProps = {
   loading: boolean;
-  form: UseFormReturn<EmergencyLoanFilterFormData>;
+  form: UseFormReturn<DamayanFundFilterFormData>;
 };
 
 const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) => {
@@ -55,7 +54,7 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
               )}
             </div>
             <div className="mt-5">
-              <EmergencyLoanSelection emergencyLoanLabel="docNoFromLabel" emergencyLoanValue="docNoFrom" clearErrors={form.clearErrors} setValue={form.setValue} />
+              <DamayanFundSelection damayanFundLabel="docNoFromLabel" damayanFundValue="docNoFrom" clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>
           <div className="flex items-start gap-2">
@@ -81,7 +80,7 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
               )}
             </div>
             <div className="mt-5">
-              <EmergencyLoanSelection emergencyLoanLabel="docNoToLabel" emergencyLoanValue="docNoTo" clearErrors={form.clearErrors} setValue={form.setValue} />
+              <DamayanFundSelection damayanFundLabel="docNoToLabel" damayanFundValue="docNoTo" clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>
         </div>

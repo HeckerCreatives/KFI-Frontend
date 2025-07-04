@@ -55,6 +55,7 @@ import LoanRelease from './dashboard/loan-release/LoanRelease';
 import ExpenseVoucher from './dashboard/expense-voucher/ExpenseVoucher';
 import JournalVoucher from './dashboard/journal-voucher/JournalVoucher';
 import EmergencyLoan from './dashboard/emergency-loan/EmergencyLoan';
+import DamayanFund from './dashboard/damayan-fund/DamayanFund';
 
 const Tabs = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -173,6 +174,7 @@ const Tabs = () => {
             <Route path="/dashboard/acknowledgement" render={() => <Acknowledgement />} exact={true} />
             <Route path="/dashboard/release" render={() => <Release />} exact={true} />
             <Route path="/dashboard/emergency-loan" render={() => <EmergencyLoan />} exact={true} />
+            <Route path="/dashboard/damayan-fund" render={() => <DamayanFund />} exact={true} />
             {/* Transactions Ends */}
 
             {/* General Ledger */}
