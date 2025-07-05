@@ -106,7 +106,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Transaction - Loan Release - Add Record" sub="All Actions" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Loan Release - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">

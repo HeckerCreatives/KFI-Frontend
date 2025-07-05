@@ -46,15 +46,15 @@ const Acknowledgement = () => {
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['Transaction', 'Acknowledgment']} />
-          {/* <div className="px-3 pb-3 flex-1">
+          <div className="px-3 pb-3 flex-1">
             <div className=" bg-white p-3 rounded-2xl shadow-lg mt-3 mb-4 flex flex-col items-end">
               <div className="w-full flex items-end">
                 <AcknowledgementFilter getAcknowledgements={getAcknowledgements} />
               </div>
               <div className="w-full flex items-start">
                 <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'create') && <CreateAcknowledgement getAcknowledgements={getAcknowledgements} />}</div>
-                <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'print') && <PrintAllLoanRelease />}</div>
-                <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'export') && <ExportAllLoanRelease />}</div>
+                {/* <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'print') && <PrintAllLoanRelease />}</div> */}
+                {/* <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'export') && <ExportAllLoanRelease />}</div> */}
               </div>
             </div>
             <div className="relative overflow-auto">
@@ -73,7 +73,7 @@ const Acknowledgement = () => {
                 <TableBody>
                   {data.loading && <TableLoadingRow colspan={8} />}
                   {!data.loading && data.acknowledgements.length < 1 && <TableNoRows label="No Acknowledgement Record Found" colspan={8} />}
-                  {!data.loading &&
+                  {/* {!data.loading &&
                     data.acknowledgements.length > 0 &&
                     data.acknowledgements.map((acknowledgement: AcknowledgementType) => (
                       <TableRow key={acknowledgement._id}>
@@ -100,11 +100,11 @@ const Acknowledgement = () => {
                           </TableCell>
                         )}
                       </TableRow>
-                    ))}
+                    ))} */}
                 </TableBody>
               </Table>
             </div>
-          </div> */}
+          </div>
         </div>
       </IonContent>
     </IonPage>

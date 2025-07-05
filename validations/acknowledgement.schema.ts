@@ -21,10 +21,10 @@ export const acknowledgementEntrySchema = z.object({
 
 export const acknowledgementSchema = z.object({
   code: z.string().min(1, 'CV # is required'),
-  supplier: z.string().min(1, 'Supplier is required'),
-  supplierLabel: z.string().min(1, 'Supplier is required'),
-  refNumber: z.string().optional().or(z.literal('')),
-  remarks: z.string().optional().or(z.literal('')),
+  center: z.string().min(1, 'Center is required'),
+  centerLabel: z.string().min(1, 'Center is required'),
+  centerName: z.string().optional().or(z.literal('')),
+  refNo: z.string().optional().or(z.literal('')),
   date: z.string().min(1, 'Date is required').max(255, 'Date must only consist of 255 characters'),
   acctMonth: z
     .string()
@@ -37,15 +37,27 @@ export const acknowledgementSchema = z.object({
     .min(1, 'Account Year is required')
     .max(255, 'Account Year must only consist of 255 characters')
     .refine(value => !isNaN(Number(value)), 'Account Year must be a number'),
+  acctOfficer: z.string().min(1, 'Account Officer is required').max(255, 'Bank code must only consist of 255 characters'),
   checkNo: z.string().min(1, 'Check number is required').max(255, 'Check number must only consist of 255 characters'),
   checkDate: z.string().min(1, 'Check date is required').max(255, 'Check date must only consist of 255 characters'),
   bankCode: z.string().min(1, 'Bank code is required').max(255, 'Bank code must only consist of 255 characters'),
   bankCodeLabel: z.string().min(1, 'Bank code is required').max(255, 'Bank code must only consist of 255 characters'),
+  type: z
+    .string()
+    .min(1, 'Type is required')
+    .refine(value => ['cash', 'direct deposit', 'check'].includes(value), 'Type is required'),
   amount: z
     .string()
     .min(1, 'Amount is required')
     .max(255, 'Amount must only consist of 255 characters')
     .refine(value => !isNaN(Number(value)), 'Amount must be a number'),
+  cashCollection: z
+    .string()
+    .min(1, 'Amount is required')
+    .max(255, 'Amount must only consist of 255 characters')
+    .refine(value => !isNaN(Number(value)), 'Amount must be a number')
+    .optional()
+    .or(z.literal('')),
   entries: z.array(acknowledgementEntrySchema).optional(),
   mode: z.string().refine(value => ['create', 'update'].includes(value), 'Mode is required'),
 });

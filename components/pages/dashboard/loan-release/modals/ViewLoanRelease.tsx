@@ -34,7 +34,7 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader title="Transaction - Loan Release - View Record" sub="All Actions" dismiss={dismiss} />
+            <ModalHeader title="Loan Release - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-6 !py-5">

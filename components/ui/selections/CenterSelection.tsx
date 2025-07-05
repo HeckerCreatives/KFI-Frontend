@@ -20,9 +20,10 @@ type CenterSelectionProps<T extends FieldValues> = {
   clearErrors: UseFormClearErrors<T>;
   centerLabel: Path<T>;
   centerValue: Path<T>;
+  centerDescription?: Path<T>;
 };
 
-const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, setValue, clearErrors }: CenterSelectionProps<T>) => {
+const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, centerDescription, setValue, clearErrors }: CenterSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [datas, setDatas] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
@@ -55,10 +56,19 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, setV
   const handleSelectCenter = (center: Option) => {
     const codeValue = center.code as PathValue<T, Path<T>>;
     const idValue = center._id as PathValue<T, Path<T>>;
+
     setValue(centerLabel as Path<T>, codeValue as any);
     setValue(centerValue as Path<T>, idValue as any);
+
     clearErrors(centerLabel);
     clearErrors(centerValue);
+
+    if (centerDescription) {
+      const description = center.description as PathValue<T, Path<T>>;
+      setValue(centerDescription as Path<T>, description as any);
+      clearErrors(centerDescription);
+    }
+
     setDatas([]);
     dismiss();
   };

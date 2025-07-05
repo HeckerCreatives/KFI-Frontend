@@ -12,6 +12,7 @@ import LoanSelection from '../../../../ui/selections/LoanSelection';
 import InputCheckbox from '../../../../ui/forms/InputCheckbox';
 import { AcknowledgementFormData } from '../../../../../validations/acknowledgement.schema';
 import SupplierSelection from '../../../../ui/selections/SupplierSelection';
+import InputSelect from '../../../../ui/forms/InputSelect';
 
 type TForm = {
   form: UseFormReturn<AcknowledgementFormData>;
@@ -39,7 +40,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               <InputText
                 disabled={loading}
                 readOnly
-                name="supplierLabel"
+                name="centerLabel"
                 control={form.control}
                 clearErrors={form.clearErrors}
                 label="Center Code"
@@ -48,13 +49,24 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               />
             </FormIonItem>
             <div className="mt-5">
-              <SupplierSelection supplierLabel="supplierLabel" supplierValue="supplier" clearErrors={form.clearErrors} setValue={form.setValue} />
+              <CenterSelection centerLabel="centerLabel" centerValue="center" centerDescription="centerName" clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>
           <FormIonItem>
             <InputText
               disabled={loading}
-              name="refNumber"
+              name="centerName"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Name"
+              placeholder={`Type here`}
+              className="!px-2 !py-2 rounded-md"
+            />
+          </FormIonItem>
+          <FormIonItem>
+            <InputText
+              disabled={loading}
+              name="refNo"
               control={form.control}
               clearErrors={form.clearErrors}
               label="Reference Number"
@@ -63,12 +75,28 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
             />
           </FormIonItem>
           <FormIonItem>
-            <InputTextarea
+            <InputSelect
               disabled={loading}
-              name="remarks"
+              name="type"
               control={form.control}
               clearErrors={form.clearErrors}
-              label="Remarks"
+              label="Cash Type"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+              options={[
+                { label: 'Cash', value: 'cash' },
+                { label: 'Direct Deposit', value: 'direct deposit' },
+                { label: 'Check', value: 'check' },
+              ]}
+            />
+          </FormIonItem>
+          <FormIonItem>
+            <InputText
+              disabled={loading}
+              name="acctOfficer"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Account Officer"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
             />

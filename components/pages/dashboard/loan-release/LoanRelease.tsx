@@ -126,7 +126,7 @@ const LoanRelease = () => {
                       <TableRow key={transaction._id}>
                         <TableCell>CV#{transaction.code}</TableCell>
                         <TableCell>{formatDateTable(transaction.date)}</TableCell>
-                        <TableCell>{transaction.bank.description}</TableCell>
+                        <TableCell className="max-w-52 truncate">{transaction.bank.description}</TableCell>
                         <TableCell>{transaction.checkNo}</TableCell>
                         <TableCell>{formatMoney(transaction.amount)}</TableCell>
                         <TableCell>{transaction.encodedBy.username}</TableCell>
