@@ -6,6 +6,10 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import { AcknowledgementFormData, acknowledgementSchema } from '../../../../../validations/acknowledgement.schema';
 import AcknowledgementForm from '../components/AcknowledgementForm';
 import AcknowledgementFormTable from '../components/AcknowledgementFormTable';
+import kfiAxios from '../../../../utils/axios';
+import { TErrorData, TFormError } from '../../../../../types/types';
+import checkError from '../../../../utils/check-error';
+import formErrorHandler from '../../../../utils/form-error-handler';
 
 type CreateAcknowledgementProps = {
   getAcknowledgements: (page: number, keyword?: string, sort?: string) => void;
@@ -24,16 +28,19 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
       centerLabel: '',
       centerName: '',
       refNo: '',
+      remarks: '',
       date: '',
       acctMonth: '',
       acctYear: '',
       acctOfficer: '',
       checkNo: '',
       checkDate: '',
+      type: '',
       bankCode: '',
       bankCodeLabel: '',
       amount: '',
       cashCollection: '',
+      entries: [],
       mode: 'create',
     },
   });
@@ -43,7 +50,33 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
     setIsOpen(false);
   }
 
-  async function onSubmit(data: AcknowledgementFormData) {}
+  async function onSubmit(data: AcknowledgementFormData) {
+    setLoading(true);
+    try {
+      const result = await kfiAxios.post('acknowledgement', data);
+      const { success } = result.data;
+      if (success) {
+        getAcknowledgements(1);
+        present({
+          message: 'Acknowledgement successfully added.',
+          duration: 1000,
+        });
+        dismiss();
+        return;
+      }
+      present({
+        message: 'Failed to add a new acknowledgement. Please try again.',
+        duration: 1000,
+      });
+    } catch (error: any) {
+      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+      const errors: TFormError[] | string = checkError(errs);
+      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+      formErrorHandler(errors, form.setError, fields);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <>

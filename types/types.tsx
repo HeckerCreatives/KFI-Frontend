@@ -107,17 +107,6 @@ export type Entry = {
   createdAt: string;
 };
 
-export type Acknowledgement = {
-  _id: string;
-  emergencyLoan: string;
-  client: { _id: string; name: string; center: { _id: string; centerNo: string } };
-  particular: string;
-  acctCode: { _id: string; code: string; description: string };
-  credit: number;
-  debit: number;
-  createdAt: string;
-};
-
 export type EmergencyLoanEntry = {
   _id: string;
   emergencyLoan: string;
@@ -137,6 +126,21 @@ export type DamayanFundEntry = {
   acctCode: { _id: string; code: string; description: string };
   credit: number;
   debit: number;
+  createdAt: string;
+};
+
+export type AcknowledgementEntry = {
+  _id: string;
+  acknowledgement: string;
+  particular: string;
+  acctCode: { _id: string; code: string; description: string };
+  loanReleaseEntryId: {
+    _id: string;
+    transaction: { _id: string; code: string; noOfWeeks: number; dueDate: string };
+    client: { _id: string; name: string };
+  };
+  credit: number | null;
+  debit: number | null;
   createdAt: string;
 };
 
@@ -173,6 +177,27 @@ export type ExpenseVoucher = {
   checkNo: string;
   code: string;
   cycle: number;
+  date: string;
+  encodedBy: { username: string };
+  entries: any[];
+  refNo: string;
+  remarks: string;
+  createdAt: string;
+};
+
+export type Acknowledgement = {
+  _id: string;
+  center: { _id: string; centerNo: string; description: string };
+  acctMonth: number;
+  acctYear: number;
+  acctOfficer: string;
+  amount: number;
+  cashCollectionAmount?: number;
+  bankCode: { _id: string; code: string; description: string };
+  type: string;
+  checkDate: string;
+  checkNo: string;
+  code: string;
   date: string;
   encodedBy: { username: string };
   entries: any[];

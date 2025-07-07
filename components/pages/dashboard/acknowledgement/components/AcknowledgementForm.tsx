@@ -75,6 +75,17 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
             />
           </FormIonItem>
           <FormIonItem>
+            <InputTextarea
+              disabled={loading}
+              name="remarks"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Remarks"
+              placeholder={`Type here`}
+              className="!px-2 !py-2 rounded-md"
+            />
+          </FormIonItem>
+          <FormIonItem>
             <InputSelect
               disabled={loading}
               name="type"
@@ -90,6 +101,8 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               ]}
             />
           </FormIonItem>
+        </IonCol>
+        <IonCol size="6" className="space-y-2">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -101,8 +114,6 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-        </IonCol>
-        <IonCol size="6" className="space-y-2">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -187,7 +198,6 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               <BankSelection bankLabel="bankCodeLabel" bankValue="bankCode" setValue={form.setValue} clearErrors={form.clearErrors} />
             </div>
           </div>
-
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -195,6 +205,17 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               control={form.control}
               clearErrors={form.clearErrors}
               label="Amount"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
+          </FormIonItem>
+          <FormIonItem>
+            <InputText
+              disabled={loading}
+              name="cashCollection"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="if Direct Dep. w/ Cash Collection. Enter Cash Amount"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
             />
