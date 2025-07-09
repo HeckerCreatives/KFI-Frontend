@@ -16,6 +16,7 @@ import kfiAxios from '../../../utils/axios';
 import PrintAllAcknowledgement from './modals/prints/PrintAllAcknowledgement';
 import ExportAllAcknowledgement from './modals/prints/ExportAllAcknowledgement';
 import AcknowledgementActions from './components/AcknowledgementActions';
+import TablePagination from '../../../ui/forms/TablePagination';
 
 export type TData = {
   acknowledgements: AcknowledgementType[];
@@ -90,7 +91,7 @@ const Acknowledgement = () => {
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
-          <PageTitle pages={['Transaction', 'Acknowledgment']} />
+          <PageTitle pages={['Transaction', 'Acknowledgement']} />
           <div className="px-3 pb-3 flex-1">
             <div className=" bg-white p-3 rounded-2xl shadow-lg mt-3 mb-4 flex flex-col items-end">
               <div className="w-full flex items-end">
@@ -150,6 +151,7 @@ const Acknowledgement = () => {
               </Table>
             </div>
           </div>
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>

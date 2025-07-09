@@ -2,11 +2,11 @@ import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from
 import React, { useState } from 'react';
 import ModalHeader from '../../../../../ui/page/ModalHeader';
 import { trash } from 'ionicons/icons';
-import { AcknowledgementEntry } from '../../../../../../types/types';
+import { ReleaseEntry } from '../../../../../../types/types';
 import kfiAxios from '../../../../../utils/axios';
 
 type DeleteEntryProps = {
-  entry: AcknowledgementEntry;
+  entry: ReleaseEntry;
   getEntries: (page: number) => void;
   rowLength: number;
   currentPage: number;
@@ -24,7 +24,7 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryP
   async function handleDelete() {
     setLoading(true);
     try {
-      const result = await kfiAxios.delete(`/acknowledgement/entries/${entry.acknowledgement}/${entry._id}`);
+      const result = await kfiAxios.delete(`/release/entries/${entry.release}/${entry._id}`);
       const { success } = result.data;
       if (success) {
         const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
@@ -60,7 +60,7 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryP
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Acknowledgement - Delete Entry" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Release - Delete Entry" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">

@@ -5,16 +5,15 @@ import InputText from '../../../../ui/forms/InputText';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import ChartOfAccountSelection from '../../../../ui/selections/ChartOfAccountSelection';
 import { close } from 'ionicons/icons';
-import { AcknowledgementEntryFormData } from '../../../../../validations/acknowledgement.schema';
 import LoanReleaseEntrySelection from '../../../../ui/selections/LoanReleaseEntrySelection';
-import classNames from 'classnames';
+import { ReleaseEntryFormData } from '../../../../../validations/release.schema';
 
 type TForm = {
-  form: UseFormReturn<AcknowledgementEntryFormData>;
+  form: UseFormReturn<ReleaseEntryFormData>;
   loading?: boolean;
 };
 
-const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
+const ReleaseEntryForm = ({ form, loading = false }: TForm) => {
   const clearAcctCode = () => {
     form.setValue('acctCode', '');
     form.setValue('acctCodeId', '');
@@ -143,4 +142,4 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
   );
 };
 
-export default AcknowledgementEntryForm;
+export default ReleaseEntryForm;

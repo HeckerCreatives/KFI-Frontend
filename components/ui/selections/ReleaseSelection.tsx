@@ -9,56 +9,37 @@ import TableLoadingRow from '../forms/TableLoadingRow';
 import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
-import { formatDateTable } from '../../utils/date-utils';
 
 type Option = {
   _id: string;
-  cvNo: string;
-  dueDate: string;
-  noOfWeeks: number;
-  name: string;
-  centerNo: string;
+  code: string;
 };
 
-export type TLoanReleaseEntries = {
-  loanEntries: Option[];
+export type TRelease = {
+  releases: { _id: string; code: string }[];
   totalPages: number;
   nextPage: boolean;
   prevPage: boolean;
   loading: boolean;
 };
 
-type LoanReleaseEntrySelectionProps<T extends FieldValues> = {
+type ReleaseSelectionProps<T extends FieldValues> = {
   setValue: UseFormSetValue<T>;
   clearErrors: UseFormClearErrors<T>;
-  loanReleaseEntryId: Path<T>;
-  cvNo: Path<T>;
-  dueDate: Path<T>;
-  noOfWeeks: Path<T>;
-  name: Path<T>;
-  particular: Path<T>;
+  releaseLabel: Path<T>;
+  releaseValue: Path<T>;
   className?: string;
 };
 
-const LoanReleaseEntrySelection = <T extends FieldValues>({
-  loanReleaseEntryId,
-  cvNo,
-  dueDate,
-  noOfWeeks,
-  name,
-  particular,
-  setValue,
-  clearErrors,
-  className = '',
-}: LoanReleaseEntrySelectionProps<T>) => {
+const ReleaseSelection = <T extends FieldValues>({ releaseLabel, releaseValue, setValue, clearErrors, className = '' }: ReleaseSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const ionInputRef = useRef<HTMLIonInputElement>(null);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const [data, setData] = useState<TLoanReleaseEntries>({
-    loanEntries: [],
+  const [data, setData] = useState<TRelease>({
+    releases: [],
     loading: false,
     totalPages: 0,
     nextPage: false,
@@ -78,12 +59,12 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
     setLoading(true);
     try {
       const filter: any = { keyword: value, page };
-      const result = await kfiAxios.get('transaction/entries/selection', { params: filter });
-      const { success, loanEntries, hasPrevPage, hasNextPage, totalPages } = result.data;
+      const result = await kfiAxios.get('release/selection', { params: filter });
+      const { success, releases, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({
           ...prev,
-          loanEntries,
+          releases,
           totalPages: totalPages,
           nextPage: hasNextPage,
           prevPage: hasPrevPage,
@@ -97,23 +78,16 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
     }
   };
 
-  const handleSelectExpenseVoucher = (loanEntry: Option) => {
-    setValue(loanReleaseEntryId as Path<T>, loanEntry._id as PathValue<T, Path<T>> as any);
-    setValue(cvNo as Path<T>, `CV#${loanEntry.cvNo}` as PathValue<T, Path<T>> as any);
-    setValue(dueDate as Path<T>, formatDateTable(loanEntry.dueDate) as PathValue<T, Path<T>> as any);
-    setValue(noOfWeeks as Path<T>, `${loanEntry.noOfWeeks}` as PathValue<T, Path<T>> as any);
-    setValue(name as Path<T>, loanEntry.name as PathValue<T, Path<T>> as any);
-    setValue(particular as Path<T>, `${loanEntry.centerNo} - ${loanEntry.name}` as PathValue<T, Path<T>> as any);
+  const handleSelectExpenseVoucher = (release: Option) => {
+    const code = release.code as PathValue<T, Path<T>>;
+    const id = release._id as PathValue<T, Path<T>>;
 
-    clearErrors(loanReleaseEntryId);
-    clearErrors(cvNo);
-    clearErrors(dueDate);
-    clearErrors(noOfWeeks);
-    clearErrors(name);
-    clearErrors(particular);
-
+    setValue(releaseLabel as Path<T>, code as any);
+    setValue(releaseValue as Path<T>, id as any);
+    clearErrors(releaseLabel);
+    clearErrors(releaseValue);
     setData({
-      loanEntries: [],
+      releases: [],
       loading: false,
       totalPages: 0,
       nextPage: false,
@@ -134,7 +108,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Release Entry Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Release Selection" />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !p-2  border-2 !border-slate-400">
@@ -171,22 +145,16 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
             <Table>
               <TableHeader>
                 <TableHeadRow className="border-b-0 bg-slate-100">
-                  <TableHead className="!py-2">CV#</TableHead>
-                  <TableHead className="!py-2">Due Date</TableHead>
-                  <TableHead className="!py-2">No. Of Weeks</TableHead>
-                  <TableHead className="!py-2">Name</TableHead>
+                  <TableHead className="!py-2">Document No.</TableHead>
                 </TableHeadRow>
               </TableHeader>
               <TableBody>
-                {data.loading && <TableLoadingRow colspan={4} />}
-                {!data.loading && data.loanEntries.length < 1 && <TableNoRows colspan={4} label="No Loan Release Entry Found" />}
+                {data.loading && <TableLoadingRow colspan={1} />}
+                {!data.loading && data.releases.length < 1 && <TableNoRows colspan={1} label="No expense voucher found" />}
                 {!data.loading &&
-                  data.loanEntries.map((data: Option) => (
+                  data.releases.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">CV#{data.cvNo}</TableCell>
-                      <TableCell className="">{formatDateTable(data.dueDate)}</TableCell>
-                      <TableCell className="">{data.noOfWeeks}</TableCell>
-                      <TableCell className="">{data.name}</TableCell>
+                      <TableCell className="">CV#{data.code}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -199,4 +167,4 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
   );
 };
 
-export default LoanReleaseEntrySelection;
+export default ReleaseSelection;

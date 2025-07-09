@@ -1,18 +1,20 @@
 import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useState } from 'react';
-import ModalHeader from '../../../../../ui/page/ModalHeader';
-import { trash } from 'ionicons/icons';
-import { AcknowledgementEntry } from '../../../../../../types/types';
-import kfiAxios from '../../../../../utils/axios';
+import ModalHeader from '../../../../ui/page/ModalHeader';
+import { trashBin } from 'ionicons/icons';
+import { Release } from '../../../../../types/types';
+import kfiAxios from '../../../../utils/axios';
 
-type DeleteEntryProps = {
-  entry: AcknowledgementEntry;
-  getEntries: (page: number) => void;
-  rowLength: number;
+type DeleteReleaseProps = {
+  release: Release;
+  getRelease: (page: number, keyword?: string, sort?: string) => void;
+  searchkey: string;
+  sortKey: string;
   currentPage: number;
+  rowLength: number;
 };
 
-const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryProps) => {
+const DeleteRelease = ({ release, getRelease, searchkey, sortKey, rowLength, currentPage }: DeleteReleaseProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -24,13 +26,13 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryP
   async function handleDelete() {
     setLoading(true);
     try {
-      const result = await kfiAxios.delete(`/acknowledgement/entries/${entry.acknowledgement}/${entry._id}`);
+      const result = await kfiAxios.delete(`/release/${release._id}`);
       const { success } = result.data;
       if (success) {
         const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getEntries(page);
+        getRelease(page, searchkey, sortKey);
         present({
-          message: 'Entry successfully deleted',
+          message: 'Release successfully deleted',
           duration: 1000,
         });
         dismiss();
@@ -39,7 +41,7 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryP
     } catch (error: any) {
       const message = error.response.data.error.message || error?.response?.data?.msg;
       present({
-        message: message || 'Failed to delete the entry record. Please try again',
+        message: message || 'Failed to delete the release record. Please try again',
         duration: 1000,
       });
     } finally {
@@ -49,18 +51,16 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryP
 
   return (
     <>
-      <IonButton
-        disabled={loading}
+      <div
         onClick={() => setIsOpen(true)}
-        fill="clear"
-        className="text-red-700 [--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5"
+        className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
       >
-        <IonIcon icon={trash} />
-      </IonButton>
+        <IonIcon icon={trashBin} className="text-[1rem]" /> Delete
+      </div>
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Acknowledgement - Delete Entry" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Release - Delete Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">
@@ -81,4 +81,4 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryP
   );
 };
 
-export default DeleteEntry;
+export default DeleteRelease;
