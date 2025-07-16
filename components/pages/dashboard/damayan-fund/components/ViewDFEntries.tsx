@@ -53,7 +53,6 @@ const ViewDFEntries = ({ isOpen, damayanFund }: ViewEntriesProps) => {
         return;
       }
     } catch (error) {
-      console.log(error);
       present({
         message: 'Failed to get entry records. Please try again',
         duration: 1000,

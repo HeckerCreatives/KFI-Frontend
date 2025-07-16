@@ -75,7 +75,7 @@ const ActionLogs = () => {
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
-          <PageTitle pages={['System', 'Bank']} />
+          <PageTitle pages={['Diagnostics', 'Action Logs']} />
           <div className="px-3 pb-3 flex-1">
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
               <ActionLogFilter getActions={getActions} />
@@ -92,7 +92,7 @@ const ActionLogs = () => {
                 </TableHeader>
                 <TableBody>
                   {data.loading && <TableLoadingRow colspan={4} />}
-                  {!data.loading && data.actions.length < 1 && <TableNoRows label="No Action Record Found" colspan={3} />}
+                  {!data.loading && data.actions.length < 1 && <TableNoRows label="No Action Record Found" colspan={4} />}
                   {!data.loading &&
                     data.actions.length > 0 &&
                     data.actions.map((action: Activity) => (

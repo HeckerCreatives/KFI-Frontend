@@ -61,8 +61,9 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
               <IonButton disabled={loading} onClick={handlePrintClientProfile} fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md max-w-[70%] font-semibold">
                 {loading ? 'Printing Client Profile...' : 'Client Profile'}
               </IonButton>
-              <IonButton disabled={loading} onClick={handlePrintClientProfile} fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md max-w-[70%] font-semibold">
-                {loading ? 'Printing Statement of Account...' : 'Statement of Account'}
+              <IonButton fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md max-w-[70%] font-semibold">
+                {/* {loading ? 'Printing Statement of Account...' : 'Statement of Account'} */}
+                Statement Of Account
               </IonButton>
             </div>
           </div>

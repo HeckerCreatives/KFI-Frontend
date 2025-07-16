@@ -112,7 +112,7 @@ const ClientMasterFile = () => {
                 </TableHeader>
                 <TableBody>
                   {data.loading && <TableLoadingRow colspan={25} />}
-                  {!data.loading && data.clients.length < 1 && <TableNoRows label="No Center Record Found" colspan={25} />}
+                  {!data.loading && data.clients.length < 1 && <TableNoRows label="No Client Record Found" colspan={25} />}
                   {!data.loading &&
                     data.clients.length > 0 &&
                     data.clients.map((client: ClientMasterFileType) => (
