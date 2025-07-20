@@ -46,7 +46,7 @@ export const journalVoucherSchema = z
       .min(1, 'Amount is required')
       .max(255, 'Amount must only consist of 255 characters')
       .refine(value => !isNaN(Number(value)), 'Amount must be a number'),
-    remarks: z.string().min(1, 'Remarks is required').max(255, 'Remarks must only consist of 255 characters').optional().or(z.literal('')),
+    remarks: z.string().min(1, 'Particular is required').max(255, 'Particular must only consist of 255 characters').optional().or(z.literal('')),
     entries: z.array(journalVoucherEntrySchema).optional(),
     mode: z.string().refine(value => ['create', 'update'].includes(value), 'Mode is required'),
   })

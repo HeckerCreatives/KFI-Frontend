@@ -27,10 +27,10 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-1">
       <div className="border p-3 rounded-md border-slate-300">
         <h6 className="m-0 mb-1">Document No.</h6>
-        <div className="flex flex-col gap-2 flex-wrap">
+        <div className="flex flex-col gap-1 flex-wrap">
           <div className="flex items-start gap-2">
             <div className="flex-1 relative">
               <FormIonItem className="flex-1 min-w-64">
@@ -53,7 +53,7 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
                 />
               )}
             </div>
-            <div className="mt-5">
+            <div className="mt-1.5">
               <LoanReleaseSelection loanReleaseLabel="docNoFromLabel" loanReleaseValue="docNoFrom" clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>
@@ -79,7 +79,7 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
                 />
               )}
             </div>
-            <div className="mt-5">
+            <div className="mt-1.5">
               <LoanReleaseSelection loanReleaseLabel="docNoToLabel" loanReleaseValue="docNoTo" clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>

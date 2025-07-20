@@ -39,43 +39,47 @@ const InputSelect = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <div className="w-full">
+        <div className="w-full flex items-start gap-2">
           {label && showLabel && (
-            <IonLabel class="custom" className="!text-sm font-semibold tracking-wide !text-slate-800">
+            <IonLabel class="custom" className="!text-sm font-semibold !text-slate-800">
               {label}
               {required && <span className="text-red-500"> *</span>}
             </IonLabel>
           )}
-          <IonSelect
-            aria-label={label || 'no label'}
-            disabled={disabled}
-            interface="popover"
-            {...field}
-            placeholder={placeholder}
-            onIonChange={e => {
-              field.onChange(e.detail.value);
-              clearErrors(name);
-              clearErrors('root');
-            }}
-            labelPlacement="stacked"
-            onIonBlur={field.onBlur}
-            className={classNames(
-              '!border border-slate-400 [--highlight-color-focused:none] !px-2 !py-1 text-sm min-h-[1.4rem] min-w-full',
-              error && '![--border-color:red] !border-red-600',
-              className,
-            )}
-          >
-            {options.map(option => (
-              <IonSelectOption key={option.value} value={option.value} className="text-sm [--min-height:0.5rem]">
-                {option.label}
-              </IonSelectOption>
-            ))}
-          </IonSelect>
-          {error && (
-            <IonText slot="error" color="danger" className="text-xs font-semibold block">
-              {error.message}
-            </IonText>
-          )}
+          <div className="flex-1">
+            <IonSelect
+              aria-label={label || 'no label'}
+              disabled={disabled}
+              interface="popover"
+              {...field}
+              placeholder={placeholder}
+              onIonChange={e => {
+                field.onChange(e.detail.value);
+                clearErrors(name);
+                clearErrors('root');
+              }}
+              labelPlacement="stacked"
+              onIonBlur={field.onBlur}
+              className={classNames(
+                '!border border-slate-400 [--highlight-color-focused:none] !px-2 !py-1 text-sm !min-h-[1.2rem] min-w-full',
+                error && '![--border-color:red] !border-red-600',
+                className,
+              )}
+            >
+              {options.map(option => (
+                <IonSelectOption key={option.value} value={option.value} className="text-sm [--min-height:0.5rem]">
+                  {option.label}
+                </IonSelectOption>
+              ))}
+            </IonSelect>
+            <div className="text-start">
+              {error && (
+                <IonText slot="error" color="danger" className="text-xs font-semibold block">
+                  {error.message}
+                </IonText>
+              )}
+            </div>
+          </div>
         </div>
       )}
     />

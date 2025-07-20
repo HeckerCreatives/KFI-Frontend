@@ -91,7 +91,7 @@ const ActivityLogs = ({ user }: AddPermissionProps) => {
       </div>
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:0.5rem] h-12">
             <ModalHeader disabled={data.loading} title="Admin - User Action Logs" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>

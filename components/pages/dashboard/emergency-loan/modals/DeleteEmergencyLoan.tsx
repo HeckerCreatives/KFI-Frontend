@@ -57,9 +57,9 @@ const DeleteEmergencyLoan = ({ emergencyLoan, getEmergencyLoans, searchkey, sort
       >
         <IonIcon icon={trashBin} className="text-[1rem]" /> Delete
       </div>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
+      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]">
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Emergency Loan - Delete Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>

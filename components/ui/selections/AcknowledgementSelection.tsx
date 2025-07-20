@@ -107,7 +107,7 @@ const AcknowledgementSelection = <T extends FieldValues>({
   return (
     <>
       <div className="text-end">
-        <IonButton onClick={handleOpen} fill="clear" className={classNames('max-h-10 min-h-10 btn-color text-white capitalize font-semibold rounded-md m-0', className)} strong>
+        <IonButton onClick={handleOpen} fill="clear" className={classNames('max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0', className)} strong>
           Find
         </IonButton>
       </div>

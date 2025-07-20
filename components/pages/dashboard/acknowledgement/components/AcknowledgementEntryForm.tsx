@@ -32,7 +32,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
-        <IonCol size="12" className="space-y-2">
+        <IonCol size="12" className="space-y-1">
           <div className="flex items-start gap-2 flex-nowrap">
             <div className="flex-1 relative">
               <FormIonItem>
@@ -47,10 +47,10 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
                 />
               </FormIonItem>
               {form.watch('cvNo') && (
-                <IonIcon onClick={clearCV} icon={close} className="absolute top-7 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400" />
+                <IonIcon onClick={clearCV} icon={close} className="absolute top-3 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400" />
               )}
             </div>
-            <div className="mt-5">
+            <div className="mt-1.5">
               <LoanReleaseEntrySelection
                 loanReleaseEntryId={`loanReleaseEntryId`}
                 cvNo={`cvNo`}
@@ -90,11 +90,11 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
                 <IonIcon
                   onClick={clearAcctCode}
                   icon={close}
-                  className="absolute top-7 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
+                  className="absolute top-3 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
                 />
               )}
             </div>
-            <div className="mt-5">
+            <div className={form.formState.errors.acctCode ? 'mt-0' : 'mt-1.5'}>
               <ChartOfAccountSelection
                 chartOfAccountLabel="acctCode"
                 chartOfAccountValue="acctCodeId"

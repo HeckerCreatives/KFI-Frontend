@@ -6,6 +6,7 @@ import FormIonItem from '../../../../ui/utils/FormIonItem';
 import ChartOfAccountSelection from '../../../../ui/selections/ChartOfAccountSelection';
 import { close } from 'ionicons/icons';
 import { JournalVoucherEntryFormData } from '../../../../../validations/journal-voucher.schema';
+import classNames from 'classnames';
 
 type TForm = {
   form: UseFormReturn<JournalVoucherEntryFormData>;
@@ -21,7 +22,7 @@ const JVEntryForm = ({ form, loading = false }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
-        <IonCol size="12" className="space-y-2">
+        <IonCol size="12" className="space-y-1">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -51,11 +52,11 @@ const JVEntryForm = ({ form, loading = false }: TForm) => {
                 <IonIcon
                   onClick={clearAcctCode}
                   icon={close}
-                  className="absolute top-7 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
+                  className="absolute top-3 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
                 />
               )}
             </div>
-            <div className="mt-5">
+            <div className={classNames(form.formState.errors.acctCode ? 'mt-0' : 'mt-1.5')}>
               <ChartOfAccountSelection
                 chartOfAccountLabel="acctCode"
                 chartOfAccountValue="acctCodeId"

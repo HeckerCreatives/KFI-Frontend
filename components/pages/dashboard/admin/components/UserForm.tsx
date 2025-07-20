@@ -15,7 +15,7 @@ const UserForm = ({ form, loading }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
-        <IonCol size="12" className="space-y-2">
+        <IonCol size="12" className="space-y-0">
           <FormIonItem>
             <InputText
               disabled={loading}

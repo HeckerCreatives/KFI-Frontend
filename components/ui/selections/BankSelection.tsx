@@ -67,7 +67,7 @@ const BankSelection = <T extends FieldValues>({ bankLabel, bankValue, setValue, 
   return (
     <>
       <div className="text-end">
-        <IonButton onClick={handleOpen} fill="clear" className="max-h-10 min-h-10 btn-color text-white capitalize font-semibold rounded-md m-0" strong>
+        <IonButton onClick={handleOpen} fill="clear" className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0" strong>
           Find
         </IonButton>
       </div>

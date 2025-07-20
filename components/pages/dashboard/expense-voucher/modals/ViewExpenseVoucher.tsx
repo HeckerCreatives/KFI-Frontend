@@ -31,22 +31,21 @@ const ViewExpenseVoucher = ({ expenseVoucher }: ViewExpenseVoucherType) => {
       </div>
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Expense Voucher - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-6 !py-5">
+        <div className="inner-content !p-2">
           <IonGrid>
             <IonRow>
-              <IonCol size="6" className="space-y-2">
+              <IonCol size="6" className="space-y-1">
                 <ExpenseVoucherViewCard label="EV#" value={`EV#${expenseVoucher.code}`} />
                 <ExpenseVoucherViewCard label="Supplier" value={expenseVoucher.supplier.description} />
-                <ExpenseVoucherViewCard label="Reference Number" value={expenseVoucher.refNo} />
                 <ExpenseVoucherViewCard label="Remark" value={expenseVoucher.remarks} />
                 <ExpenseVoucherViewCard label="Date" value={formatDateTable(expenseVoucher.date)} />
                 <ExpenseVoucherViewCard label="User" value={expenseVoucher.encodedBy.username} />
               </IonCol>
-              <IonCol size="6" className="space-y-2">
+              <IonCol size="6" className="space-y-1">
                 <IonGrid className="ion-no-padding">
                   <IonRow className="gap-2">
                     <IonCol>

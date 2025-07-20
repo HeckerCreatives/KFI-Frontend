@@ -32,24 +32,23 @@ const ViewRelease = ({ release }: ViewReleaseProps) => {
       </div>
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Release - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-6 !py-5">
+        <div className="inner-content !p-2">
           <IonGrid>
             <IonRow>
-              <IonCol size="6" className="space-y-2">
+              <IonCol size="6" className="space-y-1">
                 <ReleaseViewCard label="CV#" value={`CV#${release.code}`} />
                 <ReleaseViewCard label="Center Code" value={`${release.center.centerNo}`} />
                 <ReleaseViewCard label="Name" value={`${release.center.description}`} />
-                <ReleaseViewCard label="Reference Number" value={release.refNo} />
-                <ReleaseViewCard label="Remark" value={release.remarks} />
+                <ReleaseViewCard label="Particular" value={release.remarks} />
                 <ReleaseViewCard label="Cash Type" value={release.type} />
                 <ReleaseViewCard label="Account Officer" value={release.acctOfficer} />
                 <ReleaseViewCard label="User" value={release.encodedBy.username} />
               </IonCol>
-              <IonCol size="6" className="space-y-2">
+              <IonCol size="6" className="space-y-1">
                 <ReleaseViewCard label="Date" value={formatDateTable(release.date)} />
                 <IonGrid className="ion-no-padding">
                   <IonRow className="gap-2">

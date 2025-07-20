@@ -27,22 +27,21 @@ const ViewEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan }) 
       </div>
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Emergency Loan - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-6 !py-5">
+        <div className="inner-content !p-2">
           <IonGrid>
             <IonRow>
-              <IonCol size="6" className="space-y-2">
+              <IonCol size="6" className="space-y-1">
                 <JournalVoucherViewCard label="EV#" value={`CV#${emergencyLoan.code}`} />
                 <JournalVoucherViewCard label="Supplier" value={emergencyLoan.supplier.description} />
-                <JournalVoucherViewCard label="Reference Number" value={emergencyLoan.refNo} />
-                <JournalVoucherViewCard label="Remark" value={emergencyLoan.remarks} />
+                <JournalVoucherViewCard label="Particular" value={emergencyLoan.remarks} />
                 <JournalVoucherViewCard label="Date" value={formatDateTable(emergencyLoan.date)} />
                 <JournalVoucherViewCard label="User" value={emergencyLoan.encodedBy.username} />
               </IonCol>
-              <IonCol size="6" className="space-y-2">
+              <IonCol size="6" className="space-y-1">
                 <IonGrid className="ion-no-padding">
                   <IonRow className="gap-2">
                     <IonCol>

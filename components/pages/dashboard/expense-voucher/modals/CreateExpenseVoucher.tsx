@@ -81,7 +81,7 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
       </IonButton>
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Expense Voucher - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
@@ -90,7 +90,7 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <ExpenseVoucherForm form={form as UseFormReturn<ExpenseVoucherFormData | UpdateExpenseVoucherFormData>} loading={loading} />
               <ExpenseVoucherFormTable form={form} loading={loading} />
-              <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
+              <div className="text-end border-t pt-1 space-x-2 px-3">
                 <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
                   {loading ? 'Saving...' : 'Save'}
                 </IonButton>

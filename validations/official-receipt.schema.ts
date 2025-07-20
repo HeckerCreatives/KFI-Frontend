@@ -5,7 +5,7 @@ export const officialReceiptSchema = z.object({
   center: z.string().min(1, 'Center Code is required').max(255, 'Center Code must only consist of 255 characters'),
   name: z.string().min(1, 'Name is required').max(255, 'Name must only consist of 255 characters'),
   refNumber: z.string().min(1, 'Reference Number is required').max(255, 'Reference Number must only consist of 255 characters'),
-  remarks: z.string().min(1, 'Remarks is required').max(255, 'Remarks must only consist of 255 characters'),
+  remarks: z.string().min(1, 'Particular is required').max(255, 'Particular must only consist of 255 characters'),
   date: z.string().min(1, 'Date is required').max(255, 'Date must only consist of 255 characters'),
   acctMonth: z.string().min(1, 'Account Month is required').max(255, 'Account Month must only consist of 255 characters'),
   acctYear: z.string().min(1, 'Account Year is required').max(255, 'Account Year must only consist of 255 characters'),

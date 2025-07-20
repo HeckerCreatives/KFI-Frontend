@@ -62,7 +62,7 @@ const DeleteClientMasterFile = ({ client, getClients, searchkey, sortKey, curren
         className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
       >
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Client - Delete Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>

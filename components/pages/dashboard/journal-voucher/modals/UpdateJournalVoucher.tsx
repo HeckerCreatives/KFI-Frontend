@@ -114,7 +114,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
       </div>
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Journal Voucher - Edit Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>

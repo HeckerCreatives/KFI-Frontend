@@ -7,6 +7,7 @@ import InputTextarea from '../../../../ui/forms/InputTextarea';
 import BankSelection from '../../../../ui/selections/BankSelection';
 import SupplierSelection from '../../../../ui/selections/SupplierSelection';
 import { DamayanFundFormData } from '../../../../../validations/damayan-fund.schema';
+import classNames from 'classnames';
 
 type TForm = {
   form: UseFormReturn<DamayanFundFormData>;
@@ -17,7 +18,7 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
-        <IonCol size="6" className="space-y-2">
+        <IonCol size="6" className="space-y-1">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -42,11 +43,11 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>
-            <div className="mt-5">
+            <div className={classNames(form.formState.errors.supplierLabel ? 'mt-0' : 'mt-1.5')}>
               <SupplierSelection supplierLabel="supplierLabel" supplierValue="supplier" clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>
-          <FormIonItem>
+          {/* <FormIonItem>
             <InputText
               disabled={loading}
               name="refNo"
@@ -56,20 +57,18 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
               placeholder={`Type here`}
               className="!px-2 !py-2 rounded-md"
             />
-          </FormIonItem>
+          </FormIonItem> */}
           <FormIonItem>
-            <InputTextarea
+            <InputText
               disabled={loading}
               name="remarks"
               control={form.control}
               clearErrors={form.clearErrors}
-              label="Remarks"
+              label="Particular"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-        </IonCol>
-        <IonCol size="6" className="space-y-2">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -85,7 +84,7 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
           </FormIonItem>
           <IonGrid className="ion-no-padding">
             <IonRow className="gap-2">
-              <IonCol>
+              <IonCol size="12" sizeLg="6">
                 <FormIonItem>
                   <InputText
                     disabled={loading}
@@ -113,6 +112,8 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
               </IonCol>
             </IonRow>
           </IonGrid>
+        </IonCol>
+        <IonCol size="6" className="space-y-1">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -150,7 +151,7 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>
-            <div className="mt-5">
+            <div className={classNames(form.formState.errors.bankCodeLabel ? 'mt-0' : 'mt-1.5')}>
               <BankSelection bankLabel="bankCodeLabel" bankValue="bankCode" setValue={form.setValue} clearErrors={form.clearErrors} />
             </div>
           </div>

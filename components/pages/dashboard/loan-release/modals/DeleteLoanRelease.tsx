@@ -59,7 +59,7 @@ const DeleteLoanRelease = ({ transaction, getTransactions, searchkey, sortKey, r
       </div>
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Loan Release - Delete Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>

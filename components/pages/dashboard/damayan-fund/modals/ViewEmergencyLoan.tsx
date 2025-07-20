@@ -27,22 +27,21 @@ const ViewDamayanFund = ({ damayanFund }: { damayanFund: DamayanFund }) => {
       </div>
       <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Damayan Fund - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-6 !py-5">
+        <div className="inner-content !p-2">
           <IonGrid>
             <IonRow>
-              <IonCol size="6" className="space-y-2">
+              <IonCol size="6" className="space-y-1">
                 <DamayanFundViewCard label="JV#" value={`JV#${damayanFund.code}`} />
                 <DamayanFundViewCard label="Supplier" value={damayanFund.supplier.description} />
-                <DamayanFundViewCard label="Reference Number" value={damayanFund.refNo} />
-                <DamayanFundViewCard label="Remark" value={damayanFund.remarks} />
+                <DamayanFundViewCard label="Particular" value={damayanFund.remarks} />
                 <DamayanFundViewCard label="Date" value={formatDateTable(damayanFund.date)} />
                 <DamayanFundViewCard label="User" value={damayanFund.encodedBy.username} />
               </IonCol>
-              <IonCol size="6" className="space-y-2">
+              <IonCol size="6" className="space-y-1">
                 <IonGrid className="ion-no-padding">
                   <IonRow className="gap-2">
                     <IonCol>

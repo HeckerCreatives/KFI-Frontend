@@ -36,42 +36,46 @@ const InputText = <T extends FieldValues>({
       control={control}
       render={({ field, fieldState: { error } }) => (
         <div className="w-full">
-          {label && (
-            <div className="flex justify-between">
-              <IonLabel class="custom" className="!text-sm font-semibold tracking-wide !text-slate-600">
-                {label}
-              </IonLabel>
-              {label && required && <span className="text-slate-500 text-xs italic">Required</span>}
-            </div>
-          )}
-
-          <IonInput
-            clearInput={type === 'search'}
-            {...field}
-            type={type}
-            aria-label={label || 'no label'}
-            placeholder={placeholder}
-            onIonInput={e => {
-              field.onChange(e.detail.value);
-              clearErrors(name);
-              clearErrors('root');
-            }}
-            disabled={disabled}
-            onIonBlur={field.onBlur}
-            className={classNames(
-              'text-sm !bg-white ![--highlight-color-focused:none] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:1rem] !min-h-[1rem]',
-              error && '![--border-color:red] !border-red-600',
-              className,
+          <div className="w-full flex items-start gap-2">
+            {label && (
+              <div className="flex justify-between">
+                <IonLabel class="custom" className="!text-sm font-semibold !text-slate-600 truncate">
+                  {label}
+                </IonLabel>
+              </div>
             )}
-            readonly={readOnly}
-            max={max}
-          />
 
-          {error && (
-            <IonText slot="error" color="danger" className="text-xs font-semibold block">
-              {error.message}
-            </IonText>
-          )}
+            <div className="w-full">
+              <IonInput
+                clearInput={type === 'search'}
+                {...field}
+                type={type}
+                aria-label={label || 'no label'}
+                placeholder={placeholder}
+                onIonInput={e => {
+                  field.onChange(e.detail.value);
+                  clearErrors(name);
+                  clearErrors('root');
+                }}
+                disabled={disabled}
+                onIonBlur={field.onBlur}
+                className={classNames(
+                  'text-sm !bg-white ![--highlight-color-focused:none] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:0.75rem] !min-h-[1rem]',
+                  error && '![--border-color:red] !border-red-600',
+                  className,
+                )}
+                readonly={readOnly}
+                max={max}
+              />
+              <div className="text-start">
+                {error && (
+                  <IonText slot="error" color="danger" className="text-xs font-semibold block">
+                    {error.message}
+                  </IonText>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     />

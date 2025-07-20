@@ -2,7 +2,7 @@ export const TABLE_LIMIT = 15;
 
 export const manageAccountResource: string[] = ['admin', 'clients'];
 
-export const transactionResource: string[] = ['loan release', 'expense voucher', 'journal voucher', 'acknowledgement', 'release'];
+export const transactionResource: string[] = ['loan release', 'expense voucher', 'journal voucher', 'acknowledgement', 'release', 'damayan fund', 'emergency loan'];
 
 export const generalLedgerResource: string[] = ['audit trail', 'financial statement', 'trial balance'];
 

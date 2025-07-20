@@ -23,7 +23,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
-        <IonCol size="6" className="space-y-2">
+        <IonCol size="6" className="space-y-1">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -44,11 +44,11 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                 control={form.control}
                 clearErrors={form.clearErrors}
                 label="Center Code"
-                placeholder="Type here"
+                placeholder="Click find to search center code"
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>
-            <div className="mt-5">
+            <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : 'mt-1.5')}>
               <CenterSelection centerLabel="centerLabel" centerValue="center" centerDescription="centerName" clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>
@@ -63,7 +63,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-          <FormIonItem>
+          {/* <FormIonItem>
             <InputText
               disabled={loading}
               name="refNo"
@@ -73,14 +73,14 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               placeholder={`Type here`}
               className="!px-2 !py-2 rounded-md"
             />
-          </FormIonItem>
+          </FormIonItem> */}
           <FormIonItem>
-            <InputTextarea
+            <InputText
               disabled={loading}
               name="remarks"
               control={form.control}
               clearErrors={form.clearErrors}
-              label="Remarks"
+              label="Particular"
               placeholder={`Type here`}
               className="!px-2 !py-2 rounded-md"
             />
@@ -101,8 +101,6 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               ]}
             />
           </FormIonItem>
-        </IonCol>
-        <IonCol size="6" className="space-y-2">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -127,9 +125,11 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               max="9999-12-31"
             />
           </FormIonItem>
+        </IonCol>
+        <IonCol size="6" className="space-y-1">
           <IonGrid className="ion-no-padding">
             <IonRow className="gap-2">
-              <IonCol>
+              <IonCol size="12" sizeLg="6">
                 <FormIonItem>
                   <InputText
                     disabled={loading}
@@ -190,11 +190,11 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                 control={form.control}
                 clearErrors={form.clearErrors}
                 label="Bank Code"
-                placeholder="Type here"
+                placeholder="Click find to search bank code"
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>
-            <div className="mt-5">
+            <div className={classNames(form.formState.errors.bankCodeLabel ? 'mt-0' : 'mt-1.5')}>
               <BankSelection bankLabel="bankCodeLabel" bankValue="bankCode" setValue={form.setValue} clearErrors={form.clearErrors} />
             </div>
           </div>

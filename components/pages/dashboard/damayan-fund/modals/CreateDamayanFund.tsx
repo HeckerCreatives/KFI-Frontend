@@ -93,7 +93,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
         className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Damayan Fund - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>

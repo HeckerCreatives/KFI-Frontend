@@ -7,6 +7,7 @@ import { EntryFormData } from '../../../../../validations/loan-release.schema';
 import ClientSelection from '../../../../ui/selections/ClientSelection';
 import ChartOfAccountSelection from '../../../../ui/selections/ChartOfAccountSelection';
 import { close } from 'ionicons/icons';
+import classNames from 'classnames';
 
 type TForm = {
   form: UseFormReturn<EntryFormData>;
@@ -36,10 +37,10 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
   };
 
   return (
-    <IonGrid>
+    <IonGrid class="">
       <IonRow>
-        <IonCol size="12" className="space-y-2">
-          <div className="flex items-end gap-2 flex-nowrap">
+        <IonCol size="12" className="space-y-1">
+          <div className="flex items-start gap-2 flex-nowrap">
             <div className="flex-1 relative">
               <FormIonItem>
                 <InputText
@@ -57,11 +58,11 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
                 <IonIcon
                   onClick={clearClient}
                   icon={close}
-                  className="absolute top-7 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
+                  className="absolute top-3 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
                 />
               )}
             </div>
-            <div className="mt-6">
+            <div className={classNames(form.formState.errors.client ? 'mt-0' : 'mt-1.5')}>
               <ClientSelection clientLabel="client" clientValue="clientId" center={center} clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>
@@ -77,7 +78,7 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-          <div className="flex items-end gap-2 flex-nowrap">
+          <div className="flex items-start gap-2 flex-nowrap">
             <div className="flex-1 relative">
               <FormIonItem>
                 <InputText
@@ -95,11 +96,11 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
                 <IonIcon
                   onClick={clearAcctCode}
                   icon={close}
-                  className="absolute top-7 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
+                  className="absolute top-3 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
                 />
               )}
             </div>
-            <div className="mt-6">
+            <div className={classNames(form.formState.errors.acctCode ? 'mt-0' : 'mt-1.5')}>
               <ChartOfAccountSelection
                 chartOfAccountLabel="acctCode"
                 chartOfAccountValue="acctCodeId"

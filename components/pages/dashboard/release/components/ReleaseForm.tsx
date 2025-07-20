@@ -8,6 +8,7 @@ import InputTextarea from '../../../../ui/forms/InputTextarea';
 import BankSelection from '../../../../ui/selections/BankSelection';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import { ReleaseFormData } from '../../../../../validations/release.schema';
+import classNames from 'classnames';
 
 type TForm = {
   form: UseFormReturn<ReleaseFormData>;
@@ -18,7 +19,7 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
-        <IonCol size="6" className="space-y-2">
+        <IonCol size="6" className="space-y-1">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -43,7 +44,7 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>
-            <div className="mt-5">
+            <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : 'mt-1.5')}>
               <CenterSelection centerLabel="centerLabel" centerValue="center" centerDescription="centerName" clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>
@@ -58,7 +59,7 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-          <FormIonItem>
+          {/* <FormIonItem>
             <InputText
               disabled={loading}
               name="refNo"
@@ -68,14 +69,14 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
               placeholder={`Type here`}
               className="!px-2 !py-2 rounded-md"
             />
-          </FormIonItem>
+          </FormIonItem> */}
           <FormIonItem>
-            <InputTextarea
+            <InputText
               disabled={loading}
               name="remarks"
               control={form.control}
               clearErrors={form.clearErrors}
-              label="Remarks"
+              label="Particular"
               placeholder={`Type here`}
               className="!px-2 !py-2 rounded-md"
             />
@@ -96,8 +97,6 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
               ]}
             />
           </FormIonItem>
-        </IonCol>
-        <IonCol size="6" className="space-y-2">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -122,9 +121,11 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
               max="9999-12-31"
             />
           </FormIonItem>
+        </IonCol>
+        <IonCol size="6" className="space-y-1">
           <IonGrid className="ion-no-padding">
             <IonRow className="gap-2">
-              <IonCol>
+              <IonCol size="12" sizeLg="6">
                 <FormIonItem>
                   <InputText
                     disabled={loading}
@@ -189,7 +190,7 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>
-            <div className="mt-5">
+            <div className={classNames(form.formState.errors.bankCodeLabel ? 'mt-0' : 'mt-1.5')}>
               <BankSelection bankLabel="bankCodeLabel" bankValue="bankCode" setValue={form.setValue} clearErrors={form.clearErrors} />
             </div>
           </div>
@@ -204,17 +205,20 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem>
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="cashCollection"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="if Direct Dep. w/ Cash Collection. Enter Cash Amount"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-            />
-          </FormIonItem>
+          <div>
+            <label className="text-xs block translate-y-1">if Direct Dep. w/ Cash Collection. Enter Cash Amount</label>
+            <FormIonItem className="m-0 !py-0">
+              <InputText
+                disabled={loading}
+                name="cashCollection"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label=""
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+              />
+            </FormIonItem>
+          </div>
         </IonCol>
       </IonRow>
     </IonGrid>

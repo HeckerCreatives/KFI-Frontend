@@ -33,19 +33,18 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
         className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
       >
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Loan Release - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-6 !py-5">
+        <div className="inner-content !p-2">
           <IonGrid>
             <IonRow>
-              <IonCol size="6" className="space-y-2">
+              <IonCol size="6" className="space-y-1">
                 <LoanReleaseViewCard label="CV#" value={`CV#${transaction.code}`} />
                 <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} />
                 <LoanReleaseViewCard label="Name" value={transaction.center.description} />
-                <LoanReleaseViewCard label="Reference Number" value={transaction.refNo} />
-                <LoanReleaseViewCard label="Remark" value={transaction.remarks} />
+                <LoanReleaseViewCard label="Particular" value={transaction.remarks} />
                 <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} />
                 <IonGrid className="ion-no-padding">
                   <IonRow className="gap-2">
@@ -57,10 +56,10 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
                     </IonCol>
                   </IonRow>
                 </IonGrid>
+                <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} />
                 <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} />
               </IonCol>
               <IonCol size="6" className="space-y-2">
-                <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} />
                 <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} />
                 <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} />
                 <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} />

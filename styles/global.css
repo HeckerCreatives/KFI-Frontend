@@ -7,66 +7,66 @@
 
 /* Thin */
 @font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/Poppins-Light.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/Poppins-LightItalic.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-LightItalic.ttf') format('truetype');
   font-weight: 300;
   font-style: italic;
 }
 
 /* Regular */
 @font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/Poppins-Regular.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/Poppins-RegularItalic.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-RegularItalic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
 
 /* Semibold */
 @font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/Poppins-Medium.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Medium.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/Poppins-MediumItalic.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-MediumItalic.ttf') format('truetype');
   font-weight: 600;
   font-style: italic;
 }
 
 /* Bold */
 @font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/Poppins-Bold.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/Poppins-BoldItalic.ttf') format('truetype');
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-BoldItalic.ttf') format('truetype');
   font-weight: 700;
   font-style: italic;
 }
 
 * {
-  font-family: 'Poppins' !important;
+  font-family: 'Montserrat' !important;
 }
 
 body {

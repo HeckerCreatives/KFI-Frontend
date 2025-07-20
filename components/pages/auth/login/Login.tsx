@@ -12,6 +12,7 @@ import formErrorHandler from '../../../utils/form-error-handler';
 import InputPassword from '../../../ui/forms/InputPassword';
 import logo from '../../../assets/images/logo-nobg.png';
 import Image from 'next/image';
+import { Capacitor } from '@capacitor/core';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,21 @@ const Login = () => {
       password: '',
     },
   });
+
+  // const getDeviceName = async (): string => {
+  //   if (!Capacitor.isNativePlatform()) return 'Web Browser';
+
+  //   if (Capacitor.getPlatform() === 'electron') {
+  //     if (typeof window !== 'undefined' && window.require) {
+  //       const { hostname } = window.require('os');
+  //       return hostname();
+  //     }
+  //     return 'Unknown PC';
+  //   }
+
+  //   const {} = await import("@capaitor/device")
+
+  // };
 
   const onSubmit = async (data: LoginFormData) => {
     try {
@@ -55,7 +71,7 @@ const Login = () => {
       <IonContent fullscreen>
         <div className="w-full h-full bg-gradient-to-br from-[#F76B2E] via-[#FFF4DE] to-[#F76B2E] via-50% from-1% to-100%">
           <div className="grid place-items-center h-full">
-            <div className=" bg-[#FFF0E3] grid place-items-center max-w-[40rem] rounded-2xl shadow-lg">
+            <div className=" bg-[#FFF0E3] grid place-items-center max-w-[27.5rem] rounded-2xl shadow-lg">
               <div className="px-10 space-y-8 py-20">
                 <div>
                   <div className="pb-8">
@@ -66,7 +82,7 @@ const Login = () => {
                   <p>Please sign in to access your account and manage your services securely.</p>
                 </div>
                 <div>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
                     <FormIonItem>
                       <InputText
                         disabled={loading}

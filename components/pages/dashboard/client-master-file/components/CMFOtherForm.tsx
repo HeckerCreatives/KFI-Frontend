@@ -8,6 +8,7 @@ import CenterSelection from '../../../../ui/selections/CenterSelection';
 import BusinessTypeSelection from '../../../../ui/selections/BusinessTypeSelection';
 import GroupOfAccountSelection from '../../../../ui/selections/GroupOfAccountSelection';
 import InputSelect from '../../../../ui/forms/InputSelect';
+import classNames from 'classnames';
 
 type TForm = {
   form: UseFormReturn<ClientMasterFileFormData>;
@@ -16,20 +17,9 @@ type TForm = {
 
 const CMFOtherForm = ({ form, loading }: TForm) => {
   return (
-    <IonGrid>
+    <IonGrid className="py-0">
       <IonRow>
         <IonCol size="6" className="space-y-2">
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="memberStatus"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Member Status"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-            />
-          </FormIonItem>
           <div className="flex items-start gap-2 flex-nowrap">
             <FormIonItem className="flex-1">
               <InputText
@@ -43,7 +33,7 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>
-            <div className="mt-5">
+            <div className={classNames(form.formState.errors.groupNumberLabel ? 'mt-0' : 'mt-1.5')}>
               <GroupOfAccountSelection groupOfAccountLabel="groupNumberLabel" groupOfAccountValue="groupNumber" setValue={form.setValue} clearErrors={form.clearErrors} />
             </div>
           </div>
@@ -60,7 +50,7 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
                 readOnly
               />
             </FormIonItem>
-            <div className="mt-5">
+            <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : 'mt-1.5')}>
               <CenterSelection centerLabel="centerLabel" centerValue="center" setValue={form.setValue} clearErrors={form.clearErrors} />
             </div>
           </div>
@@ -101,23 +91,12 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
                 readOnly
               />
             </FormIonItem>
-            <div className="mt-5">
+            <div className={classNames(form.formState.errors.businessLabel ? 'mt-0' : 'mt-1.5')}>
               <BusinessTypeSelection businessTypeLabel="businessLabel" businessTypeValue="business" setValue={form.setValue} clearErrors={form.clearErrors} />
             </div>
           </div>
         </IonCol>
         <IonCol size="6" className="space-y-2">
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="position"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Position"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-            />
-          </FormIonItem>
           <FormIonItem>
             <InputText
               disabled={loading}

@@ -14,7 +14,7 @@ const SelectionHeader = ({ disabled = false, dismiss, title }: SelectionHeaderPr
       <div className="h-10 flex items-center justify-between bg-slate-900/40">
         <div slot="start" className="h-10 grid place-items-center">
           <div className="px-5">
-            <h6 className="font-semibold m-0 text-sm leading-3 tracking-wider">{title}</h6>
+            <h6 className="font-semibold m-0 text-sm leading-3">{title}</h6>
           </div>
         </div>
         <div slot="end" className="h-10 grid place-items-center">
