@@ -95,7 +95,7 @@ const Tabs = () => {
       <IonMenu contentId="main-content" menuId="main-content" class="lg:max-w-64" disabled={isPlatform('desktop') && !isOpen}>
         <IonContent>
           <div>
-            <div className="h-40 bg-desktop bg-cover flex items-end">
+            <div className="h-14 border-b bg-cover flex items-end">
               <div className="w-full bg-slate-100/50 px-5 py-2">
                 <Image alt="logo" src={logoNoBg} className="h-10 w-auto" />
               </div>
