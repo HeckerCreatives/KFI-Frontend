@@ -38,7 +38,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                 control={form.control}
                 clearErrors={form.clearErrors}
                 label="Supplier"
-                placeholder="Type here"
+                placeholder="Click find to select supplier"
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>
@@ -146,7 +146,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                 control={form.control}
                 clearErrors={form.clearErrors}
                 label="Bank Code"
-                placeholder="Type here"
+                placeholder="Click find to select bank code"
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>

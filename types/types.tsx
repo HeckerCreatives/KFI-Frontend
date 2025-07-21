@@ -162,6 +162,7 @@ export type ReleaseEntry = {
 export type ExpenseVoucherEntry = {
   _id: string;
   expenseVoucher: string;
+  client: { _id: string; name: string; center: { _id: string; centerNo: string } };
   particular: string;
   acctCode: { _id: string; code: string; description: string };
   credit: number | null;
@@ -173,6 +174,7 @@ export type ExpenseVoucherEntry = {
 export type JournalVoucherEntry = {
   _id: string;
   journalVoucher: string;
+  client: { _id: string; name: string; center: { _id: string; centerNo: string } };
   particular: string;
   acctCode: { _id: string; code: string; description: string };
   credit: number | null;

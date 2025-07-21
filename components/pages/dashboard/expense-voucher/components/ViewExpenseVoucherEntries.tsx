@@ -76,6 +76,7 @@ const ViewExpenseVoucherEntries = ({ isOpen, expenseVoucher }: ViewEntriesProps)
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4">
+              <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>
               <TableHead>Acct. Code</TableHead>
               <TableHead>Description</TableHead>
@@ -90,7 +91,8 @@ const ViewExpenseVoucherEntries = ({ isOpen, expenseVoucher }: ViewEntriesProps)
             {!data.loading &&
               data.entries.map((entry: ExpenseVoucherEntry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2">
-                  <TableCell>{entry?.particular}</TableCell>
+                  <TableCell>{entry?.client?.name || ''}</TableCell>
+                  <TableCell>{entry?.particular || ''}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>
                   <TableCell>{entry?.acctCode?.description}</TableCell>
                   <TableCell className="text-end">{formatNumber(entry?.debit as number)}</TableCell>

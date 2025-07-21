@@ -25,6 +25,8 @@ const AddEntry = ({ expenseVoucherId, getEntries }: AddEntryProps) => {
   const form = useForm<ExpenseVoucherEntryFormData>({
     resolver: zodResolver(expenseVoucherEntrySchema),
     defaultValues: {
+      client: '',
+      clientLabel: '',
       particular: '',
       acctCodeId: '',
       acctCode: '',

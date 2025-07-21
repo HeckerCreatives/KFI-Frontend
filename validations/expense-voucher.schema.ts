@@ -1,6 +1,8 @@
 import z from 'zod';
 
 export const expenseVoucherEntrySchema = z.object({
+  client: z.string().optional().or(z.literal('')),
+  clientLabel: z.string().optional().or(z.literal('')),
   particular: z.string().optional().or(z.literal('')),
   acctCodeId: z.string().min(1, 'Account Code Id is required').max(255, 'Account Code Id must only consist of 255 characters'),
   acctCode: z.string().min(1, 'Account Code is required').max(255, 'Account Code must only consist of 255 characters'),

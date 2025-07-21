@@ -121,7 +121,7 @@ const ExpenseVoucher = () => {
                   {!data.loading &&
                     data.expenseVouchers.map((expenseVoucher: ExpenseVoucherType, i: number) => (
                       <TableRow key={expenseVoucher._id}>
-                        <TableCell>EV#{expenseVoucher.code}</TableCell>
+                        <TableCell>CV#{expenseVoucher.code}</TableCell>
                         <TableCell>{formatDateTable(expenseVoucher.date)}</TableCell>
                         <TableCell>{expenseVoucher.bankCode.description}</TableCell>
                         <TableCell>{expenseVoucher.checkNo}</TableCell>

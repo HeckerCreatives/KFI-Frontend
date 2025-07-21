@@ -8,6 +8,7 @@ import ChartOfAccountSelection from '../../../../ui/selections/ChartOfAccountSel
 import classNames from 'classnames';
 import { IonButton, IonIcon } from '@ionic/react';
 import { trash } from 'ionicons/icons';
+import ClientSelection from '../../../../ui/selections/ClientSelection';
 
 type JVFormTableDocProps = {
   index: number;
@@ -20,6 +21,23 @@ type JVFormTableDocProps = {
 const JVFormTableDoc = ({ index, entry, remove, form, loading }: JVFormTableDocProps) => {
   return (
     <TableRow className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2">
+      <TableCell className="min-w-fit">
+        <div className="flex items-start gap-1">
+          <FormIonItem>
+            <InputText readOnly control={form.control} name={`entries.${index}.clientLabel`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
+          </FormIonItem>
+          <div className={classNames('mt-2.5', form?.formState.errors?.entries && form.formState.errors.entries[index]?.clientLabel && '!mt-0.5')}>
+            <ClientSelection
+              clientLabel={`entries.${index}.clientLabel`}
+              clientValue={`entries.${index}.client`}
+              clientParticular={`entries.${index}.particular`}
+              setValue={form.setValue}
+              clearErrors={form.clearErrors}
+              className="!min-h-3.5 text-[0.5rem]"
+            />
+          </div>
+        </div>
+      </TableCell>
       <TableCell>
         <FormIonItem>
           <InputText disabled={loading} control={form.control} name={`entries.${index}.particular`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />

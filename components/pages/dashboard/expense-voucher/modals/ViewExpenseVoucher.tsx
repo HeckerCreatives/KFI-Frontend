@@ -39,7 +39,7 @@ const ViewExpenseVoucher = ({ expenseVoucher }: ViewExpenseVoucherType) => {
           <IonGrid>
             <IonRow>
               <IonCol size="6" className="space-y-1">
-                <ExpenseVoucherViewCard label="EV#" value={`EV#${expenseVoucher.code}`} />
+                <ExpenseVoucherViewCard label="CV#" value={`CV#${expenseVoucher.code}`} />
                 <ExpenseVoucherViewCard label="Supplier" value={expenseVoucher.supplier.description} />
                 <ExpenseVoucherViewCard label="Remark" value={expenseVoucher.remarks} />
                 <ExpenseVoucherViewCard label="Date" value={formatDateTable(expenseVoucher.date)} />

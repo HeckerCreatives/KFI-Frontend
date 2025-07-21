@@ -35,7 +35,7 @@ const ViewEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan }) 
           <IonGrid>
             <IonRow>
               <IonCol size="6" className="space-y-1">
-                <JournalVoucherViewCard label="EV#" value={`CV#${emergencyLoan.code}`} />
+                <JournalVoucherViewCard label="CV#" value={`CV#${emergencyLoan.code}`} />
                 <JournalVoucherViewCard label="Supplier" value={emergencyLoan.supplier.description} />
                 <JournalVoucherViewCard label="Particular" value={emergencyLoan.remarks} />
                 <JournalVoucherViewCard label="Date" value={formatDateTable(emergencyLoan.date)} />

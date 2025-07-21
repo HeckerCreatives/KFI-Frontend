@@ -27,6 +27,8 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
   const form = useForm<ExpenseVoucherEntryFormData>({
     resolver: zodResolver(expenseVoucherEntrySchema),
     defaultValues: {
+      client: '',
+      clientLabel: '',
       particular: '',
       acctCodeId: '',
       acctCode: '',
@@ -40,7 +42,9 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
   useEffect(() => {
     if (entry) {
       form.reset({
-        particular: entry.particular,
+        client: entry.client?._id || '',
+        clientLabel: entry.client?.name || '',
+        particular: entry.particular || '',
         acctCodeId: entry.acctCode._id,
         acctCode: entry.acctCode.code,
         description: entry.acctCode.description,

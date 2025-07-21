@@ -20,7 +20,7 @@ const ExpenseVoucherFormTable = ({ form, loading = false }: ExpenseVoucherFormTa
 
   const addEntry = () => {
     form.clearErrors('entries');
-    append({ particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0', cvForRecompute: '' });
+    append({ client: '', clientLabel: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0', cvForRecompute: '' });
   };
 
   const deleteEntry = (index: number) => {
@@ -38,6 +38,7 @@ const ExpenseVoucherFormTable = ({ form, loading = false }: ExpenseVoucherFormTa
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4">
+              <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>
               <TableHead>Acct. Code</TableHead>
               <TableHead>Description</TableHead>

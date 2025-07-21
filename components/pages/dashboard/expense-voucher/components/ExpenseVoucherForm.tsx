@@ -25,7 +25,7 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
               name="code"
               control={form.control}
               clearErrors={form.clearErrors}
-              label="EV#"
+              label="CV#"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
             />
@@ -38,7 +38,7 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
                 control={form.control}
                 clearErrors={form.clearErrors}
                 label="Supplier"
-                placeholder="Type here"
+                placeholder="Click find to select supplier"
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>

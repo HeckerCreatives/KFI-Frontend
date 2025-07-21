@@ -23,6 +23,8 @@ const AddEntry = ({ journalVoucherId, getEntries }: AddEntryProps) => {
   const form = useForm<JournalVoucherEntryFormData>({
     resolver: zodResolver(journalVoucherEntrySchema),
     defaultValues: {
+      client: '',
+      clientLabel: '',
       particular: '',
       acctCodeId: '',
       acctCode: '',

@@ -36,7 +36,7 @@ const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher
           <IonGrid>
             <IonRow>
               <IonCol size="6" className="space-y-1">
-                <JournalVoucherViewCard label="EV#" value={`JV#${journalVoucher.code}`} />
+                <JournalVoucherViewCard label="CV#" value={`CV#${journalVoucher.code}`} />
                 <JournalVoucherViewCard label="Supplier" value={journalVoucher.supplier.description} />
                 <JournalVoucherViewCard label="Particular" value={journalVoucher.remarks} />
                 <JournalVoucherViewCard label="Date" value={formatDateTable(journalVoucher.date)} />

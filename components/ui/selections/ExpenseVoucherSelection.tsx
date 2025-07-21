@@ -154,7 +154,7 @@ const ExpenseVoucherSelection = <T extends FieldValues>({ expenseVoucherLabel, e
                 {!data.loading &&
                   data.expenseVouchers.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">EV#{data.code}</TableCell>
+                      <TableCell className="">CV#{data.code}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
