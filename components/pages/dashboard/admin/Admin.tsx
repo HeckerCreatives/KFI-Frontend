@@ -13,6 +13,7 @@ import UserFilter from './components/UserFilter';
 import UserActions from './components/UserActions';
 import { formatDateTable } from '../../../utils/date-utils';
 import BanUser from './modal/BanUser';
+import ManageAccountNav from '../../../ui/navs/ManageAccountNav';
 
 export type TUser = {
   users: User[];
@@ -93,6 +94,7 @@ const Admin = () => {
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['Manage Account', 'Admin']} />
           <div className="px-3 pb-3 flex-1">
+            <ManageAccountNav />
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
               <div className="flex items-center gap-2">
                 <CreateUser getUsers={getUsers} />

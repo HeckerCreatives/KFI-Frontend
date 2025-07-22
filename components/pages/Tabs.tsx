@@ -28,7 +28,7 @@ import BusinessType from './dashboard/business-type/BusinessType';
 import GroupAccount from './dashboard/group-account/GroupAccount';
 import logoNoBg from '../assets/images/logo-nobg.png';
 import Image from 'next/image';
-import { chevronDownOutline, homeOutline, logOut, settingsOutline } from 'ionicons/icons';
+import { chevronDownOutline, homeOutline, keyOutline, logOut, settingsOutline } from 'ionicons/icons';
 import TransactionNavigation from '../ui/navs/TransactionNavigation';
 import ManageAccount from '../ui/navs/ManageAccount';
 import Admin from './dashboard/admin/Admin';
@@ -116,8 +116,26 @@ const Tabs = () => {
                 </IonItem>
               </IonMenuToggle>
             </div>
+            {isVisible(token.role, token.permissions, manageAccountResource) && (
+              <div className="space-y-2 px-2.5 mb-2 mt-5">
+                <IonMenuToggle autoHide={false} className="">
+                  <IonItem
+                    routerLink="/dashboard/admin"
+                    className={classNames(
+                      '!text-[0.9rem] [--padding-start:0rem] [--min-height:2.25rem] [--border-color:transparent] space-x-2 text-slate-500 hover:[--color:#FA6C2F]',
+                      pathname === '/dashboard/admin' && '!text-[#fa6c2f]',
+                    )}
+                  >
+                    <div className="flex items-center justify-start gap-2 px-3">
+                      <IonIcon size="small" icon={keyOutline} />
+                      <IonLabel>Manage Account</IonLabel>
+                    </div>
+                  </IonItem>
+                </IonMenuToggle>
+              </div>
+            )}
             <IonAccordionGroup className="space-y-2 px-3">
-              {isVisible(token.role, token.permissions, manageAccountResource) && <ManageAccount />}
+              {/* {isVisible(token.role, token.permissions, manageAccountResource) && <ManageAccount />} */}
               {isVisible(token.role, token.permissions, transactionResource) && <TransactionNavigation />}
               {isVisible(token.role, token.permissions, generalLedgerResource) && <GeneralLedgerNav />}
               {isVisible(token.role, token.permissions, systemResource) && <SystemNav />}
