@@ -14,6 +14,7 @@ type TFormInput<T extends FieldValues> = {
   disabled?: boolean;
   className?: string;
   containerClassName?: string;
+  labelClassname?: string;
 };
 
 const InputPassword = <T extends FieldValues>({
@@ -26,6 +27,7 @@ const InputPassword = <T extends FieldValues>({
   disabled = false,
   className = '',
   containerClassName = '',
+  labelClassname = '',
 }: TFormInput<T>) => {
   const [show, setShow] = useState(false);
 
@@ -44,7 +46,7 @@ const InputPassword = <T extends FieldValues>({
           <div className="w-full space-y-0 flex items-center gap-2">
             <div className="flex justify-between">
               {label && (
-                <IonLabel class="custom" className="!text-sm font-semibold !text-slate-600 truncate">
+                <IonLabel class="custom" className={classNames('!text-sm font-semibold !text-slate-600 truncate', labelClassname)}>
                   {label}
                 </IonLabel>
               )}

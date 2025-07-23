@@ -15,7 +15,7 @@ const ModalHeader = ({ dismiss, title, sub, disabled = false }: TProps) => {
       <div className="h-12 flex items-center justify-between bg-slate-900/40">
         <div slot="start" className="h-12 grid place-items-center">
           <div className="px-5 leading-3">
-            <span className="text-xs">{sub}</span>
+            {/* <span className="text-xs">{sub}</span> */}
             <h6 className="font-semibold leading-5 m-0 text-lg">{title}</h6>
           </div>
         </div>

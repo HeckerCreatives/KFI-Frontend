@@ -15,6 +15,7 @@ type TFormInput<T extends FieldValues> = {
   className?: string;
   readOnly?: boolean;
   max?: string;
+  labelClassName?: string;
 };
 
 const InputText = <T extends FieldValues>({
@@ -27,6 +28,7 @@ const InputText = <T extends FieldValues>({
   required = false,
   disabled = false,
   className,
+  labelClassName = '',
   readOnly = false,
   max = '',
 }: TFormInput<T>) => {
@@ -39,7 +41,7 @@ const InputText = <T extends FieldValues>({
           <div className="w-full flex items-start gap-2">
             {label && (
               <div className="flex justify-between">
-                <IonLabel class="custom" className="!text-sm font-semibold !text-slate-600 truncate">
+                <IonLabel class="custom" className={classNames('!text-sm font-semibold !text-slate-600', labelClassName)}>
                   {label}
                 </IonLabel>
               </div>

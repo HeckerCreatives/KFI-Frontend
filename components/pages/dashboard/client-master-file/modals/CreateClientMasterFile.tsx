@@ -87,7 +87,7 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
           + Add Record
         </IonButton>
       </div>
-      <IonModal ref={modal} trigger="create-cmf-modal" backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
+      <IonModal ref={modal} trigger="create-cmf-modal" backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Client - Add Record" sub="Manage Account" dismiss={dismiss} />

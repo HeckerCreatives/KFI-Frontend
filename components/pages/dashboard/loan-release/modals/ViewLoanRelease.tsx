@@ -30,7 +30,7 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
         isOpen={isOpen}
         trigger={`view-leanRelease-modal-${transaction._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
@@ -41,32 +41,33 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
           <IonGrid>
             <IonRow>
               <IonCol size="6" className="space-y-1">
-                <LoanReleaseViewCard label="CV#" value={`CV#${transaction.code}`} />
-                <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                  <LoanReleaseViewCard label="CV#" value={`CV#${transaction.code}`} />
+                  <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} />
+                </div>
                 <LoanReleaseViewCard label="Name" value={transaction.center.description} />
                 <LoanReleaseViewCard label="Particular" value={transaction.remarks} />
-                <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} />
-                <IonGrid className="ion-no-padding">
-                  <IonRow className="gap-2">
-                    <IonCol>
-                      <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} />
-                    </IonCol>
-                    <IonCol>
-                      <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} />
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-                <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} />
                 <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} />
               </IonCol>
-              <IonCol size="6" className="space-y-2">
-                <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} />
-                <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} />
-                <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} />
-                <LoanReleaseViewCard label="Bank Code" value={transaction.bank.description} />
-                <LoanReleaseViewCard label="Amount" value={`${formatNumber(transaction.amount)}`} />
-                <LoanReleaseViewCard label="Cycle" value={`${transaction.cycle}`} />
-                <LoanReleaseViewCard label="Interest Rate" value={`${transaction.interest}`} />
+              <IonCol size="6" className="space-y-1">
+                <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+                  <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} />
+                  <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} />
+                  <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} />
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+                  <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} />
+                  <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} />
+                  <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
+                  <LoanReleaseViewCard label="Bank Code" value={transaction.bank.description} />
+                  <LoanReleaseViewCard label="Amount" value={`${formatNumber(transaction.amount)}`} />
+                  <LoanReleaseViewCard label="Cycle" value={`${transaction.cycle}`} />
+                  <LoanReleaseViewCard label="Interest Rate" value={`${transaction.interest}`} />
+                </div>
               </IonCol>
             </IonRow>
           </IonGrid>

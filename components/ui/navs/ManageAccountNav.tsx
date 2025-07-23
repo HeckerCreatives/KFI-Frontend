@@ -19,8 +19,8 @@ const ManageAccountNav = () => {
             routerLink="/dashboard/admin"
             fill="clear"
             className={classNames(
-              'max-h-10 min-h-6  text-white hover:bg-[#FA6C2F] capitalize font-semibold rounded-md',
-              pathname === '/dashboard/admin' ? 'bg-[#FA6C2F]' : 'bg-[#f5a04c]',
+              'max-h-10 min-h-6  text-white hover:bg-[#FA6C2F] hover:border-[#FA6C2F] capitalize font-semibold rounded-md border-2',
+              pathname === '/dashboard/admin' ? 'bg-[#FA6C2F] !border-orange-900' : 'bg-[#f5a04c] border-[#f5a04c]',
             )}
             strong
           >
@@ -33,8 +33,8 @@ const ManageAccountNav = () => {
             routerLink="/dashboard/client"
             fill="clear"
             className={classNames(
-              'max-h-10 min-h-6  text-white hover:bg-[#FA6C2F] capitalize font-semibold rounded-md',
-              pathname === '/dashboard/client' ? 'bg-[#FA6C2F]' : 'bg-[#f5a04c]',
+              'max-h-10 min-h-6  text-white hover:bg-[#FA6C2F] hover:border-[#FA6C2F] capitalize font-semibold rounded-md border-2',
+              pathname === '/dashboard/client' ? 'bg-[#FA6C2F] !border-orange-900' : 'bg-[#f5a04c] border-[#f5a04c]',
             )}
             strong
           >

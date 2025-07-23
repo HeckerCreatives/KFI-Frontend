@@ -13,7 +13,7 @@ export const clientMasterFileSchema = z.object({
   sex: z.string().min(1, 'Sex is required'),
   spouse: z.string().min(1, 'Spouse is required'),
   civilStatus: z.string().min(1, 'Civil Status is required'),
-  parent: z.string().min(1, 'Parent is required'),
+  parent: z.string().min(1, 'Parent is required').optional().or(z.literal('')),
   memberStatus: z.string().min(1, 'Member status is required'),
   groupNumber: z.string().min(1, 'Group No. is required'),
   groupNumberLabel: z.string().min(1, 'Group No. is required'),
@@ -25,9 +25,9 @@ export const clientMasterFileSchema = z.object({
   businessLabel: z.string().min(1, 'Business label is required'),
   position: z.string().min(1, 'Position is required'),
   acctNumber: z.string().min(1, 'Account No. is required'),
-  dateResigned: z.string().min(1, 'Date resigned is required'),
+  dateResigned: z.string().min(1, 'Date resigned is required').optional().or(z.literal('')),
   newStatus: z.string().min(1, 'New Status is required'),
-  reason: z.string().min(1, 'Reason is required'),
+  reason: z.string().min(1, 'Reason is required').optional().or(z.literal('')),
 });
 
 export type ClientMasterFileFormData = z.infer<typeof clientMasterFileSchema>;

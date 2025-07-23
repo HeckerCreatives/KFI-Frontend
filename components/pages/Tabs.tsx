@@ -95,9 +95,9 @@ const Tabs = () => {
       <IonMenu contentId="main-content" menuId="main-content" class="lg:max-w-64" disabled={isPlatform('desktop') && !isOpen}>
         <IonContent>
           <div>
-            <div className="h-14 border-b bg-cover flex items-end">
-              <div className="w-full bg-slate-100/50 px-5 py-2">
-                <Image alt="logo" src={logoNoBg} className="h-10 w-auto" />
+            <div className="h-20 border-b bg-cover flex items-end">
+              <div className="w-full bg-slate-100/50 p-5">
+                <Image alt="logo" src={logoNoBg} className="h-12 w-auto" />
               </div>
             </div>
             <div className="space-y-2 px-2.5 mb-2 mt-5">
@@ -153,14 +153,16 @@ const Tabs = () => {
                 {isDesktop && <IonMenuButton autoHide={false} onClick={() => setIsOpen(prev => !prev)} />}
               </div>
               <div className="flex items-center justify-center gap-5">
-                <IonButton
-                  fill="clear"
-                  className="min-h-[3.5rem] min-w-40 border-[#FA6C2F] px-1 !m-0 bg-[#FFF0E3] [--color:black] font-bold space-x-4 capitalize"
-                  id="click-trigger"
-                >
-                  <div className="w-10 h-10 bg-slate-300 rounded-full uppercase grid place-items-center min-w-10 min-h-10">{token.username.substring(0, 2)}</div>
-                  <span>{token.username}</span> <IonIcon className="text-[#FA6C2F] stroke w-4 h-4" icon={chevronDownOutline} />
-                </IonButton>
+                <div className="flex items-center justify-center gap-2 capitalize">
+                  <span className="block text-[0.9rem] font-semibold">{token.username}</span>
+                  <IonButton
+                    fill="clear"
+                    className="min-h-[3.5rem] [--padding-start:0] [--padding-end:0] [--padding-bottom:0] [--padding-top:0] border-[#FA6C2F] !m-0  [--color:black] font-bold  [--ripple-color:transparent]"
+                    id="click-trigger"
+                  >
+                    <div className="w-10 h-10 bg-[#FFF0E3] rounded-full uppercase grid place-items-center min-w-10 min-h-10">{token.username.substring(0, 2)}</div>
+                  </IonButton>
+                </div>
                 <IonPopover showBackdrop={false} trigger="click-trigger" triggerAction="click">
                   <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
                     <div className="flex items-center gap-2 text-sm text-slate-700 font-semibold hover:bg-slate-100 py-3 px-3 cursor-pointer active:bg-slate-200">

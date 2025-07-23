@@ -110,7 +110,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
           <IonIcon icon={createSharp} className="text-[1rem]" /> Edit
         </div>
       </div>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
+      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Expense Voucher - Edit Record" sub="Transaction" dismiss={dismiss} />

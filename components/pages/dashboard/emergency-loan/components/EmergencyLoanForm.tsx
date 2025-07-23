@@ -82,6 +82,8 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
               max="9999-12-31"
             />
           </FormIonItem>
+        </IonCol>
+        <IonCol size="6" className="space-y-1">
           <IonGrid className="ion-no-padding">
             <IonRow className="gap-2">
               <IonCol size="12" sizeLg="6">
@@ -112,61 +114,63 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
               </IonCol>
             </IonRow>
           </IonGrid>
-        </IonCol>
-        <IonCol size="6" className="space-y-1">
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="checkNo"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Check Number"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-            />
-          </FormIonItem>
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="checkDate"
-              type="date"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Check Date"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-              max="9999-12-31"
-            />
-          </FormIonItem>
-          <div className="flex items-start gap-2 flex-nowrap">
-            <FormIonItem className="flex-1">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <FormIonItem>
               <InputText
                 disabled={loading}
-                name="bankCodeLabel"
-                readOnly
+                name="checkNo"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                label="Bank Code"
+                label="Check Number"
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
               />
             </FormIonItem>
-            <div className={classNames(form.formState.errors.bankCodeLabel ? 'mt-0' : 'mt-1.5')}>
-              <BankSelection bankLabel="bankCodeLabel" bankValue="bankCode" setValue={form.setValue} clearErrors={form.clearErrors} />
-            </div>
+            <FormIonItem>
+              <InputText
+                disabled={loading}
+                name="checkDate"
+                type="date"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Check Date"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+                max="9999-12-31"
+              />
+            </FormIonItem>
           </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <div className="flex items-start gap-2 flex-nowrap">
+              <FormIonItem className="flex-1">
+                <InputText
+                  disabled={loading}
+                  name="bankCodeLabel"
+                  readOnly
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  label="Bank Code"
+                  placeholder="Type here"
+                  className="!px-2 !py-2 rounded-md"
+                />
+              </FormIonItem>
+              <div className={classNames(form.formState.errors.bankCodeLabel ? 'mt-0' : 'mt-1.5')}>
+                <BankSelection bankLabel="bankCodeLabel" bankValue="bankCode" setValue={form.setValue} clearErrors={form.clearErrors} />
+              </div>
+            </div>
 
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="amount"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Amount"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-            />
-          </FormIonItem>
+            <FormIonItem>
+              <InputText
+                disabled={loading}
+                name="amount"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Amount"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+              />
+            </FormIonItem>
+          </div>
         </IonCol>
       </IonRow>
     </IonGrid>

@@ -98,30 +98,32 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
               </IonCol>
             </IonRow>
           </IonGrid>
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="birthdate"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Bith Date"
-              type="date"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-              max="9999-12-31"
-            />
-          </FormIonItem>
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="birthplace"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Birth Place"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-            />
-          </FormIonItem>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <FormIonItem>
+              <InputText
+                disabled={loading}
+                name="birthdate"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Bith Date"
+                type="date"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+                max="9999-12-31"
+              />
+            </FormIonItem>
+            <FormIonItem>
+              <InputText
+                disabled={loading}
+                name="birthplace"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Birth Place"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+              />
+            </FormIonItem>
+          </div>
         </IonCol>
         <IonCol size="6" className="space-y-2">
           <IonGrid className="ion-no-padding">
@@ -158,17 +160,31 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
               </IonCol>
             </IonRow>
           </IonGrid>
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="spouse"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Spouse"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-            />
-          </FormIonItem>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <FormIonItem>
+              <InputText
+                disabled={loading}
+                name="parent"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Parent"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+              />
+            </FormIonItem>
+            <FormIonItem>
+              <InputText
+                disabled={loading}
+                name="spouse"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Spouse"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+              />
+            </FormIonItem>
+          </div>
+
           <FormIonItem>
             <InputSelect
               disabled={loading}
@@ -187,17 +203,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
               ]}
             />
           </FormIonItem>
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="parent"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Parent"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-            />
-          </FormIonItem>
+
           <FormIonItem>
             <InputText
               disabled={loading}

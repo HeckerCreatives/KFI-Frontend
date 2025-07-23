@@ -14,6 +14,7 @@ import UserActions from './components/UserActions';
 import { formatDateTable } from '../../../utils/date-utils';
 import BanUser from './modal/BanUser';
 import ManageAccountNav from '../../../ui/navs/ManageAccountNav';
+import classNames from 'classnames';
 
 export type TUser = {
   users: User[];
@@ -124,7 +125,16 @@ const Admin = () => {
                           <IonCheckbox value={user._id} onIonChange={handleSelected} />
                         </TableCell>
                         <TableCell>{user.username}</TableCell>
-                        <TableCell className="capitalize">{user.status}</TableCell>
+                        <TableCell className="uppercase">
+                          <div
+                            className={classNames(
+                              'w-fit px-3 py-1 rounded-md text-xs text-white font-semibold tracking-wider',
+                              user.status === 'banned' ? 'bg-red-600' : 'bg-green-600',
+                            )}
+                          >
+                            {user.status}
+                          </div>
+                        </TableCell>
                         <TableCell>{formatDateTable(user.createdAt)}</TableCell>
                         <TableCell>
                           <UserActions user={user} setData={setData} />

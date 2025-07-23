@@ -14,7 +14,7 @@ const Dashboard = () => {
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['Dashboard']} />
           <div className="px-3 pb-3 flex-1">
-            <h3 className="px-2 m-0 mt-5 font-semibold text-slate-600">Hi, Welcome to KFI</h3>
+            <h3 className="px-2 m-0 mt-5 font-semibold text-slate-600 text-[1rem]">Hi, Welcome to KFI</h3>
             <div className="space-y-2">
               <div className="overflow-auto py-2">
                 <div className="flex flex-nowrap items-center justify-around gap-2">
@@ -25,7 +25,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="bg-white shadow-lg rounded-sm px-3 pt-1 pb-2">
-                <h3 className="text-[1rem] font-semibold border-b pb-2">Loans per Account Officer</h3>
+                <h3 className="text-[0.9rem] font-semibold border-b pb-2">Loans per Account Officer</h3>
                 <div className="relative overflow-auto">
                   <Table>
                     <TableHeader>
@@ -51,7 +51,7 @@ const Dashboard = () => {
               </div>
               <div className="flex flex-row flex-wrap h-full items-start gap-2 justify-center">
                 <div className="bg-white shadow-lg w-full rounded-sm px-3 pt-1 pb-2 flex-1">
-                  <h3 className="text-[1rem] font-semibold border-b pb-2">Recent Loan</h3>
+                  <h3 className="text-[0.9rem] font-semibold border-b pb-2">Recent Loan</h3>
                   <div className="relative overflow-auto">
                     <Table>
                       <TableHeader>
@@ -72,7 +72,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="bg-white shadow-lg rounded-sm w-full px-3 pt-1 pb-2 flex-1">
-                  <h3 className="text-[1rem] font-semibold border-b pb-2">Recent Member</h3>
+                  <h3 className="text-[0.9rem] font-semibold border-b pb-2">Recent Member</h3>
                   <div className="relative overflow-auto">
                     <Table>
                       <TableHeader>

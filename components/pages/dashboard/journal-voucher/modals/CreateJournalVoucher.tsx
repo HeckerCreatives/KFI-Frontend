@@ -80,7 +80,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
       <IonButton fill="clear" onClick={() => setIsOpen(true)} className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
         + Add Record
       </IonButton>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]">
+      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]">
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Journal Voucher - Add Record" sub="Transaction" dismiss={dismiss} />

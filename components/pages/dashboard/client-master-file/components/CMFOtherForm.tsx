@@ -20,38 +20,40 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
     <IonGrid className="py-0">
       <IonRow>
         <IonCol size="6" className="space-y-2">
-          <div className="flex items-start gap-2 flex-nowrap">
-            <FormIonItem className="flex-1">
-              <InputText
-                readOnly
-                disabled={loading}
-                name="groupNumberLabel"
-                control={form.control}
-                clearErrors={form.clearErrors}
-                label="Group Number"
-                placeholder="Click find to search a group number"
-                className="!px-2 !py-2 rounded-md"
-              />
-            </FormIonItem>
-            <div className={classNames(form.formState.errors.groupNumberLabel ? 'mt-0' : 'mt-1.5')}>
-              <GroupOfAccountSelection groupOfAccountLabel="groupNumberLabel" groupOfAccountValue="groupNumber" setValue={form.setValue} clearErrors={form.clearErrors} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <div className="flex items-start gap-2 flex-nowrap">
+              <FormIonItem className="flex-1">
+                <InputText
+                  readOnly
+                  disabled={loading}
+                  name="groupNumberLabel"
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  label="Group Number"
+                  placeholder="Click find to search a group number"
+                  className="!px-2 !py-2 rounded-md"
+                />
+              </FormIonItem>
+              <div className={classNames(form.formState.errors.groupNumberLabel ? 'mt-0' : 'mt-1.5')}>
+                <GroupOfAccountSelection groupOfAccountLabel="groupNumberLabel" groupOfAccountValue="groupNumber" setValue={form.setValue} clearErrors={form.clearErrors} />
+              </div>
             </div>
-          </div>
-          <div className="flex items-start gap-2 flex-nowrap">
-            <FormIonItem className="flex-1">
-              <InputText
-                disabled={loading}
-                name="centerLabel"
-                control={form.control}
-                clearErrors={form.clearErrors}
-                label="Center"
-                placeholder="Click find to search a center"
-                className="!px-2 !py-2 rounded-md"
-                readOnly
-              />
-            </FormIonItem>
-            <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : 'mt-1.5')}>
-              <CenterSelection centerLabel="centerLabel" centerValue="center" setValue={form.setValue} clearErrors={form.clearErrors} />
+            <div className="flex items-start gap-2 flex-nowrap">
+              <FormIonItem className="flex-1">
+                <InputText
+                  disabled={loading}
+                  name="centerLabel"
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  label="Center"
+                  placeholder="Click find to search a center"
+                  className="!px-2 !py-2 rounded-md"
+                  readOnly
+                />
+              </FormIonItem>
+              <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : 'mt-1.5')}>
+                <CenterSelection centerLabel="centerLabel" centerValue="center" setValue={form.setValue} clearErrors={form.clearErrors} />
+              </div>
             </div>
           </div>
           <FormIonItem>
@@ -123,7 +125,7 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
           </FormIonItem>
 
           <FormIonItem className="flex-1">
-            <InputSelect
+            <InputText
               disabled={loading}
               name="newStatus"
               control={form.control}
@@ -131,11 +133,6 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
               label="New Status"
               placeholder="New Status"
               className="!px-2 !py-2 rounded-md"
-              options={[
-                { label: 'Status One', value: 'status1' },
-                { label: 'Status Two', value: 'status2' },
-                { label: 'Status Three', value: 'status3' },
-              ]}
             />
           </FormIonItem>
 

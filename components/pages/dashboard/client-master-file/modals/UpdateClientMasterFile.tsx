@@ -135,7 +135,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         ref={modal}
         trigger={`update-cmf-modal-${client._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
