@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonTitle, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';

@@ -1,0 +1,69 @@
+import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
+import { chevronDownOutline } from 'ionicons/icons';
+import React, { useState } from 'react';
+import NoChildNav from './NoChildNav';
+import { NavLink } from '../../../../types/types';
+import WithChildNav from './WithChildNav';
+import classNames from 'classnames';
+import { usePathname } from 'next/navigation';
+
+const SystemNav = () => {
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const fileLinks: NavLink[] = [
+    {
+      path: '',
+      label: 'Loan Product',
+      resource: ['group of account', 'chart of account', 'product'],
+      children: [
+        { path: '/dashboard/group-of-account', label: 'Group Of Account', resource: 'group of account' },
+        { path: '/dashboard/chart-of-account', label: 'Chart Of Account', resource: 'chart of account' },
+        { path: '/dashboard/product', label: 'Product', resource: 'product' },
+      ],
+    },
+    { path: '/dashboard/center', label: 'Center', resource: 'center' },
+    { path: '/dashboard/bank', label: 'Bank', resource: 'bank' },
+    { path: '/dashboard/weekly-savings', label: 'Weekly Savings', resource: 'weekly savings' },
+    {
+      path: '',
+      label: 'Business',
+      resource: ['business type', 'business supplier'],
+      children: [
+        { path: '/dashboard/business-type', label: 'Type', resource: 'business type' },
+        { path: '/dashboard/business-supplier', label: 'Supplier', resource: 'business supplier' },
+      ],
+    },
+  ];
+
+  return (
+    <div>
+      <IonButton
+        fill="clear"
+        className={classNames(
+          'min-h-10 border-b-2 text-[0.8rem] capitalize [--padding-start:0] [--padding-end:0] [--padding-bottom:0] [--padding-top:0] !m-0  [--color:black]  [--ripple-color:transparent]',
+          isOpen && '!font-semibold',
+          fileLinks.map(link => link.path).includes(pathname) ? 'border-slate-600' : 'border-transparent',
+        )}
+        id="systems"
+        onClick={() => setIsOpen(true)}
+      >
+        System&nbsp;
+        <IonIcon icon={chevronDownOutline} className="text-xs" />
+      </IonButton>
+      <IonPopover onDidDismiss={() => setIsOpen(false)} showBackdrop={false} trigger="systems" triggerAction="click" className="[--max-width:12rem]">
+        <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
+          {fileLinks.map(link =>
+            link.children ? (
+              <WithChildNav key={link.label} label={link.label} resource={link.resource} childPaths={link.children} />
+            ) : (
+              <NoChildNav key={link.label} label={link.label} path={link.path} resource={link.resource} />
+            ),
+          )}
+        </IonContent>
+      </IonPopover>
+    </div>
+  );
+};
+
+export default SystemNav;

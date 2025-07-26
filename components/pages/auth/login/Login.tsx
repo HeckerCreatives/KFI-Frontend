@@ -69,17 +69,16 @@ const Login = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
-        <div className="w-full h-full bg-gradient-to-br from-[#F76B2E] via-[#FFF4DE] to-[#F76B2E] via-50% from-1% to-100%">
-          <div className="grid place-items-center h-full">
-            <div className=" bg-[#FFF0E3] grid place-items-center max-w-[27.5rem] min-w-[27.5rem] rounded-2xl shadow-lg">
-              <div className="px-10 w-full space-y-8 py-20">
+        <div className="w-full h-full bg-[#FFF0E3] bg-desktop bg-no-repeat bg-bottom bg-contain">
+          <div className="h-full mx-auto pt-[10%]">
+            <div className=" bg-[FFF0E3] grid place-items-center max-w-[27.5rem] min-w-[27.5rem] rounded-2xl mx-auto">
+              <div className="px-10 w-full space-y-8">
                 <div className="text-center">
-                  <div className="pb-8">
-                    <Image alt="logo" src={logo} className="h-20 w-auto mx-auto" />
+                  <div className="mb-8 w-fit mx-auto p-2 rounded-lg bg-[FFF0E3]">
+                    <Image alt="logo" src={logo} className="h-20 w-auto mx-auto filter drop-shadow-[1px_1px_0px_white]" />
                   </div>
-
-                  <h6 className="text-xl font-semibold m-0">Login</h6>
-                  <p>Please sign in to access your account.</p>
+                  <h6 className="text-slate-900 text-2xl font-semibold m-0">Login</h6>
+                  <p className="text-slate-900">Please sign in to access your account.</p>
                 </div>
                 <div>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
@@ -90,9 +89,8 @@ const Login = () => {
                         required
                         control={form.control}
                         clearErrors={form.clearErrors}
-                        label="User's Code"
+                        placeholder="User's Code"
                         className="!px-3 !py-2 shadow-lg mb-1 border-none"
-                        labelClassName="min-w-[5.4rem]"
                       />
                     </FormIonItem>
                     <FormIonItem>
@@ -102,9 +100,8 @@ const Login = () => {
                         required
                         control={form.control}
                         clearErrors={form.clearErrors}
-                        label="Password"
+                        placeholder="Password"
                         className="!px-3 !py-2 shadow-lg mb-1 border-none"
-                        labelClassname="min-w-[5.4rem]"
                       />
                     </FormIonItem>
                     {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}

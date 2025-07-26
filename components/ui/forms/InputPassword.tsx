@@ -44,13 +44,13 @@ const InputPassword = <T extends FieldValues>({
       render={({ field, fieldState: { error } }) => (
         <div className="w-full">
           <div className="w-full space-y-0 flex items-center gap-2">
-            <div className="flex justify-between">
-              {label && (
+            {label && (
+              <div className="flex justify-between">
                 <IonLabel class="custom" className={classNames('!text-sm font-semibold !text-slate-600 truncate', labelClassname)}>
                   {label}
                 </IonLabel>
-              )}
-            </div>
+              </div>
+            )}
             <div className={classNames('relative my-1 w-full', containerClassName)}>
               <IonInput
                 {...field}

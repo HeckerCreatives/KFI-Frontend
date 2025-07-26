@@ -1,0 +1,38 @@
+import { IonButton, IonContent, IonIcon, IonPopover, IonTitle } from '@ionic/react';
+import { chevronDownOutline } from 'ionicons/icons';
+import React from 'react';
+import TransactionNav from './nav-menu/TransactionNav';
+import GeneralLedgerNav from './nav-menu/GeneralLedgerNav';
+import SystemNav from './nav-menu/SystemNav';
+import Diagnostics from './nav-menu/Diagnostics';
+import classNames from 'classnames';
+import { usePathname } from 'next/navigation';
+
+const TopNavigation = () => {
+  const pathname = usePathname();
+
+  return (
+    <div className="px-2.5 font-semibold text-sm flex-none h-12 border-b-slate-200 border-b">
+      <div className="flex items-center justify-start gap-10 px-2">
+        <div>
+          <IonButton
+            fill="clear"
+            routerLink="/dashboard/home"
+            className={classNames(
+              'min-h-10 border-b-2 text-[0.8rem] capitalize [--padding-start:0] [--padding-end:0] [--padding-bottom:0] [--padding-top:0] !m-0  [--color:black]  [--ripple-color:transparent]',
+              pathname === '/dashboard/home' ? 'border-slate-600' : 'border-transparent',
+            )}
+          >
+            Dashboard
+          </IonButton>
+        </div>
+        <TransactionNav />
+        <GeneralLedgerNav />
+        <SystemNav />
+        <Diagnostics />
+      </div>
+    </div>
+  );
+};
+
+export default TopNavigation;
