@@ -94,7 +94,7 @@ const Login = () => {
                         clearErrors={form.clearErrors}
                         label="User's Code"
                         placeholder="Enter your user's code"
-                        className="!px-3 !py-3 rounded-lg border-orange-300/50"
+                        className="!px-3 !py-3 rounded-lg !border-orange-200"
                         containerClassnames="flex flex-col"
                         labelClassName="!text-xs !text-orange-800/90 !font-[600]"
                         icon={person}
@@ -109,7 +109,7 @@ const Login = () => {
                         control={form.control}
                         clearErrors={form.clearErrors}
                         label="Password"
-                        className="!px-3 !py-3 rounded-lg border-orange-300/50"
+                        className="!px-3 !py-3 rounded-lg !border-orange-200"
                         containerClassNames="flex flex-col"
                         labelClassname="!text-xs !text-orange-800/90 !font-[600]"
                         icon={lockClosed}
