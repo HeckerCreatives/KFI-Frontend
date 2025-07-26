@@ -94,7 +94,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
                 <JournalVoucherFormTable form={form} loading={loading} />
               </div>
               <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
-                <IonButton color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
+                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   Save
                 </IonButton>
                 <IonButton onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>

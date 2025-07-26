@@ -26,6 +26,18 @@ const TopNavigation = () => {
             Dashboard
           </IonButton>
         </div>
+        <div>
+          <IonButton
+            fill="clear"
+            routerLink="/dashboard/admin"
+            className={classNames(
+              'min-h-10 border-b-2 text-[0.8rem] capitalize [--padding-start:0] [--padding-end:0] [--padding-bottom:0] [--padding-top:0] !m-0  [--color:black]  [--ripple-color:transparent]',
+              ['/dashboard/admin', '/dashboard/client'].includes(pathname) ? 'border-slate-600' : 'border-transparent',
+            )}
+          >
+            Manage Account
+          </IonButton>
+        </div>
         <TransactionNav />
         <GeneralLedgerNav />
         <SystemNav />

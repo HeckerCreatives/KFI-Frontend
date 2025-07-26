@@ -11,7 +11,7 @@ type TProps = {
 
 const ModalHeader = ({ dismiss, title, sub, disabled = false }: TProps) => {
   return (
-    <div className=" bg-desktop bg-center h-12">
+    <div className=" bg-modalHeader bg-center h-12">
       <div className="h-12 flex items-center justify-between bg-slate-900/40">
         <div slot="start" className="h-12 grid place-items-center">
           <div className="px-5 leading-3">

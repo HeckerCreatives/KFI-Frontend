@@ -104,7 +104,7 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
               </FormIonItem>
               {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
               <div className="text-end border-t pt-1 space-x-2">
-                <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
+                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   {loading ? 'Saving...' : 'Save'}
                 </IonButton>
                 <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>

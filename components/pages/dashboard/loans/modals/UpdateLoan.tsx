@@ -80,7 +80,7 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
         className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
       >
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Product - Edit Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
@@ -104,7 +104,7 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
                 type="button"
                 title="Save changes"
                 fill="clear"
-                className="max-h-10 min-h-10 mt-5 !p-0 bg-green-600 text-white capitalize font-semibold rounded-md m-0"
+                className="max-h-10 min-h-9 mt-1.5 !p-0 bg-green-600 text-white capitalize font-semibold rounded-md m-0"
                 strong
               >
                 <IonIcon icon={save} className="text-sm" />

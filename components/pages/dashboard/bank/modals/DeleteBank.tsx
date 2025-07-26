@@ -60,10 +60,10 @@ const DeleteBank = ({ bank, getBanks, searchkey, sortKey, currentPage, rowLength
         ref={modal}
         trigger={`delete-bank-modal-${bank._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
       >
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Bank - Delete Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>

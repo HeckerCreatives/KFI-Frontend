@@ -58,10 +58,10 @@ const DeleteGroupAccount = ({ getGroupAccounts, groupAccount, searchkey, sortKey
         ref={modal}
         trigger={`delete-group-account-modal-${groupAccount._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
       >
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Group Account - Delete Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>

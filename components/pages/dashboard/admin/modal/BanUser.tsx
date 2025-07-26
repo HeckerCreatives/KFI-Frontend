@@ -100,10 +100,10 @@ const BanUser = ({ selected, setSelected, refetch }: BanUserProps) => {
                 />
               </FormIonItem>
               <div className="text-end border-t mt-2 pt-1 space-x-2">
-                <IonButton disabled={loading} color="danger" type="submit" className="!text-sm capitalize" strong={true}>
+                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   {loading ? 'Banning...' : 'Yes'}
                 </IonButton>
-                <IonButton disabled={loading} onClick={dismiss} color="tertiary" type="button" className="!text-sm capitalize" strong={true}>
+                <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
                   No
                 </IonButton>
               </div>

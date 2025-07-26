@@ -10,7 +10,7 @@ type SelectionHeaderProps = {
 
 const SelectionHeader = ({ disabled = false, dismiss, title }: SelectionHeaderProps) => {
   return (
-    <div className=" bg-desktop bg-center h-10">
+    <div className=" bg-modalHeader bg-center h-10">
       <div className="h-10 flex items-center justify-between bg-slate-900/40">
         <div slot="start" className="h-10 grid place-items-center">
           <div className="px-5">

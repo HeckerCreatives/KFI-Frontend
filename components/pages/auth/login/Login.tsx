@@ -90,7 +90,7 @@ const Login = () => {
                         control={form.control}
                         clearErrors={form.clearErrors}
                         placeholder="User's Code"
-                        className="!px-3 !py-2 shadow-lg mb-1 border-none"
+                        className="!px-3 !py-3 shadow-lg mb-1 rounded-lg border-none"
                       />
                     </FormIonItem>
                     <FormIonItem>
@@ -101,12 +101,12 @@ const Login = () => {
                         control={form.control}
                         clearErrors={form.clearErrors}
                         placeholder="Password"
-                        className="!px-3 !py-2 shadow-lg mb-1 border-none"
+                        className="!px-3 !py-3 shadow-lg mb-1 rounded-lg border-none"
                       />
                     </FormIonItem>
                     {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
                     <div className="text-end">
-                      <IonButton disabled={loading} slot="end" type="submit" className="min-h-8 w-full !text-sm [--background:#FB5000] capitalize" strong={true}>
+                      <IonButton disabled={loading} slot="end" type="submit" className="min-h-10 w-full !text-sm [--background:#FB5000] capitalize" strong={true}>
                         {loading ? <IonSpinner name="lines-small" /> : 'Login'}
                       </IonButton>
                     </div>

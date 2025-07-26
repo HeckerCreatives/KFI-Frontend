@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         desktop: 'url("/img/login-bg-3.svg")',
+        modalHeader: 'url("/img/login-bg.png")',
       },
     },
   },

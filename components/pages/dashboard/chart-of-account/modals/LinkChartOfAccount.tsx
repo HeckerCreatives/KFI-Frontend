@@ -80,10 +80,10 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
         ref={modal}
         trigger={`update-coa-modal-${chartAccount._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
       >
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Chart of Account - Link to Group Account" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
@@ -109,12 +109,12 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
                     readOnly
                   />
                 </FormIonItem>
-                <div className="mt-5">
+                <div className="mt-1.5">
                   <GroupOfAccountSelection groupOfAccountLabel="groupAccountLabel" groupOfAccountValue="groupAccount" setValue={form.setValue} clearErrors={form.clearErrors} />
                 </div>
               </div>
               <div className="text-end border-t mt-2 pt-1 space-x-2">
-                <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
+                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   {loading ? 'Linking...' : 'Link'}
                 </IonButton>
                 <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>

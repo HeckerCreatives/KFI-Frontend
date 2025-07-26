@@ -1,7 +1,7 @@
-import { IonCol, IonContent, IonGrid, IonIcon, IonPage, IonRow, IonSelect, IonSelectOption } from '@ionic/react';
+import { IonButton, IonCol, IonContent, IonGrid, IonIcon, IonInput, IonPage, IonRow, IonSelect, IonSelectOption } from '@ionic/react';
 import React, { useRef, useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
-import { cashSharp, peopleSharp, personAddSharp, personRemoveSharp } from 'ionicons/icons';
+import { cashSharp, peopleSharp, personAddSharp, personRemoveSharp, search } from 'ionicons/icons';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import DashboardCard from './components/DashboardCard';
 
@@ -27,7 +27,27 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="bg-white shadow-lg rounded-sm px-3 pt-1 pb-2">
-                  <h3 className="text-[0.9rem] font-semibold border-b pb-2">Loans per Account Officer</h3>
+                  <div className="flex items-center justify-between border-b w-full">
+                    <h3 className="text-[0.9rem] font-semibold pb-2">Loans per Account Officer</h3>
+                    <div className="flex items-center">
+                      <IonInput
+                        aria-label={'no label'}
+                        placeholder="Recent Loan"
+                        labelPlacement="stacked"
+                        className={'!border border-slate-400 text-[0.9rem] [--highlight-color-focused:none] rounded-md bg-white !px-2 !py-1 text-sm !min-h-[1.2rem]'}
+                      ></IonInput>
+                      <div>
+                        <IonButton
+                          type="submit"
+                          fill="clear"
+                          className="max-h-10 min-h-[1.8rem] ![--padding-top:0] ![--padding-bottom:0] ![--padding-end:0.4rem] ![--padding-start:0.45rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                          strong
+                        >
+                          <IonIcon icon={search} />
+                        </IonButton>
+                      </div>
+                    </div>
+                  </div>
                   <div className="relative overflow-auto">
                     <Table>
                       <TableHeader>
@@ -52,30 +72,28 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-              <div className="">
-                <div className="bg-white shadow-lg w-full rounded-sm px-3 pt-1 pb-2 flex-1 mt-2">
-                  <div className="flex-1 flex items-center justify-between border-b py-3">
-                    <div className="min-w-40">
-                      <IonSelect
-                        aria-label={'no label'}
-                        interface="popover"
-                        placeholder="Recent Loan"
-                        labelPlacement="stacked"
-                        className={'!border border-slate-400 [--highlight-color-focused:none] !px-2 !py-1 text-sm !min-h-[1.2rem] min-w-full'}
-                        onIonChange={e => setSelected(e.detail.value)}
-                        value={selected}
-                      >
-                        <IonSelectOption value="recent loan" className="text-sm [--min-height:0.5rem]">
-                          Recent Loan
-                        </IonSelectOption>
-                        <IonSelectOption value="recent member" className="text-sm [--min-height:0.5rem]">
-                          Recent Member
-                        </IonSelectOption>
-                      </IonSelect>
-                    </div>
-                    <div></div>
+              <div className="flex flex-col">
+                <div className="flex items-center justify-between border-b pt-2 pb-1 ">
+                  <div className="min-w-64">
+                    <IonSelect
+                      aria-label={'no label'}
+                      interface="popover"
+                      placeholder="Recent Loan"
+                      labelPlacement="stacked"
+                      className={'!border border-slate-400 [--highlight-color-focused:none] rounded-md bg-white !px-2 !py-2 text-sm !min-h-[1.2rem] min-w-full'}
+                      onIonChange={e => setSelected(e.detail.value)}
+                      value={selected}
+                    >
+                      <IonSelectOption value="recent loan" className="text-sm [--min-height:0.5rem]">
+                        Recent Loan
+                      </IonSelectOption>
+                      <IonSelectOption value="recent member" className="text-sm [--min-height:0.5rem]">
+                        Recent Member
+                      </IonSelectOption>
+                    </IonSelect>
                   </div>
-
+                </div>
+                <div className="bg-white shadow-lg w-full rounded-sm px-3 pt-1 pb-2 flex-1">
                   {selected === 'recent loan' && (
                     <div className="relative overflow-auto">
                       <Table>

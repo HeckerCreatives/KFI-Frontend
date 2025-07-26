@@ -36,9 +36,9 @@ const PrintAllWeeklySavingsTable = () => {
       <IonButton fill="clear" id="print_all_wst" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
         Print
       </IonButton>
-      <IonModal ref={modal} trigger={`print_all_wst`} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
+      <IonModal ref={modal} trigger={`print_all_wst`} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]">
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Weekly Savings - Print All" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>

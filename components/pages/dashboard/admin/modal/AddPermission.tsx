@@ -84,7 +84,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
           <SystemPermission permissions={permissions} setPermissions={setPermissions} />
           <DiagnosticsPermission permissions={permissions} setPermissions={setPermissions} />
           <div className="text-end border-t pt-1 space-x-2">
-            <IonButton onClick={handleAddPermission} disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
+            <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
               {loading ? 'Saving...' : 'Save'}
             </IonButton>
             <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>

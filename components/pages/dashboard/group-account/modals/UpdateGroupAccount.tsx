@@ -83,7 +83,7 @@ const UpdateGroupAccount = ({ groupAccount, setData }: UpdateGroupAccountProps) 
         className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
       >
         <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
+          <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Group Account - Edit Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
@@ -92,7 +92,7 @@ const UpdateGroupAccount = ({ groupAccount, setData }: UpdateGroupAccountProps) 
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <GroupAccountForm form={form} loading={loading} />
               <div className="text-end border-t mt-2 pt-1 space-x-2">
-                <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
+                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   {loading ? 'Saving...' : 'Save'}
                 </IonButton>
                 <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
