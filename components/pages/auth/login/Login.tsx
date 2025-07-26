@@ -106,8 +106,15 @@ const Login = () => {
                     </FormIonItem>
                     {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
                     <div className="text-end">
-                      <IonButton disabled={loading} slot="end" type="submit" className="min-h-10 w-full !text-sm [--background:#FB5000] capitalize" strong={true}>
-                        {loading ? <IonSpinner name="lines-small" /> : 'Login'}
+                      <IonButton
+                        disabled={loading}
+                        slot="end"
+                        fill="clear"
+                        type="submit"
+                        className="min-h-10 w-full !text-sm bg-[#FB5000] text-white capitalize !rounded-lg"
+                        strong={true}
+                      >
+                        {loading ? <IonSpinner name="lines-small" color="light" /> : 'Login'}
                       </IonButton>
                     </div>
                   </form>
