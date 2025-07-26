@@ -74,11 +74,13 @@ const Login = () => {
             <div className=" bg-[FFF0E3] grid place-items-center max-w-[27.5rem] min-w-[27.5rem] rounded-2xl mx-auto">
               <div className="px-10 w-full space-y-8">
                 <div className="text-center">
-                  <div className="mb-8 w-fit mx-auto p-2 rounded-lg bg-[FFF0E3]">
+                  <div className="mb-7 w-fit mx-auto p-2 rounded-lg bg-[FFF0E3]">
                     <Image alt="logo" src={logo} className="h-20 w-auto mx-auto filter drop-shadow-[1px_1px_0px_white]" />
                   </div>
-                  <h6 className="text-slate-900 text-2xl font-semibold m-0">Login</h6>
-                  <p className="text-slate-900">Please sign in to access your account.</p>
+                  <div className="space-y-6">
+                    <h6 className="text-slate-900 text-2xl font-semibold m-0">Login</h6>
+                    <p className="text-slate-900">Please sign in to access your account.</p>
+                  </div>
                 </div>
                 <div>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
