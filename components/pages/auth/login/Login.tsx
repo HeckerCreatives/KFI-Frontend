@@ -71,8 +71,8 @@ const Login = () => {
     <IonPage>
       <IonContent fullscreen>
         <div className="w-full h-full bg-[#FFF0E3] bg-desktop bg-no-repeat bg-bottom bg-contain">
-          <div className="h-full mx-auto pt-[10%]">
-            <div className=" bg-[FFF0E3] grid place-items-center max-w-[27.5rem] min-w-[27.5rem] rounded-2xl mx-auto">
+          <div className="h-full mx-auto pt-[7%]">
+            <div className=" bg-white py-10 border-t-4 border-orange-400 grid place-items-center max-w-[27.5rem] min-w-[27.5rem] rounded-lg mx-auto">
               <div className="px-10 w-full space-y-8">
                 <div className="text-center">
                   <div className="mb-5 w-fit mx-auto p-2 rounded-lg bg-[FFF0E3]">
