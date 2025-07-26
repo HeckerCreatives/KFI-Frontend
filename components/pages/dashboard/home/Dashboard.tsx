@@ -80,7 +80,7 @@ const Dashboard = () => {
                       interface="popover"
                       placeholder="Recent Loan"
                       labelPlacement="stacked"
-                      className={'!border border-orange-400 [--highlight-color-focused:none] rounded-md bg-orange-50 !px-2 !py-2 text-sm !min-h-[1.2rem] min-w-full '}
+                      className={'!border border-orange-400 [--highlight-color-focused:none] rounded-md bg-orange-50 !px-2 !py-2 !text-[0.8rem] !min-h-[1.2rem] min-w-full '}
                       onIonChange={e => setSelected(e.detail.value)}
                       value={selected}
                     >

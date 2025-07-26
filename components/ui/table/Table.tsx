@@ -57,7 +57,7 @@ interface ThProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
 }
 
 const TableHead = ({ className, children, ...props }: ThProps) => (
-  <th className={classNames('px-5 py-3.5 truncate font-semibold text-sm capitalize', className)} {...props}>
+  <th className={classNames('px-5 py-3.5 truncate  text-sm uppercase !font-[600] text-orange-800', className)} {...props}>
     {children}
   </th>
 );
@@ -69,7 +69,7 @@ interface TdProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
 }
 
 const TableCell = ({ className, children, ...props }: TdProps) => (
-  <td className={classNames(' px-5 py-2 align-middle text-sm text-slate-600', className)} {...props}>
+  <td className={classNames(' px-5 py-2 align-middle !text-[0.8rem] text-slate-600', className)} {...props}>
     {children}
   </td>
 );

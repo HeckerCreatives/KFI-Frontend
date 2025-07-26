@@ -20,6 +20,8 @@ type TFormInputSelect<T extends FieldValues> = {
   showLabel?: boolean;
   className?: string;
   disabled?: boolean;
+  containerClassnames?: string;
+  labelClassName?: string;
 };
 
 const InputSelect = <T extends FieldValues>({
@@ -33,15 +35,17 @@ const InputSelect = <T extends FieldValues>({
   showLabel = true,
   className,
   disabled = false,
+  containerClassnames = '',
+  labelClassName = '',
 }: TFormInputSelect<T>) => {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <div className="w-full flex items-start gap-2">
+        <div className={classNames('w-full flex items-start gap-2', containerClassnames)}>
           {label && showLabel && (
-            <IonLabel class="custom" className="!text-sm font-semibold !text-slate-800">
+            <IonLabel class="custom" className={classNames('!text-sm font-semibold text-slate-600', labelClassName)}>
               {label}
               {required && <span className="text-red-500"> *</span>}
             </IonLabel>

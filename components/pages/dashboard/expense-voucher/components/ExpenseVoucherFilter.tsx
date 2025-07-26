@@ -50,6 +50,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
               { label: 'Code Z - A', value: 'code-desc' },
             ]}
             className="!border-orange-500 rounded-md !w-full !py-[0.35rem]"
+            labelClassName="truncate"
           />
         </FormIonItem>
 
@@ -62,6 +63,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
             clearErrors={form.clearErrors}
             className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500"
             max="9999-12-31"
+            labelClassName="truncate"
           />
         </FormIonItem>
         <FormIonItem className="flex-1 min-w-32">
@@ -73,6 +75,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
             clearErrors={form.clearErrors}
             className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500"
             max="9999-12-31"
+            labelClassName="truncate"
           />
         </FormIonItem>
         <FormIonItem className="flex-1 min-w-32">
@@ -84,6 +87,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
             control={form.control}
             clearErrors={form.clearErrors}
             className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
+            labelClassName="truncate"
           />
         </FormIonItem>
       </div>
