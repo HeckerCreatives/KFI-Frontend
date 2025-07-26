@@ -96,7 +96,7 @@ const Login = () => {
                         placeholder="Enter your user's code"
                         className="!px-3 !py-3 rounded-lg border-orange-300/50"
                         containerClassnames="flex flex-col"
-                        labelClassName="!text-xs !text-orange-800/80 !font-[600]"
+                        labelClassName="!text-xs !text-orange-800/90 !font-[600]"
                         icon={person}
                       />
                     </FormIonItem>
@@ -111,7 +111,7 @@ const Login = () => {
                         label="Password"
                         className="!px-3 !py-3 rounded-lg border-orange-300/50"
                         containerClassNames="flex flex-col"
-                        labelClassname="!text-xs !text-orange-800/80 !font-[600]"
+                        labelClassname="!text-xs !text-orange-800/90 !font-[600]"
                         icon={lockClosed}
                       />
                     </FormIonItem>
