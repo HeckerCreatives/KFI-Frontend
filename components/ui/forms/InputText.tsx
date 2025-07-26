@@ -46,7 +46,7 @@ const InputText = <T extends FieldValues>({
           <div className={classNames('w-full flex items-start gap-2', containerClassnames)}>
             {label && (
               <div className="flex justify-between">
-                <IonLabel class="custom" className={classNames('!text-sm font-semibold !text-slate-600', labelClassName)}>
+                <IonLabel class="custom" className={classNames('!text-sm font-semibold text-slate-600', labelClassName)}>
                   {label}
                 </IonLabel>
               </div>
