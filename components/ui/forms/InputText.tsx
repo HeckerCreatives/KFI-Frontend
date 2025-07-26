@@ -1,5 +1,6 @@
-import { IonInput, IonLabel, IonText } from '@ionic/react';
+import { IonIcon, IonInput, IonLabel, IonText } from '@ionic/react';
 import classNames from 'classnames';
+import { person } from 'ionicons/icons';
 import React from 'react';
 import { Control, Controller, FieldPath, FieldValues, UseFormClearErrors } from 'react-hook-form';
 
@@ -16,6 +17,8 @@ type TFormInput<T extends FieldValues> = {
   readOnly?: boolean;
   max?: string;
   labelClassName?: string;
+  containerClassnames?: string;
+  icon?: string;
 };
 
 const InputText = <T extends FieldValues>({
@@ -31,6 +34,8 @@ const InputText = <T extends FieldValues>({
   labelClassName = '',
   readOnly = false,
   max = '',
+  containerClassnames = '',
+  icon = '',
 }: TFormInput<T>) => {
   return (
     <Controller
@@ -38,7 +43,7 @@ const InputText = <T extends FieldValues>({
       control={control}
       render={({ field, fieldState: { error } }) => (
         <div className="w-full">
-          <div className="w-full flex items-start gap-2">
+          <div className={classNames('w-full flex items-start gap-2', containerClassnames)}>
             {label && (
               <div className="flex justify-between">
                 <IonLabel class="custom" className={classNames('!text-sm font-semibold !text-slate-600', labelClassName)}>
@@ -68,7 +73,9 @@ const InputText = <T extends FieldValues>({
                 )}
                 readonly={readOnly}
                 max={max}
-              />
+              >
+                {icon && <IonIcon slot="start" icon={icon} aria-hidden="true" className="fill-orange-400"></IonIcon>}
+              </IonInput>
               <div className="text-start">
                 {error && (
                   <IonText slot="error" color="danger" className="text-xs font-semibold block">

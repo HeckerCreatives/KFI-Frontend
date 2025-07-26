@@ -13,8 +13,9 @@ type TFormInput<T extends FieldValues> = {
   required?: boolean;
   disabled?: boolean;
   className?: string;
-  containerClassName?: string;
+  containerClassNames?: string;
   labelClassname?: string;
+  icon?: string;
 };
 
 const InputPassword = <T extends FieldValues>({
@@ -26,8 +27,9 @@ const InputPassword = <T extends FieldValues>({
   required = false,
   disabled = false,
   className = '',
-  containerClassName = '',
+  containerClassNames = '',
   labelClassname = '',
+  icon = '',
 }: TFormInput<T>) => {
   const [show, setShow] = useState(false);
 
@@ -43,7 +45,7 @@ const InputPassword = <T extends FieldValues>({
       control={control}
       render={({ field, fieldState: { error } }) => (
         <div className="w-full">
-          <div className="w-full space-y-0 flex items-center gap-2">
+          <div className={classNames('w-full flex items-start gap-2', containerClassNames)}>
             {label && (
               <div className="flex justify-between">
                 <IonLabel class="custom" className={classNames('!text-sm font-semibold !text-slate-600 truncate', labelClassname)}>
@@ -51,7 +53,7 @@ const InputPassword = <T extends FieldValues>({
                 </IonLabel>
               </div>
             )}
-            <div className={classNames('relative my-1 w-full', containerClassName)}>
+            <div className={classNames('relative w-full')}>
               <IonInput
                 {...field}
                 aria-label={label || 'no label'}
@@ -69,7 +71,9 @@ const InputPassword = <T extends FieldValues>({
                   error && '![--border-color:red] !border-red-600',
                   className,
                 )}
-              />
+              >
+                {icon && <IonIcon slot="start" icon={icon} aria-hidden="true" className="fill-orange-400"></IonIcon>}
+              </IonInput>
               <IonButton fill="clear" type="button" onClick={toggleShow} className="[--ripple-color:transparent] w-fit h-fit absolute top-[0.12rem] right-0.5 z-50">
                 {show ? <IonIcon icon={eye} className="cursor-pointer h-5 w-5 fill-slate-500" /> : <IonIcon icon={eyeOff} className="cursor-pointer h-5 w-5 fill-slate-500" />}
               </IonButton>

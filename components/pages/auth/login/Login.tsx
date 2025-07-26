@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonPage, IonSpinner, isPlatform, useIonRouter } from '@ionic/react';
+import { IonButton, IonContent, IonIcon, IonPage, IonSpinner, isPlatform, useIonRouter } from '@ionic/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../ui/utils/FormIonItem';
@@ -13,6 +13,7 @@ import InputPassword from '../../../ui/forms/InputPassword';
 import logo from '../../../assets/images/logo-nobg.png';
 import Image from 'next/image';
 import { Capacitor } from '@capacitor/core';
+import { lockClosed, person } from 'ionicons/icons';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -74,16 +75,16 @@ const Login = () => {
             <div className=" bg-[FFF0E3] grid place-items-center max-w-[27.5rem] min-w-[27.5rem] rounded-2xl mx-auto">
               <div className="px-10 w-full space-y-8">
                 <div className="text-center">
-                  <div className="mb-7 w-fit mx-auto p-2 rounded-lg bg-[FFF0E3]">
+                  <div className="mb-5 w-fit mx-auto p-2 rounded-lg bg-[FFF0E3]">
                     <Image alt="logo" src={logo} className="h-20 w-auto mx-auto filter drop-shadow-[1px_1px_0px_white]" />
                   </div>
-                  <div className="space-y-6">
-                    <h6 className="text-slate-900 text-2xl font-semibold m-0">Login</h6>
-                    <p className="text-slate-900">Please sign in to access your account.</p>
+                  <div className="space-y-2">
+                    <h6 className="text-orange-700 text-[1.3rem] !font-[600] m-0">Welcome Back!</h6>
+                    <p className="text-slate-600 text-sm ">Login to your account</p>
                   </div>
                 </div>
                 <div>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                     <FormIonItem>
                       <InputText
                         disabled={loading}
@@ -91,19 +92,27 @@ const Login = () => {
                         required
                         control={form.control}
                         clearErrors={form.clearErrors}
-                        placeholder="User's Code"
-                        className="!px-3 !py-3 shadow-lg mb-1 rounded-lg border-none"
+                        label="User's Code"
+                        placeholder="Enter your user's code"
+                        className="!px-3 !py-3 rounded-lg border-orange-300/50"
+                        containerClassnames="flex flex-col"
+                        labelClassName="!text-xs !text-orange-800/80 !font-[600]"
+                        icon={person}
                       />
                     </FormIonItem>
                     <FormIonItem>
                       <InputPassword
                         disabled={loading}
                         name="password"
+                        placeholder="Enter your password"
                         required
                         control={form.control}
                         clearErrors={form.clearErrors}
-                        placeholder="Password"
-                        className="!px-3 !py-3 shadow-lg mb-1 rounded-lg border-none"
+                        label="Password"
+                        className="!px-3 !py-3 rounded-lg border-orange-300/50"
+                        containerClassNames="flex flex-col"
+                        labelClassname="!text-xs !text-orange-800/80 !font-[600]"
+                        icon={lockClosed}
                       />
                     </FormIonItem>
                     {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
@@ -113,10 +122,17 @@ const Login = () => {
                         slot="end"
                         fill="clear"
                         type="submit"
-                        className="min-h-10 w-full !text-sm bg-[#FB5000] text-white capitalize !rounded-lg"
+                        className="min-h-10 w-full !text-sm bg-[linear-gradient(90deg,rgba(245,157,13,1)30%,rgba(250,117,22,1)100%)] text-white capitalize border-1 border-orange-200 !rounded-lg"
                         strong={true}
                       >
-                        {loading ? <IonSpinner name="lines-small" color="light" /> : 'Login'}
+                        {loading ? (
+                          <IonSpinner name="lines-small" color="light" />
+                        ) : (
+                          <span className="flex items-center gap-1">
+                            <IonIcon icon={lockClosed} className="text-sm" />
+                            Login
+                          </span>
+                        )}
                       </IonButton>
                     </div>
                   </form>
