@@ -12,15 +12,15 @@ const TopNavigation = () => {
   const pathname = usePathname();
 
   return (
-    <div className="px-2.5 font-semibold text-sm flex-none h-12 border-b-slate-200 border-b">
-      <div className="flex items-center justify-start gap-10 px-2">
+    <div className="px-2.5 font-semibold text-sm h-12 border-b-slate-200 border-b">
+      <div className="flex items-center justify-start gap-5 px-2 h-full">
         <div>
           <IonButton
             fill="clear"
             routerLink="/dashboard/home"
             className={classNames(
-              'min-h-10 border-b-2 text-[0.8rem] capitalize [--padding-start:0] [--padding-end:0] [--padding-bottom:0] [--padding-top:0] !m-0  [--color:black]  [--ripple-color:transparent]',
-              pathname === '/dashboard/home' ? 'border-slate-600' : 'border-transparent',
+              'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-lg [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+              pathname === '/dashboard/home' ? 'bg-orange-600 text-white' : 'bg-transparent',
             )}
           >
             Dashboard
@@ -31,8 +31,8 @@ const TopNavigation = () => {
             fill="clear"
             routerLink="/dashboard/admin"
             className={classNames(
-              'min-h-10 border-b-2 text-[0.8rem] capitalize [--padding-start:0] [--padding-end:0] [--padding-bottom:0] [--padding-top:0] !m-0  [--color:black]  [--ripple-color:transparent]',
-              ['/dashboard/admin', '/dashboard/client'].includes(pathname) ? 'border-slate-600' : 'border-transparent',
+              'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-lg [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+              ['/dashboard/admin', '/dashboard/client'].includes(pathname) ? 'bg-orange-600 text-white' : 'bg-transparent',
             )}
           >
             Manage Account

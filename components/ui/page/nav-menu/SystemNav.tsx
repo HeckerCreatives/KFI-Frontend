@@ -41,9 +41,14 @@ const SystemNav = () => {
       <IonButton
         fill="clear"
         className={classNames(
-          'min-h-10 border-b-2 text-[0.8rem] capitalize [--padding-start:0] [--padding-end:0] [--padding-bottom:0] [--padding-top:0] !m-0  [--color:black]  [--ripple-color:transparent]',
+          'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-lg [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
           isOpen && '!font-semibold',
-          fileLinks.map(link => link.path).includes(pathname) ? 'border-slate-600' : 'border-transparent',
+          fileLinks
+            .map(link => (link.children ? link.children.map(child => child.path) : link.path))
+            .flat()
+            .includes(pathname)
+            ? 'bg-orange-600 text-white'
+            : 'bg-transparent',
         )}
         id="systems"
         onClick={() => setIsOpen(true)}

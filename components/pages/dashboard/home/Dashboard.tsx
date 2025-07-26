@@ -28,13 +28,13 @@ const Dashboard = () => {
                 </div>
                 <div className="bg-white shadow-lg rounded-sm px-3 pt-1 pb-2">
                   <div className="flex items-center justify-between border-b w-full">
-                    <h3 className="text-[0.9rem] font-semibold pb-2">Loans per Account Officer</h3>
+                    <h3 className="text-[0.9rem] !font-semibold pb-2 text-orange-700">Loans per Account Officer</h3>
                     <div className="flex items-center">
                       <IonInput
                         aria-label={'no label'}
-                        placeholder="Recent Loan"
+                        placeholder=""
                         labelPlacement="stacked"
-                        className={'!border border-slate-400 text-[0.9rem] [--highlight-color-focused:none] rounded-md bg-white !px-2 !py-1 text-sm !min-h-[1.2rem]'}
+                        className={'!border text-[0.9rem] bg-orange-50 border-orange-400 [--highlight-color-focused:none] rounded-md !px-2 !py-1 text-sm !min-h-[1.2rem]'}
                       ></IonInput>
                       <div>
                         <IonButton
@@ -52,15 +52,15 @@ const Dashboard = () => {
                     <Table>
                       <TableHeader>
                         <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
-                          <TableHead>Account Officer</TableHead>
-                          <TableHead className="text-center">Center</TableHead>
-                          <TableHead className="text-center">Total Members</TableHead>
-                          <TableHead className="text-center">Total Loan Amount</TableHead>
+                          <TableHead className="text-orange-700 !font-[600]">Account Officer</TableHead>
+                          <TableHead className="text-center text-orange-700 !font-[600]">Center</TableHead>
+                          <TableHead className="text-center text-orange-700 !font-[600]">Total Members</TableHead>
+                          <TableHead className="text-center text-orange-700 !font-[600]">Total Loan Amount</TableHead>
                         </TableHeadRow>
                       </TableHeader>
                       <TableBody>
                         {arrDummy.map((arr: string, i: number) => (
-                          <TableRow key={i} className="!border-0 odd:bg-orange-50">
+                          <TableRow key={i} className="!border-0 odd:bg-orange-50 [&>td]:text-[0.8rem]">
                             <TableCell className="">Bien Daniel</TableCell>
                             <TableCell className="text-center">Binangonan</TableCell>
                             <TableCell className="text-center">523</TableCell>
@@ -80,14 +80,14 @@ const Dashboard = () => {
                       interface="popover"
                       placeholder="Recent Loan"
                       labelPlacement="stacked"
-                      className={'!border border-slate-400 [--highlight-color-focused:none] rounded-md bg-white !px-2 !py-2 text-sm !min-h-[1.2rem] min-w-full'}
+                      className={'!border border-orange-400 [--highlight-color-focused:none] rounded-md bg-orange-50 !px-2 !py-2 text-sm !min-h-[1.2rem] min-w-full '}
                       onIonChange={e => setSelected(e.detail.value)}
                       value={selected}
                     >
-                      <IonSelectOption value="recent loan" className="text-sm [--min-height:0.5rem]">
+                      <IonSelectOption value="recent loan" className="h-10 text-sm ![--min-height:1rem] [&>ion-radio]:checked:bg-red-600">
                         Recent Loan
                       </IonSelectOption>
-                      <IonSelectOption value="recent member" className="text-sm [--min-height:0.5rem]">
+                      <IonSelectOption value="recent member" className="h-18 text-sm ![--min-height:1rem]">
                         Recent Member
                       </IonSelectOption>
                     </IonSelect>
@@ -99,13 +99,13 @@ const Dashboard = () => {
                       <Table>
                         <TableHeader>
                           <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
-                            <TableHead>Name</TableHead>
-                            <TableHead className="text-center">Amount</TableHead>
+                            <TableHead className=" text-orange-700 !font-[600]">Name</TableHead>
+                            <TableHead className="text-center text-orange-700 !font-[600]">Amount</TableHead>
                           </TableHeadRow>
                         </TableHeader>
                         <TableBody>
                           {arrDummy.map((arr: string, i: number) => (
-                            <TableRow key={i} className="!border-0 odd:bg-orange-50">
+                            <TableRow key={i} className="!border-0 odd:bg-orange-50 [&>td]:text-[0.8rem]">
                               <TableCell className="">Bien Daniel</TableCell>
                               <TableCell className="text-center">10,000</TableCell>
                             </TableRow>
@@ -120,13 +120,13 @@ const Dashboard = () => {
                       <Table>
                         <TableHeader>
                           <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
-                            <TableHead>Name</TableHead>
-                            <TableHead className="text-center">Center</TableHead>
+                            <TableHead className=" text-orange-700 !font-[600]">Name</TableHead>
+                            <TableHead className="text-center  text-orange-700 !font-[600]">Center</TableHead>
                           </TableHeadRow>
                         </TableHeader>
                         <TableBody>
                           {arrDummy.map((arr: string, i: number) => (
-                            <TableRow key={i} className="!border-0 odd:bg-orange-50">
+                            <TableRow key={i} className="!border-0 odd:bg-orange-50 [&>td]:text-[0.8rem]">
                               <TableCell className="">Bien Daniel</TableCell>
                               <TableCell className="text-center">Binangonan</TableCell>
                             </TableRow>
