@@ -10,12 +10,14 @@ setupIonicReact({});
 const AppShell = () => {
   const isLoggedIn = localStorage.getItem('auth') ? true : false;
 
+  console.log(isLoggedIn);
+
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet id="main">
-          <Route path="/" render={() => (isLoggedIn ? <Redirect to="/dashboard" /> : <Login />)} />
-          <Route path="/dashboard" render={() => (isLoggedIn ? <Tabs /> : <Redirect to="/" />)} />
+          <Route path="/" render={() => (isLoggedIn ? <Redirect to="/dashboard" /> : <Login />)} exact={true} />
+          <Route path="/dashboard" render={() => (isLoggedIn ? <Tabs /> : <Redirect to="/" />)} exact={true} />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
