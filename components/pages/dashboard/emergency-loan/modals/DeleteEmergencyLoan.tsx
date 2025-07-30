@@ -51,23 +51,36 @@ const DeleteEmergencyLoan = ({ emergencyLoan, getEmergencyLoans, searchkey, sort
 
   return (
     <>
-      <div
+      {/* <div
         onClick={() => setIsOpen(true)}
         className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
       >
         <IonIcon icon={trashBin} className="text-[1rem]" /> Delete
-      </div>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]">
+      </div> */}
+      <IonButton
+        onClick={() => setIsOpen(true)}
+        type="button"
+        fill="clear"
+        className="space-x-1 w-20 h-6 rounded-lg ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff5a00] text-slate-100 capitalize min-h-4 text-xs"
+      >
+        <IonIcon icon={trashBin} className="text-xs" />
+        <span>Delete</span>
+      </IonButton>
+      <IonModal
+        isOpen={isOpen}
+        backdropDismiss={false}
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%]"
+      >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Emergency Loan - Delete Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-0">
+        <div className="inner-content !px-0 !pb-0">
           <div className="p-2">
             <p className="text-lg text-center py-5">Are you sure you want to delete this record?</p>
             <div className="text-end border-t mt-2 pt-1 space-x-2">
-              <IonButton onClick={handleDelete} disabled={loading} color="danger" type="submit" className="!text-sm capitalize" strong={true}>
+              <IonButton onClick={handleDelete} disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                 {loading ? 'Deleting...' : 'Yes'}
               </IonButton>
               <IonButton disabled={loading} onClick={dismiss} color="tertiary" type="button" className="!text-sm capitalize" strong={true}>

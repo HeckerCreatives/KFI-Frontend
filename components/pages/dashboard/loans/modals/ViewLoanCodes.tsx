@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { IonModal, IonHeader, IonToolbar, IonIcon } from '@ionic/react';
+import { IonModal, IonHeader, IonToolbar, IonIcon, IonButton } from '@ionic/react';
 import { document } from 'ionicons/icons';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { Loan, LoanCode } from '../../../../../types/types';
@@ -14,23 +14,32 @@ const ViewLoanCodes = ({ loan }: { loan: Loan }) => {
 
   return (
     <>
-      <div className="text-end">
+      {/* <div className="text-end">
         <div
           id={`view-loan-code-${loan._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={document} className="text-[1rem]" /> View Loan Codes
         </div>
-      </div>
+      </div> */}
+      <IonButton
+        id={`view-loan-code-${loan._id}`}
+        type="button"
+        fill="clear"
+        className="space-x-1 rounded-lg w-44 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+      >
+        <IonIcon icon={document} className="text-xs" />
+        <span>View Loan Codes</span>
+      </IonButton>
       <IonModal
         ref={modal}
         trigger={`view-loan-code-${loan._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader title="Product - View Loan Code Record" sub="System" dismiss={dismiss} />
+            <ModalHeader title={`Product - ${loan.code} - View Loan Code Record`} sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">

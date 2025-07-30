@@ -80,45 +80,47 @@ const Supplier = () => {
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['System', 'Business', 'Supplier']} />
-          <div className="px-3 pb-3 flex-1">
-            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
+          <div className="px-3 pb-3 flex-1 flex flex-col">
+            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg my-3">
               <div>{canDoAction(token.role, token.permissions, 'business supplier', 'create') && <CreateSupplier getSuppliers={getSuppliers} />}</div>
               <SupplierFilter getSuppliers={getSuppliers} />
             </div>
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow>
-                    <TableHead>Code</TableHead>
-                    <TableHead>Description</TableHead>
-                    {haveActions(token.role, 'business supplier', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {data.loading && <TableLoadingRow colspan={3} />}
-                  {!data.loading && data.suppliers.length < 1 && <TableNoRows label="No Supplier Record Found" colspan={3} />}
-                  {data.suppliers.map((supplier: SupplierType) => (
-                    <TableRow key={supplier._id}>
-                      <TableCell>{supplier.code}</TableCell>
-                      <TableCell>{supplier.description}</TableCell>
-                      {haveActions(token.role, 'business supplier', token.permissions, ['update', 'delete']) && (
-                        <TableCell>
-                          <SupplierActions
-                            supplier={supplier}
-                            setData={setData}
-                            getSuppliers={getSuppliers}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            searchKey={searchKey}
-                            sortKey={sortKey}
-                            rowLength={data.suppliers.length}
-                          />
-                        </TableCell>
-                      )}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+              <div className="relative overflow-auto rounded-xl">
+                <Table>
+                  <TableHeader>
+                    <TableHeadRow>
+                      <TableHead>Code</TableHead>
+                      <TableHead>Description</TableHead>
+                      {haveActions(token.role, 'business supplier', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.loading && <TableLoadingRow colspan={3} />}
+                    {!data.loading && data.suppliers.length < 1 && <TableNoRows label="No Supplier Record Found" colspan={3} />}
+                    {data.suppliers.map((supplier: SupplierType) => (
+                      <TableRow key={supplier._id}>
+                        <TableCell>{supplier.code}</TableCell>
+                        <TableCell>{supplier.description}</TableCell>
+                        {haveActions(token.role, 'business supplier', token.permissions, ['update', 'delete']) && (
+                          <TableCell>
+                            <SupplierActions
+                              supplier={supplier}
+                              setData={setData}
+                              getSuppliers={getSuppliers}
+                              currentPage={currentPage}
+                              setCurrentPage={setCurrentPage}
+                              searchKey={searchKey}
+                              sortKey={sortKey}
+                              rowLength={data.suppliers.length}
+                            />
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

@@ -1,4 +1,4 @@
-import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react';
+import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useRef, useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { useForm } from 'react-hook-form';
@@ -18,6 +18,7 @@ type ChangePasswordProps = {
 
 const ChangePassword = ({ user }: ChangePasswordProps) => {
   const [loading, setLoading] = useState(false);
+  const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -41,6 +42,10 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
       const { success } = result.data;
       if (success) {
         dismiss();
+        present({
+          message: 'Password changed successfully!.',
+          duration: 1000,
+        });
         return;
       }
     } catch (error: any) {
@@ -55,19 +60,27 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
 
   return (
     <>
-      <div className="text-end">
+      {/* <div className="text-end">
         <div
           id={`update-password-modal-${user._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={documentLockSharp} className="text-[1rem]" /> Change Password
         </div>
-      </div>
+      </div> */}
+      <IonButton
+        fill="clear"
+        id={`update-password-modal-${user._id}`}
+        className="space-x-1 rounded-lg w-40 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff9a00] text-slate-700 capitalize min-h-4 px-2 py-1 text-xs"
+      >
+        <IonIcon icon={documentLockSharp} className="text-xs" />
+        <span>Change Password</span>
+      </IonButton>
       <IonModal
         ref={modal}
         trigger={`update-password-modal-${user._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
@@ -89,6 +102,8 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
                   disabled={loading}
+                  labelClassname="truncate min-w-40 !text-slate-600"
+                  topClass="-top-[0.1rem]"
                 />
               </FormIonItem>
               <FormIonItem>
@@ -100,6 +115,8 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
                   disabled={loading}
+                  labelClassname="truncate min-w-40 !text-slate-600"
+                  topClass="-top-[0.1rem]"
                 />
               </FormIonItem>
               {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}

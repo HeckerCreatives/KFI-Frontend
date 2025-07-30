@@ -25,6 +25,7 @@ const BankForm = ({ form, loading }: TForm) => {
               label="Code"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="!text-slate-600 truncate min-w-20"
             />
           </FormIonItem>
           <FormIonItem>
@@ -36,6 +37,7 @@ const BankForm = ({ form, loading }: TForm) => {
               label="Description"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassNames="!text-slate-600 truncate min-w-20"
             />
           </FormIonItem>
           {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}

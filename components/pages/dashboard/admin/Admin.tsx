@@ -96,55 +96,50 @@ const Admin = () => {
           <div>
             <PageTitle pages={['Manage Account', 'Admin']} />
           </div>
-          <div className="px-3 pb-3 pt-2 flex-1">
+          <div className="px-3 pb-3 pt-2 flex-1 flex flex-col">
             <ManageAccountNav />
-            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
+            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg my-3">
               <div className="flex items-center gap-2">
                 <CreateUser getUsers={getUsers} />
                 <BanUser selected={selected} setSelected={setSelected} refetch={refetch} />
               </div>
               <UserFilter getUsers={getUsers} />
             </div>
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow>
-                    <TableHead className="!min-w-5 !max-w-5" />
-                    <TableHead>Username</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Created At</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {data.loading && <TableLoadingRow colspan={5} />}
-                  {!data.loading && data.users.length < 1 && <TableNoRows label="No User Account Found" colspan={5} />}
-                  {!data.loading &&
-                    data.users.length > 0 &&
-                    data.users.map((user: User) => (
-                      <TableRow key={user._id}>
-                        <TableCell className="!min-w-5 !max-w-5">
-                          <IonCheckbox value={user._id} onIonChange={handleSelected} />
-                        </TableCell>
-                        <TableCell>{user.username}</TableCell>
-                        <TableCell className="uppercase">
-                          <div
-                            className={classNames(
-                              'w-fit px-3 py-1 rounded-md text-xs text-white font-semibold tracking-wider',
-                              user.status === 'banned' ? 'bg-red-600' : 'bg-green-600',
-                            )}
-                          >
-                            {user.status}
-                          </div>
-                        </TableCell>
-                        <TableCell>{formatDateTable(user.createdAt)}</TableCell>
-                        <TableCell>
-                          <UserActions user={user} setData={setData} />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+              <div className="relative overflow-auto rounded-xl">
+                <Table>
+                  <TableHeader>
+                    <TableHeadRow>
+                      <TableHead className="!min-w-5 !max-w-5" />
+                      <TableHead>Username</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Created At</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.loading && <TableLoadingRow colspan={5} />}
+                    {!data.loading && data.users.length < 1 && <TableNoRows label="No User Account Found" colspan={5} />}
+                    {!data.loading &&
+                      data.users.length > 0 &&
+                      data.users.map((user: User) => (
+                        <TableRow key={user._id}>
+                          <TableCell className="!min-w-5 !max-w-5">
+                            <IonCheckbox value={user._id} onIonChange={handleSelected} />
+                          </TableCell>
+                          <TableCell>{user.username}</TableCell>
+                          <TableCell className="uppercase">
+                            <div className={classNames('!font-semibold', user.status === 'banned' ? 'text-red-600' : 'text-green-600')}>{user.status}</div>
+                          </TableCell>
+                          <TableCell>{formatDateTable(user.createdAt)}</TableCell>
+                          <TableCell>
+                            <UserActions user={user} setData={setData} />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

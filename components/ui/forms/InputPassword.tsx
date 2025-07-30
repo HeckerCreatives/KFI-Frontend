@@ -16,6 +16,7 @@ type TFormInput<T extends FieldValues> = {
   containerClassNames?: string;
   labelClassname?: string;
   icon?: string;
+  topClass?: string;
 };
 
 const InputPassword = <T extends FieldValues>({
@@ -30,6 +31,7 @@ const InputPassword = <T extends FieldValues>({
   containerClassNames = '',
   labelClassname = '',
   icon = '',
+  topClass = 'top-[0.12rem]',
 }: TFormInput<T>) => {
   const [show, setShow] = useState(false);
 
@@ -74,7 +76,7 @@ const InputPassword = <T extends FieldValues>({
               >
                 {icon && <IonIcon slot="start" icon={icon} aria-hidden="true" className="fill-orange-400"></IonIcon>}
               </IonInput>
-              <IonButton fill="clear" type="button" onClick={toggleShow} className="[--ripple-color:transparent] w-fit h-fit absolute top-[0.12rem] right-0.5 z-50">
+              <IonButton fill="clear" type="button" onClick={toggleShow} className={classNames('[--ripple-color:transparent] w-fit h-fit absolute right-0.5 z-50', topClass)}>
                 {show ? <IonIcon icon={eye} className="cursor-pointer h-5 w-5 fill-slate-500" /> : <IonIcon icon={eyeOff} className="cursor-pointer h-5 w-5 fill-slate-500" />}
               </IonButton>
             </div>

@@ -68,7 +68,7 @@ const ExportAllDamayanFund = () => {
         ref={modal}
         trigger={`export_all_damayan_fund`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">

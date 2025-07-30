@@ -70,7 +70,11 @@ const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, 
           Find
         </IonButton>
       </div>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
+      <IonModal
+        isOpen={isOpen}
+        backdropDismiss={false}
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+      >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
             <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Type Selection" />

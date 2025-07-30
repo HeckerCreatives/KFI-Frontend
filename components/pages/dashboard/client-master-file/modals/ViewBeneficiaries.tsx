@@ -1,4 +1,4 @@
-import { IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react';
+import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react';
 import { person } from 'ionicons/icons';
 import React, { useRef } from 'react';
 import { AccessToken, Beneficiary, ClientMasterFile } from '../../../../../types/types';
@@ -26,19 +26,28 @@ const ViewBeneficiaries = ({ client, setData }: ViewBeneficiariesProps) => {
 
   return (
     <>
-      <div className="text-end">
+      {/* <div className="text-end">
         <div
           id={`view-beneficiaries-modal-${client._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={person} className="text-[1rem]" /> View Beneficiaries
         </div>
-      </div>
+      </div> */}
+      <IonButton
+        type="button"
+        id={`view-beneficiaries-modal-${client._id}`}
+        fill="clear"
+        className="space-x-1 rounded-lg w-40 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+      >
+        <IonIcon icon={person} className="text-xs" />
+        <span>View Beneficiary</span>
+      </IonButton>
       <IonModal
         ref={modal}
         trigger={`view-beneficiaries-modal-${client._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40rem] lg:[--width:50%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">

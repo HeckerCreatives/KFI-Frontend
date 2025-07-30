@@ -121,7 +121,11 @@ const ChartOfAccountSelection = <T extends FieldValues>({
           Find
         </IonButton>
       </div>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:80%] md:[--width:100%] lg:[--max-width:80%] lg:[--width:80%]">
+      <IonModal
+        isOpen={isOpen}
+        backdropDismiss={false}
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:80%] md:[--width:100%] lg:[--max-width:80%] lg:[--width:80%]"
+      >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
             <SelectionHeader dismiss={dismiss} disabled={loading} title="Chart Of Account Selection" />

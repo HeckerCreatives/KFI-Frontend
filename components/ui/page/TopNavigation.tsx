@@ -1,5 +1,4 @@
-import { IonButton, IonContent, IonIcon, IonPopover, IonTitle } from '@ionic/react';
-import { chevronDownOutline } from 'ionicons/icons';
+import { IonButton } from '@ionic/react';
 import React from 'react';
 import TransactionNav from './nav-menu/TransactionNav';
 import GeneralLedgerNav from './nav-menu/GeneralLedgerNav';
@@ -7,8 +6,13 @@ import SystemNav from './nav-menu/SystemNav';
 import Diagnostics from './nav-menu/Diagnostics';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
+import { isVisible } from '../../utils/permissions';
+import { jwtDecode } from 'jwt-decode';
+import { AccessToken, Permission } from '../../../types/types';
+import { diagnosticsResource, generalLedgerResource, manageAccountResource, systemResource, transactionResource } from '../../utils/constants';
 
 const TopNavigation = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
 
   return (
@@ -26,22 +30,26 @@ const TopNavigation = () => {
             Dashboard
           </IonButton>
         </div>
-        <div>
-          <IonButton
-            fill="clear"
-            routerLink="/dashboard/admin"
-            className={classNames(
-              'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-lg [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
-              ['/dashboard/admin', '/dashboard/client'].includes(pathname) ? 'bg-orange-600 text-white' : 'bg-transparent',
-            )}
-          >
-            Manage Account
-          </IonButton>
-        </div>
-        <TransactionNav />
-        <GeneralLedgerNav />
-        <SystemNav />
-        <Diagnostics />
+        {isVisible(token.role, token.permissions, manageAccountResource) && (
+          <div>
+            <IonButton
+              fill="clear"
+              routerLink={
+                token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === 'admin' && e.actions.visible) ? '/dashboard/admin' : '/dashboard/client'
+              }
+              className={classNames(
+                'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-lg [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+                ['/dashboard/admin', '/dashboard/client'].includes(pathname) ? 'bg-orange-600 text-white' : 'bg-transparent',
+              )}
+            >
+              Manage Account
+            </IonButton>
+          </div>
+        )}
+        {isVisible(token.role, token.permissions, transactionResource) && <TransactionNav />}
+        {isVisible(token.role, token.permissions, generalLedgerResource) && <GeneralLedgerNav />}
+        {isVisible(token.role, token.permissions, systemResource) && <SystemNav />}
+        {isVisible(token.role, token.permissions, diagnosticsResource) && <Diagnostics />}
       </div>
     </div>
   );

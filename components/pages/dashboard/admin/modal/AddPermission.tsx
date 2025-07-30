@@ -44,6 +44,10 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
           return { ...prev, users: clone };
         });
         dismiss();
+        present({
+          message: 'Permissions successfully updated!.',
+          duration: 1000,
+        });
         return;
       }
     } catch (error: any) {
@@ -58,19 +62,28 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
 
   return (
     <>
-      <div className="text-end">
+      {/* <div className="text-end">
         <div
           id={`update-permissions-modal-${user._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={shieldCheckmarkSharp} className="text-[1rem]" /> Manage Permissions
         </div>
-      </div>
+      </div> */}
+      <IonButton
+        id={`update-permissions-modal-${user._id}`}
+        type="button"
+        fill="clear"
+        className="space-x-1 rounded-lg w-44 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+      >
+        <IonIcon icon={shieldCheckmarkSharp} className="text-xs" />
+        <span>Manage Permissions</span>
+      </IonButton>
       <IonModal
         ref={modal}
         trigger={`update-permissions-modal-${user._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
@@ -84,7 +97,14 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
           <SystemPermission permissions={permissions} setPermissions={setPermissions} />
           <DiagnosticsPermission permissions={permissions} setPermissions={setPermissions} />
           <div className="text-end border-t pt-1 space-x-2">
-            <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
+            <IonButton
+              onClick={handleAddPermission}
+              disabled={loading}
+              type="submit"
+              fill="clear"
+              className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]"
+              strong={true}
+            >
               {loading ? 'Saving...' : 'Save'}
             </IonButton>
             <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>

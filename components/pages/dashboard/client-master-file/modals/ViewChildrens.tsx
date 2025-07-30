@@ -1,4 +1,4 @@
-import { IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react';
+import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react';
 import { people } from 'ionicons/icons';
 import React, { useRef } from 'react';
 import { AccessToken, Child, ClientMasterFile } from '../../../../../types/types';
@@ -26,19 +26,28 @@ const ViewChildrens = ({ client, setData }: ViewChildrensProps) => {
 
   return (
     <>
-      <div className="text-end">
+      {/* <div className="text-end">
         <div
           id={`view-children-modal-${client._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={people} className="text-[1rem]" /> View Children
         </div>
-      </div>
+      </div> */}
+      <IonButton
+        type="button"
+        id={`view-children-modal-${client._id}`}
+        fill="clear"
+        className="space-x-1 w-32 h-6 rounded-lg ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+      >
+        <IonIcon icon={people} className="text-xs" />
+        <span>View Children</span>
+      </IonButton>
       <IonModal
         ref={modal}
         trigger={`view-children-modal-${client._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:35rem] lg:[--width:50%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
@@ -16,6 +16,7 @@ type CreateUserProps = {
 
 const CreateUser = ({ getUsers }: CreateUserProps) => {
   const [loading, setLoading] = useState(false);
+  const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -42,6 +43,10 @@ const CreateUser = ({ getUsers }: CreateUserProps) => {
       if (success) {
         getUsers(1);
         dismiss();
+        present({
+          message: 'Account successfully created!.',
+          duration: 1000,
+        });
         return;
       }
     } catch (error: any) {
@@ -65,7 +70,7 @@ const CreateUser = ({ getUsers }: CreateUserProps) => {
         ref={modal}
         trigger="create-user-modal"
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">

@@ -92,64 +92,66 @@ const DamayanFund = () => {
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['Transaction', 'Damayan Fund']} />
-          <div className="px-3 pb-3 flex-1">
-            <div className=" bg-white p-3 rounded-2xl shadow-lg mt-3 mb-4 flex flex-col items-end">
-              <div className="w-full flex items-end">
+          <div className="px-3 pb-3 flex-1 flex flex-col">
+            <div className=" bg-white p-3 rounded-2xl shadow-lg my-3 flex flex-col lg:flex-row-reverse gap-2 flex-wrap">
+              <div className="w-full flex-1 flex items-center justify-end">
                 <DamayanFundFilter getDamayanFunds={getDamayanFunds} />
               </div>
-              <div className="w-full flex items-start">
+              <div className="flex items-start">
                 <div>{canDoAction(token.role, token.permissions, 'damayan fund', 'create') && <CreateDamayanFund getDamayanFunds={getDamayanFunds} />}</div>
                 <div>{canDoAction(token.role, token.permissions, 'damayan fund', 'print') && <PrintAllDamayanFund />}</div>
                 <div>{canDoAction(token.role, token.permissions, 'damayan fund', 'export') && <ExportAllDamayanFund />}</div>
               </div>
             </div>
 
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow>
-                    <TableHead>JV Number</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Bank</TableHead>
-                    <TableHead>CHK. No.</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Encoded By</TableHead>
-                    {haveActions(token.role, 'damayan fund', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {data.loading && <TableLoadingRow colspan={8} />}
-                  {!data.loading && data.damayanFunds.length < 1 && <TableNoRows label="No Damayan Fund Record Found" colspan={8} />}
-                  {!data.loading &&
-                    data.damayanFunds.length > 0 &&
-                    data.damayanFunds.map((damayanFund: DamayanFundType, i: number) => (
-                      <TableRow key={damayanFund._id}>
-                        <TableCell>JV#{damayanFund.code}</TableCell>
-                        <TableCell>{formatDateTable(damayanFund.date)}</TableCell>
-                        <TableCell>{damayanFund.bankCode.description}</TableCell>
-                        <TableCell>{damayanFund.checkNo}</TableCell>
-                        <TableCell>{formatMoney(damayanFund.amount)}</TableCell>
-                        <TableCell>{damayanFund.encodedBy.username}</TableCell>
-                        {haveActions(token.role, 'damayan fund', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
-                          <TableCell>
-                            <DamayanFundActions
-                              damayanFund={damayanFund}
-                              getDamayanFunds={getDamayanFunds}
-                              setData={setData}
-                              searchKey={searchKey}
-                              sortKey={sortKey}
-                              to={to}
-                              from={from}
-                              currentPage={currentPage}
-                              setCurrentPage={setCurrentPage}
-                              rowLength={data.damayanFunds.length}
-                            />
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+              <div className="relative overflow-auto rounded-xl">
+                <Table>
+                  <TableHeader>
+                    <TableHeadRow>
+                      <TableHead>JV Number</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Bank</TableHead>
+                      <TableHead>CHK. No.</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Encoded By</TableHead>
+                      {haveActions(token.role, 'damayan fund', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.loading && <TableLoadingRow colspan={8} />}
+                    {!data.loading && data.damayanFunds.length < 1 && <TableNoRows label="No Damayan Fund Record Found" colspan={8} />}
+                    {!data.loading &&
+                      data.damayanFunds.length > 0 &&
+                      data.damayanFunds.map((damayanFund: DamayanFundType, i: number) => (
+                        <TableRow key={damayanFund._id}>
+                          <TableCell>JV#{damayanFund.code}</TableCell>
+                          <TableCell>{formatDateTable(damayanFund.date)}</TableCell>
+                          <TableCell>{damayanFund.bankCode.description}</TableCell>
+                          <TableCell>{damayanFund.checkNo}</TableCell>
+                          <TableCell>{formatMoney(damayanFund.amount)}</TableCell>
+                          <TableCell>{damayanFund.encodedBy.username}</TableCell>
+                          {haveActions(token.role, 'damayan fund', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                            <TableCell>
+                              <DamayanFundActions
+                                damayanFund={damayanFund}
+                                getDamayanFunds={getDamayanFunds}
+                                setData={setData}
+                                searchKey={searchKey}
+                                sortKey={sortKey}
+                                to={to}
+                                from={from}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                rowLength={data.damayanFunds.length}
+                              />
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

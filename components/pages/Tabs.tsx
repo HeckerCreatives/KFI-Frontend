@@ -91,12 +91,15 @@ const Tabs = () => {
                   <div className="w-10 h-10 bg-[#FFF0E3] rounded-full uppercase grid place-items-center min-w-10 min-h-10">{token.username.substring(0, 2)}</div>
                 </IonButton>
               </div>
-              <IonPopover showBackdrop={false} trigger="click-trigger" triggerAction="click">
-                <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
-                  <div className="flex items-center gap-2 text-sm text-slate-700 font-semibold hover:bg-slate-100 py-3 px-3 cursor-pointer active:bg-slate-200">
+              <IonPopover showBackdrop={false} trigger="click-trigger" triggerAction="click" className="[--max-width:12rem]">
+                <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem]">
+                  <div className="flex items-center gap-2 text-[0.8rem] text-slate-700 font-semibold hover:bg-slate-100 py-1 px-3 cursor-pointer active:bg-slate-200">
                     <IonIcon icon={settingsOutline} /> Settings
                   </div>
-                  <div onClick={logout} className="flex items-center gap-2 text-sm text-slate-700 font-semibold hover:bg-slate-100 py-3 px-3 cursor-pointer active:bg-slate-200">
+                  <div
+                    onClick={logout}
+                    className="flex items-center gap-2 text-[0.8rem] text-slate-700 font-semibold hover:bg-slate-100 py-1 px-3 cursor-pointer active:bg-slate-200"
+                  >
                     <IonIcon icon={logOut} /> Logout
                   </div>
                 </IonContent>

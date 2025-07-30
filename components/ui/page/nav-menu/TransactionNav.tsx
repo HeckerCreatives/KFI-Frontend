@@ -2,14 +2,16 @@ import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
 import { chevronDownOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 import NoChildNav from './NoChildNav';
-import { NavLink } from '../../../../types/types';
+import { AccessToken, NavLink, Permission } from '../../../../types/types';
 import WithChildNav from './WithChildNav';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
 
 const TransactionNav = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
 
   const fileLinks: NavLink[] = [
     { path: '/dashboard/loan-release', label: 'Loan Release', resource: 'loan release' },
@@ -35,8 +37,6 @@ const TransactionNav = () => {
     { path: '/dashboard/damayan-fund', label: 'Damayan Fund', resource: 'damayan fund' },
   ];
 
-  console.log(fileLinks.map(link => (link.children ? link.children.map(child => child.path) : link.path)).flat());
-
   return (
     <div>
       <IonButton
@@ -59,12 +59,14 @@ const TransactionNav = () => {
       </IonButton>
       <IonPopover onDidDismiss={() => setIsOpen(false)} showBackdrop={false} trigger="transactions" triggerAction="click" className="[--max-width:12rem]">
         <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
-          {fileLinks.map(link =>
-            link.children ? (
-              <WithChildNav key={link.label} label={link.label} resource={link.resource} childPaths={link.children} />
-            ) : (
-              <NoChildNav key={link.label} label={link.label} path={link.path} resource={link.resource} />
-            ),
+          {fileLinks.map(
+            link =>
+              (token.role === 'superadmin' || token.permissions.find((e: Permission) => link.resource.includes(e.resource) && e.actions.visible)) &&
+              (link.children ? (
+                <WithChildNav key={link.label} label={link.label} resource={link.resource} childPaths={link.children} />
+              ) : (
+                <NoChildNav key={link.label} label={link.label} path={link.path} resource={link.resource} />
+              )),
           )}
         </IonContent>
       </IonPopover>

@@ -23,19 +23,25 @@ const BankActions = ({ bank, setData, currentPage, setCurrentPage, getBanks, sea
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
 
   return (
-    <>
-      <IonButton fill="clear" id={`bank-${bank._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
-        <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
-      </IonButton>
-      <IonPopover showBackdrop={false} trigger={`bank-${bank._id}`} triggerAction="click" className="[--max-width:10rem]">
-        <IonContent>
-          {canDoAction(token.role, token.permissions, 'bank', 'update') && <UpdateBank bank={bank} setData={setData} />}
-          {canDoAction(token.role, token.permissions, 'bank', 'delete') && (
-            <DeleteBank bank={bank} getBanks={getBanks} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
-          )}
-        </IonContent>
-      </IonPopover>
-    </>
+    <div>
+      {canDoAction(token.role, token.permissions, 'bank', 'update') && <UpdateBank bank={bank} setData={setData} />}
+      {canDoAction(token.role, token.permissions, 'bank', 'delete') && (
+        <DeleteBank bank={bank} getBanks={getBanks} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+      )}
+    </div>
+    // <>
+    //   <IonButton fill="clear" id={`bank-${bank._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
+    //     <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
+    //   </IonButton>
+    //   <IonPopover showBackdrop={false} trigger={`bank-${bank._id}`} triggerAction="click" className="[--max-width:10rem]">
+    //     <IonContent>
+    //       {canDoAction(token.role, token.permissions, 'bank', 'update') && <UpdateBank bank={bank} setData={setData} />}
+    //       {canDoAction(token.role, token.permissions, 'bank', 'delete') && (
+    //         <DeleteBank bank={bank} getBanks={getBanks} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+    //       )}
+    //     </IonContent>
+    //   </IonPopover>
+    // </>
   );
 };
 

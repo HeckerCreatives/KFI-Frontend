@@ -28,30 +28,46 @@ const EmergencyLoanActions = ({ emergencyLoan, setData, getEmergencyLoans, curre
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
 
   return (
-    <>
-      <IonButton fill="clear" id={`emergencyLoan-${emergencyLoan._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
-        <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
-      </IonButton>
-      <IonPopover showBackdrop={false} trigger={`emergencyLoan-${emergencyLoan._id}`} triggerAction="click" className="[--max-width:11rem]">
-        <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
-          {canDoAction(token.role, token.permissions, 'emergency loan', 'visible') && <ViewEmergencyLoan emergencyLoan={emergencyLoan} />}
-          {canDoAction(token.role, token.permissions, 'emergency loan', 'update') && <UpdateEmergencyLoan emergencyLoan={emergencyLoan} setData={setData} />}
-          {canDoAction(token.role, token.permissions, 'emergency loan', 'delete') && (
-            <DeleteEmergencyLoan
-              emergencyLoan={emergencyLoan}
-              getEmergencyLoans={getEmergencyLoans}
-              searchkey={searchKey}
-              sortKey={sortKey}
-              currentPage={currentPage}
-              rowLength={rowLength}
-            />
-          )}
-          {canDoAction(token.role, token.permissions, 'emergency loan', 'print') && <PrintEmergencyLoan emergencyLoan={emergencyLoan} />}
-          {canDoAction(token.role, token.permissions, 'emergency loan', 'export') && <ExportEmergencyLoan emergencyLoan={emergencyLoan} />}
-          {/* <UpdateCVExpenseVoucher index={index} /> */}
-        </IonContent>
-      </IonPopover>
-    </>
+    <div>
+      {canDoAction(token.role, token.permissions, 'emergency loan', 'visible') && <ViewEmergencyLoan emergencyLoan={emergencyLoan} />}
+      {canDoAction(token.role, token.permissions, 'emergency loan', 'update') && <UpdateEmergencyLoan emergencyLoan={emergencyLoan} setData={setData} />}
+      {canDoAction(token.role, token.permissions, 'emergency loan', 'delete') && (
+        <DeleteEmergencyLoan
+          emergencyLoan={emergencyLoan}
+          getEmergencyLoans={getEmergencyLoans}
+          searchkey={searchKey}
+          sortKey={sortKey}
+          currentPage={currentPage}
+          rowLength={rowLength}
+        />
+      )}
+      {canDoAction(token.role, token.permissions, 'emergency loan', 'print') && <PrintEmergencyLoan emergencyLoan={emergencyLoan} />}
+      {canDoAction(token.role, token.permissions, 'emergency loan', 'export') && <ExportEmergencyLoan emergencyLoan={emergencyLoan} />}
+    </div>
+    // <>
+    //   <IonButton fill="clear" id={`emergencyLoan-${emergencyLoan._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
+    //     <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
+    //   </IonButton>
+    //   <IonPopover showBackdrop={false} trigger={`emergencyLoan-${emergencyLoan._id}`} triggerAction="click" className="[--max-width:11rem]">
+    //     <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
+    //       {canDoAction(token.role, token.permissions, 'emergency loan', 'visible') && <ViewEmergencyLoan emergencyLoan={emergencyLoan} />}
+    //       {canDoAction(token.role, token.permissions, 'emergency loan', 'update') && <UpdateEmergencyLoan emergencyLoan={emergencyLoan} setData={setData} />}
+    //       {canDoAction(token.role, token.permissions, 'emergency loan', 'delete') && (
+    //         <DeleteEmergencyLoan
+    //           emergencyLoan={emergencyLoan}
+    //           getEmergencyLoans={getEmergencyLoans}
+    //           searchkey={searchKey}
+    //           sortKey={sortKey}
+    //           currentPage={currentPage}
+    //           rowLength={rowLength}
+    //         />
+    //       )}
+    //       {canDoAction(token.role, token.permissions, 'emergency loan', 'print') && <PrintEmergencyLoan emergencyLoan={emergencyLoan} />}
+    //       {canDoAction(token.role, token.permissions, 'emergency loan', 'export') && <ExportEmergencyLoan emergencyLoan={emergencyLoan} />}
+    //       {/* <UpdateCVExpenseVoucher index={index} /> */}
+    //     </IonContent>
+    //   </IonPopover>
+    // </>
   );
 };
 

@@ -70,19 +70,28 @@ const UpdateBank = ({ bank, setData }: { bank: Bank; setData: React.Dispatch<Rea
 
   return (
     <>
-      <div className="text-end">
+      {/* <div className="text-end">
         <div
           id={`update-bank-modal-${bank._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={createSharp} className="text-[1rem]" /> Edit
         </div>
-      </div>
+      </div> */}
+      <IonButton
+        id={`update-bank-modal-${bank._id}`}
+        type="button"
+        fill="clear"
+        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff9a00] text-slate-700 capitalize min-h-4 text-xs"
+      >
+        <IonIcon icon={createSharp} className="text-xs" />
+        <span>Edit</span>
+      </IonButton>
       <IonModal
         ref={modal}
         trigger={`update-bank-modal-${bank._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">

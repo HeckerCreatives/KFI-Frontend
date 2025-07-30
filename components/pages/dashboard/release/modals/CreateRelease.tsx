@@ -90,7 +90,11 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
           + Add Record
         </IonButton>
       </div>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]">
+      <IonModal
+        isOpen={isOpen}
+        backdropDismiss={false}
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+      >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Release - Add Record" sub="Transaction" dismiss={dismiss} />

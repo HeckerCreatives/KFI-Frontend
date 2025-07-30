@@ -95,62 +95,65 @@ const JournalVoucher = () => {
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['Transaction', 'Journal Voucher']} />
 
-          <div className="px-3 pb-3 flex-1">
-            <div className=" bg-white p-3 rounded-2xl shadow-lg mt-3 mb-4 flex flex-col items-end">
-              <div className="w-full flex items-end">
+          <div className="px-3 pb-3 flex-1 flex flex-col">
+            <div className=" bg-white p-3 rounded-2xl shadow-lg my-3 flex flex-col lg:flex-row-reverse gap-2 flex-wrap">
+              <div className="w-full flex-1 flex items-center justify-end">
                 <JournalVoucherFilter getJournalVouchers={getJournalVouchers} />
               </div>
-              <div className="w-full flex items-start">
+              <div className="flex items-start">
                 <div>{canDoAction(token.role, token.permissions, 'journal voucher', 'create') && <CreateJournalVoucher getJournalVouchers={getJournalVouchers} />}</div>
                 <div>{canDoAction(token.role, token.permissions, 'journal voucher', 'print') && <PrintAllJournalVoucher />}</div>
                 <div>{canDoAction(token.role, token.permissions, 'journal voucher', 'export') && <ExportAllJournalVoucher />}</div>
               </div>
             </div>
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow>
-                    <TableHead>Doc. No.</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Bank</TableHead>
-                    <TableHead>CHK. No.</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Encoded By</TableHead>
-                    {haveActions(token.role, 'journal voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {data.loading && <TableLoadingRow colspan={8} />}
-                  {!data.loading && data.journalVouchers.length < 1 && <TableNoRows label="No Journal Voucher Record Found" colspan={8} />}
-                  {!data.loading &&
-                    data.journalVouchers.map((journalVoucher: JournalVoucherType, i: number) => (
-                      <TableRow key={journalVoucher._id}>
-                        <TableCell>JV#{journalVoucher.code}</TableCell>
-                        <TableCell>{formatDateTable(journalVoucher.date)}</TableCell>
-                        <TableCell>{journalVoucher.bankCode.description}</TableCell>
-                        <TableCell>{journalVoucher.checkNo}</TableCell>
-                        <TableCell>{formatNumber(journalVoucher.amount)}</TableCell>
-                        <TableCell>{journalVoucher.encodedBy.username}</TableCell>
-                        {haveActions(token.role, 'expense voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
-                          <TableCell>
-                            <JournalVoucherActions
-                              journalVoucher={journalVoucher}
-                              getJournalVouchers={getJournalVouchers}
-                              setData={setData}
-                              searchKey={searchKey}
-                              sortKey={sortKey}
-                              to={to}
-                              from={from}
-                              currentPage={currentPage}
-                              setCurrentPage={setCurrentPage}
-                              rowLength={data.journalVouchers.length}
-                            />
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+
+            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+              <div className="relative overflow-auto rounded-xl">
+                <Table>
+                  <TableHeader>
+                    <TableHeadRow>
+                      <TableHead>Doc. No.</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Bank</TableHead>
+                      <TableHead>CHK. No.</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Encoded By</TableHead>
+                      {haveActions(token.role, 'journal voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.loading && <TableLoadingRow colspan={8} />}
+                    {!data.loading && data.journalVouchers.length < 1 && <TableNoRows label="No Journal Voucher Record Found" colspan={8} />}
+                    {!data.loading &&
+                      data.journalVouchers.map((journalVoucher: JournalVoucherType, i: number) => (
+                        <TableRow key={journalVoucher._id}>
+                          <TableCell>JV#{journalVoucher.code}</TableCell>
+                          <TableCell>{formatDateTable(journalVoucher.date)}</TableCell>
+                          <TableCell>{journalVoucher.bankCode.description}</TableCell>
+                          <TableCell>{journalVoucher.checkNo}</TableCell>
+                          <TableCell>{formatNumber(journalVoucher.amount)}</TableCell>
+                          <TableCell>{journalVoucher.encodedBy.username}</TableCell>
+                          {haveActions(token.role, 'expense voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                            <TableCell>
+                              <JournalVoucherActions
+                                journalVoucher={journalVoucher}
+                                getJournalVouchers={getJournalVouchers}
+                                setData={setData}
+                                searchKey={searchKey}
+                                sortKey={sortKey}
+                                to={to}
+                                from={from}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                rowLength={data.journalVouchers.length}
+                              />
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

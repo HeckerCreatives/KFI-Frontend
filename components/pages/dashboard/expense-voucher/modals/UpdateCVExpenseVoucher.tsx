@@ -27,7 +27,7 @@ const UpdateCVExpenseVoucher = ({ index }: { index: number }) => {
         ref={modal}
         trigger={`update-cvNoExpenseVoucher-modal-${index}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">

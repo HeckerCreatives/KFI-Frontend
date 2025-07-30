@@ -94,44 +94,47 @@ const WeeklySavingTable = () => {
               </div>
               <WeeklySavingTableFilter getWeeklySavings={getWeeklySavings} />
             </div>
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow>
-                    <TableHead>Range Amount From</TableHead>
-                    <TableHead>Range Amount To</TableHead>
-                    <TableHead>WSF</TableHead>
-                    {haveActions(token.role, 'weekly savings', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {data.loading && <TableLoadingRow colspan={4} />}
-                  {!data.loading && data.savings.length < 1 && <TableNoRows label="No Weekly Saving Record Found" colspan={4} />}
-                  {!data.loading &&
-                    data.savings.length > 0 &&
-                    data.savings.map((saving: WeeklySavings) => (
-                      <TableRow key={saving._id}>
-                        <TableCell>{formatNumber(saving.rangeAmountFrom)}</TableCell>
-                        <TableCell>{formatNumber(saving.rangeAmountTo)}</TableCell>
-                        <TableCell>{formatNumber(saving.weeklySavingsFund)}</TableCell>
-                        {haveActions(token.role, 'weekly savings', token.permissions, ['update', 'delete']) && (
-                          <TableCell>
-                            <WeeklySavingTableActions
-                              saving={saving}
-                              setData={setData}
-                              getWeeklySavings={getWeeklySavings}
-                              currentPage={currentPage}
-                              setCurrentPage={setCurrentPage}
-                              searchKey={searchKey}
-                              sortKey={sortKey}
-                              rowLength={data.savings.length}
-                            />
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+
+            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+              <div className="relative overflow-auto rounded-xl">
+                <Table>
+                  <TableHeader>
+                    <TableHeadRow>
+                      <TableHead>Range Amount From</TableHead>
+                      <TableHead>Range Amount To</TableHead>
+                      <TableHead>WSF</TableHead>
+                      {haveActions(token.role, 'weekly savings', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.loading && <TableLoadingRow colspan={4} />}
+                    {!data.loading && data.savings.length < 1 && <TableNoRows label="No Weekly Saving Record Found" colspan={4} />}
+                    {!data.loading &&
+                      data.savings.length > 0 &&
+                      data.savings.map((saving: WeeklySavings) => (
+                        <TableRow key={saving._id}>
+                          <TableCell>{formatNumber(saving.rangeAmountFrom)}</TableCell>
+                          <TableCell>{formatNumber(saving.rangeAmountTo)}</TableCell>
+                          <TableCell>{formatNumber(saving.weeklySavingsFund)}</TableCell>
+                          {haveActions(token.role, 'weekly savings', token.permissions, ['update', 'delete']) && (
+                            <TableCell>
+                              <WeeklySavingTableActions
+                                saving={saving}
+                                setData={setData}
+                                getWeeklySavings={getWeeklySavings}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                searchKey={searchKey}
+                                sortKey={sortKey}
+                                rowLength={data.savings.length}
+                              />
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

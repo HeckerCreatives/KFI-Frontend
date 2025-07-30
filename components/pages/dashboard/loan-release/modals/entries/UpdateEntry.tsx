@@ -98,7 +98,11 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
       <IonButton onClick={() => setIsOpen(true)} fill="clear" className="text-blue-700 [--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
         <IonIcon icon={create} />
       </IonButton>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
+      <IonModal
+        isOpen={isOpen}
+        backdropDismiss={false}
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+      >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Loan Release - Edit Entry" sub="Transaction" dismiss={dismiss} />

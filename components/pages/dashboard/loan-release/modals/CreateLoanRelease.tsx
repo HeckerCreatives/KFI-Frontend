@@ -102,7 +102,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
         ref={modal}
         trigger="create-loanRelease-modal"
         backdropDismiss={false}
-        className="auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">

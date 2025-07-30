@@ -84,56 +84,59 @@ const ChartOfAccount = () => {
           <div>
             <PageTitle pages={['System', 'Loan Products', 'Chart of Account']} />
           </div>
-          <div className="px-3 pb-3 flex-1">
-            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
+          <div className="px-3 pb-3 flex-1 flex flex-col">
+            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg my-3">
               <div>
                 {canDoAction(token.role, token.permissions, 'chart of account', 'print') && <PrintAllChartOfAccount />}
                 {canDoAction(token.role, token.permissions, 'chart of account', 'export') && <ExportAllChartOfAccount />}
               </div>
               <ChartOfAccountFilter getChartOfAccounts={getChartOfAccounts} />
             </div>
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow>
-                    <TableHead>Account Code</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Classification</TableHead>
-                    <TableHead>Nature of Account</TableHead>
-                    <TableHead>Department Status</TableHead>
-                    {haveActions(token.role, 'chart of account', token.permissions, ['update']) && <TableHead>Actions</TableHead>}
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {data.loading && <TableLoadingRow colspan={7} />}
-                  {!data.loading && data.chartOfAccounts.length < 1 && <TableNoRows label="No Chart Of Account Record Found" colspan={7} />}
-                  {!data.loading &&
-                    data.chartOfAccounts.length > 0 &&
-                    data.chartOfAccounts.map((chartAccount: ChartOfAccountType, i: number) => (
-                      <TableRow key={i}>
-                        <TableCell>{chartAccount.code}</TableCell>
-                        <TableCell>{chartAccount.description}</TableCell>
-                        <TableCell>{chartAccount.classification}</TableCell>
-                        <TableCell>{chartAccount.nature}</TableCell>
-                        <TableCell>{chartAccount.deptStatus}</TableCell>
-                        {haveActions(token.role, 'chart of account', token.permissions, ['update']) && (
-                          <TableCell>
-                            <ChartOfAccountActions
-                              chartAccount={chartAccount}
-                              setData={setData}
-                              getChartOfAccounts={getChartOfAccounts}
-                              currentPage={currentPage}
-                              setCurrentPage={setCurrentPage}
-                              searchKey={searchKey}
-                              sortKey={sortKey}
-                              rowLength={data.chartOfAccounts.length}
-                            />
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+
+            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+              <div className="relative overflow-auto rounded-xl">
+                <Table>
+                  <TableHeader>
+                    <TableHeadRow>
+                      <TableHead>Account Code</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead>Classification</TableHead>
+                      <TableHead>Nature of Account</TableHead>
+                      <TableHead>Department Status</TableHead>
+                      {haveActions(token.role, 'chart of account', token.permissions, ['update']) && <TableHead>Actions</TableHead>}
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.loading && <TableLoadingRow colspan={7} />}
+                    {!data.loading && data.chartOfAccounts.length < 1 && <TableNoRows label="No Chart Of Account Record Found" colspan={7} />}
+                    {!data.loading &&
+                      data.chartOfAccounts.length > 0 &&
+                      data.chartOfAccounts.map((chartAccount: ChartOfAccountType, i: number) => (
+                        <TableRow key={i}>
+                          <TableCell>{chartAccount.code}</TableCell>
+                          <TableCell>{chartAccount.description}</TableCell>
+                          <TableCell>{chartAccount.classification}</TableCell>
+                          <TableCell>{chartAccount.nature}</TableCell>
+                          <TableCell>{chartAccount.deptStatus}</TableCell>
+                          {haveActions(token.role, 'chart of account', token.permissions, ['update']) && (
+                            <TableCell>
+                              <ChartOfAccountActions
+                                chartAccount={chartAccount}
+                                setData={setData}
+                                getChartOfAccounts={getChartOfAccounts}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                searchKey={searchKey}
+                                sortKey={sortKey}
+                                rowLength={data.chartOfAccounts.length}
+                              />
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

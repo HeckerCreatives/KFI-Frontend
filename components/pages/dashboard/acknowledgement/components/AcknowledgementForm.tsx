@@ -1,17 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import InputText from '../../../../ui/forms/InputText';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import CenterSelection from '../../../../ui/selections/CenterSelection';
-import useGetCenterDescription from '../../../../utils/custom/useGetCenterDescription';
-import InputTextarea from '../../../../ui/forms/InputTextarea';
 import classNames from 'classnames';
 import BankSelection from '../../../../ui/selections/BankSelection';
-import LoanSelection from '../../../../ui/selections/LoanSelection';
-import InputCheckbox from '../../../../ui/forms/InputCheckbox';
 import { AcknowledgementFormData } from '../../../../../validations/acknowledgement.schema';
-import SupplierSelection from '../../../../ui/selections/SupplierSelection';
 import InputSelect from '../../../../ui/forms/InputSelect';
 
 type TForm = {
@@ -32,7 +27,8 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               clearErrors={form.clearErrors}
               label="CV#"
               placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
+              className="!px-2 !py-2 rounded-md lg:max-w-64"
+              labelClassName="truncate !text-slate-600 min-w-28"
             />
           </FormIonItem>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -47,6 +43,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                   label="Center Code"
                   placeholder="Click find to search center code"
                   className="!px-2 !py-2 rounded-md"
+                  labelClassName="truncate !text-slate-600 min-w-28"
                 />
               </FormIonItem>
               <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : 'mt-1.5')}>
@@ -62,6 +59,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                 label="Name"
                 placeholder={`Type here`}
                 className="!px-2 !py-2 rounded-md"
+                labelClassName="truncate !text-slate-600 min-w-28 lg:min-w-10"
               />
             </FormIonItem>
           </div>
@@ -85,6 +83,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               label="Particular"
               placeholder={`Type here`}
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-28"
             />
           </FormIonItem>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -102,6 +101,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                   { label: 'Direct Deposit', value: 'direct deposit' },
                   { label: 'Check', value: 'check' },
                 ]}
+                labelClassName="truncate !text-slate-600 min-w-28"
               />
             </FormIonItem>
             <FormIonItem>
@@ -115,6 +115,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
                 max="9999-12-31"
+                labelClassName="truncate !text-slate-600 min-w-28 lg:min-w-10"
               />
             </FormIonItem>
           </div>
@@ -127,40 +128,37 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               label="Account Officer"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-28"
             />
           </FormIonItem>
         </IonCol>
         <IonCol size="6" className="space-y-1">
-          <IonGrid className="ion-no-padding">
-            <IonRow className="gap-2">
-              <IonCol size="12" sizeLg="6">
-                <FormIonItem>
-                  <InputText
-                    disabled={loading}
-                    name="acctMonth"
-                    control={form.control}
-                    clearErrors={form.clearErrors}
-                    label="Account Month"
-                    placeholder="Type here"
-                    className="!px-2 !py-2 rounded-md"
-                  />
-                </FormIonItem>
-              </IonCol>
-              <IonCol className="px-0">
-                <FormIonItem>
-                  <InputText
-                    disabled={loading}
-                    name="acctYear"
-                    control={form.control}
-                    clearErrors={form.clearErrors}
-                    label="Account Year"
-                    placeholder="Type here"
-                    className="!px-2 !py-2 rounded-md"
-                  />
-                </FormIonItem>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <FormIonItem>
+              <InputText
+                disabled={loading}
+                name="acctMonth"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Account Month"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+                labelClassName="truncate !text-slate-600 min-w-28"
+              />
+            </FormIonItem>
+            <FormIonItem>
+              <InputText
+                disabled={loading}
+                name="acctYear"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Account Year"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+                labelClassName="truncate !text-slate-600 min-w-28 lg:min-w-24"
+              />
+            </FormIonItem>
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
             <FormIonItem>
               <InputText
@@ -171,6 +169,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                 label="Check Number"
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
+                labelClassName="truncate !text-slate-600 min-w-28"
               />
             </FormIonItem>
             <FormIonItem>
@@ -184,6 +183,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
                 max="9999-12-31"
+                labelClassName="truncate !text-slate-600 min-w-28 lg:min-w-24"
               />
             </FormIonItem>
           </div>
@@ -197,8 +197,9 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="Bank Code"
-                  placeholder="Click find to search bank code"
+                  placeholder="Click find to search for bank code"
                   className="!px-2 !py-2 rounded-md"
+                  labelClassName="truncate !text-slate-600 min-w-28"
                 />
               </FormIonItem>
               <div className={classNames(form.formState.errors.bankCodeLabel ? 'mt-0' : 'mt-1.5')}>
@@ -214,12 +215,13 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                 label="Amount"
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
+                labelClassName="truncate !text-slate-600 min-w-28 lg:min-w-24"
               />
             </FormIonItem>
           </div>
 
           <div>
-            <label className="text-xs block translate-y-1">if Direct Dep. w/ Cash Collection. Enter Cash Amount</label>
+            <label className="text-xs block translate-y-1 text-slate-600">if Direct Dep. w/ Cash Collection. Enter Cash Amount</label>
             <FormIonItem className="m-0 !py-0">
               <InputText
                 disabled={loading}

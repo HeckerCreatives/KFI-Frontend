@@ -32,7 +32,7 @@ const Dashboard = () => {
                     <div className="flex items-center">
                       <IonInput
                         aria-label={'no label'}
-                        placeholder=""
+                        placeholder="Search"
                         labelPlacement="stacked"
                         className={'!border text-[0.9rem] bg-orange-50 border-orange-400 [--highlight-color-focused:none] rounded-md !px-2 !py-1 text-sm !min-h-[1.2rem]'}
                       ></IonInput>

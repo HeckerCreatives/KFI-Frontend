@@ -24,6 +24,7 @@ const BusinessTypeForm = ({ form, loading }: TForm) => {
               label="Business Type"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 "
             />
           </FormIonItem>
         </IonCol>

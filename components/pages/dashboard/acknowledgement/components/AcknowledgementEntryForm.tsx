@@ -7,7 +7,6 @@ import ChartOfAccountSelection from '../../../../ui/selections/ChartOfAccountSel
 import { close } from 'ionicons/icons';
 import { AcknowledgementEntryFormData } from '../../../../../validations/acknowledgement.schema';
 import LoanReleaseEntrySelection from '../../../../ui/selections/LoanReleaseEntrySelection';
-import classNames from 'classnames';
 
 type TForm = {
   form: UseFormReturn<AcknowledgementEntryFormData>;
@@ -38,12 +37,13 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               <FormIonItem>
                 <InputText
                   label="CV#"
-                  placeholder="Click find to select CV#"
+                  placeholder="Click find to search for CV#"
                   readOnly
                   control={form.control}
                   name={`cvNo`}
                   clearErrors={form.clearErrors}
                   className="!px-2 !py-2 rounded-md"
+                  labelClassName="truncate !text-slate-600 min-w-20"
                 />
               </FormIonItem>
               {form.watch('cvNo') && (
@@ -64,13 +64,37 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
             </div>
           </div>
           <FormIonItem>
-            <InputText label="Due Date" readOnly control={form.control} name={`dueDate`} clearErrors={form.clearErrors} className="!px-2 !py-2 rounded-md" />
+            <InputText
+              label="Due Date"
+              readOnly
+              control={form.control}
+              name={`dueDate`}
+              clearErrors={form.clearErrors}
+              className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
+            />
           </FormIonItem>
           <FormIonItem>
-            <InputText label="Weeks" readOnly control={form.control} name={`noOfWeeks`} clearErrors={form.clearErrors} className="!px-2 !py-2 rounded-md" />
+            <InputText
+              label="Weeks"
+              readOnly
+              control={form.control}
+              name={`noOfWeeks`}
+              clearErrors={form.clearErrors}
+              className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
+            />
           </FormIonItem>
           <FormIonItem>
-            <InputText label="Name" readOnly control={form.control} name={`name`} clearErrors={form.clearErrors} className="!px-2 !py-2 rounded-md" />
+            <InputText
+              label="Name"
+              readOnly
+              control={form.control}
+              name={`name`}
+              clearErrors={form.clearErrors}
+              className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
+            />
           </FormIonItem>
           <div className="flex items-start gap-2 flex-nowrap">
             <div className="flex-1 relative">
@@ -82,8 +106,9 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="Acct. Code"
-                  placeholder="Click find to select account code"
+                  placeholder="Click find to search for account code"
                   className="!px-2 !py-2 rounded-md"
+                  labelClassName="truncate !text-slate-600 min-w-20"
                 />
               </FormIonItem>
               {form.watch('acctCodeId') && (
@@ -113,6 +138,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               clearErrors={form.clearErrors}
               label="Description"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
             />
           </FormIonItem>
           <FormIonItem>
@@ -124,6 +150,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               label="Debit"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
             />
           </FormIonItem>
           <FormIonItem>
@@ -135,6 +162,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               label="Credit"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
             />
           </FormIonItem>
         </IonCol>

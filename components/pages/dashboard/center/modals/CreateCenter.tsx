@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CenterFormData, centerSchema } from '../../../../../validations/center.schema';
@@ -16,6 +16,7 @@ type CreateCenterProps = {
 
 const CreateCenter = ({ getCenters }: CreateCenterProps) => {
   const [loading, setLoading] = useState(false);
+  const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -44,6 +45,10 @@ const CreateCenter = ({ getCenters }: CreateCenterProps) => {
       if (success) {
         getCenters(1);
         dismiss();
+        present({
+          message: 'Center successfully updated!.',
+          duration: 1000,
+        });
         return;
       }
     } catch (error: any) {
@@ -67,7 +72,7 @@ const CreateCenter = ({ getCenters }: CreateCenterProps) => {
         ref={modal}
         trigger="create-center-modal"
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">

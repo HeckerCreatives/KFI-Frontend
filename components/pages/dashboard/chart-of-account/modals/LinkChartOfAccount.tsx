@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon, useIonToast } from '@ionic/react';
 import { link } from 'ionicons/icons';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,6 +18,7 @@ import ChartOfAccountCard from '../components/ChartOfAccountCard';
 const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAccount; setData: React.Dispatch<React.SetStateAction<TChartOfAccount>> }) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
+  const [present] = useIonToast();
 
   const form = useForm<ChartOfAccountFormData>({
     resolver: zodResolver(chartOfAccountSchema),
@@ -54,6 +55,10 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
           return { ...prev, chartOfAccounts: clone };
         });
         dismiss();
+        present({
+          message: 'Chart of account successfully linked!',
+          duration: 1000,
+        });
         return;
       }
     } catch (error: any) {
@@ -68,19 +73,28 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
 
   return (
     <>
-      <div className="text-end">
+      {/* <div className="text-end">
         <div
           id={`update-coa-modal-${chartAccount._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={link} className="text-[1rem]" /> Link to Group Account
         </div>
-      </div>
+      </div> */}
+      <IonButton
+        id={`update-coa-modal-${chartAccount._id}`}
+        type="button"
+        fill="clear"
+        className="space-x-1 rounded-lg w-48 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+      >
+        <IonIcon icon={link} className="text-xs" />
+        <span>Link to Group Account</span>
+      </IonButton>
       <IonModal
         ref={modal}
         trigger={`update-coa-modal-${chartAccount._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
@@ -89,11 +103,13 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
         </IonHeader>
         <div className="inner-content">
           <div className="space-y-3">
-            <ChartOfAccountCard label="Account Code" value={chartAccount.code} />
-            <ChartOfAccountCard label="Description" value={chartAccount.description} />
-            <ChartOfAccountCard label="Classification" value={chartAccount.classification} />
-            <ChartOfAccountCard label="Nature of Account" value={chartAccount.nature} />
-            <ChartOfAccountCard label="Department Status" value={chartAccount.deptStatus} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+              <ChartOfAccountCard label="Account Code" value={chartAccount.code} />
+              <ChartOfAccountCard label="Description" value={chartAccount.description} />
+              <ChartOfAccountCard label="Classification" value={chartAccount.classification} />
+              <ChartOfAccountCard label="Nature of Account" value={chartAccount.nature} />
+              <ChartOfAccountCard label="Department Status" value={chartAccount.deptStatus} />
+            </div>
 
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex items-start gap-2 flex-nowrap">
@@ -107,6 +123,7 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
                     placeholder="Click find to search a group of account"
                     className="!px-2 !py-2 rounded-md "
                     readOnly
+                    labelClassName="truncate !text-slate-600"
                   />
                 </FormIonItem>
                 <div className="mt-1.5">

@@ -59,7 +59,7 @@ const DeleteStatus = ({ status, getStatuses, searchkey, sortKey, currentPage, ro
         ref={modal}
         trigger={`delete-status-modal-${status._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">

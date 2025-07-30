@@ -50,8 +50,9 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="Name"
-                  placeholder="Type here"
+                  placeholder="Click find to search for name"
                   className="!px-2 !py-2 rounded-md"
+                  labelClassName="truncate !text-slate-600 min-w-20"
                 />
               </FormIonItem>
               {form.watch('clientId') && (
@@ -76,6 +77,7 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
               label="Particular"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
             />
           </FormIonItem>
           <div className="flex items-start gap-2 flex-nowrap">
@@ -88,8 +90,9 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="Acct. Code"
-                  placeholder="Type here"
+                  placeholder="Click find to search for account code"
                   className="!px-2 !py-2 rounded-md"
+                  labelClassName="truncate !text-slate-600 min-w-20"
                 />
               </FormIonItem>
               {form.watch('acctCodeId') && (
@@ -120,6 +123,7 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
               label="Description"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
             />
           </FormIonItem>
           <FormIonItem>
@@ -131,6 +135,7 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
               label="Debit"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
             />
           </FormIonItem>
           <FormIonItem>
@@ -142,6 +147,7 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
               label="Credit"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
             />
           </FormIonItem>
           <FormIonItem>
@@ -153,6 +159,7 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
               label="Interest"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
             />
           </FormIonItem>
           <FormIonItem>
@@ -164,6 +171,7 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
               label="Cycle"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
             />
           </FormIonItem>
           <FormIonItem>
@@ -175,6 +183,7 @@ const EntryForm = ({ form, center, centerNo, loading }: TForm) => {
               label="Check No."
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-20"
             />
           </FormIonItem>
         </IonCol>

@@ -1,10 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
 import { useForm } from 'react-hook-form';
-import classNames from 'classnames';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import CMFPersonalForm from '../components/CMFPersonalForm';
-import CMFOtherForm from '../components/CMFOtherForm';
 import { ClientMasterFileFormData, clientMasterFileSchema } from '../../../../../validations/client-master-file.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import kfiAxios from '../../../../utils/axios';
@@ -87,7 +85,12 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
           + Add Record
         </IonButton>
       </div>
-      <IonModal ref={modal} trigger="create-cmf-modal" backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]">
+      <IonModal
+        ref={modal}
+        trigger="create-cmf-modal"
+        backdropDismiss={false}
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+      >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Client - Add Record" sub="Manage Account" dismiss={dismiss} />
@@ -97,7 +100,6 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div>
               <CMFPersonalForm form={form} loading={loading} />
-              <CMFOtherForm form={form} loading={loading} />
               {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
             </div>
             <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">

@@ -42,9 +42,10 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="From"
-                  placeholder="Type here"
+                  placeholder="Click find to search for document no."
                   className="!px-2 !py-2 rounded-md"
                   readOnly
+                  labelClassName="truncate !text-slate-600 min-w-10"
                 />
               </FormIonItem>
               {form.watch('docNoFrom') && (
@@ -68,9 +69,10 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="To"
-                  placeholder="Type here"
+                  placeholder="Click find to search for document no."
                   className="!px-2 !py-2 rounded-md"
                   readOnly
+                  labelClassName="truncate !text-slate-600 min-w-10"
                 />
               </FormIonItem>
               {form.watch('docNoTo') && (

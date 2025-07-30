@@ -40,8 +40,9 @@ const JVEntryForm = ({ form, loading = false }: TForm) => {
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="Name"
-                  placeholder="Type here"
+                  placeholder="Click find to search for name"
                   className="!px-2 !py-2 rounded-md"
+                  labelClassName="truncate !text-slate-600 min-w-32"
                 />
               </FormIonItem>
               {form.watch('client') && (
@@ -65,6 +66,7 @@ const JVEntryForm = ({ form, loading = false }: TForm) => {
               label="Particular"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-32"
             />
           </FormIonItem>
           <div className="flex items-start gap-2 flex-nowrap">
@@ -77,8 +79,9 @@ const JVEntryForm = ({ form, loading = false }: TForm) => {
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="Acct. Code"
-                  placeholder="Type here"
+                  placeholder="click find to search for account code"
                   className="!px-2 !py-2 rounded-md"
+                  labelClassName="truncate !text-slate-600 min-w-32"
                 />
               </FormIonItem>
               {form.watch('acctCodeId') && (
@@ -109,6 +112,7 @@ const JVEntryForm = ({ form, loading = false }: TForm) => {
               label="Description"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-32"
             />
           </FormIonItem>
           <FormIonItem>
@@ -120,6 +124,7 @@ const JVEntryForm = ({ form, loading = false }: TForm) => {
               label="Debit"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-32"
             />
           </FormIonItem>
           <FormIonItem>
@@ -131,6 +136,7 @@ const JVEntryForm = ({ form, loading = false }: TForm) => {
               label="Credit"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-32"
             />
           </FormIonItem>
           <FormIonItem>
@@ -142,6 +148,7 @@ const JVEntryForm = ({ form, loading = false }: TForm) => {
               label="CV# for Recompute"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-32"
             />
           </FormIonItem>
         </IonCol>

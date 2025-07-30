@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
@@ -16,6 +16,7 @@ type CreateLoanProps = {
 
 const CreateLoan = ({ getLoans }: CreateLoanProps) => {
   const [loading, setLoading] = useState(false);
+  const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -47,6 +48,10 @@ const CreateLoan = ({ getLoans }: CreateLoanProps) => {
       if (success) {
         getLoans(1);
         dismiss();
+        present({
+          message: 'Product successfully created!.',
+          duration: 1000,
+        });
         return;
       }
     } catch (error: any) {
@@ -70,7 +75,7 @@ const CreateLoan = ({ getLoans }: CreateLoanProps) => {
         ref={modal}
         trigger="create-loan-modal"
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
@@ -82,7 +87,7 @@ const CreateLoan = ({ getLoans }: CreateLoanProps) => {
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <LoanForm form={form} loading={loading} />
               <div className="text-end border-t mt-2 pt-1 space-x-2">
-                <IonButton disabled={loading} color="tertiary" type="submit" className="!text-sm capitalize" strong={true}>
+                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   {loading ? 'Saving...' : 'Save'}
                 </IonButton>
                 <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>

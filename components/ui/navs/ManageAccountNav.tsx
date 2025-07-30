@@ -13,7 +13,7 @@ const ManageAccountNav = () => {
 
   return (
     isVisible(token.role, token.permissions, manageAccountResource) && (
-      <div className="flex items-center gap-2 px-3 py-2 bg-white">
+      <div className="flex items-center gap-2 px-3 py-2 bg-white shadow-lg rounded-2xl">
         {(token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === 'admin' && e.actions.visible)) && (
           <IonButton
             routerLink="/dashboard/admin"

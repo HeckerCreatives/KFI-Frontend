@@ -92,64 +92,66 @@ const LoanRelease = () => {
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['Transaction', 'Loan Release']} />
-          <div className="px-3 pb-3 flex-1">
-            <div className=" bg-white p-3 rounded-2xl shadow-lg mt-3 mb-4 flex flex-col items-end">
-              <div className="w-full flex items-end">
+          <div className="px-3 pb-3 flex-1 flex flex-col">
+            <div className=" bg-white p-3 rounded-2xl shadow-lg my-3 flex flex-col lg:flex-row-reverse gap-2 flex-wrap">
+              <div className="w-full flex-1 flex items-center justify-end">
                 <LoanReleaseFilter getTransactions={getTransactions} />
               </div>
-              <div className="w-full flex items-start">
+              <div className="flex items-center">
                 <div>{canDoAction(token.role, token.permissions, 'loan release', 'create') && <CreateLoanRelease getTransactions={getTransactions} />}</div>
                 <div>{canDoAction(token.role, token.permissions, 'loan release', 'print') && <PrintAllLoanRelease />}</div>
                 <div>{canDoAction(token.role, token.permissions, 'loan release', 'export') && <ExportAllLoanRelease />}</div>
               </div>
             </div>
 
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow>
-                    <TableHead>CV Number</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Bank</TableHead>
-                    <TableHead>CHK. No.</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Encoded By</TableHead>
-                    {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {data.loading && <TableLoadingRow colspan={8} />}
-                  {!data.loading && data.transactions.length < 1 && <TableNoRows label="No Loan Release Record Found" colspan={8} />}
-                  {!data.loading &&
-                    data.transactions.length > 0 &&
-                    data.transactions.map((transaction: Transaction, i: number) => (
-                      <TableRow key={transaction._id}>
-                        <TableCell>CV#{transaction.code}</TableCell>
-                        <TableCell>{formatDateTable(transaction.date)}</TableCell>
-                        <TableCell className="max-w-52 truncate">{transaction.bank.description}</TableCell>
-                        <TableCell>{transaction.checkNo}</TableCell>
-                        <TableCell>{formatMoney(transaction.amount)}</TableCell>
-                        <TableCell>{transaction.encodedBy.username}</TableCell>
-                        {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
-                          <TableCell>
-                            <LoanReleaseActions
-                              transaction={transaction}
-                              getTransactions={getTransactions}
-                              setData={setData}
-                              searchKey={searchKey}
-                              sortKey={sortKey}
-                              to={to}
-                              from={from}
-                              currentPage={currentPage}
-                              setCurrentPage={setCurrentPage}
-                              rowLength={data.transactions.length}
-                            />
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+              <div className="relative overflow-auto rounded-xl">
+                <Table>
+                  <TableHeader>
+                    <TableHeadRow>
+                      <TableHead>CV Number</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Bank</TableHead>
+                      <TableHead>CHK. No.</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Encoded By</TableHead>
+                      {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.loading && <TableLoadingRow colspan={8} />}
+                    {!data.loading && data.transactions.length < 1 && <TableNoRows label="No Loan Release Record Found" colspan={8} />}
+                    {!data.loading &&
+                      data.transactions.length > 0 &&
+                      data.transactions.map((transaction: Transaction, i: number) => (
+                        <TableRow key={transaction._id}>
+                          <TableCell>CV#{transaction.code}</TableCell>
+                          <TableCell>{formatDateTable(transaction.date)}</TableCell>
+                          <TableCell className="max-w-52 truncate">{transaction.bank.description}</TableCell>
+                          <TableCell>{transaction.checkNo}</TableCell>
+                          <TableCell>{formatMoney(transaction.amount)}</TableCell>
+                          <TableCell>{transaction.encodedBy.username}</TableCell>
+                          {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                            <TableCell>
+                              <LoanReleaseActions
+                                transaction={transaction}
+                                getTransactions={getTransactions}
+                                setData={setData}
+                                searchKey={searchKey}
+                                sortKey={sortKey}
+                                to={to}
+                                from={from}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                rowLength={data.transactions.length}
+                              />
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

@@ -53,6 +53,10 @@ const BanUser = ({ selected, setSelected, refetch }: BanUserProps) => {
         setSelected([]);
         setIsOpen(false);
         form.reset();
+        present({
+          message: 'Status successfully changed!.',
+          duration: 1000,
+        });
         return;
       }
     } catch (error: any) {
@@ -73,7 +77,11 @@ const BanUser = ({ selected, setSelected, refetch }: BanUserProps) => {
           Ban / Activate
         </IonButton>
       </div>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]">
+      <IonModal
+        isOpen={isOpen}
+        backdropDismiss={false}
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:35rem] lg:[--width:50%]"
+      >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="User - Ban / Activate Users" sub="Manage Account" dismiss={dismiss} />

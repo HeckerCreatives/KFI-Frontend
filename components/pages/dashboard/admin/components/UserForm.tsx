@@ -25,6 +25,7 @@ const UserForm = ({ form, loading }: TForm) => {
               label="Name"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate min-w-32 !text-slate-600"
             />
           </FormIonItem>
           <FormIonItem>
@@ -36,6 +37,7 @@ const UserForm = ({ form, loading }: TForm) => {
               label="Username"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate min-w-32 !text-slate-600"
             />
           </FormIonItem>
           <FormIonItem>
@@ -47,6 +49,7 @@ const UserForm = ({ form, loading }: TForm) => {
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
               disabled={loading}
+              labelClassname=" min-w-32 truncate !text-slate-600"
             />
           </FormIonItem>
           <FormIonItem>
@@ -58,6 +61,7 @@ const UserForm = ({ form, loading }: TForm) => {
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
               disabled={loading}
+              labelClassname=" min-w-32 truncate !text-slate-600"
             />
           </FormIonItem>
         </IonCol>

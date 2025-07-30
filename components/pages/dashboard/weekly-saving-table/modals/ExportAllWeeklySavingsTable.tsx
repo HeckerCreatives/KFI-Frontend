@@ -38,7 +38,12 @@ const ExportAllWeeklySavingsTable = () => {
       <IonButton fill="clear" id="export_all_wst" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
         Export
       </IonButton>
-      <IonModal ref={modal} trigger={`export_all_wst`} backdropDismiss={false} className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]">
+      <IonModal
+        ref={modal}
+        trigger={`export_all_wst`}
+        backdropDismiss={false}
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
+      >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Weekly Savings - Export All" sub="System" dismiss={dismiss} />

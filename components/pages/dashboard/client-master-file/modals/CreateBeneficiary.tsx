@@ -71,7 +71,7 @@ const CreateBeneficiary = ({ client, setData }: CreateBeneficiaryProps) => {
         ref={modal}
         trigger={`add-beneficiary-modal-${client._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">

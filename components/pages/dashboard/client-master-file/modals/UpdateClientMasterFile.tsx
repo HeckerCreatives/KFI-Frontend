@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon, useIonToast } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import CMFPersonalForm from '../components/CMFPersonalForm';
-import CMFOtherForm from '../components/CMFOtherForm';
 import { ClientMasterFileFormData, clientMasterFileSchema } from '../../../../../validations/client-master-file.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import kfiAxios from '../../../../utils/axios';
@@ -21,6 +20,7 @@ type UpdateClientMasterFileProps = {
 
 const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps) => {
   const [loading, setLoading] = useState(false);
+  const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -51,7 +51,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
       businessLabel: client.business.type,
       position: client.position,
       acctNumber: client.acctNumber,
-      dateResigned: formatDateInput(client.dateResigned),
+      dateResigned: client.dateResigned ? formatDateInput(client.dateResigned) : '',
       newStatus: client.newStatus,
       reason: client.reason,
     },
@@ -84,7 +84,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         businessLabel: client.business.type,
         position: client.position,
         acctNumber: client.acctNumber,
-        dateResigned: formatDateInput(client.dateResigned),
+        dateResigned: client.dateResigned ? formatDateInput(client.dateResigned) : '',
         newStatus: client.newStatus,
         reason: client.reason,
       });
@@ -109,6 +109,10 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
           return { ...prev, clients: clone };
         });
         dismiss();
+        present({
+          message: 'Client successfully updated!.',
+          duration: 1000,
+        });
         return;
       }
     } catch (error: any) {
@@ -123,19 +127,28 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
 
   return (
     <>
-      <div className="text-end">
+      {/* <div className="text-end">
         <div
           id={`update-cmf-modal-${client._id}`}
           className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
         >
           <IonIcon icon={createSharp} className="text-[1rem]" /> Edit
         </div>
-      </div>
+      </div> */}
+      <IonButton
+        type="button"
+        id={`update-cmf-modal-${client._id}`}
+        fill="clear"
+        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff9a00] text-slate-700 capitalize min-h-4 text-xs"
+      >
+        <IonIcon icon={createSharp} className="text-xs" />
+        <span>Edit</span>
+      </IonButton>
       <IonModal
         ref={modal}
         trigger={`update-cmf-modal-${client._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
@@ -145,7 +158,6 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         <div className="inner-content !px-0">
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CMFPersonalForm form={form} loading={loading} />
-            <CMFOtherForm form={form} loading={loading} />
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
             <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>

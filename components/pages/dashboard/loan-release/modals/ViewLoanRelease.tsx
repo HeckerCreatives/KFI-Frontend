@@ -1,12 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { IonModal, IonHeader, IonToolbar, IonIcon, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonText } from '@ionic/react';
+import { IonModal, IonHeader, IonToolbar, IonIcon, IonGrid, IonRow, IonCol, IonButton } from '@ionic/react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { eye } from 'ionicons/icons';
 import LoanReleaseViewCard from '../components/LoanReleaseViewCard';
-import { Entry, Transaction } from '../../../../../types/types';
+import { Transaction } from '../../../../../types/types';
 import { formatDateTable } from '../../../../utils/date-utils';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
 import ViewEntries from '../components/ViewEntries';
 
 const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
@@ -20,17 +19,26 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
 
   return (
     <>
-      <div
+      {/* <div
         onClick={() => setIsOpen(true)}
         className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
       >
         <IonIcon icon={eye} className="text-[1rem]" /> View
-      </div>
+      </div> */}
+      <IonButton
+        type="button"
+        fill="clear"
+        className="space-x-1 rounded-lg w-24 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        onClick={() => setIsOpen(true)}
+      >
+        <IonIcon icon={eye} className="text-xs" />
+        <span>View</span>
+      </IonButton>
       <IonModal
         isOpen={isOpen}
         trigger={`view-leanRelease-modal-${transaction._id}`}
         backdropDismiss={false}
-        className="auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">

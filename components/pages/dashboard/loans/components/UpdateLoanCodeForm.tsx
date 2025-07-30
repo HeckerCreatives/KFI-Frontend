@@ -61,6 +61,10 @@ const UpdateLoanCodeForm = ({ loanCode, setData }: UpdateLoanCodeFormProps) => {
           return { ...prev, loans: clone };
         });
         form.reset();
+        present({
+          message: 'Loan code successfully updated!.',
+          duration: 1000,
+        });
         return;
       }
     } catch (error: any) {
@@ -86,6 +90,10 @@ const UpdateLoanCodeForm = ({ loanCode, setData }: UpdateLoanCodeFormProps) => {
           return { ...prev, loans: clone };
         });
         form.reset();
+        present({
+          message: 'Loan code successfully deleted!.',
+          duration: 1000,
+        });
         return;
       }
     } catch (error: any) {

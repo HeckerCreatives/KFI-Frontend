@@ -93,63 +93,66 @@ const Release = () => {
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['Transaction', 'Release']} />
-          <div className="px-3 pb-3 flex-1">
-            <div className=" bg-white p-3 rounded-2xl shadow-lg mt-3 mb-4 flex flex-col items-end">
-              <div className="w-full flex items-end">
+          <div className="px-3 pb-3 flex-1 flex flex-col">
+            <div className=" bg-white p-3 rounded-2xl shadow-lg my-3 flex flex-col lg:flex-row-reverse gap-2 flex-wrap">
+              <div className="w-full flex-1 flex items-center justify-end">
                 <ReleaseFilter getReleases={getReleases} />
               </div>
-              <div className="w-full flex items-start">
+              <div className="flex items-start">
                 <div>{canDoAction(token.role, token.permissions, 'release', 'create') && <CreateRelease getReleases={getReleases} />}</div>
                 <div>{canDoAction(token.role, token.permissions, 'release', 'print') && <PrintAllRelease />}</div>
                 <div>{canDoAction(token.role, token.permissions, 'release', 'export') && <ExportAllRelease />}</div>
               </div>
             </div>
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow>
-                    <TableHead>CV Number</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Bank</TableHead>
-                    <TableHead>CHK. No.</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Encoded By</TableHead>
-                    {haveActions(token.role, 'release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {data.loading && <TableLoadingRow colspan={8} />}
-                  {!data.loading && data.releases.length < 1 && <TableNoRows label="No Release Record Found" colspan={8} />}
-                  {!data.loading &&
-                    data.releases.length > 0 &&
-                    data.releases.map((release: ReleaseType) => (
-                      <TableRow key={release._id}>
-                        <TableCell>CV#{release.code}</TableCell>
-                        <TableCell>{formatDateTable(release.date)}</TableCell>
-                        <TableCell>{release.bankCode.description}</TableCell>
-                        <TableCell>{release.checkNo}</TableCell>
-                        <TableCell>{formatMoney(release.amount)}</TableCell>
-                        <TableCell>{release.encodedBy.username}</TableCell>
-                        {haveActions(token.role, 'release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
-                          <TableCell>
-                            <ReleaseActions
-                              release={release}
-                              getReleases={getReleases}
-                              setData={setData}
-                              searchKey={searchKey}
-                              sortKey={sortKey}
-                              to={to}
-                              from={from}
-                              currentPage={currentPage}
-                              setCurrentPage={setCurrentPage}
-                              rowLength={data.releases.length}
-                            />
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+
+            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+              <div className="relative overflow-auto rounded-xl">
+                <Table>
+                  <TableHeader>
+                    <TableHeadRow>
+                      <TableHead>CV Number</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Bank</TableHead>
+                      <TableHead>CHK. No.</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Encoded By</TableHead>
+                      {haveActions(token.role, 'release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.loading && <TableLoadingRow colspan={8} />}
+                    {!data.loading && data.releases.length < 1 && <TableNoRows label="No Release Record Found" colspan={8} />}
+                    {!data.loading &&
+                      data.releases.length > 0 &&
+                      data.releases.map((release: ReleaseType) => (
+                        <TableRow key={release._id}>
+                          <TableCell>CV#{release.code}</TableCell>
+                          <TableCell>{formatDateTable(release.date)}</TableCell>
+                          <TableCell>{release.bankCode.description}</TableCell>
+                          <TableCell>{release.checkNo}</TableCell>
+                          <TableCell>{formatMoney(release.amount)}</TableCell>
+                          <TableCell>{release.encodedBy.username}</TableCell>
+                          {haveActions(token.role, 'release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                            <TableCell>
+                              <ReleaseActions
+                                release={release}
+                                getReleases={getReleases}
+                                setData={setData}
+                                searchKey={searchKey}
+                                sortKey={sortKey}
+                                to={to}
+                                from={from}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                rowLength={data.releases.length}
+                              />
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

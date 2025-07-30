@@ -84,14 +84,26 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
 
   return (
     <>
-      <div
+      {/* <div
         onClick={() => setIsOpen(true)}
         className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
       >
         <IonIcon icon={createSharp} className="text-[1rem]" /> Edit
-      </div>
-
-      <IonModal isOpen={isOpen} backdropDismiss={false} className="auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]">
+      </div> */}
+      <IonButton
+        onClick={() => setIsOpen(true)}
+        type="button"
+        fill="clear"
+        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff9a00] text-slate-700 capitalize min-h-4 text-xs"
+      >
+        <IonIcon icon={createSharp} className="text-xs" />
+        <span>Edit</span>
+      </IonButton>
+      <IonModal
+        isOpen={isOpen}
+        backdropDismiss={false}
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+      >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Loan Release - Edit Record" sub="Transaction" dismiss={dismiss} />
@@ -135,6 +147,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                           label="Amount"
                           placeholder="Type here"
                           className="!px-2 !py-2 rounded-md"
+                          labelClassName="truncate min-w-32 lg:min-w-0 !text-slate-600"
                         />
                       </FormIonItem>
 
@@ -147,6 +160,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                           label="Cycle"
                           placeholder="Type here"
                           className="!px-2 !py-2 rounded-md"
+                          labelClassName="truncate min-w-32 lg:min-w-0 !text-slate-600"
                         />
                       </FormIonItem>
 
@@ -159,6 +173,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                           label="Interest Rate (%)"
                           placeholder="Type here"
                           className="!px-2 !py-2 rounded-md"
+                          labelClassName="truncate min-w-32 lg:min-w-0 !text-slate-600"
                         />
                       </FormIonItem>
                     </div>

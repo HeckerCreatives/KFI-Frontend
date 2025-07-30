@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonIcon, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
@@ -80,45 +80,48 @@ const Loans = () => {
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['System', 'Loan Product', 'Product']} />
-          <div className="px-3 pb-3 flex-1">
-            <div className="flex items-center justify-center flex-wrap gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
+          <div className="px-3 pb-3 flex-1 flex flex-col">
+            <div className="flex items-center justify-center flex-wrap gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg my-3">
               <div>{canDoAction(token.role, token.permissions, 'product', 'create') && <CreateLoan getLoans={getLoans} />}</div>
               <LoanFilter getLoans={getLoans} />
             </div>
-            <div className="relative overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableHeadRow>
-                    <TableHead>Code</TableHead>
-                    {haveActions(token.role, 'product', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
-                  </TableHeadRow>
-                </TableHeader>
-                <TableBody>
-                  {data.loading && <TableLoadingRow colspan={3} />}
-                  {!data.loading && data.loans.length < 1 && <TableNoRows label="No Product Record Found" colspan={3} />}
-                  {!data.loading &&
-                    data.loans.length > 0 &&
-                    data.loans.map((loan: Loan) => (
-                      <TableRow key={loan._id}>
-                        <TableCell>{loan.code}</TableCell>
-                        {haveActions(token.role, 'product', token.permissions, ['update', 'delete', 'visible']) && (
-                          <TableCell>
-                            <LoanActions
-                              loan={loan}
-                              setData={setData}
-                              getLoans={getLoans}
-                              currentPage={currentPage}
-                              setCurrentPage={setCurrentPage}
-                              searchKey={searchKey}
-                              sortKey={sortKey}
-                              rowLength={data.loans.length}
-                            />
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+
+            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+              <div className="relative overflow-auto rounded-xl">
+                <Table>
+                  <TableHeader>
+                    <TableHeadRow>
+                      <TableHead>Code</TableHead>
+                      {haveActions(token.role, 'product', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.loading && <TableLoadingRow colspan={3} />}
+                    {!data.loading && data.loans.length < 1 && <TableNoRows label="No Product Record Found" colspan={3} />}
+                    {!data.loading &&
+                      data.loans.length > 0 &&
+                      data.loans.map((loan: Loan) => (
+                        <TableRow key={loan._id}>
+                          <TableCell>{loan.code}</TableCell>
+                          {haveActions(token.role, 'product', token.permissions, ['update', 'delete', 'visible']) && (
+                            <TableCell>
+                              <LoanActions
+                                loan={loan}
+                                setData={setData}
+                                getLoans={getLoans}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                searchKey={searchKey}
+                                sortKey={sortKey}
+                                rowLength={data.loans.length}
+                              />
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

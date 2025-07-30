@@ -24,6 +24,7 @@ const ChildrenForm = ({ form, loading }: TForm) => {
               label="Child Name"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-26"
             />
           </FormIonItem>
         </IonCol>

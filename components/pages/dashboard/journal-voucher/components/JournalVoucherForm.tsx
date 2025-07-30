@@ -29,6 +29,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                 label="JV#"
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
+                labelClassName="truncate !text-slate-600 min-w-16"
               />
             </FormIonItem>
             <div className="flex items-start gap-2 flex-nowrap">
@@ -39,8 +40,9 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="Supplier"
-                  placeholder="Click find to select supplier"
+                  placeholder="Click find to search for supplier"
                   className="!px-2 !py-2 rounded-md"
+                  labelClassName="truncate !text-slate-600 min-w-16"
                 />
               </FormIonItem>
               <div className={classNames(form.formState.errors.supplier ? 'mt-0' : 'mt-1.5')}>
@@ -68,6 +70,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
               label="Particular"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-16"
             />
           </FormIonItem>
           <FormIonItem>
@@ -81,6 +84,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
               max="9999-12-31"
+              labelClassName="truncate !text-slate-600 min-w-16"
             />
           </FormIonItem>
         </IonCol>
@@ -97,6 +101,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                     label="Account Month"
                     placeholder="Type here"
                     className="!px-2 !py-2 rounded-md"
+                    labelClassName="truncate !text-slate-600"
                   />
                 </FormIonItem>
               </IonCol>
@@ -110,6 +115,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                     label="Account Year"
                     placeholder="Type here"
                     className="!px-2 !py-2 rounded-md"
+                    labelClassName="truncate !text-slate-600 min-w-[6.5rem]"
                   />
                 </FormIonItem>
               </IonCol>
@@ -125,6 +131,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                 label="Check Number"
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
+                labelClassName="truncate !text-slate-600 min-w-[6.5rem]"
               />
             </FormIonItem>
             <FormIonItem>
@@ -138,6 +145,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
                 max="9999-12-31"
+                labelClassName="truncate !text-slate-600 min-w-[6.5rem]"
               />
             </FormIonItem>
           </div>
@@ -151,8 +159,9 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="Bank Code"
-                  placeholder="Click find to select bank code"
+                  placeholder="Click find to search for bank code"
                   className="!px-2 !py-2 rounded-md"
+                  labelClassName="truncate !text-slate-600 min-w-[6.5rem]"
                 />
               </FormIonItem>
               <div className={classNames(form.formState.errors.bankLabel ? 'mt-0' : 'mt-1.5')}>
@@ -168,6 +177,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                 label="Amount"
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
+                labelClassName="truncate !text-slate-600 min-w-[6.5rem]"
               />
             </FormIonItem>
           </div>

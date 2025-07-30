@@ -13,47 +13,62 @@ type TFormInput<T extends FieldValues> = {
   disabled?: boolean;
   className?: string;
   rows?: number;
+  labelClassNames?: string;
+  containerClassnames?: string;
 };
 
-const InputTextarea = <T extends FieldValues>({ name, control, clearErrors, label, placeholder = '', required = false, disabled = false, className, rows = 4 }: TFormInput<T>) => {
+const InputTextarea = <T extends FieldValues>({
+  name,
+  control,
+  clearErrors,
+  label,
+  placeholder = '',
+  required = false,
+  disabled = false,
+  className,
+  rows = 4,
+  labelClassNames = '',
+  containerClassnames = '',
+}: TFormInput<T>) => {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
         <div className="w-full">
-          <div className="flex justify-between">
+          <div className={classNames('w-full flex items-start gap-2', containerClassnames)}>
             {label && (
-              <IonLabel class="custom" className="!text-sm font-semibold !text-slate-600">
+              <IonLabel class="custom" className={classNames('!text-sm font-semibold !text-slate-600', labelClassNames)}>
                 {label}
               </IonLabel>
             )}
-            {label && required && <span className="text-slate-500 text-xs italic">Required</span>}
-          </div>
-          <IonTextarea
-            aria-label={label || 'no label'}
-            rows={rows}
-            {...field}
-            placeholder={placeholder}
-            onIonInput={e => {
-              field.onChange(e.detail.value);
-              clearErrors(name);
-              clearErrors('root');
-            }}
-            disabled={disabled}
-            onIonBlur={field.onBlur}
-            className={classNames(
-              'text-sm !bg-white ![--highlight-color-focused:none] ![--padding-bottom:0] !mt-0 ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:1rem]',
-              error && '![--border-color:red] !border-red-600',
-              className,
-            )}
-          />
 
-          {error && (
-            <IonText slot="error" color="danger" className="text-xs font-semibold block">
-              {error.message}
-            </IonText>
-          )}
+            <div className="w-full">
+              <IonTextarea
+                aria-label={label || 'no label'}
+                rows={rows}
+                {...field}
+                placeholder={placeholder}
+                onIonInput={e => {
+                  field.onChange(e.detail.value);
+                  clearErrors(name);
+                  clearErrors('root');
+                }}
+                disabled={disabled}
+                onIonBlur={field.onBlur}
+                className={classNames(
+                  'text-sm !bg-white ![--highlight-color-focused:none] ![--padding-bottom:0] !mt-0 ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:1rem]',
+                  error && '![--border-color:red] !border-red-600',
+                  className,
+                )}
+              />
+              {error && (
+                <IonText slot="error" color="danger" className="text-xs font-semibold block">
+                  {error.message}
+                </IonText>
+              )}
+            </div>
+          </div>
         </div>
       )}
     />

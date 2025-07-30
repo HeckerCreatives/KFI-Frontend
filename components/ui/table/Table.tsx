@@ -19,7 +19,7 @@ type TableHeaderProps = {
   children?: React.ReactNode;
 } & React.TableHTMLAttributes<HTMLTableSectionElement>;
 
-const TableHeader = ({ className, children, ...props }: TableHeaderProps) => <thead className={classNames('bg-[#FDF1E8] text-slate-700', className)}>{children}</thead>;
+const TableHeader = ({ className, children, ...props }: TableHeaderProps) => <thead className={classNames('text-slate-700  ', className)}>{children}</thead>;
 
 TableHeader.displayName = 'TableHeader';
 
@@ -45,7 +45,7 @@ const TableRow = ({ className, children, ...props }: TableRowProps) => (
 TableRow.displayName = 'TableRow';
 
 const TableHeadRow = ({ className, children, ...props }: TableRowProps) => (
-  <tr className={classNames(' border-b-4 border-b-slate-200 truncate', className)} {...props}>
+  <tr className={classNames('border-b-4 border-b-slate-200 truncate bg-[#FDF1E8] !rounded-xl', className)} {...props}>
     {children}
   </tr>
 );

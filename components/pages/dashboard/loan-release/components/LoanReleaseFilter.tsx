@@ -35,9 +35,33 @@ const LoanReleaseFilter = ({ getTransactions }: LoanReleaseFilterProps) => {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex items-center flex-wrap gap-2">
-      <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-2">
-        <FormIonItem className="flex-1 min-w-32">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit">
+      <div className="flex flex-wrap items-center gap-2 justify-start">
+        <FormIonItem className="min-w-32 ![--min-height:1rem]">
+          <InputText
+            label="Date From"
+            name="dateFrom"
+            type="date"
+            control={form.control}
+            clearErrors={form.clearErrors}
+            className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500 max-w-36"
+            max="9999-12-31"
+            labelClassName="truncate"
+          />
+        </FormIonItem>
+        <FormIonItem className="min-w-32 ![--min-height:1rem]">
+          <InputText
+            name="dateTo"
+            label="Date To"
+            type="date"
+            control={form.control}
+            clearErrors={form.clearErrors}
+            className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500 max-w-36"
+            max="9999-12-31"
+            labelClassName="truncate"
+          />
+        </FormIonItem>
+        <FormIonItem className="min-w-32 ![--min-height:1rem]">
           <InputSelect
             label="Sort By"
             name="sort"
@@ -49,50 +73,26 @@ const LoanReleaseFilter = ({ getTransactions }: LoanReleaseFilterProps) => {
               { label: 'Code A - Z', value: 'code-asc' },
               { label: 'Code Z - A', value: 'code-desc' },
             ]}
-            className="!border-orange-500 rounded-md !w-full !py-[0.35rem]"
+            className="!border-orange-500 rounded-md !w-full !py-[0.35rem] !max-w-36 !min-w-36"
             labelClassName="truncate"
           />
         </FormIonItem>
-        <FormIonItem className="flex-1 min-w-32">
-          <InputText
-            label="Date From"
-            name="dateFrom"
-            type="date"
-            control={form.control}
-            clearErrors={form.clearErrors}
-            className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500"
-            max="9999-12-31"
-            labelClassName="truncate"
-          />
-        </FormIonItem>
-        <FormIonItem className="flex-1 min-w-32">
-          <InputText
-            name="dateTo"
-            label="Date To"
-            type="date"
-            control={form.control}
-            clearErrors={form.clearErrors}
-            className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500"
-            max="9999-12-31"
-            labelClassName="truncate"
-          />
-        </FormIonItem>
-        <FormIonItem className="flex-1 min-w-32">
+        <FormIonItem className="min-w-32 ![--min-height:1rem]">
           <InputText
             name="code"
-            label="Keyword"
+            label="Search"
             placeholder="Type here"
             type="search"
             control={form.control}
             clearErrors={form.clearErrors}
-            className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
+            className="!px-3 !min-h-[1rem] rounded-md !border-orange-500 max-w-36"
             labelClassName="truncate"
           />
         </FormIonItem>
+        <IonButton type="submit" fill="clear" className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+          Search
+        </IonButton>
       </div>
-      <IonButton type="submit" fill="clear" className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-        Search
-      </IonButton>
     </form>
   );
 };

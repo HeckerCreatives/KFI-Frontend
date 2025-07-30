@@ -24,7 +24,8 @@ const LoanForm = ({ form, loading = false }: TForm) => {
               clearErrors={form.clearErrors}
               label="Code"
               placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
+              className="!px-2 !py-2 rounded-md max-w-64"
+              labelClassName="truncate !text-slate-600"
             />
           </FormIonItem>
         </IonCol>
