@@ -86,7 +86,7 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
       <div className="relative overflow-auto">
         <Table>
           <TableHeader>
-            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4">
+            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!font-normal  [&>th]:!py-1.5">
               <TableHead>CV#</TableHead>
               <TableHead>Due Date</TableHead>
               <TableHead>Week</TableHead>

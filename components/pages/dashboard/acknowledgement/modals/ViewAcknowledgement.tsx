@@ -41,46 +41,44 @@ const ViewAcknowledgement = ({ acknowledgement }: ViewAcknowledgementProps) => {
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Acknowledgement - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !p-2">
-          <IonGrid>
-            <IonRow>
-              <IonCol size="6" className="space-y-1">
-                <AcknowledgementViewCard label="CV#" value={`CV#${acknowledgement.code}`} />
-                <AcknowledgementViewCard label="Center Code" value={`${acknowledgement.center.centerNo}`} />
-                <AcknowledgementViewCard label="Name" value={`${acknowledgement.center.description}`} />
-                <AcknowledgementViewCard label="Particular" value={acknowledgement.remarks} />
-                <AcknowledgementViewCard label="Cash Type" value={acknowledgement.type} />
-                <AcknowledgementViewCard label="Account Officer" value={acknowledgement.acctOfficer} />
-                <AcknowledgementViewCard label="User" value={acknowledgement.encodedBy.username} />
-              </IonCol>
-              <IonCol size="6" className="space-y-1">
-                <AcknowledgementViewCard label="Date" value={formatDateTable(acknowledgement.date)} />
-                <IonGrid className="ion-no-padding">
-                  <IonRow className="gap-2">
-                    <IonCol>
-                      <AcknowledgementViewCard label="Account Month" value={`${acknowledgement.acctMonth}`} />
-                    </IonCol>
-                    <IonCol>
-                      <AcknowledgementViewCard label="Account Year" value={`${acknowledgement.acctYear}`} />
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-                <AcknowledgementViewCard label="Check Number" value={acknowledgement.checkNo} />
-                <AcknowledgementViewCard label="Check Date" value={formatDateTable(acknowledgement.checkDate)} />
-                <AcknowledgementViewCard label="Bank Code" value={acknowledgement.bankCode.description} />
-                <AcknowledgementViewCard label="Amount" value={`${formatNumber(acknowledgement.amount)}`} />
-                <AcknowledgementViewCard label="Cash Collection" value={`${formatNumber(acknowledgement.cashCollectionAmount || 0)}`} />
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-          <ViewAcknowledgementEntries acknowledgement={acknowledgement} isOpen={isOpen} />
+        <div className="inner-content h-screen !p-2 flex flex-col gap-2">
+          <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-2">
+              <AcknowledgementViewCard label="CV#" value={`CV#${acknowledgement.code}`} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard label="Center Code" value={`${acknowledgement.center.centerNo}`} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard label="Name" value={`${acknowledgement.center.description}`} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard label="Particular" value={acknowledgement.remarks} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard label="Cash Type" value={acknowledgement.type} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard label="Account Officer" value={acknowledgement.acctOfficer} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard label="User" value={acknowledgement.encodedBy.username} labelClassName="min-w-28 text-end !text-slate-600" />
+            </div>
+            <div className="space-y-2">
+              <AcknowledgementViewCard label="Date" value={formatDateTable(acknowledgement.date)} labelClassName="min-w-28 text-end !text-slate-600" />
+              <div className="grid grid-cols-1 lg:grid-cols-2">
+                <AcknowledgementViewCard label="Account Month" value={`${acknowledgement.acctMonth}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                <AcknowledgementViewCard label="Account Year" value={`${acknowledgement.acctYear}`} labelClassName="min-w-28 text-end !text-slate-600" />
+              </div>
+              <AcknowledgementViewCard label="Check Number" value={acknowledgement.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard label="Check Date" value={formatDateTable(acknowledgement.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard label="Bank Code" value={acknowledgement.bankCode.description} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard label="Amount" value={`${formatNumber(acknowledgement.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard
+                label="Cash Collection"
+                value={`${formatNumber(acknowledgement.cashCollectionAmount || 0)}`}
+                labelClassName="min-w-28 text-end !text-slate-600"
+              />
+            </div>
+          </div>
+          <div className="flex-1">
+            <ViewAcknowledgementEntries acknowledgement={acknowledgement} isOpen={isOpen} />
+          </div>
         </div>
       </IonModal>
     </>

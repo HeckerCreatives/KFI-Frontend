@@ -25,7 +25,7 @@ const CenterForm = ({ form, loading }: TForm) => {
               label="Center Code"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-28"
+              labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -37,7 +37,7 @@ const CenterForm = ({ form, loading }: TForm) => {
               label="Account Officer"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-28"
+              labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -49,7 +49,7 @@ const CenterForm = ({ form, loading }: TForm) => {
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
               disabled={loading}
-              labelClassNames="truncate !text-slate-600 min-w-28"
+              labelClassNames="truncate !text-slate-600 min-w-28 !text-sm text-end"
             />
           </FormIonItem>
         </IonCol>
@@ -63,7 +63,7 @@ const CenterForm = ({ form, loading }: TForm) => {
               label="Center Chief"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-28"
+              labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -75,7 +75,7 @@ const CenterForm = ({ form, loading }: TForm) => {
               label="Treasurer"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-28"
+              labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -87,7 +87,7 @@ const CenterForm = ({ form, loading }: TForm) => {
               label="Location"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassNames="truncate !text-slate-600 min-w-28"
+              labelClassNames="truncate !text-slate-600 min-w-28 !text-sm text-end"
             />
           </FormIonItem>
         </IonCol>

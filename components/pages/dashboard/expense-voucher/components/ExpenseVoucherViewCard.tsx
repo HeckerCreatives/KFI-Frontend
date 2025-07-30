@@ -1,15 +1,18 @@
+import classNames from 'classnames';
 import React from 'react';
 
 type TProps = {
   label: string;
   value: string;
+  labelClassName?: string;
+  containerClassName?: string;
 };
 
-const ExpenseVoucherViewCard = ({ label, value }: TProps) => {
+const ExpenseVoucherViewCard = ({ label, value, labelClassName = '', containerClassName = '' }: TProps) => {
   return (
-    <div className="w-full text-slate-600">
-      <div className="text-slate-800 text-sm font-semibold">{label}</div>
-      <div className="border-b border-slate-400 min-h-7 px-3 text-xs flex items-end pb-1">{value}</div>
+    <div className="w-full flex items-start gap-2 text-slate-600">
+      <div className={classNames('text-slate-800 text-[0.7rem] font-semibold truncate w-fit', labelClassName)}>{label}</div>
+      <div className={classNames('border border-slate-400 min-h-5 text-[0.7rem] py-0 px-3 text-sm flex items-end flex-1 rounded-md', containerClassName)}>{value}</div>
     </div>
   );
 };

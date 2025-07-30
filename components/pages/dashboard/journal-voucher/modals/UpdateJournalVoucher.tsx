@@ -131,7 +131,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
             <ModalHeader title="Journal Voucher - Edit Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-0">
+        <div className="inner-content h-screen !px-0 flex flex-col">
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div>
               <JournalVoucherForm form={form} loading={loading} />
@@ -142,7 +142,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
               </IonButton>
             </div>
           </form>
-          <div className="border-t border-t-slate-400 mx-2 pt-5">
+          <div className="border-t border-t-slate-400 mx-2 pt-5 flex-1">
             <UpdateJVEntries isOpen={isOpen} journalVoucher={journalVoucher} />
           </div>
         </div>

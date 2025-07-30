@@ -14,7 +14,7 @@ const BeneficiaryForm = ({ form, loading }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
-        <IonCol size="12" className="space-y-2">
+        <IonCol size="12" className="space-y-0">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -24,7 +24,7 @@ const BeneficiaryForm = ({ form, loading }: TForm) => {
               label="Beneficiary Name"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-32"
+              labelClassName="truncate !text-slate-600 min-w-32 !text-sm text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -36,7 +36,7 @@ const BeneficiaryForm = ({ form, loading }: TForm) => {
               label="Relationship"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-32"
+              labelClassName="truncate !text-slate-600 min-w-32 !text-sm text-end"
             />
           </FormIonItem>
         </IonCol>

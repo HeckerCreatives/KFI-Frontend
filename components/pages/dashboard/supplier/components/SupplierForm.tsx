@@ -25,7 +25,7 @@ const SupplierForm = ({ form, loading }: TForm) => {
               label="Code"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-20 !text-sm text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -37,7 +37,7 @@ const SupplierForm = ({ form, loading }: TForm) => {
               label="Description"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassNames="truncate !text-slate-600 min-w-20"
+              labelClassNames="truncate !text-slate-600 min-w-20 !text-sm text-end"
             />
           </FormIonItem>
         </IonCol>

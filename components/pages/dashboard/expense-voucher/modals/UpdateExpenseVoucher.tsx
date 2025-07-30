@@ -129,7 +129,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
             <ModalHeader title="Expense Voucher - Edit Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-0">
+        <div className="inner-content h-screen !px-0 flex flex-col">
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div>
               <ExpenseVoucherForm form={form} loading={loading} />
@@ -140,7 +140,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
               </IonButton>
             </div>
           </form>
-          <div className="border-t border-t-slate-400 mx-2 pt-5">
+          <div className="border-t border-t-slate-400 mx-2 pt-5 flex-1">
             <UpdateExpenseVoucherEntries isOpen={isOpen} expenseVoucher={expenseVoucher} />
           </div>
         </div>

@@ -21,9 +21,10 @@ type CenterSelectionProps<T extends FieldValues> = {
   centerLabel: Path<T>;
   centerValue: Path<T>;
   centerDescription?: Path<T>;
+  className?: string;
 };
 
-const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, centerDescription, setValue, clearErrors }: CenterSelectionProps<T>) => {
+const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, centerDescription, setValue, clearErrors, className = '' }: CenterSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [datas, setDatas] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
@@ -75,11 +76,10 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
 
   return (
     <>
-      <div className="text-end">
-        <IonButton onClick={handleOpen} fill="clear" className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0" strong>
-          Find
-        </IonButton>
-      </div>
+      <IonButton onClick={handleOpen} fill="clear" className={classNames('max-h-9 min-h-9 btn-color text-white capitalize font-semibold !m-0 rounded-md', className)} strong>
+        Find
+      </IonButton>
+
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}

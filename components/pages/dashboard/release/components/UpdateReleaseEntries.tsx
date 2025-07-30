@@ -78,12 +78,14 @@ const UpdateReleaseEntries = ({ isOpen, release }: UpdateReleaseEntriesProps) =>
   }, [isOpen]);
 
   return (
-    <div className="pb-2">
-      <AddEntry releaseId={release._id} getEntries={getEntries} />
-      <div className="relative overflow-auto">
+    <div className="pb-2 h-full flex flex-col">
+      <div>
+        <AddEntry releaseId={release._id} getEntries={getEntries} />
+      </div>
+      <div className="relative overflow-auto flex-1">
         <Table>
           <TableHeader>
-            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4">
+            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!font-normal [&>th]:!py-1.5">
               <TableHead>CV#</TableHead>
               <TableHead>Due Date</TableHead>
               <TableHead>Week</TableHead>
@@ -100,7 +102,7 @@ const UpdateReleaseEntries = ({ isOpen, release }: UpdateReleaseEntriesProps) =>
             {!data.loading && data.entries.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
             {!data.loading &&
               data.entries.map((entry: ReleaseEntry, index: number) => (
-                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2">
+                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[1.1rem]">
                   <TableCell>{entry?.loanReleaseEntryId ? `CV#${entry?.loanReleaseEntryId?.transaction?.code}` : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? formatDateTable(entry?.loanReleaseEntryId?.transaction?.dueDate) : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? entry?.loanReleaseEntryId?.transaction?.noOfWeeks : ''}</TableCell>

@@ -74,12 +74,14 @@ const UpdateEntries = ({ isOpen, transaction }: UpdateEntriesProps) => {
   }, [isOpen]);
 
   return (
-    <div className="pb-2">
-      <AddEntry transactionId={transaction._id} centerId={transaction.center._id} centerNo={transaction.center.centerNo} getEntries={getEntries} />
-      <div className="relative overflow-auto">
+    <div className="pb-2 flex flex-col h-full">
+      <div>
+        <AddEntry transactionId={transaction._id} centerId={transaction.center._id} centerNo={transaction.center.centerNo} getEntries={getEntries} />
+      </div>
+      <div className="relative overflow-auto flex-1">
         <Table>
           <TableHeader>
-            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4">
+            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal">
               <TableHead>Line</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>
@@ -98,7 +100,7 @@ const UpdateEntries = ({ isOpen, transaction }: UpdateEntriesProps) => {
             {!data.loading && data.entries.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
             {!data.loading &&
               data.entries.map((entry: Entry, index: number) => (
-                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2">
+                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[1.1rem]">
                   <TableCell className="text-center">{(currentPage - 1) * TABLE_LIMIT + (index + 1)}</TableCell>
                   <TableCell>{entry?.client?.name}</TableCell>
                   <TableCell>{entry?.particular}</TableCell>

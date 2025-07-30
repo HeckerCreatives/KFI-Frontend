@@ -133,7 +133,7 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
             <ModalHeader disabled={loading} title="Emergency Loan - Edit Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-0">
+        <div className="inner-content h-screen !px-0 flex flex-col">
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="mb-3">
               <EmergencyLoanForm form={form} loading={loading} />
@@ -147,7 +147,7 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
               </IonButton>
             </div>
           </form>
-          <div className="border-t border-t-slate-400 mx-2 pt-5">
+          <div className="border-t border-t-slate-400 mx-2 pt-5 flex-1">
             <UpdateELEntries isOpen={isOpen} emergencyLoan={emergencyLoan} />
           </div>
         </div>

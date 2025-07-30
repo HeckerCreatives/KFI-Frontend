@@ -37,42 +37,46 @@ const ViewDamayanFund = ({ damayanFund }: { damayanFund: DamayanFund }) => {
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Damayan Fund - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !p-2">
-          <IonGrid>
-            <IonRow>
-              <IonCol size="6" className="space-y-1">
-                <DamayanFundViewCard label="JV#" value={`JV#${damayanFund.code}`} />
-                <DamayanFundViewCard label="Supplier" value={damayanFund.supplier.description} />
-                <DamayanFundViewCard label="Particular" value={damayanFund.remarks} />
-                <DamayanFundViewCard label="Date" value={formatDateTable(damayanFund.date)} />
-                <DamayanFundViewCard label="User" value={damayanFund.encodedBy.username} />
-              </IonCol>
-              <IonCol size="6" className="space-y-1">
-                <IonGrid className="ion-no-padding">
-                  <IonRow className="gap-2">
-                    <IonCol>
-                      <DamayanFundViewCard label="Account Month" value={`${damayanFund.acctMonth}`} />
-                    </IonCol>
-                    <IonCol>
-                      <DamayanFundViewCard label="Account Year" value={`${damayanFund.acctYear}`} />
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-                <DamayanFundViewCard label="Check Number" value={damayanFund.checkNo} />
-                <DamayanFundViewCard label="Check Date" value={formatDateTable(damayanFund.checkDate)} />
-                <DamayanFundViewCard label="Bank Code" value={damayanFund.bankCode.description} />
-                <DamayanFundViewCard label="Amount" value={`${formatNumber(damayanFund.amount)}`} />
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-          <ViewDFEntries damayanFund={damayanFund} isOpen={isOpen} />
+        <div className="inner-content h-screen !p-2 flex flex-col">
+          <div>
+            <IonGrid>
+              <IonRow>
+                <IonCol size="6" className="space-y-1">
+                  <DamayanFundViewCard label="JV#" value={`JV#${damayanFund.code}`} labelClassName="min-w-16 text-end !text-slate-600" />
+                  <DamayanFundViewCard label="Supplier" value={damayanFund.supplier.description} labelClassName="min-w-16 text-end !text-slate-600" />
+                  <DamayanFundViewCard label="Particular" value={damayanFund.remarks} labelClassName="min-w-16 text-end !text-slate-600" />
+                  <DamayanFundViewCard label="Date" value={formatDateTable(damayanFund.date)} labelClassName="min-w-16 text-end !text-slate-600" />
+                  <DamayanFundViewCard label="User" value={damayanFund.encodedBy.username} labelClassName="min-w-16 text-end !text-slate-600" />
+                </IonCol>
+                <IonCol size="6" className="space-y-1">
+                  <IonGrid className="ion-no-padding">
+                    <IonRow className="gap-2">
+                      <IonCol>
+                        <DamayanFundViewCard label="Account Month" value={`${damayanFund.acctMonth}`} labelClassName="min-w-24 text-end !text-slate-600" />
+                      </IonCol>
+                      <IonCol>
+                        <DamayanFundViewCard label="Account Year" value={`${damayanFund.acctYear}`} labelClassName="min-w-24 text-end !text-slate-600" />
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                  <DamayanFundViewCard label="Check Number" value={damayanFund.checkNo} labelClassName="min-w-24 text-end !text-slate-600" />
+                  <DamayanFundViewCard label="Check Date" value={formatDateTable(damayanFund.checkDate)} labelClassName="min-w-24 text-end !text-slate-600" />
+                  <DamayanFundViewCard label="Bank Code" value={damayanFund.bankCode.description} labelClassName="min-w-24 text-end !text-slate-600" />
+                  <DamayanFundViewCard label="Amount" value={`${formatNumber(damayanFund.amount)}`} labelClassName="min-w-24 text-end !text-slate-600" />
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </div>
+          <div className="flex-1">
+            <ViewDFEntries damayanFund={damayanFund} isOpen={isOpen} />
+          </div>
         </div>
       </IonModal>
     </>

@@ -21,9 +21,10 @@ type BankSelectionProps<T extends FieldValues> = {
   clearErrors: UseFormClearErrors<T>;
   bankLabel: Path<T>;
   bankValue: Path<T>;
+  className?: string;
 };
 
-const BankSelection = <T extends FieldValues>({ bankLabel, bankValue, setValue, clearErrors }: BankSelectionProps<T>) => {
+const BankSelection = <T extends FieldValues>({ bankLabel, bankValue, setValue, clearErrors, className = '' }: BankSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [datas, setDatas] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
@@ -66,11 +67,10 @@ const BankSelection = <T extends FieldValues>({ bankLabel, bankValue, setValue, 
 
   return (
     <>
-      <div className="text-end">
-        <IonButton onClick={handleOpen} fill="clear" className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0" strong>
-          Find
-        </IonButton>
-      </div>
+      <IonButton onClick={handleOpen} fill="clear" className={classNames('max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0', className)} strong>
+        Find
+      </IonButton>
+
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}

@@ -20,9 +20,10 @@ type LoanSelectionProps<T extends FieldValues> = {
   clearErrors: UseFormClearErrors<T>;
   loanLabel: Path<T>;
   loanValue: Path<T>;
+  className?: string;
 };
 
-const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, clearErrors }: LoanSelectionProps<T>) => {
+const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, clearErrors, className = '' }: LoanSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [datas, setDatas] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
@@ -65,11 +66,10 @@ const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, 
 
   return (
     <>
-      <div className="text-end">
-        <IonButton onClick={handleOpen} fill="clear" className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0" strong>
-          Find
-        </IonButton>
-      </div>
+      <IonButton onClick={handleOpen} fill="clear" className={classNames('max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0', className)} strong>
+        Find
+      </IonButton>
+
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}

@@ -109,85 +109,81 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
             <ModalHeader disabled={loading} title="Loan Release - Edit Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-0">
+        <div className="inner-content h-screen flex flex-col gap-3 !p-2">
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div>
-              <IonGrid>
-                <IonRow>
-                  <IonCol size="6" className="space-y-1">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                      <LoanReleaseViewCard label="CV#" value={`CV#${transaction.code}`} />
-                      <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} />
-                    </div>
-                    <LoanReleaseViewCard label="Name" value={transaction.center.description} />
-                    <LoanReleaseViewCard label="Particular" value={transaction.remarks} />
-                    <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} />
-                  </IonCol>
-                  <IonCol size="6" className="space-y-1">
-                    <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} />
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
-                      <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} />
-                      <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} />
-                      <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} />
-                    </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
-                      <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} />
-                      <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} />
-                      <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} />
-                    </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                  <LoanReleaseViewCard label="CV#" value={`CV#${transaction.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                  <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} labelClassName="min-w-20 text-end !text-slate-600" />
+                </div>
+                <LoanReleaseViewCard label="Name" value={transaction.center.description} labelClassName="min-w-20 text-end !text-slate-600" />
+                <LoanReleaseViewCard label="Particular" value={transaction.remarks} labelClassName="min-w-20 text-end !text-slate-600" />
+                <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} labelClassName="min-w-20 text-end !text-slate-600" />
+              </div>
+              <div className="space-y-2">
+                <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} labelClassName="min-w-28 text-end !text-slate-600" />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+                  <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+                  <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
+                </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
-                      <LoanReleaseViewCard label="Bank Code" value={transaction.bank.description} />
-                      <FormIonItem>
-                        <InputText
-                          disabled={loading}
-                          name="amount"
-                          control={form.control}
-                          clearErrors={form.clearErrors}
-                          label="Amount"
-                          placeholder="Type here"
-                          className="!px-2 !py-2 rounded-md"
-                          labelClassName="truncate min-w-32 lg:min-w-0 !text-slate-600"
-                        />
-                      </FormIonItem>
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
+                  <LoanReleaseViewCard label="Bank Code" value={transaction.bank.description} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <FormIonItem className=" [--min-height:0]">
+                    <InputText
+                      disabled={loading}
+                      name="amount"
+                      control={form.control}
+                      clearErrors={form.clearErrors}
+                      label="Amount"
+                      placeholder="Type here"
+                      className="!px-2 !py-2 rounded-md"
+                      labelClassName="truncate min-w-28 lg:min-w-0 !text-slate-600"
+                    />
+                  </FormIonItem>
 
-                      <FormIonItem className="flex-1">
-                        <InputText
-                          disabled={loading}
-                          name="cycle"
-                          control={form.control}
-                          clearErrors={form.clearErrors}
-                          label="Cycle"
-                          placeholder="Type here"
-                          className="!px-2 !py-2 rounded-md"
-                          labelClassName="truncate min-w-32 lg:min-w-0 !text-slate-600"
-                        />
-                      </FormIonItem>
+                  <FormIonItem className="flex-1 [--min-height:0]">
+                    <InputText
+                      disabled={loading}
+                      name="cycle"
+                      control={form.control}
+                      clearErrors={form.clearErrors}
+                      label="Cycle"
+                      placeholder="Type here"
+                      className="!px-2 !py-2 rounded-md"
+                      labelClassName="truncate min-w-28 lg:min-w-0 !text-slate-600"
+                    />
+                  </FormIonItem>
 
-                      <FormIonItem className="flex-1">
-                        <InputText
-                          disabled={loading}
-                          name="interestRate"
-                          control={form.control}
-                          clearErrors={form.clearErrors}
-                          label="Interest Rate (%)"
-                          placeholder="Type here"
-                          className="!px-2 !py-2 rounded-md"
-                          labelClassName="truncate min-w-32 lg:min-w-0 !text-slate-600"
-                        />
-                      </FormIonItem>
-                    </div>
-                  </IonCol>
-                </IonRow>
-              </IonGrid>
+                  <FormIonItem className="flex-1 [--min-height:0]">
+                    <InputText
+                      disabled={loading}
+                      name="interestRate"
+                      control={form.control}
+                      clearErrors={form.clearErrors}
+                      label="Interest Rate (%)"
+                      placeholder="Type here"
+                      className="!px-2 !py-2 rounded-md"
+                      labelClassName="truncate min-w-28 lg:min-w-0 !text-slate-600"
+                    />
+                  </FormIonItem>
+                </div>
+              </div>
             </div>
-            <div className="text-end space-x-1 px-2 pb-2">
+            <div className="text-end space-x-1 px-0 pb-2">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                 {loading ? 'Saving...' : 'Save Changes'}
               </IonButton>
             </div>
           </form>
-          <div className="border-t border-t-slate-400 mx-2 pt-5">
+          <div className="border-t border-t-slate-400 pt-5 flex-1">
             <UpdateEntries isOpen={isOpen} transaction={transaction} />
           </div>
         </div>

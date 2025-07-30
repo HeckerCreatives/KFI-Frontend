@@ -71,8 +71,8 @@ const ViewJVEntries = ({ isOpen, journalVoucher }: ViewEntriesProps) => {
   }, [isOpen]);
 
   return (
-    <div className="pb-2">
-      <div className="relative overflow-auto">
+    <div className="pb-2 h-full flex flex-col">
+      <div className="relative overflow-auto flex-1">
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4">

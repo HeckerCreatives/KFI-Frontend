@@ -37,42 +37,46 @@ const ViewEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan }) 
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Emergency Loan - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !p-2">
-          <IonGrid>
-            <IonRow>
-              <IonCol size="6" className="space-y-1">
-                <JournalVoucherViewCard label="CV#" value={`CV#${emergencyLoan.code}`} />
-                <JournalVoucherViewCard label="Supplier" value={emergencyLoan.supplier.description} />
-                <JournalVoucherViewCard label="Particular" value={emergencyLoan.remarks} />
-                <JournalVoucherViewCard label="Date" value={formatDateTable(emergencyLoan.date)} />
-                <JournalVoucherViewCard label="User" value={emergencyLoan.encodedBy.username} />
-              </IonCol>
-              <IonCol size="6" className="space-y-1">
-                <IonGrid className="ion-no-padding">
-                  <IonRow className="gap-2">
-                    <IonCol>
-                      <JournalVoucherViewCard label="Account Month" value={`${emergencyLoan.acctMonth}`} />
-                    </IonCol>
-                    <IonCol>
-                      <JournalVoucherViewCard label="Account Year" value={`${emergencyLoan.acctYear}`} />
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-                <JournalVoucherViewCard label="Check Number" value={emergencyLoan.checkNo} />
-                <JournalVoucherViewCard label="Check Date" value={formatDateTable(emergencyLoan.checkDate)} />
-                <JournalVoucherViewCard label="Bank Code" value={emergencyLoan.bankCode.description} />
-                <JournalVoucherViewCard label="Amount" value={`${formatNumber(emergencyLoan.amount)}`} />
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-          <ViewELEntries emergencyLoan={emergencyLoan} isOpen={isOpen} />
+        <div className="inner-content h-screen !p-2 flex flex-col">
+          <div>
+            <IonGrid>
+              <IonRow>
+                <IonCol size="6" className="space-y-1">
+                  <JournalVoucherViewCard label="CV#" value={`CV#${emergencyLoan.code}`} labelClassName="min-w-14 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Supplier" value={emergencyLoan.supplier.description} labelClassName="min-w-14 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Particular" value={emergencyLoan.remarks} labelClassName="min-w-14 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Date" value={formatDateTable(emergencyLoan.date)} labelClassName="min-w-14 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="User" value={emergencyLoan.encodedBy.username} labelClassName="min-w-14 text-end !text-slate-600" />
+                </IonCol>
+                <IonCol size="6" className="space-y-1">
+                  <IonGrid className="ion-no-padding">
+                    <IonRow className="gap-2">
+                      <IonCol>
+                        <JournalVoucherViewCard label="Account Month" value={`${emergencyLoan.acctMonth}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                      </IonCol>
+                      <IonCol>
+                        <JournalVoucherViewCard label="Account Year" value={`${emergencyLoan.acctYear}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                  <JournalVoucherViewCard label="Check Number" value={emergencyLoan.checkNo} labelClassName="min-w-20 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Check Date" value={formatDateTable(emergencyLoan.checkDate)} labelClassName="min-w-20 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Bank Code" value={emergencyLoan.bankCode.description} labelClassName="min-w-20 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Amount" value={`${formatNumber(emergencyLoan.amount)}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </div>
+          <div className="flex-1">
+            <ViewELEntries emergencyLoan={emergencyLoan} isOpen={isOpen} />
+          </div>
         </div>
       </IonModal>
     </>

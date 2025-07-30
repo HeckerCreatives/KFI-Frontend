@@ -44,7 +44,7 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
                   placeholder="Click find to search for document no."
                   className="!px-2 !py-2 rounded-md"
                   readOnly
-                  labelClassName="!text-slate-600 truncate min-w-10"
+                  labelClassName="!text-slate-600 truncate min-w-10 !text-sm text-end"
                 />
               </FormIonItem>
               {form.watch('docNoFrom') && (
@@ -71,7 +71,7 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
                   placeholder="Click find to search for document no."
                   className="!px-2 !py-2 rounded-md"
                   readOnly
-                  labelClassName="!text-slate-600 truncate min-w-10"
+                  labelClassName="!text-slate-600 truncate min-w-10 !text-sm text-end"
                 />
               </FormIonItem>
               {form.watch('docNoTo') && (

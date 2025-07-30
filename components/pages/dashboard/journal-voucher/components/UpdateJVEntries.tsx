@@ -74,12 +74,14 @@ const UpdateJVEntries = ({ isOpen, journalVoucher }: UpdateJVEntriesProps) => {
   }, [isOpen]);
 
   return (
-    <div className="pb-2">
-      <AddEntry journalVoucherId={journalVoucher._id} getEntries={getEntries} />
-      <div className="relative overflow-auto">
+    <div className="pb-2 h-full flex flex-col">
+      <div>
+        <AddEntry journalVoucherId={journalVoucher._id} getEntries={getEntries} />
+      </div>
+      <div className="relative overflow-auto flex-1">
         <Table>
           <TableHeader>
-            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4">
+            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!font-normal [&>th]:!py-1.5">
               <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>
               <TableHead>Acct. Code</TableHead>
@@ -95,7 +97,7 @@ const UpdateJVEntries = ({ isOpen, journalVoucher }: UpdateJVEntriesProps) => {
             {!data.loading && data.entries.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
             {!data.loading &&
               data.entries.map((entry: JournalVoucherEntry) => (
-                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2">
+                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[1.1rem]">
                   <TableCell>{entry?.client?.name}</TableCell>
                   <TableCell>{entry?.particular}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>

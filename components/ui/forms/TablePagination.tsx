@@ -41,20 +41,20 @@ const TablePagination = ({ currentPage, totalPages, onPageChange, visibleRange =
     // </div>
 
     <div className="w-full pb-3">
-      <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md bg-[#18181B] w-fit mx-auto">
+      <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">
         <div>
           <IonButton
             fill="clear"
             disabled={currentPage === 1 || disabled}
             onClick={() => currentPage - 1 !== 0 && onPageChange(currentPage - 1)}
-            // className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
-            className="max-h-10 min-h-6 h-8 bg-[#EAB308] text-white capitalize font-semibold rounded-md"
+            className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+            // className="max-h-10 min-h-6 h-8 bg-[#EAB308] text-white capitalize font-semibold rounded-md"
           >
             <IonIcon icon={arrowBack} />
           </IonButton>
         </div>
         <div>
-          <div className="text-sm !font-semibold bg-[#27272A] px-3 py-1.5 rounded-lg text-slate-300">
+          <div className="text-sm !font-semibold  px-3 py-1.5 rounded-lg text-slate-700">
             {currentPage} / {totalPages}
           </div>
         </div>
@@ -63,8 +63,8 @@ const TablePagination = ({ currentPage, totalPages, onPageChange, visibleRange =
             fill="clear"
             disabled={totalPages === currentPage || disabled}
             onClick={() => currentPage + 1 <= totalPages && onPageChange(currentPage + 1)}
-            // className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
-            className="max-h-10 min-h-6 h-8 bg-[#EAB308] text-white capitalize font-semibold rounded-md"
+            className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+            // className="max-h-10 min-h-6 h-8 bg-[#EAB308] text-white capitalize font-semibold rounded-md"
           >
             <IonIcon icon={arrowForward} />
           </IonButton>

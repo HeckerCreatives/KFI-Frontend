@@ -97,11 +97,15 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
             <ModalHeader disabled={loading} title="Emergency Loan - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-0">
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="mb-3">
-              <EmergencyLoanForm form={form} loading={loading} />
-              <EmergencyLoanFormTable form={form} />
+        <div className="inner-content h-screen !px-0">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col">
+            <div className="mb-3 flex-1">
+              <div>
+                <EmergencyLoanForm form={form} loading={loading} />
+              </div>
+              <div>
+                <EmergencyLoanFormTable form={form} />
+              </div>
             </div>
             <div className="text-end space-x-1 px-2">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>

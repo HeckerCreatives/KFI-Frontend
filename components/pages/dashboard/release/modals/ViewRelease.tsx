@@ -42,46 +42,50 @@ const ViewRelease = ({ release }: ViewReleaseProps) => {
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Release - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !p-2">
-          <IonGrid>
-            <IonRow>
-              <IonCol size="6" className="space-y-1">
-                <ReleaseViewCard label="CV#" value={`CV#${release.code}`} />
-                <ReleaseViewCard label="Center Code" value={`${release.center.centerNo}`} />
-                <ReleaseViewCard label="Name" value={`${release.center.description}`} />
-                <ReleaseViewCard label="Particular" value={release.remarks} />
-                <ReleaseViewCard label="Cash Type" value={release.type} />
-                <ReleaseViewCard label="Account Officer" value={release.acctOfficer} />
-                <ReleaseViewCard label="User" value={release.encodedBy.username} />
-              </IonCol>
-              <IonCol size="6" className="space-y-1">
-                <ReleaseViewCard label="Date" value={formatDateTable(release.date)} />
-                <IonGrid className="ion-no-padding">
-                  <IonRow className="gap-2">
-                    <IonCol>
-                      <ReleaseViewCard label="Account Month" value={`${release.acctMonth}`} />
-                    </IonCol>
-                    <IonCol>
-                      <ReleaseViewCard label="Account Year" value={`${release.acctYear}`} />
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-                <ReleaseViewCard label="Check Number" value={release.checkNo} />
-                <ReleaseViewCard label="Check Date" value={formatDateTable(release.checkDate)} />
-                <ReleaseViewCard label="Bank Code" value={release.bankCode.description} />
-                <ReleaseViewCard label="Amount" value={`${formatNumber(release.amount)}`} />
-                <ReleaseViewCard label="Cash Collection" value={`${formatNumber(release.cashCollectionAmount || 0)}`} />
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-          <ViewReleaseEntries release={release} isOpen={isOpen} />
+        <div className="inner-content h-screen !p-2 flex flex-col">
+          <div>
+            <IonGrid>
+              <IonRow>
+                <IonCol size="6" className="space-y-1">
+                  <ReleaseViewCard label="CV#" value={`CV#${release.code}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <ReleaseViewCard label="Center Code" value={`${release.center.centerNo}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <ReleaseViewCard label="Name" value={`${release.center.description}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <ReleaseViewCard label="Particular" value={release.remarks} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <ReleaseViewCard label="Cash Type" value={release.type} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <ReleaseViewCard label="Account Officer" value={release.acctOfficer} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <ReleaseViewCard label="User" value={release.encodedBy.username} labelClassName="min-w-28 text-end !text-slate-600" />
+                </IonCol>
+                <IonCol size="6" className="space-y-1">
+                  <ReleaseViewCard label="Date" value={formatDateTable(release.date)} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <IonGrid className="ion-no-padding">
+                    <IonRow className="gap-2">
+                      <IonCol>
+                        <ReleaseViewCard label="Account Month" value={`${release.acctMonth}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                      </IonCol>
+                      <IonCol>
+                        <ReleaseViewCard label="Account Year" value={`${release.acctYear}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                  <ReleaseViewCard label="Check Number" value={release.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <ReleaseViewCard label="Check Date" value={formatDateTable(release.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <ReleaseViewCard label="Bank Code" value={release.bankCode.description} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <ReleaseViewCard label="Amount" value={`${formatNumber(release.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <ReleaseViewCard label="Cash Collection" value={`${formatNumber(release.cashCollectionAmount || 0)}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </div>
+          <div className="flex-1">
+            <ViewReleaseEntries release={release} isOpen={isOpen} />
+          </div>
         </div>
       </IonModal>
     </>

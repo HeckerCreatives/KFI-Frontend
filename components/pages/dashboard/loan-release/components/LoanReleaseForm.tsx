@@ -32,7 +32,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
     <IonGrid>
       <IonRow>
         <IonCol size="6" className="space-y-1">
-          <FormIonItem>
+          <FormIonItem className="[--min-height:0]">
             <InputText
               disabled={loading}
               name="cvNo"
@@ -40,49 +40,42 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               clearErrors={form.clearErrors}
               label="CV#"
               placeholder="Type here"
-              className="!px-2 !py-2 rounded-md lg:max-w-64"
-              labelClassName="truncate min-w-[7.5rem] lg:min-w-24 !text-slate-600"
+              className="!px-1 !py-1 rounded-md lg:max-w-64 !text-[0.7rem]"
+              labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
             />
           </FormIonItem>
-          <IonGrid className="ion-no-padding">
-            <IonRow className="gap-2">
-              <IonCol>
-                <div className="flex items-start gap-2 flex-nowrap">
-                  <FormIonItem className="flex-1">
-                    <InputText
-                      disabled={loading}
-                      readOnly
-                      name="centerLabel"
-                      control={form.control}
-                      clearErrors={form.clearErrors}
-                      label="Center Code"
-                      placeholder="Click find to search for center code"
-                      className="!px-2 !py-2 rounded-md"
-                      labelClassName="truncate min-w-[7.5rem] lg:min-w-24 !text-slate-600"
-                    />
-                  </FormIonItem>
-                  <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : 'mt-1.5')}>
-                    <CenterSelection centerLabel="centerLabel" centerValue="center" clearErrors={form.clearErrors} setValue={form.setValue} />
-                  </div>
-                </div>
-              </IonCol>
-              <IonCol size="12" sizeLg="6">
-                <FormIonItem>
-                  <InputText
-                    disabled={loading}
-                    readOnly
-                    name="name"
-                    control={form.control}
-                    clearErrors={form.clearErrors}
-                    label="Name"
-                    placeholder={`${centerLoads ? 'Loading...' : 'Type here'}`}
-                    className="!px-2 !py-2 rounded-md"
-                    labelClassName="truncate min-w-[7.5rem] !text-slate-600"
-                  />
-                </FormIonItem>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <div className="flex items-center gap-2 flex-nowrap">
+              <FormIonItem className="flex-1 [--min-height:0]">
+                <InputText
+                  disabled={loading}
+                  readOnly
+                  name="centerLabel"
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  label="Center Code"
+                  placeholder="Click find to search for center code"
+                  className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                  labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
+                />
+              </FormIonItem>
+              <CenterSelection centerLabel="centerLabel" centerValue="center" clearErrors={form.clearErrors} setValue={form.setValue} className="!min-h-6 h-[1.65rem] text-xs" />
+            </div>
+
+            <FormIonItem className="[--min-height:0]">
+              <InputText
+                disabled={loading}
+                readOnly
+                name="name"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Name"
+                placeholder={`${centerLoads ? 'Loading...' : 'Type here'}`}
+                className="!px-1 !py-1 rounded-md !text-[0.7rem] "
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
+              />
+            </FormIonItem>
+          </div>
 
           {/* <FormIonItem>
             <InputText
@@ -95,7 +88,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               className="!px-2 !py-2 rounded-md"
             />
           </FormIonItem> */}
-          <FormIonItem>
+          <FormIonItem className="w-full [--min-height:0]">
             <InputText
               disabled={loading}
               name="remarks"
@@ -103,12 +96,12 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               clearErrors={form.clearErrors}
               label="Particular"
               placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate min-w-[7.5rem] lg:min-w-24 !text-slate-600"
+              className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+              labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
             />
           </FormIonItem>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            <FormIonItem>
+            <FormIonItem className="w-full [--min-height:0]">
               <InputText
                 disabled={loading}
                 name="date"
@@ -117,12 +110,12 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                 clearErrors={form.clearErrors}
                 label="Date"
                 placeholder="Type here"
-                className="!px-2 !py-2 rounded-md"
                 max="9999-12-31"
-                labelClassName="truncate min-w-[7.5rem] lg:min-w-24 !text-slate-600"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <FormIonItem>
+            <FormIonItem className="w-full [--min-height:0]">
               <InputText
                 disabled={loading}
                 name="acctMonth"
@@ -130,11 +123,13 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                 clearErrors={form.clearErrors}
                 label="Account Month"
                 placeholder="Type here"
-                className="!px-2 !py-2 rounded-md"
-                labelClassName="truncate min-w-[7.5rem] !text-slate-600"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <FormIonItem>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <FormIonItem className="w-full [--min-height:0]">
               <InputText
                 disabled={loading}
                 name="acctYear"
@@ -142,11 +137,11 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                 clearErrors={form.clearErrors}
                 label="Account Year"
                 placeholder="Type here"
-                className="!px-2 !py-2 rounded-md"
-                labelClassName="truncate min-w-[7.5rem] lg:min-w-24 !text-slate-600"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <FormIonItem>
+            <FormIonItem className="w-full [--min-height:0]">
               <InputText
                 disabled={loading}
                 name="noOfWeeks"
@@ -154,8 +149,8 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                 clearErrors={form.clearErrors}
                 label="Number of Weeks"
                 placeholder="Type here"
-                className="!px-2 !py-2 rounded-md"
-                labelClassName="truncate min-w-[7.5rem] !text-slate-600"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
               />
             </FormIonItem>
           </div>
@@ -163,7 +158,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
         <IonCol size="6" className="space-y-1">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
             <div className="flex items-start gap-2">
-              <FormIonItem className="flex-1">
+              <FormIonItem className="w-full [--min-height:0]">
                 <InputText
                   readOnly
                   disabled={loading}
@@ -172,16 +167,14 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                   clearErrors={form.clearErrors}
                   label="Type of Loan"
                   placeholder="Click find to search for type of loan"
-                  className="!px-2 !py-2 rounded-md"
-                  labelClassName="truncate min-w-28 !text-slate-600"
+                  className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                  labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
                 />
               </FormIonItem>
-              <div className={classNames(form.formState.errors.typeOfLoanLabel ? 'mt-0' : 'mt-1.5')}>
-                <LoanSelection loanLabel="typeOfLoanLabel" loanValue="typeOfLoan" clearErrors={form.clearErrors} setValue={form.setValue} />
-              </div>
+              <LoanSelection loanLabel="typeOfLoanLabel" loanValue="typeOfLoan" clearErrors={form.clearErrors} setValue={form.setValue} className="!min-h-6 h-[1.65rem] text-xs" />
             </div>
             <div className="flex items-start gap-2 flex-nowrap">
-              <FormIonItem className="flex-1">
+              <FormIonItem className="w-full [--min-height:0]">
                 <InputText
                   disabled={loading}
                   name="bankCodeLabel"
@@ -190,18 +183,16 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                   clearErrors={form.clearErrors}
                   label="Bank Code"
                   placeholder="Click find to search for bank code"
-                  className="!px-2 !py-2 rounded-md"
-                  labelClassName="truncate min-w-28 !text-slate-600"
+                  className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                  labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
                 />
               </FormIonItem>
-              <div className={classNames(form.formState.errors.bankCodeLabel ? 'mt-0' : 'mt-1.5')}>
-                <BankSelection bankLabel="bankCodeLabel" bankValue="bankCode" setValue={form.setValue} clearErrors={form.clearErrors} />
-              </div>
+              <BankSelection bankLabel="bankCodeLabel" bankValue="bankCode" setValue={form.setValue} clearErrors={form.clearErrors} className="!min-h-6 h-[1.65rem] text-xs" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
-            <FormIonItem>
+            <FormIonItem className="w-full [--min-height:0]">
               <InputText
                 disabled={loading}
                 name="checkNo"
@@ -209,11 +200,11 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                 clearErrors={form.clearErrors}
                 label="Check Number"
                 placeholder="Type here"
-                className="!px-2 !py-2 rounded-md"
-                labelClassName="truncate min-w-28 !text-slate-600"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <FormIonItem>
+            <FormIonItem className="w-full [--min-height:0]">
               <InputText
                 disabled={loading}
                 name="checkDate"
@@ -222,15 +213,15 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                 clearErrors={form.clearErrors}
                 label="Check Date"
                 placeholder="Type here"
-                className="!px-2 !py-2 rounded-md"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
                 max="9999-12-31"
-                labelClassName="truncate min-w-28 !text-slate-600"
               />
             </FormIonItem>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            <FormIonItem>
+            <FormIonItem className="w-full [--min-height:0]">
               <InputText
                 disabled={loading}
                 name="amount"
@@ -238,11 +229,11 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                 clearErrors={form.clearErrors}
                 label="Amount"
                 placeholder="Type here"
-                className="!px-2 !py-2 rounded-md"
-                labelClassName="truncate min-w-28 !text-slate-600"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <FormIonItem className="flex-1">
+            <FormIonItem className="w-full [--min-height:0]">
               <InputText
                 disabled={loading}
                 name="cycle"
@@ -250,11 +241,13 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                 clearErrors={form.clearErrors}
                 label="Cycle"
                 placeholder="Type here"
-                className="!px-2 !py-2 rounded-md"
-                labelClassName="truncate min-w-28 !text-slate-600"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <FormIonItem className="flex-1">
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <FormIonItem className="w-full [--min-height:0]">
               <InputText
                 disabled={loading}
                 name="interestRate"
@@ -262,12 +255,12 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
                 clearErrors={form.clearErrors}
                 label="Interest Rate (%)"
                 placeholder="Type here"
-                className="!px-2 !py-2 rounded-md"
-                labelClassName="truncate min-w-28 !text-slate-600"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <FormIonItem>
-              <InputCheckbox disabled={loading} name="isEduc" control={form.control} label="EDUC" />
+            <FormIonItem className="w-full [--min-height:0] ps-[6.5rem]">
+              <InputCheckbox disabled={loading} name="isEduc" control={form.control} label="EDUC" className="!h-6 text-xs" />
             </FormIonItem>
           </div>
         </IonCol>

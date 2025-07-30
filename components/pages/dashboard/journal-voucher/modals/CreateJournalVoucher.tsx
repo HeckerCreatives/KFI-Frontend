@@ -90,23 +90,23 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
             <ModalHeader title="Journal Voucher - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-0">
-          <div>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div>
-                <JournalVoucherForm form={form} loading={loading} />
-                <JournalVoucherFormTable form={form} loading={loading} />
-              </div>
-              <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
-                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
-                  Save
-                </IonButton>
-                <IonButton onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
-                  Cancel
-                </IonButton>
-              </div>
-            </form>
-          </div>
+        <div className="inner-content h-screen !px-0 flex flex-col">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col">
+            <div>
+              <JournalVoucherForm form={form} loading={loading} />
+            </div>
+            <div className="flex-1">
+              <JournalVoucherFormTable form={form} loading={loading} />
+            </div>
+            <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
+              <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
+                Save
+              </IonButton>
+              <IonButton onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
+                Cancel
+              </IonButton>
+            </div>
+          </form>
         </div>
       </IonModal>
     </>

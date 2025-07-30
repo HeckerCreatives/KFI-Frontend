@@ -24,7 +24,7 @@ const WeeklySavingTableForm = ({ form, loading }: TForm) => {
               label="Range Amount From"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-[8.3rem]"
+              labelClassName="truncate !text-slate-600 min-w-[8.3rem] !text-sm text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -36,7 +36,7 @@ const WeeklySavingTableForm = ({ form, loading }: TForm) => {
               label="Range Amount To"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-[8.3rem]"
+              labelClassName="truncate !text-slate-600 min-w-[8.3rem] !text-sm text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -48,7 +48,7 @@ const WeeklySavingTableForm = ({ form, loading }: TForm) => {
               label="WSF"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-[8.3rem]"
+              labelClassName="truncate !text-slate-600 min-w-[8.3rem] !text-sm text-end"
             />
           </FormIonItem>
         </IonCol>

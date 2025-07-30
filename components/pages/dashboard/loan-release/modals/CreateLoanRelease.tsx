@@ -109,11 +109,15 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
             <ModalHeader disabled={loading} title="Loan Release - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-0">
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="mb-3">
-              <LoanReleaseForm form={form} loading={loading} />
-              <LoanReleaseFormTable form={form} />
+        <div className="inner-content h-screen !px-0">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col">
+            <div className="mb-3 flex-1 flex flex-col">
+              <div>
+                <LoanReleaseForm form={form} loading={loading} />
+              </div>
+              <div className="overflow-auto flex-1">
+                <LoanReleaseFormTable form={form} />
+              </div>
             </div>
             <div className="text-end space-x-1 px-2">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>

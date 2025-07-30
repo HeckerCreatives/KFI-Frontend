@@ -46,7 +46,7 @@ const EmergencyLoanFilter = ({ getEmergencyLoans }: EmergencyLoanFilterProps) =>
             clearErrors={form.clearErrors}
             className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500 max-w-36"
             max="9999-12-31"
-            labelClassName="truncate"
+            labelClassName="truncate !text-xs pt-1.5"
           />
         </FormIonItem>
         <FormIonItem className="min-w-32 ![--min-height:1rem]">
@@ -58,7 +58,7 @@ const EmergencyLoanFilter = ({ getEmergencyLoans }: EmergencyLoanFilterProps) =>
             clearErrors={form.clearErrors}
             className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500 max-w-36"
             max="9999-12-31"
-            labelClassName="truncate"
+            labelClassName="truncate !text-xs pt-1.5"
           />
         </FormIonItem>
         <FormIonItem className="min-w-32 ![--min-height:1rem]">
@@ -74,7 +74,7 @@ const EmergencyLoanFilter = ({ getEmergencyLoans }: EmergencyLoanFilterProps) =>
               { label: 'Code Z - A', value: 'code-desc' },
             ]}
             className="!border-orange-500 rounded-md !w-full !py-[0.35rem] !max-w-36 !min-w-36"
-            labelClassName="truncate"
+            labelClassName="truncate !text-xs pt-1.5"
           />
         </FormIonItem>
         <FormIonItem className="min-w-32 ![--min-height:1rem]">
@@ -86,7 +86,7 @@ const EmergencyLoanFilter = ({ getEmergencyLoans }: EmergencyLoanFilterProps) =>
             control={form.control}
             clearErrors={form.clearErrors}
             className="!px-3 !min-h-[1rem] rounded-md !border-orange-500 max-w-36"
-            labelClassName="truncate"
+            labelClassName="truncate !text-xs pt-1.5"
           />
         </FormIonItem>
         <IonButton type="submit" fill="clear" className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>

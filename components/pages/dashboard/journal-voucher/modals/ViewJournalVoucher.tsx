@@ -38,42 +38,40 @@ const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Journal Voucher - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !p-2">
-          <IonGrid>
-            <IonRow>
-              <IonCol size="6" className="space-y-1">
-                <JournalVoucherViewCard label="CV#" value={`CV#${journalVoucher.code}`} />
-                <JournalVoucherViewCard label="Supplier" value={journalVoucher.supplier.description} />
-                <JournalVoucherViewCard label="Particular" value={journalVoucher.remarks} />
-                <JournalVoucherViewCard label="Date" value={formatDateTable(journalVoucher.date)} />
-                <JournalVoucherViewCard label="User" value={journalVoucher.encodedBy.username} />
-              </IonCol>
-              <IonCol size="6" className="space-y-1">
-                <IonGrid className="ion-no-padding">
-                  <IonRow className="gap-2">
-                    <IonCol>
-                      <JournalVoucherViewCard label="Account Month" value={`${journalVoucher.acctMonth}`} />
-                    </IonCol>
-                    <IonCol>
-                      <JournalVoucherViewCard label="Account Year" value={`${journalVoucher.acctYear}`} />
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-                <JournalVoucherViewCard label="Check Number" value={journalVoucher.checkNo} />
-                <JournalVoucherViewCard label="Check Date" value={formatDateTable(journalVoucher.checkDate)} />
-                <JournalVoucherViewCard label="Bank Code" value={journalVoucher.bankCode.description} />
-                <JournalVoucherViewCard label="Amount" value={`${formatNumber(journalVoucher.amount)}`} />
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-          <ViewJVEntries journalVoucher={journalVoucher} isOpen={isOpen} />
+        <div className="inner-content h-screen !p-2 flex flex-col">
+          <div>
+            <IonGrid>
+              <IonRow>
+                <IonCol size="6" className="space-y-1">
+                  <JournalVoucherViewCard label="CV#" value={`CV#${journalVoucher.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Supplier" value={journalVoucher.supplier.description} labelClassName="min-w-20 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Particular" value={journalVoucher.remarks} labelClassName="min-w-20 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Date" value={formatDateTable(journalVoucher.date)} labelClassName="min-w-20 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="User" value={journalVoucher.encodedBy.username} labelClassName="min-w-20 text-end !text-slate-600" />
+                </IonCol>
+                <IonCol size="6" className="space-y-1">
+                  <div className="grid grid-cols-1 lg:grid-cols-2">
+                    <JournalVoucherViewCard label="Account Month" value={`${journalVoucher.acctMonth}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                    <JournalVoucherViewCard label="Account Year" value={`${journalVoucher.acctYear}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                  </div>
+                  <JournalVoucherViewCard label="Check Number" value={journalVoucher.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Check Date" value={formatDateTable(journalVoucher.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Bank Code" value={journalVoucher.bankCode.description} labelClassName="min-w-28 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Amount" value={`${formatNumber(journalVoucher.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </div>
+          <div className="flex-1">
+            <ViewJVEntries journalVoucher={journalVoucher} isOpen={isOpen} />
+          </div>
         </div>
       </IonModal>
     </>

@@ -100,9 +100,9 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
             <ModalHeader disabled={loading} title="Release - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-0">
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="mb-3">
+        <div className="inner-content h-screen !px-0">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
+            <div className="mb-3 flex-1">
               <ReleaseForm form={form} loading={loading} />
               <ReleaseFormTable form={form} />
             </div>

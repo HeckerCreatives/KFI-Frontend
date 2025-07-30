@@ -19,6 +19,7 @@ type TFormInput<T extends FieldValues> = {
   labelClassName?: string;
   containerClassnames?: string;
   icon?: string;
+  errorClassName?: string;
 };
 
 const InputText = <T extends FieldValues>({
@@ -36,6 +37,7 @@ const InputText = <T extends FieldValues>({
   max = '',
   containerClassnames = '',
   icon = '',
+  errorClassName = '',
 }: TFormInput<T>) => {
   return (
     <Controller
@@ -46,7 +48,7 @@ const InputText = <T extends FieldValues>({
           <div className={classNames('w-full flex items-start gap-2', containerClassnames)}>
             {label && (
               <div className="flex justify-between">
-                <IonLabel class="custom" className={classNames('!text-sm font-semibold text-slate-600', labelClassName)}>
+                <IonLabel class="custom" className={classNames('text-sm font-semibold text-slate-600', labelClassName)}>
                   {label}
                 </IonLabel>
               </div>
@@ -67,7 +69,7 @@ const InputText = <T extends FieldValues>({
                 disabled={disabled}
                 onIonBlur={field.onBlur}
                 className={classNames(
-                  'text-sm !bg-white ![--highlight-color-focused:none] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:0.75rem] !min-h-[1rem]',
+                  'text-sm !bg-white ![--highlight-color-focused:none] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:0.75rem] !min-h-[0.75rem]',
                   error && '![--border-color:red] !border-red-600',
                   className,
                 )}
@@ -78,7 +80,7 @@ const InputText = <T extends FieldValues>({
               </IonInput>
               <div className="text-start">
                 {error && (
-                  <IonText slot="error" color="danger" className="text-xs font-semibold block">
+                  <IonText slot="error" color="danger" className={classNames('text-xs font-semibold block', errorClassName)}>
                     {error.message}
                   </IonText>
                 )}

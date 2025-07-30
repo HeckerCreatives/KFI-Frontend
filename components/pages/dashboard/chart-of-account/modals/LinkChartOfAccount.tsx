@@ -103,12 +103,12 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
         </IonHeader>
         <div className="inner-content">
           <div className="space-y-3">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-              <ChartOfAccountCard label="Account Code" value={chartAccount.code} />
-              <ChartOfAccountCard label="Description" value={chartAccount.description} />
-              <ChartOfAccountCard label="Classification" value={chartAccount.classification} />
-              <ChartOfAccountCard label="Nature of Account" value={chartAccount.nature} />
-              <ChartOfAccountCard label="Department Status" value={chartAccount.deptStatus} />
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-2">
+              <ChartOfAccountCard label="Account Code" value={chartAccount.code} labelClassName="min-w-24 text-end" />
+              <ChartOfAccountCard label="Description" value={chartAccount.description} labelClassName="min-w-24 text-end" />
+              <ChartOfAccountCard label="Classification" value={chartAccount.classification} labelClassName="min-w-24 text-end" />
+              <ChartOfAccountCard label="Nature of Account" value={chartAccount.nature} labelClassName="min-w-24 text-end" />
+              <ChartOfAccountCard label="Department Status" value={chartAccount.deptStatus} labelClassName="min-w-24 text-end" />
             </div>
 
             <form onSubmit={form.handleSubmit(onSubmit)}>

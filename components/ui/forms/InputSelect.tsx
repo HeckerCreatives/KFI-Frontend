@@ -45,7 +45,7 @@ const InputSelect = <T extends FieldValues>({
       render={({ field, fieldState: { error } }) => (
         <div className={classNames('w-full flex items-start gap-2', containerClassnames)}>
           {label && showLabel && (
-            <IonLabel class="custom" className={classNames('!text-sm font-semibold text-slate-600', labelClassName)}>
+            <IonLabel class="custom" className={classNames('text-sm font-semibold text-slate-600', labelClassName)}>
               {label}
               {required && <span className="text-red-500"> *</span>}
             </IonLabel>
@@ -65,7 +65,7 @@ const InputSelect = <T extends FieldValues>({
               labelPlacement="stacked"
               onIonBlur={field.onBlur}
               className={classNames(
-                '!border border-slate-400 [--highlight-color-focused:none] !px-2 !py-1 text-sm !min-h-[1.2rem] min-w-full',
+                '!border border-slate-400 [--highlight-color-focused:none] !px-2 !py-1 text-sm !min-h-[0.75rem] min-w-full',
                 error && '![--border-color:red] !border-red-600',
                 className,
               )}

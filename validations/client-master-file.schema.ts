@@ -11,7 +11,7 @@ export const clientMasterFileSchema = z.object({
   birthplace: z.string().min(1, 'Birth Place is required'),
   age: z.string().min(1, 'Age is required'),
   sex: z.string().min(1, 'Sex is required'),
-  spouse: z.string().min(1, 'Spouse is required'),
+  spouse: z.string().min(1, 'Spouse is required').optional().or(z.literal('')),
   civilStatus: z.string().min(1, 'Civil Status is required'),
   parent: z.string().min(1, 'Parent is required').optional().or(z.literal('')),
   memberStatus: z.string().min(1, 'Member status is required'),

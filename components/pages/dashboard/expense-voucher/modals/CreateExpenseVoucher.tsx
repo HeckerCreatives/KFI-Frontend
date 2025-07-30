@@ -89,21 +89,23 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
             <ModalHeader title="Expense Voucher - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content !px-0">
-          <div>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="inner-content !px-0 h-screen flex flex-col">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col">
+            <div>
               <ExpenseVoucherForm form={form as UseFormReturn<ExpenseVoucherFormData | UpdateExpenseVoucherFormData>} loading={loading} />
+            </div>
+            <div className="flex-1">
               <ExpenseVoucherFormTable form={form} loading={loading} />
-              <div className="text-end border-t pt-1 space-x-2 px-3">
-                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
-                  {loading ? 'Saving...' : 'Save'}
-                </IonButton>
-                <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
-                  Cancel
-                </IonButton>
-              </div>
-            </form>
-          </div>
+            </div>
+            <div className="text-end border-t pt-1 space-x-2 px-3">
+              <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
+                {loading ? 'Saving...' : 'Save'}
+              </IonButton>
+              <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
+                Cancel
+              </IonButton>
+            </div>
+          </form>
         </div>
       </IonModal>
     </>
