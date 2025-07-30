@@ -38,7 +38,7 @@ const ViewBeneficiaries = ({ client, setData }: ViewBeneficiariesProps) => {
         type="button"
         id={`view-beneficiaries-modal-${client._id}`}
         fill="clear"
-        className="space-x-1 rounded-lg w-40 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-lg w-40 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#FA6C2F] text-slate-100 capitalize min-h-8 text-xs"
       >
         <IonIcon icon={person} className="text-xs" />
         <span>View Beneficiary</span>

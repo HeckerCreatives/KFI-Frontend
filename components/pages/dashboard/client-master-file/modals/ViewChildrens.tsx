@@ -38,7 +38,7 @@ const ViewChildrens = ({ client, setData }: ViewChildrensProps) => {
         type="button"
         id={`view-children-modal-${client._id}`}
         fill="clear"
-        className="space-x-1 w-32 h-6 rounded-lg ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 w-32 h-6 rounded-lg ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#FA6C2F] text-slate-100 capitalize min-h-8 text-xs"
       >
         <IonIcon icon={people} className="text-xs" />
         <span>View Children</span>

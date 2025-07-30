@@ -6,12 +6,16 @@ import CMFPersonalForm from '../components/CMFPersonalForm';
 import { ClientMasterFileFormData, clientMasterFileSchema } from '../../../../../validations/client-master-file.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import kfiAxios from '../../../../utils/axios';
-import { ClientMasterFile, TErrorData, TFormError } from '../../../../../types/types';
+import { AccessToken, ClientMasterFile, TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { TClientMasterFile } from '../ClientMasterFile';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { createSharp } from 'ionicons/icons';
+import ViewBeneficiaries from './ViewBeneficiaries';
+import ViewChildrens from './ViewChildrens';
+import { canDoAction } from '../../../../utils/permissions';
+import { jwtDecode } from 'jwt-decode';
 
 type UpdateClientMasterFileProps = {
   client: ClientMasterFile;
@@ -21,6 +25,8 @@ type UpdateClientMasterFileProps = {
 const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps) => {
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
+
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
 
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -156,6 +162,14 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">
+          <div className="px-2 text-end">
+            {canDoAction(token.role, token.permissions, 'clients', 'visible') && (
+              <>
+                <ViewBeneficiaries client={client} setData={setData} />
+                <ViewChildrens client={client} setData={setData} />
+              </>
+            )}
+          </div>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CMFPersonalForm form={form} loading={loading} />
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
