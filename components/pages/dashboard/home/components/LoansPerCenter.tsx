@@ -90,7 +90,7 @@ const LoansPerCenter = () => {
           ></IonInput>
           <div>
             <IonButton
-              type="submit"
+              onClick={() => getRecentLoans(1)}
               fill="clear"
               className="max-h-10 min-h-[1.8rem] ![--padding-top:0] ![--padding-bottom:0] ![--padding-end:0.4rem] ![--padding-start:0.45rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
               strong
