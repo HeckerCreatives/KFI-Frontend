@@ -44,7 +44,7 @@ const AcknowledgementFilter = ({ getAcknowledgements }: AcknowledgementFilterPro
             type="date"
             control={form.control}
             clearErrors={form.clearErrors}
-            className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500 max-w-36"
+            className="!px-3 !py-[0.3rem] !min-h-[1rem] rounded-md !border-orange-500 max-w-36"
             max="9999-12-31"
             labelClassName="truncate !text-xs pt-1.5"
           />
@@ -56,7 +56,7 @@ const AcknowledgementFilter = ({ getAcknowledgements }: AcknowledgementFilterPro
             type="date"
             control={form.control}
             clearErrors={form.clearErrors}
-            className="!px-3 !py-[0.3rem] !min-h-[1.5rem] rounded-md !border-orange-500 max-w-36"
+            className="!px-3 !py-[0.3rem] !min-h-[1rem] rounded-md !border-orange-500 max-w-36"
             max="9999-12-31"
             labelClassName="truncate !text-xs pt-1.5"
           />
@@ -73,7 +73,7 @@ const AcknowledgementFilter = ({ getAcknowledgements }: AcknowledgementFilterPro
               { label: 'Code A - Z', value: 'code-asc' },
               { label: 'Code Z - A', value: 'code-desc' },
             ]}
-            className="!border-orange-500 rounded-md !w-full !py-[0.35rem] !max-w-36 !min-w-36"
+            className="!border-orange-500 rounded-md !w-full !py-[0.35rem] !max-w-36 !min-w-36 !min-h-[1rem]"
             labelClassName="truncate !text-xs pt-1.5"
           />
         </FormIonItem>

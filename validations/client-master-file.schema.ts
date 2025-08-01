@@ -1,4 +1,6 @@
 import z from 'zod';
+import { beneficiarySchema } from './beneficiary.schema';
+import { childrenSchema } from './children.schema';
 
 export const clientMasterFileSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -15,6 +17,7 @@ export const clientMasterFileSchema = z.object({
   civilStatus: z.string().min(1, 'Civil Status is required'),
   parent: z.string().min(1, 'Parent is required').optional().or(z.literal('')),
   memberStatus: z.string().min(1, 'Member status is required'),
+  memberStatusLabel: z.string().min(1, 'Member status is required'),
   center: z.string().min(1, 'Center is required'),
   centerLabel: z.string().min(1, 'Center label is required'),
   acctOfficer: z.string().min(1, 'Account officer is required'),
@@ -24,8 +27,9 @@ export const clientMasterFileSchema = z.object({
   position: z.string().min(1, 'Position is required'),
   acctNumber: z.string().min(1, 'Account No. is required'),
   dateResigned: z.string().min(1, 'Date resigned is required').optional().or(z.literal('')),
-  newStatus: z.string().min(1, 'New Status is required'),
   reason: z.string().min(1, 'Reason is required').optional().or(z.literal('')),
+  beneficiary: z.array(beneficiarySchema).optional(),
+  children: z.array(childrenSchema).optional(),
 });
 
 export type ClientMasterFileFormData = z.infer<typeof clientMasterFileSchema>;

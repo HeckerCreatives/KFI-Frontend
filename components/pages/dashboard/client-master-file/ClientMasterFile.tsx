@@ -106,11 +106,10 @@ const ClientMasterFile = () => {
                       <TableHead>Name</TableHead>
                       <TableHead>Center No.</TableHead>
                       <TableHead>Account Officer</TableHead>
-                      <TableHead>New Status</TableHead>
+                      <TableHead>Member Status</TableHead>
                       <TableHead>Address</TableHead>
                       <TableHead>City</TableHead>
                       <TableHead>Zip Code</TableHead>
-                      <TableHead>Telephone No.</TableHead>
                       <TableHead>Mobile No.</TableHead>
                       {haveActions(token.role, 'clients', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
@@ -126,11 +125,10 @@ const ClientMasterFile = () => {
                           <TableCell>{client.name}</TableCell>
                           <TableCell>{client.center.centerNo}</TableCell>
                           <TableCell>{client.acctOfficer}</TableCell>
-                          <TableCell>{client.newStatus}</TableCell>
+                          <TableCell>{client.memberStatus}</TableCell>
                           <TableCell>{client.address}</TableCell>
                           <TableCell>{client.city}</TableCell>
                           <TableCell>{client.zipCode}</TableCell>
-                          <TableCell>{client.telNo}</TableCell>
                           <TableCell>{client.mobileNo}</TableCell>
                           {haveActions(token.role, 'clients', token.permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>

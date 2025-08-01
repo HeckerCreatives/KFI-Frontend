@@ -78,7 +78,7 @@ const DeleteClientMasterFile = ({ client, getClients, searchkey, sortKey, curren
         <div className="inner-content">
           <p className="text-lg text-center py-5">Are you sure you want to delete this record?</p>
           <div className="text-end border-t mt-2 pt-1 space-x-2">
-            <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
+            <IonButton onClick={handleDelete} disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
               {loading ? 'Deleting...' : 'Yes'}
             </IonButton>
             <IonButton disabled={loading} onClick={dismiss} color="tertiary" type="button" className="!text-sm capitalize" strong={true}>

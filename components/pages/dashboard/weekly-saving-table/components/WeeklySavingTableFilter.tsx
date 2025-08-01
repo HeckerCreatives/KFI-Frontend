@@ -49,7 +49,7 @@ const WeeklySavingTableFilter = ({ getWeeklySavings }: WeeklySavingFilterProps) 
               className="!border-orange-500 rounded-md !w-full !py-1.5"
             />
           </FormIonItem>
-          <IonButton type="submit" fill="clear" className="max-h-10 min-h-[2.3rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+          <IonButton type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
             Sort
           </IonButton>
         </form>

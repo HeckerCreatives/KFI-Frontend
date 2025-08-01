@@ -32,6 +32,7 @@ import JournalVoucher from './dashboard/journal-voucher/JournalVoucher';
 import EmergencyLoan from './dashboard/emergency-loan/EmergencyLoan';
 import DamayanFund from './dashboard/damayan-fund/DamayanFund';
 import TopNavigation from '../ui/page/TopNavigation';
+import ChangeOwnPassword from './dashboard/settings/change-password/ChangeOwnPassword';
 
 const Tabs = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -93,9 +94,7 @@ const Tabs = () => {
               </div>
               <IonPopover showBackdrop={false} trigger="click-trigger" triggerAction="click" className="[--max-width:12rem]">
                 <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem]">
-                  <div className="flex items-center gap-2 text-[0.8rem] text-slate-700 font-semibold hover:bg-slate-100 py-1 px-3 cursor-pointer active:bg-slate-200">
-                    <IonIcon icon={settingsOutline} /> Settings
-                  </div>
+                  <ChangeOwnPassword />
                   <div
                     onClick={logout}
                     className="flex items-center gap-2 text-[0.8rem] text-slate-700 font-semibold hover:bg-slate-100 py-1 px-3 cursor-pointer active:bg-slate-200"

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import ModalHeader from '../../../../ui/page/ModalHeader';
@@ -16,7 +16,6 @@ type CreateClientMasterFileProps = {
 
 const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => {
   const [loading, setLoading] = useState(false);
-  const [active, setActive] = useState('personal');
 
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -37,6 +36,7 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
       civilStatus: '',
       parent: '',
       memberStatus: '',
+      memberStatusLabel: '',
       center: '',
       centerLabel: '',
       acctOfficer: '',
@@ -46,8 +46,9 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
       position: '',
       acctNumber: '',
       dateResigned: '',
-      newStatus: '',
       reason: '',
+      beneficiary: [{ name: '', relationship: '' }],
+      children: [{ name: '' }],
     },
   });
 
@@ -75,6 +76,10 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    console.log(form.formState.errors);
+  }, [form.formState.errors]);
 
   return (
     <>

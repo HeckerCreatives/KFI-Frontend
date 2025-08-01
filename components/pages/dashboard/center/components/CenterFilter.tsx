@@ -60,10 +60,10 @@ const CenterFilter = ({ getCenters }: CenterFilterProps) => {
                 type="search"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                className="!px-3 !py-0.5 !min-h-[1rem] rounded-md !border-orange-500"
+                className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
               />
             </FormIonItem>
-            <IonButton type="submit" fill="clear" className="max-h-10 min-h-[2.3rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+            <IonButton type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
               Search
             </IonButton>
           </div>

@@ -107,18 +107,6 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
             />
           </FormIonItem>
 
-          <FormIonItem className="flex-1">
-            <InputText
-              disabled={loading}
-              name="newStatus"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="New Status"
-              placeholder="New Status"
-              className="!px-2 !py-2 rounded-md"
-            />
-          </FormIonItem>
-
           <FormIonItem>
             <InputText
               disabled={loading}

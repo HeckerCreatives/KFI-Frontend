@@ -67,7 +67,7 @@ const CreateLoan = ({ getLoans }: CreateLoanProps) => {
   return (
     <>
       <div className="text-end">
-        <IonButton fill="clear" id="create-loan-modal" className="max-h-10 min-h-[2.3rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        <IonButton fill="clear" id="create-loan-modal" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
           + Add Record
         </IonButton>
       </div>

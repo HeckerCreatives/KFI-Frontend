@@ -91,7 +91,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
           </IonToolbar>
         </IonHeader>
         <div className="inner-content space-y-4">
-          <ManageAccountPermission permissions={permissions} setPermissions={setPermissions} />
+          {/* <ManageAccountPermission permissions={permissions} setPermissions={setPermissions} /> */}
           <TransactionPermission permissions={permissions} setPermissions={setPermissions} />
           <GeneralLedgerPermission permissions={permissions} setPermissions={setPermissions} />
           <SystemPermission permissions={permissions} setPermissions={setPermissions} />

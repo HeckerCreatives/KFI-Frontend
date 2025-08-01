@@ -12,9 +12,6 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { TClientMasterFile } from '../ClientMasterFile';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { createSharp } from 'ionicons/icons';
-import ViewBeneficiaries from './ViewBeneficiaries';
-import ViewChildrens from './ViewChildrens';
-import { canDoAction } from '../../../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
 
 type UpdateClientMasterFileProps = {
@@ -56,8 +53,9 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
       position: client.position,
       acctNumber: client.acctNumber,
       dateResigned: client.dateResigned ? formatDateInput(client.dateResigned) : '',
-      newStatus: client.newStatus,
       reason: client.reason,
+      beneficiary: [{ name: '', relationship: '' }],
+      children: [{ name: '' }],
     },
   });
 
@@ -78,6 +76,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         civilStatus: client.civilStatus,
         parent: client.parent,
         memberStatus: client.memberStatus,
+        memberStatusLabel: client.memberStatus,
         center: client.center._id,
         centerLabel: client.center.centerNo,
         acctOfficer: client.acctOfficer,
@@ -87,8 +86,9 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         position: client.position,
         acctNumber: client.acctNumber,
         dateResigned: client.dateResigned ? formatDateInput(client.dateResigned) : '',
-        newStatus: client.newStatus,
         reason: client.reason,
+        beneficiary: client.beneficiaries.length > 1 ? client.beneficiaries : [{ name: '', relationship: '' }],
+        children: client.children.length > 1 ? client.children : [{ name: '' }],
       });
     }
   }, [client, form]);
@@ -158,14 +158,14 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">
-          <div className="px-2 text-end">
+          {/* <div className="px-2 text-end">
             {canDoAction(token.role, token.permissions, 'clients', 'visible') && (
               <>
                 <ViewBeneficiaries client={client} setData={setData} />
                 <ViewChildrens client={client} setData={setData} />
               </>
             )}
-          </div>
+          </div> */}
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CMFPersonalForm form={form} loading={loading} />
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
