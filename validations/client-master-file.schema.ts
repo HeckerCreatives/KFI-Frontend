@@ -15,8 +15,6 @@ export const clientMasterFileSchema = z.object({
   civilStatus: z.string().min(1, 'Civil Status is required'),
   parent: z.string().min(1, 'Parent is required').optional().or(z.literal('')),
   memberStatus: z.string().min(1, 'Member status is required'),
-  groupNumber: z.string().min(1, 'Group No. is required'),
-  groupNumberLabel: z.string().min(1, 'Group No. is required'),
   center: z.string().min(1, 'Center is required'),
   centerLabel: z.string().min(1, 'Center label is required'),
   acctOfficer: z.string().min(1, 'Account officer is required'),

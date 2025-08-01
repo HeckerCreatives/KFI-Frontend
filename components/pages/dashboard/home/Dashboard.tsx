@@ -16,8 +16,8 @@ const Dashboard = () => {
         <div className="h-full flex flex-col items-stretch justify-start">
           <PageTitle pages={['Dashboard']} />
           <div className="px-3 pb-3 flex-1">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-              <div className="md:col-span-1 lg:col-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-full gap-2">
+              <div className="md:col-span-1 lg:col-span-2 flex flex-col">
                 <div className="overflow-auto py-2">
                   <div className="flex flex-nowrap items-center justify-around gap-2">
                     <DashboardCard title="Total Members" value="9,999,999" icon={peopleSharp} />
@@ -26,7 +26,7 @@ const Dashboard = () => {
                     <DashboardCard title="Total Loan Amount" value="9,999,999" icon={cashSharp} />
                   </div>
                 </div>
-                <div className="bg-white shadow-lg rounded-sm px-3 pt-1 pb-2">
+                <div className="bg-white shadow-lg rounded-sm px-3 pt-1 pb-2 flex-1">
                   <div className="flex items-center justify-between border-b w-full">
                     <h3 className="text-[0.9rem] !font-semibold pb-2 text-orange-700">Loans per Account Officer</h3>
                     <div className="flex items-center">

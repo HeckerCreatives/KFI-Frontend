@@ -24,23 +24,6 @@ const CMFOtherForm = ({ form, loading }: TForm) => {
             <div className="flex items-start gap-2 flex-nowrap">
               <FormIonItem className="flex-1">
                 <InputText
-                  readOnly
-                  disabled={loading}
-                  name="groupNumberLabel"
-                  control={form.control}
-                  clearErrors={form.clearErrors}
-                  label="Group Number"
-                  placeholder="Click find to search a group number"
-                  className="!px-2 !py-2 rounded-md"
-                />
-              </FormIonItem>
-              <div className={classNames(form.formState.errors.groupNumberLabel ? 'mt-0' : 'mt-1.5')}>
-                <GroupOfAccountSelection groupOfAccountLabel="groupNumberLabel" groupOfAccountValue="groupNumber" setValue={form.setValue} clearErrors={form.clearErrors} />
-              </div>
-            </div>
-            <div className="flex items-start gap-2 flex-nowrap">
-              <FormIonItem className="flex-1">
-                <InputText
                   disabled={loading}
                   name="centerLabel"
                   control={form.control}

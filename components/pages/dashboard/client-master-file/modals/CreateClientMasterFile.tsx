@@ -37,8 +37,6 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
       civilStatus: '',
       parent: '',
       memberStatus: '',
-      groupNumber: '',
-      groupNumberLabel: '',
       center: '',
       centerLabel: '',
       acctOfficer: '',

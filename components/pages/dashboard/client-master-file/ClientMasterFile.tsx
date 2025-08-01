@@ -104,7 +104,6 @@ const ClientMasterFile = () => {
                     <TableHeadRow>
                       <TableHead>Account No.</TableHead>
                       <TableHead>Name</TableHead>
-                      <TableHead>Group No.</TableHead>
                       <TableHead>Center No.</TableHead>
                       <TableHead>Account Officer</TableHead>
                       <TableHead>New Status</TableHead>
@@ -125,7 +124,6 @@ const ClientMasterFile = () => {
                         <TableRow key={client._id}>
                           <TableCell>{client.acctNumber}</TableCell>
                           <TableCell>{client.name}</TableCell>
-                          <TableCell>{client.groupNumber.code}</TableCell>
                           <TableCell>{client.center.centerNo}</TableCell>
                           <TableCell>{client.acctOfficer}</TableCell>
                           <TableCell>{client.newStatus}</TableCell>
