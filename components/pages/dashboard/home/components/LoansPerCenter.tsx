@@ -111,8 +111,8 @@ const LoansPerCenter = () => {
             </TableHeadRow>
           </TableHeader>
           <TableBody>
-            {data.loading && <TableLoadingRow colspan={3} />}
-            {!data.loading && data.loans.length < 1 && <TableNoRows label="No Loans Found" colspan={3} />}
+            {data.loading && <TableLoadingRow colspan={4} />}
+            {!data.loading && data.loans.length < 1 && <TableNoRows label="No Loans Found" colspan={4} />}
             {!data.loading &&
               data.loans.length > 0 &&
               data.loans.map((loan: Loan, i: number) => (
