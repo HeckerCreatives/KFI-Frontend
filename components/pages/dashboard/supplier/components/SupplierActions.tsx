@@ -7,6 +7,7 @@ import { AccessToken, Supplier } from '../../../../../types/types';
 import { TSupplier } from '../Supplier';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../../utils/permissions';
+import ViewSupplier from '../modals/ViewSupplier';
 
 type SupplierActionsProps = {
   supplier: Supplier;
@@ -24,6 +25,7 @@ const SupplierActions = ({ supplier, setData, currentPage, setCurrentPage, getSu
 
   return (
     <div>
+      {canDoAction(token.role, token.permissions, 'business supplier', 'visible') && <ViewSupplier supplier={supplier} />}
       {canDoAction(token.role, token.permissions, 'business supplier', 'update') && <UpdateSupplier supplier={supplier} setData={setData} />}
       {canDoAction(token.role, token.permissions, 'business supplier', 'delete') && (
         <DeleteSupplier supplier={supplier} getSuppliers={getSuppliers} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />

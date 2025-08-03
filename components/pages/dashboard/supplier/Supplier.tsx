@@ -92,7 +92,7 @@ const Supplier = () => {
                     <TableHeadRow>
                       <TableHead>Code</TableHead>
                       <TableHead>Description</TableHead>
-                      {haveActions(token.role, 'business supplier', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'business supplier', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -102,7 +102,7 @@ const Supplier = () => {
                       <TableRow key={supplier._id}>
                         <TableCell>{supplier.code}</TableCell>
                         <TableCell>{supplier.description}</TableCell>
-                        {haveActions(token.role, 'business supplier', token.permissions, ['update', 'delete']) && (
+                        {haveActions(token.role, 'business supplier', token.permissions, ['update', 'delete', 'visible']) && (
                           <TableCell>
                             <SupplierActions
                               supplier={supplier}

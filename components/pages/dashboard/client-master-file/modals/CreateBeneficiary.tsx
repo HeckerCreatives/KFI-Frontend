@@ -25,7 +25,6 @@ const CreateBeneficiary = ({ client, setData }: CreateBeneficiaryProps) => {
     resolver: zodResolver(beneficiarySchema),
     defaultValues: {
       name: '',
-      relationship: '',
     },
   });
 

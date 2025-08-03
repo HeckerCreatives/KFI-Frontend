@@ -20,3 +20,5 @@ export const isVisible = (role: string, permissions: Permission[], resources: st
   )
     return true;
 };
+
+export const suAdminOnly = (role: string) => role === 'superadmin';

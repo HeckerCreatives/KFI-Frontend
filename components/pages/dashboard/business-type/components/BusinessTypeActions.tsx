@@ -7,6 +7,7 @@ import { AccessToken, BusinessType } from '../../../../../types/types';
 import { TBusinessType } from '../BusinessType';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../../utils/permissions';
+import ViewBusinessType from '../modals/ViewBusinessType';
 
 type BusinessTypeActionsProps = {
   businessType: BusinessType;
@@ -23,6 +24,7 @@ const BusinessTypeActions = ({ businessType, setData, currentPage, setCurrentPag
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   return (
     <div>
+      {canDoAction(token.role, token.permissions, 'business type', 'visible') && <ViewBusinessType businessType={businessType} />}
       {canDoAction(token.role, token.permissions, 'business type', 'update') && <UpdateBusinessType businessType={businessType} setData={setData} />}
       {canDoAction(token.role, token.permissions, 'business type', 'delete') && (
         <DeleteBusinessType

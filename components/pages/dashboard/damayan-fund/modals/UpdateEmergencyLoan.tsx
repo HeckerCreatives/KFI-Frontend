@@ -33,9 +33,9 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
       supplierLabel: '',
       refNo: '',
       remarks: '',
-      date: '',
-      acctMonth: '',
-      acctYear: '',
+      date: formatDateInput(new Date().toISOString()),
+      acctMonth: `${new Date().getMonth() + 1}`,
+      acctYear: `${new Date().getFullYear()}`,
       checkNo: '',
       checkDate: '',
       bankCode: '',
@@ -75,12 +75,12 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
     setLoading(true);
     try {
       const result = await kfiAxios.put(`damayan-fund/${damayanFund._id}`, data);
-      const { success, emergencyLoan: updatedEmergencyLoan } = result.data;
+      const { success, damayanFund: updatedDamayanFund } = result.data;
       if (success) {
         setData(prev => {
-          const index = prev.damayanFunds.findIndex(damayanFund => damayanFund._id === updatedEmergencyLoan._id);
+          const index = prev.damayanFunds.findIndex(damayanFund => damayanFund._id === updatedDamayanFund._id);
           if (index < 0) return prev;
-          prev.damayanFunds[index] = { ...updatedEmergencyLoan };
+          prev.damayanFunds[index] = { ...updatedDamayanFund };
           return { ...prev };
         });
         present({

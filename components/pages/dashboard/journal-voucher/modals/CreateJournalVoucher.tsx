@@ -11,6 +11,7 @@ import kfiAxios from '../../../../utils/axios';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { formatDateInput } from '../../../../utils/date-utils';
 
 type CreateJournalVoucherProps = {
   getJournalVouchers: (page: number, keyword?: string, sort?: string) => void;
@@ -28,9 +29,9 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
       supplier: '',
       supplierId: '',
       refNo: '',
-      date: '',
-      acctMonth: '',
-      acctYear: '',
+      date: formatDateInput(new Date().toISOString()),
+      acctMonth: `${new Date().getMonth() + 1}`,
+      acctYear: `${new Date().getFullYear()}`,
       checkNo: '',
       checkDate: '',
       bank: '',

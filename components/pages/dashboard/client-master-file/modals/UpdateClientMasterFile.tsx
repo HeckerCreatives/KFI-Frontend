@@ -54,7 +54,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
       acctNumber: client.acctNumber,
       dateResigned: client.dateResigned ? formatDateInput(client.dateResigned) : '',
       reason: client.reason,
-      beneficiary: [{ name: '', relationship: '' }],
+      beneficiary: [{ name: '' }],
       children: [{ name: '' }],
     },
   });
@@ -87,8 +87,8 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         acctNumber: client.acctNumber,
         dateResigned: client.dateResigned ? formatDateInput(client.dateResigned) : '',
         reason: client.reason,
-        beneficiary: client.beneficiaries.length > 1 ? client.beneficiaries : [{ name: '', relationship: '' }],
-        children: client.children.length > 1 ? client.children : [{ name: '' }],
+        beneficiary: client.beneficiaries.length > 0 ? client.beneficiaries : [{ name: '' }],
+        children: client.children.length > 0 ? client.children : [{ name: '' }],
       });
     }
   }, [client, form]);

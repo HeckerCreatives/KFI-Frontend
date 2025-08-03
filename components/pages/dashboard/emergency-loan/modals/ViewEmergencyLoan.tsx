@@ -45,36 +45,34 @@ const ViewEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan }) 
           </IonToolbar>
         </IonHeader>
         <div className="inner-content h-screen !p-2 flex flex-col">
-          <div>
-            <IonGrid>
-              <IonRow>
-                <IonCol size="6" className="space-y-1">
+          <div className="space-y-1">
+            <div className="grid grid-cols-3 gap-2">
+              <div className="col-span-2 grid grid-cols-2 gap-2">
+                <div className="space-y-1">
                   <JournalVoucherViewCard label="CV#" value={`CV#${emergencyLoan.code}`} labelClassName="min-w-14 text-end !text-slate-600" />
                   <JournalVoucherViewCard label="Supplier" value={emergencyLoan.supplier.description} labelClassName="min-w-14 text-end !text-slate-600" />
-                  <JournalVoucherViewCard label="Particular" value={emergencyLoan.remarks} labelClassName="min-w-14 text-end !text-slate-600" />
+                </div>
+                <div className="space-y-1">
                   <JournalVoucherViewCard label="Date" value={formatDateTable(emergencyLoan.date)} labelClassName="min-w-14 text-end !text-slate-600" />
-                  <JournalVoucherViewCard label="User" value={emergencyLoan.encodedBy.username} labelClassName="min-w-14 text-end !text-slate-600" />
-                </IonCol>
-                <IonCol size="6" className="space-y-1">
-                  <IonGrid className="ion-no-padding">
-                    <IonRow className="gap-2">
-                      <IonCol>
-                        <JournalVoucherViewCard label="Account Month" value={`${emergencyLoan.acctMonth}`} labelClassName="min-w-20 text-end !text-slate-600" />
-                      </IonCol>
-                      <IonCol>
-                        <JournalVoucherViewCard label="Account Year" value={`${emergencyLoan.acctYear}`} labelClassName="min-w-20 text-end !text-slate-600" />
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                  <JournalVoucherViewCard label="Check Number" value={emergencyLoan.checkNo} labelClassName="min-w-20 text-end !text-slate-600" />
-                  <JournalVoucherViewCard label="Check Date" value={formatDateTable(emergencyLoan.checkDate)} labelClassName="min-w-20 text-end !text-slate-600" />
-                  <JournalVoucherViewCard label="Bank Code" value={emergencyLoan.bankCode.description} labelClassName="min-w-20 text-end !text-slate-600" />
-                  <JournalVoucherViewCard label="Amount" value={`${formatNumber(emergencyLoan.amount)}`} labelClassName="min-w-20 text-end !text-slate-600" />
-                </IonCol>
-              </IonRow>
-            </IonGrid>
+                  <JournalVoucherViewCard label="Account Month" value={`${emergencyLoan.acctMonth}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Account Year" value={`${emergencyLoan.acctYear}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                </div>
+                <div className="col-span-2">
+                  <JournalVoucherViewCard label="Particular" value={emergencyLoan.remarks} labelClassName="min-w-14 text-end !text-slate-600" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <JournalVoucherViewCard label="Check Number" value={emergencyLoan.checkNo} labelClassName="min-w-20 text-end !text-slate-600" />
+                <JournalVoucherViewCard label="Check Date" value={formatDateTable(emergencyLoan.checkDate)} labelClassName="min-w-20 text-end !text-slate-600" />
+                <JournalVoucherViewCard label="Bank Code" value={emergencyLoan.bankCode.description} labelClassName="min-w-20 text-end !text-slate-600" />
+                <JournalVoucherViewCard label="Amount" value={`${formatNumber(emergencyLoan.amount)}`} labelClassName="min-w-20 text-end !text-slate-600" />
+              </div>
+            </div>
+            <div className="">
+              <JournalVoucherViewCard label="User" value={emergencyLoan.encodedBy.username} labelClassName="min-w-14 text-end !text-slate-600" containerClassName="max-w-40" />
+            </div>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 mt-1">
             <ViewELEntries emergencyLoan={emergencyLoan} isOpen={isOpen} />
           </div>
         </div>

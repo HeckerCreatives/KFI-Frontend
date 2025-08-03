@@ -26,7 +26,6 @@ const UpdateBeneficiary = ({ beneficiary, setData }: UpdateBeneficiary) => {
     resolver: zodResolver(beneficiarySchema),
     defaultValues: {
       name: beneficiary.name,
-      relationship: beneficiary.relationship,
     },
   });
 
@@ -34,7 +33,6 @@ const UpdateBeneficiary = ({ beneficiary, setData }: UpdateBeneficiary) => {
     if (beneficiary) {
       form.reset({
         name: beneficiary.name,
-        relationship: beneficiary.relationship,
       });
     }
   }, [beneficiary, form]);

@@ -8,6 +8,7 @@ import { AccessToken, Center } from '../../../../../types/types';
 import { TCenter } from '../Center';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../../utils/permissions';
+import ViewCenter from '../modals/ViewCenter';
 
 type CenterActionsProps = {
   center: Center;
@@ -24,6 +25,7 @@ const CenterActions = ({ center, setData, getCenters, currentPage, setCurrentPag
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   return (
     <div>
+      {canDoAction(token.role, token.permissions, 'center', 'visible') && <ViewCenter center={center} />}
       {canDoAction(token.role, token.permissions, 'center', 'update') && <UpdateCenter center={center} setData={setData} />}
       {canDoAction(token.role, token.permissions, 'center', 'delete') && (
         <DeleteCenter center={center} getCenters={getCenters} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />

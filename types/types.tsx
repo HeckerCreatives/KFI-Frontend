@@ -44,7 +44,7 @@ export interface ClientMasterFile {
   birthdate: string;
   birthplace: string;
   business: { _id: string; type: string };
-  center: { _id: string; centerNo: string };
+  center: { _id: string; centerNo: string; description: string };
   city: string;
   civilStatus: string;
   createdAt: string;

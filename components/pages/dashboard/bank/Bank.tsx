@@ -92,7 +92,7 @@ const Bank = () => {
                     <TableHeadRow>
                       <TableHead>Code</TableHead>
                       <TableHead>Description</TableHead>
-                      {haveActions(token.role, 'bank', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'bank', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -104,7 +104,7 @@ const Bank = () => {
                         <TableRow key={bank._id}>
                           <TableCell>{bank.code}</TableCell>
                           <TableCell>{bank.description}</TableCell>
-                          {haveActions(token.role, 'bank', token.permissions, ['update', 'delete']) && (
+                          {haveActions(token.role, 'bank', token.permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <BankActions
                                 bank={bank}

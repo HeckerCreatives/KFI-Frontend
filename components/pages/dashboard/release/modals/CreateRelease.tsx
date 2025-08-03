@@ -10,6 +10,7 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { ReleaseFormData, releaseSchema } from '../../../../../validations/release.schema';
 import ReleaseForm from '../components/ReleaseForm';
 import ReleaseFormTable from '../components/ReleaseFormTable';
+import { formatDateInput } from '../../../../utils/date-utils';
 
 type CreateReleaseProps = {
   getReleases: (page: number, keyword?: string, sort?: string) => void;
@@ -29,9 +30,9 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
       centerName: '',
       refNo: '',
       remarks: '',
-      date: '',
-      acctMonth: '',
-      acctYear: '',
+      date: formatDateInput(new Date().toISOString()),
+      acctMonth: `${new Date().getMonth() + 1}`,
+      acctYear: `${new Date().getFullYear()}`,
       acctOfficer: '',
       checkNo: '',
       checkDate: '',

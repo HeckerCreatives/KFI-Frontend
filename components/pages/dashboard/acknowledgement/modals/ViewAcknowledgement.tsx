@@ -49,22 +49,25 @@ const ViewAcknowledgement = ({ acknowledgement }: ViewAcknowledgementProps) => {
           </IonToolbar>
         </IonHeader>
         <div className="inner-content h-screen !p-2 flex flex-col gap-2">
-          <div className="grid grid-cols-2 gap-2">
-            <div className="space-y-2">
-              <AcknowledgementViewCard label="CV#" value={`CV#${acknowledgement.code}`} labelClassName="min-w-28 text-end !text-slate-600" />
-              <AcknowledgementViewCard label="Center Code" value={`${acknowledgement.center.centerNo}`} labelClassName="min-w-28 text-end !text-slate-600" />
-              <AcknowledgementViewCard label="Name" value={`${acknowledgement.center.description}`} labelClassName="min-w-28 text-end !text-slate-600" />
-              <AcknowledgementViewCard label="Particular" value={acknowledgement.remarks} labelClassName="min-w-28 text-end !text-slate-600" />
-              <AcknowledgementViewCard label="Cash Type" value={acknowledgement.type} labelClassName="min-w-28 text-end !text-slate-600" />
-              <AcknowledgementViewCard label="Account Officer" value={acknowledgement.acctOfficer} labelClassName="min-w-28 text-end !text-slate-600" />
-              <AcknowledgementViewCard label="User" value={acknowledgement.encodedBy.username} labelClassName="min-w-28 text-end !text-slate-600" />
-            </div>
-            <div className="space-y-2">
-              <AcknowledgementViewCard label="Date" value={formatDateTable(acknowledgement.date)} labelClassName="min-w-28 text-end !text-slate-600" />
-              <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="grid grid-cols-3 gap-2">
+            <div className="col-span-2 grid grid-cols-2 gap-2">
+              <div className="space-y-1">
+                <AcknowledgementViewCard label="CV#" value={`CV#${acknowledgement.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                <AcknowledgementViewCard label="Center Code" value={`${acknowledgement.center.centerNo}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                <AcknowledgementViewCard label="Name" value={`${acknowledgement.center.description}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                <AcknowledgementViewCard label="Cash Type" value={acknowledgement.type} labelClassName="min-w-20 text-end !text-slate-600" />
+              </div>
+              <div className="space-y-1">
+                <AcknowledgementViewCard label="Date" value={formatDateTable(acknowledgement.date)} labelClassName="min-w-28 text-end !text-slate-600" />
                 <AcknowledgementViewCard label="Account Month" value={`${acknowledgement.acctMonth}`} labelClassName="min-w-28 text-end !text-slate-600" />
                 <AcknowledgementViewCard label="Account Year" value={`${acknowledgement.acctYear}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                <AcknowledgementViewCard label="Account Officer" value={acknowledgement.acctOfficer} labelClassName="min-w-28 text-end !text-slate-600" />
               </div>
+              <div className="col-span-2 ">
+                <AcknowledgementViewCard label="Particular" value={acknowledgement.remarks} labelClassName="min-w-20 text-end !text-slate-600" />
+              </div>
+            </div>
+            <div className="space-y-1">
               <AcknowledgementViewCard label="Check Number" value={acknowledgement.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
               <AcknowledgementViewCard label="Check Date" value={formatDateTable(acknowledgement.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
               <AcknowledgementViewCard label="Bank Code" value={acknowledgement.bankCode.description} labelClassName="min-w-28 text-end !text-slate-600" />
@@ -75,6 +78,9 @@ const ViewAcknowledgement = ({ acknowledgement }: ViewAcknowledgementProps) => {
                 labelClassName="min-w-28 text-end !text-slate-600"
               />
             </div>
+          </div>
+          <div>
+            <AcknowledgementViewCard label="User" value={acknowledgement.encodedBy.username} labelClassName="min-w-20 text-end !text-slate-600" containerClassName="max-w-40" />
           </div>
           <div className="flex-1">
             <ViewAcknowledgementEntries acknowledgement={acknowledgement} isOpen={isOpen} />

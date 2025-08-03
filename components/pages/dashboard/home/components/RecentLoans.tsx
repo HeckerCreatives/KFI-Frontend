@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
-import { useIonToast, useIonViewWillEnter } from '@ionic/react';
-import { TTableFilter } from '../../../../../types/types';
-import { TABLE_LIMIT } from '../../../../utils/constants';
+import { useIonToast } from '@ionic/react';
 import kfiAxios from '../../../../utils/axios';
-import TablePagination from '../../../../ui/forms/TablePagination';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
+import ViewLoanDetails from '../modals/ViewLoanDetails';
 
 export type Member = {
   _id: string;
   debit: number;
   client: { name: string };
+  checkNo: string;
+  credit: string;
+  cycle: string;
+  interest: string;
+  particular: string;
+  center: { centerNo: string; description: string };
+  acctCode: { code: string; description: string };
 };
 export type TRecentMember = {
   entries: Member[];
@@ -38,17 +43,10 @@ const RecentLoans = () => {
   const getRecentLoans = async (page: number) => {
     setData(prev => ({ ...prev, loading: true }));
     try {
-      const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-      const result = await kfiAxios.get('/statistics/recent-loans', { params: filter });
-      const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
+      const result = await kfiAxios.get('/statistics/recent-loans');
+      const { success, entries } = result.data;
       if (success) {
-        setData(prev => ({
-          ...prev,
-          entries: entries,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
+        setData(prev => ({ ...prev, entries: entries }));
         setCurrentPage(page);
         return;
       }
@@ -62,8 +60,6 @@ const RecentLoans = () => {
     }
   };
 
-  const handlePagination = (page: number) => getRecentLoans(page);
-
   useEffect(() => {
     getRecentLoans(currentPage);
   }, []);
@@ -76,6 +72,7 @@ const RecentLoans = () => {
             <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
               <TableHead className=" text-orange-700 !font-[600]">Name</TableHead>
               <TableHead className="text-center text-orange-700 !font-[600]">Amount</TableHead>
+              <TableHead className="text-center text-orange-700 !font-[600]">Actions</TableHead>
             </TableHeadRow>
           </TableHeader>
           <TableBody>
@@ -87,12 +84,14 @@ const RecentLoans = () => {
                 <TableRow key={`${entry._id}-${i}`} className="!border-0 odd:bg-orange-50 [&>td]:text-[0.8rem]">
                   <TableCell className="">{entry.client.name}</TableCell>
                   <TableCell className="text-center">{formatNumber(entry.debit)}</TableCell>
+                  <TableCell className="text-center">
+                    <ViewLoanDetails loan={entry} />
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </div>
-      <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
     </div>
   );
 };

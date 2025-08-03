@@ -10,6 +10,7 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { DamayanFundFormData, damayanFundSchema } from '../../../../../validations/damayan-fund.schema';
 import DamayanFundForm from '../components/DamayanFundForm';
 import DamayanFundFormTable from '../components/DamayanFundFormTable';
+import { formatDateInput } from '../../../../utils/date-utils';
 
 type CreateDamayanFundProps = {
   getDamayanFunds: (page: number, keyword?: string, sort?: string) => void;
@@ -28,9 +29,9 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
       supplierLabel: '',
       refNo: '',
       remarks: '',
-      date: '',
-      acctMonth: '',
-      acctYear: '',
+      date: formatDateInput(new Date().toISOString()),
+      acctMonth: `${new Date().getMonth() + 1}`,
+      acctYear: `${new Date().getFullYear()}`,
       checkNo: '',
       checkDate: '',
       bankCode: '',

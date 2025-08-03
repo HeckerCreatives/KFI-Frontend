@@ -11,6 +11,7 @@ import { canDoAction } from '../../../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
 import PrintClient from '../modals/PrintClient';
 import ExportClient from '../modals/ExportClient';
+import ViewClientMasterFile from '../modals/ViewClientMasterFile';
 
 type ClientMasterFileActionsProps = {
   client: ClientMasterFile;
@@ -27,6 +28,7 @@ const ClientMasterFileActions = ({ client, getClients, setData, currentPage, set
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   return (
     <div className="flex items-center gap-1">
+      {canDoAction(token.role, token.permissions, 'clients', 'visible') && <ViewClientMasterFile member={client} />}
       {canDoAction(token.role, token.permissions, 'clients', 'update') && <UpdateClientMasterFile client={client} setData={setData} />}
       {canDoAction(token.role, token.permissions, 'clients', 'delete') && (
         <DeleteClientMasterFile client={client} getClients={getClients} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />

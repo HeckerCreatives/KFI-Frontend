@@ -45,34 +45,32 @@ const ViewDamayanFund = ({ damayanFund }: { damayanFund: DamayanFund }) => {
           </IonToolbar>
         </IonHeader>
         <div className="inner-content h-screen !p-2 flex flex-col">
-          <div>
-            <IonGrid>
-              <IonRow>
-                <IonCol size="6" className="space-y-1">
+          <div className="space-y-1 mb-1">
+            <div className="grid grid-cols-3 space-y-1">
+              <div className="col-span-2 space-y-1 grid grid-cols-2 gap-2">
+                <div className="space-y-1">
                   <DamayanFundViewCard label="JV#" value={`JV#${damayanFund.code}`} labelClassName="min-w-16 text-end !text-slate-600" />
                   <DamayanFundViewCard label="Supplier" value={damayanFund.supplier.description} labelClassName="min-w-16 text-end !text-slate-600" />
+                </div>
+                <div className="space-y-1">
+                  <DamayanFundViewCard label="Date" value={formatDateTable(damayanFund.date)} labelClassName="min-w-24 text-end !text-slate-600" />
+                  <DamayanFundViewCard label="Account Month" value={`${damayanFund.acctMonth}`} labelClassName="min-w-24 text-end !text-slate-600" />
+                  <DamayanFundViewCard label="Account Year" value={`${damayanFund.acctYear}`} labelClassName="min-w-24 text-end !text-slate-600" />
+                </div>
+                <div className="col-span-2 space-y-1">
                   <DamayanFundViewCard label="Particular" value={damayanFund.remarks} labelClassName="min-w-16 text-end !text-slate-600" />
-                  <DamayanFundViewCard label="Date" value={formatDateTable(damayanFund.date)} labelClassName="min-w-16 text-end !text-slate-600" />
-                  <DamayanFundViewCard label="User" value={damayanFund.encodedBy.username} labelClassName="min-w-16 text-end !text-slate-600" />
-                </IonCol>
-                <IonCol size="6" className="space-y-1">
-                  <IonGrid className="ion-no-padding">
-                    <IonRow className="gap-2">
-                      <IonCol>
-                        <DamayanFundViewCard label="Account Month" value={`${damayanFund.acctMonth}`} labelClassName="min-w-24 text-end !text-slate-600" />
-                      </IonCol>
-                      <IonCol>
-                        <DamayanFundViewCard label="Account Year" value={`${damayanFund.acctYear}`} labelClassName="min-w-24 text-end !text-slate-600" />
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                  <DamayanFundViewCard label="Check Number" value={damayanFund.checkNo} labelClassName="min-w-24 text-end !text-slate-600" />
-                  <DamayanFundViewCard label="Check Date" value={formatDateTable(damayanFund.checkDate)} labelClassName="min-w-24 text-end !text-slate-600" />
-                  <DamayanFundViewCard label="Bank Code" value={damayanFund.bankCode.description} labelClassName="min-w-24 text-end !text-slate-600" />
-                  <DamayanFundViewCard label="Amount" value={`${formatNumber(damayanFund.amount)}`} labelClassName="min-w-24 text-end !text-slate-600" />
-                </IonCol>
-              </IonRow>
-            </IonGrid>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <DamayanFundViewCard label="Check Number" value={damayanFund.checkNo} labelClassName="min-w-24 text-end !text-slate-600" />
+                <DamayanFundViewCard label="Check Date" value={formatDateTable(damayanFund.checkDate)} labelClassName="min-w-24 text-end !text-slate-600" />
+                <DamayanFundViewCard label="Bank Code" value={damayanFund.bankCode.description} labelClassName="min-w-24 text-end !text-slate-600" />
+                <DamayanFundViewCard label="Amount" value={`${formatNumber(damayanFund.amount)}`} labelClassName="min-w-24 text-end !text-slate-600" />
+              </div>
+            </div>
+            <div>
+              <DamayanFundViewCard label="User" value={damayanFund.encodedBy.username} labelClassName="min-w-16 text-end !text-slate-600" containerClassName="max-w-40" />
+            </div>
           </div>
           <div className="flex-1">
             <ViewDFEntries damayanFund={damayanFund} isOpen={isOpen} />

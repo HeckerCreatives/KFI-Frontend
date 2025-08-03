@@ -7,6 +7,7 @@ import { AccessToken, Bank } from '../../../../../types/types';
 import { TBank } from '../Bank';
 import { canDoAction } from '../../../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
+import ViewBank from '../modals/ViewBank';
 
 type BankActionsProps = {
   bank: Bank;
@@ -24,6 +25,7 @@ const BankActions = ({ bank, setData, currentPage, setCurrentPage, getBanks, sea
 
   return (
     <div>
+      {canDoAction(token.role, token.permissions, 'bank', 'visible') && <ViewBank bank={bank} />}
       {canDoAction(token.role, token.permissions, 'bank', 'update') && <UpdateBank bank={bank} setData={setData} />}
       {canDoAction(token.role, token.permissions, 'bank', 'delete') && (
         <DeleteBank bank={bank} getBanks={getBanks} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />

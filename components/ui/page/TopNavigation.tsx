@@ -6,7 +6,7 @@ import SystemNav from './nav-menu/SystemNav';
 import Diagnostics from './nav-menu/Diagnostics';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
-import { isVisible } from '../../utils/permissions';
+import { isVisible, suAdminOnly } from '../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
 import { AccessToken, Permission } from '../../../types/types';
 import { diagnosticsResource, generalLedgerResource, manageAccountResource, systemResource, transactionResource } from '../../utils/constants';
@@ -30,7 +30,7 @@ const TopNavigation = () => {
             Dashboard
           </IonButton>
         </div>
-        {isVisible(token.role, token.permissions, manageAccountResource) && (
+        {suAdminOnly(token.role) && (
           <div>
             <IonButton
               fill="clear"

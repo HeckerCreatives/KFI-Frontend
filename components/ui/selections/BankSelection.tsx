@@ -55,7 +55,7 @@ const BankSelection = <T extends FieldValues>({ bankLabel, bankValue, setValue, 
   };
 
   const handleSelectBusinessType = (bank: Option) => {
-    const typeValue = `${bank.code} - ${bank.description}` as PathValue<T, Path<T>>;
+    const typeValue = `${bank.code}` as PathValue<T, Path<T>>;
     const idValue = bank._id as PathValue<T, Path<T>>;
     setValue(bankLabel as Path<T>, typeValue as any);
     setValue(bankValue as Path<T>, idValue as any);

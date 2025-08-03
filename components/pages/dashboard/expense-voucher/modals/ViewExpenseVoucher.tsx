@@ -49,32 +49,28 @@ const ViewExpenseVoucher = ({ expenseVoucher }: ViewExpenseVoucherType) => {
           </IonToolbar>
         </IonHeader>
         <div className="inner-content h-screen flex flex-col gap-2">
-          <div>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="space-y-2">
+          <div className="space-y-1">
+            <div className="grid grid-cols-3 gap-2">
+              <div className="space-y-1">
                 <ExpenseVoucherViewCard label="CV#" value={`CV#${expenseVoucher.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
                 <ExpenseVoucherViewCard label="Supplier" value={expenseVoucher.supplier.description} labelClassName="min-w-20 text-end !text-slate-600" />
-                <ExpenseVoucherViewCard label="Remark" value={expenseVoucher.remarks} labelClassName="min-w-20 text-end !text-slate-600" />
-                <ExpenseVoucherViewCard label="Date" value={formatDateTable(expenseVoucher.date)} labelClassName="min-w-20 text-end !text-slate-600" />
-                <ExpenseVoucherViewCard label="User" value={expenseVoucher.encodedBy.username} labelClassName="min-w-20 text-end !text-slate-600" />
               </div>
-              <div className="space-y-2">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  <ExpenseVoucherViewCard label="Account Month" value={`${expenseVoucher.acctMonth}`} labelClassName="min-w-28 text-end !text-slate-600" />
-                  <ExpenseVoucherViewCard label="Account Year" value={`${expenseVoucher.acctYear}`} labelClassName="min-w-28 text-end !text-slate-600" />
-                </div>
+              <div className="space-y-1">
+                <ExpenseVoucherViewCard label="Date" value={formatDateTable(expenseVoucher.date)} labelClassName="min-w-20 text-end !text-slate-600" />
+                <ExpenseVoucherViewCard label="Account Month" value={`${expenseVoucher.acctMonth}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                <ExpenseVoucherViewCard label="Account Year" value={`${expenseVoucher.acctYear}`} labelClassName="min-w-28 text-end !text-slate-600" />
+              </div>
+              <div className="space-y-1">
                 <ExpenseVoucherViewCard label="Check Number" value={expenseVoucher.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
                 <ExpenseVoucherViewCard label="Check Date" value={formatDateTable(expenseVoucher.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
                 <ExpenseVoucherViewCard label="Bank Code" value={expenseVoucher.bankCode.description} labelClassName="min-w-28 text-end !text-slate-600" />
                 <ExpenseVoucherViewCard label="Amount" value={`${formatNumber(expenseVoucher.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
               </div>
             </div>
-            <IonGrid>
-              <IonRow>
-                <IonCol size="6" className="space-y-1"></IonCol>
-                <IonCol size="6" className="space-y-1"></IonCol>
-              </IonRow>
-            </IonGrid>
+            <div className="space-y-1">
+              <ExpenseVoucherViewCard label="Remark" value={expenseVoucher.remarks} labelClassName="min-w-20 text-end !text-slate-600" />
+              <ExpenseVoucherViewCard label="User" value={expenseVoucher.encodedBy.username} labelClassName="min-w-20 text-end !text-slate-600" containerClassName="max-w-40" />
+            </div>
           </div>
           <div className="flex-1">
             <ViewExpenseVoucherEntries expenseVoucher={expenseVoucher} isOpen={isOpen} />

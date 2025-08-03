@@ -389,34 +389,20 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
             ))}
             {beneficiary.fields.map((field, index) => (
               <div key={field.id} className="flex items-center flex-wrap gap-2">
-                <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  <FormIonItem className="flex-1">
-                    <InputText
-                      disabled={loading}
-                      name={`beneficiary.${index}.name`}
-                      control={form.control}
-                      clearErrors={form.clearErrors}
-                      label="Beneficiary"
-                      placeholder="Type here"
-                      className="!px-2 !py-2 rounded-md"
-                      labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
-                    />
-                  </FormIonItem>
-                  <FormIonItem className="flex-1">
-                    <InputText
-                      disabled={loading}
-                      name={`beneficiary.${index}.relationship`}
-                      control={form.control}
-                      clearErrors={form.clearErrors}
-                      label="Relationship"
-                      placeholder="Type here"
-                      className="!px-2 !py-2 rounded-md"
-                      labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
-                    />
-                  </FormIonItem>
-                </div>
+                <FormIonItem className="flex-1">
+                  <InputText
+                    disabled={loading}
+                    name={`beneficiary.${index}.name`}
+                    control={form.control}
+                    clearErrors={form.clearErrors}
+                    label="Beneficiary"
+                    placeholder="Type here"
+                    className="!px-2 !py-2 rounded-md"
+                    labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
+                  />
+                </FormIonItem>
                 <IonButton
-                  onClick={() => beneficiary.append({ name: '', relationship: '' })}
+                  onClick={() => beneficiary.append({ name: '' })}
                   fill="clear"
                   className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0"
                   strong

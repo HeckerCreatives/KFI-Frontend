@@ -7,6 +7,7 @@ import { AccessToken, GroupAccount } from '../../../../../types/types';
 import { TGroupAccount } from '../GroupAccount';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../../utils/permissions';
+import ViewGroupAccount from '../modals/ViewGroupAccount';
 
 type GroupAccountActionsProps = {
   groupAccount: GroupAccount;
@@ -23,6 +24,7 @@ const GroupAccountActions = ({ groupAccount, setData, currentPage, setCurrentPag
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   return (
     <div>
+      {canDoAction(token.role, token.permissions, 'group of account', 'visible') && <ViewGroupAccount groupAccount={groupAccount} />}
       {canDoAction(token.role, token.permissions, 'group of account', 'update') && <UpdateGroupAccount groupAccount={groupAccount} setData={setData} />}
       {canDoAction(token.role, token.permissions, 'group of account', 'delete') && (
         <DeleteGroupAccount

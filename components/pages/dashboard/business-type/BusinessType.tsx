@@ -91,7 +91,7 @@ const BusinessType = () => {
                   <TableHeader>
                     <TableHeadRow>
                       <TableHead>Business Type</TableHead>
-                      {haveActions(token.role, 'business type', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'business type', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -102,7 +102,7 @@ const BusinessType = () => {
                       data.businessTypes.map((businessType: BusinessTypeInt) => (
                         <TableRow key={businessType._id}>
                           <TableCell>{businessType.type}</TableCell>
-                          {haveActions(token.role, 'business type', token.permissions, ['update', 'delete']) && (
+                          {haveActions(token.role, 'business type', token.permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <BusinessTypeActions
                                 businessType={businessType}

@@ -47,7 +47,7 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
       acctNumber: '',
       dateResigned: '',
       reason: '',
-      beneficiary: [{ name: '', relationship: '' }],
+      beneficiary: [{ name: '' }],
       children: [{ name: '' }],
     },
   });
@@ -76,10 +76,6 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
       setLoading(false);
     }
   }
-
-  useEffect(() => {
-    console.log(form.formState.errors);
-  }, [form.formState.errors]);
 
   return (
     <>

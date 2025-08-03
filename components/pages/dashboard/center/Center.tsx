@@ -103,7 +103,7 @@ const Center = () => {
                       <TableHead>Center Chief</TableHead>
                       <TableHead>Treasurer</TableHead>
                       <TableHead>Account Officer</TableHead>
-                      {haveActions(token.role, 'center', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'center', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -119,7 +119,7 @@ const Center = () => {
                           <TableCell>{center.centerChief}</TableCell>
                           <TableCell>{center.treasurer}</TableCell>
                           <TableCell>{center.acctOfficer}</TableCell>
-                          {haveActions(token.role, 'center', token.permissions, ['update', 'delete']) && (
+                          {haveActions(token.role, 'center', token.permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <CenterActions
                                 center={center}

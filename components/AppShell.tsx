@@ -1,30 +1,50 @@
 'use client';
-import { IonApp, IonRouterOutlet, setupIonicReact, useIonRouter } from '@ionic/react';
+import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import Login from './pages/auth/login/Login';
 import Tabs from './pages/Tabs';
-import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 setupIonicReact({});
 
 const AppShell = () => {
-  const isLoggedIn = localStorage.getItem('auth') ? true : false;
-  const pathname = usePathname();
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    if (pathname !== '/' && !isLoggedIn) {
-      (window as any).location.href = '/';
-    }
-  }, [isLoggedIn]);
+    // Client-side only check
+    setIsLoggedIn(!!localStorage.getItem('auth'));
+    setAuthChecked(true);
+  }, []);
+
+  if (!authChecked) {
+    return (
+      <IonApp>
+        <div className="ion-page">Loading...</div>
+      </IonApp>
+    );
+  }
 
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet id="main">
-          <Route path="/" render={() => (isLoggedIn ? <Redirect to="/dashboard" /> : <Login />)} exact={isLoggedIn ? false : true} />
-          <Route path="/dashboard" render={() => (isLoggedIn ? <Tabs /> : <Redirect to="/" />)} exact={isLoggedIn ? false : true} />
+          <Route
+            path="/"
+            exact
+            render={() => {
+              if (!authChecked) return null;
+              return isLoggedIn ? <Redirect to="/dashboard" /> : <Login />;
+            }}
+          />
+          <Route
+            path="/dashboard"
+            render={() => {
+              if (!authChecked) return null;
+              return isLoggedIn ? <Tabs /> : <Redirect to="/" />;
+            }}
+          />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

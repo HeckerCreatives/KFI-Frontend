@@ -1,16 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
-import { useIonToast, useIonViewWillEnter } from '@ionic/react';
-import { TTableFilter } from '../../../../../types/types';
-import { TABLE_LIMIT } from '../../../../utils/constants';
+import { useIonToast } from '@ionic/react';
 import kfiAxios from '../../../../utils/axios';
-import TablePagination from '../../../../ui/forms/TablePagination';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
+import ViewRecentMember from '../modals/ViewRecentMember';
 
 export type Member = {
   name: string;
+  address: string;
+  city: string;
+  zipCode: string;
+  mobileNo: string;
+  telNo: string;
+  birthdate: string;
+  birthplace: string;
+  age: number;
+  sex: string;
+  parent: string;
+  spouse: string;
+  civilStatus: string;
+  position: string;
+  memberStatus: string;
   center: { centerNo: string; description: string };
+  acctOfficer: string;
+  dateRelease: string;
+  business: { type: string };
+  acctNumber: string;
+  dateResigned: string;
+  reason: string;
+  children: { name: string }[];
+  beneficiaries: { name: string }[];
 };
 export type TRecentMember = {
   clients: Member[];
@@ -21,8 +41,6 @@ export type TRecentMember = {
 };
 
 const RecentMembers = () => {
-  const arrDummy: string[] = Array.from(Array(10)).fill('');
-
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -38,31 +56,22 @@ const RecentMembers = () => {
   const getRecentMembers = async (page: number) => {
     setData(prev => ({ ...prev, loading: true }));
     try {
-      const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-      const result = await kfiAxios.get('/statistics/recent-members', { params: filter });
-      const { success, customers, hasPrevPage, hasNextPage, totalPages } = result.data;
+      const result = await kfiAxios.get('/statistics/recent-members');
+      const { success, customers } = result.data;
       if (success) {
-        setData(prev => ({
-          ...prev,
-          clients: customers,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
+        setData(prev => ({ ...prev, clients: customers }));
         setCurrentPage(page);
         return;
       }
     } catch (error) {
       present({
-        message: 'Failed to get recentt members records. Please try again',
+        message: 'Failed to get recent members records. Please try again',
         duration: 1000,
       });
     } finally {
       setData(prev => ({ ...prev, loading: false }));
     }
   };
-
-  const handlePagination = (page: number) => getRecentMembers(page);
 
   useEffect(() => {
     getRecentMembers(currentPage);
@@ -76,6 +85,7 @@ const RecentMembers = () => {
             <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
               <TableHead className=" text-orange-700 !font-[600]">Name</TableHead>
               <TableHead className="text-center  text-orange-700 !font-[600]">Center</TableHead>
+              <TableHead className="text-center  text-orange-700 !font-[600]">Actions</TableHead>
             </TableHeadRow>
           </TableHeader>
           <TableBody>
@@ -89,12 +99,14 @@ const RecentMembers = () => {
                   <TableCell className="text-center">
                     {client.center.centerNo} - {client.center.description}
                   </TableCell>
+                  <TableCell className="text-center">
+                    <ViewRecentMember member={client} />
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </div>
-      <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
     </div>
   );
 };

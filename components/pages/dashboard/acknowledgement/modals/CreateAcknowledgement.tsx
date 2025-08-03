@@ -10,6 +10,7 @@ import kfiAxios from '../../../../utils/axios';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { formatDateInput } from '../../../../utils/date-utils';
 
 type CreateAcknowledgementProps = {
   getAcknowledgements: (page: number, keyword?: string, sort?: string) => void;
@@ -29,9 +30,9 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
       centerName: '',
       refNo: '',
       remarks: '',
-      date: '',
-      acctMonth: '',
-      acctYear: '',
+      date: formatDateInput(new Date().toISOString()),
+      acctMonth: `${new Date().getMonth() + 1}`,
+      acctYear: `${new Date().getFullYear()}`,
       acctOfficer: '',
       checkNo: '',
       checkDate: '',
