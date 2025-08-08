@@ -103,7 +103,7 @@ const UpdateAcknowledgementEntries = ({ isOpen, acknowledgement }: UpdateAcknowl
             {!data.loading &&
               data.entries.map((entry: AcknowledgementEntry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[1.1rem]">
-                  <TableCell>{entry?.loanReleaseEntryId ? `CV#${entry?.loanReleaseEntryId?.transaction?.code}` : ''}</TableCell>
+                  <TableCell>{entry?.loanReleaseEntryId ? `${entry?.loanReleaseEntryId?.transaction?.code}` : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? formatDateTable(entry?.loanReleaseEntryId?.transaction?.dueDate) : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? entry?.loanReleaseEntryId?.transaction?.noOfWeeks : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? entry.loanReleaseEntryId.client.name : ''}</TableCell>

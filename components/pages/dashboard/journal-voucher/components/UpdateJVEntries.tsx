@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
-import { ExpenseVoucher, ExpenseVoucherEntry, JournalVoucherEntry, TTableFilter } from '../../../../../types/types';
+import { JournalVoucher, JournalVoucherEntry, TTableFilter } from '../../../../../types/types';
 import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
 import { useIonToast } from '@ionic/react';
@@ -23,7 +23,7 @@ export type TData = {
 
 type UpdateJVEntriesProps = {
   isOpen: boolean;
-  journalVoucher: ExpenseVoucher;
+  journalVoucher: JournalVoucher;
 };
 
 const UpdateJVEntries = ({ isOpen, journalVoucher }: UpdateJVEntriesProps) => {

@@ -164,7 +164,7 @@ const AcknowledgementSelection = <T extends FieldValues>({
                 {!data.loading &&
                   data.acknowledgements.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">CV#{data.code}</TableCell>
+                      <TableCell className="">{data.code}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

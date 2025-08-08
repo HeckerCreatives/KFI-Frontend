@@ -158,7 +158,7 @@ const LoanReleaseSelection = <T extends FieldValues>({ loanReleaseLabel, loanRel
                 {!data.loading &&
                   data.loanReleases.map((data: Option) => (
                     <TableRow onClick={() => handleSelectLoanRelease(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">CV#{data.code}</TableCell>
+                      <TableCell className="">{data.code}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

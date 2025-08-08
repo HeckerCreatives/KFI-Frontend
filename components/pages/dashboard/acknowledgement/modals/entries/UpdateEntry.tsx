@@ -13,6 +13,7 @@ import { AcknowledgementEntryFormData, acknowledgementEntrySchema } from '../../
 import { TData } from '../../components/UpdateAcknowledgementEntries';
 import AcknowledgementEntryForm from '../../components/AcknowledgementEntryForm';
 import { formatDateTable } from '../../../../../utils/date-utils';
+import { formatAmount, removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type UpdateEntryProps = {
   entry: AcknowledgementEntry;
@@ -53,8 +54,8 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
         acctCodeId: entry.acctCode._id,
         acctCode: entry.acctCode.code,
         description: entry.acctCode.description,
-        debit: `${entry.debit}`,
-        credit: `${entry.credit}`,
+        debit: `${formatAmount(entry.debit as number)}`,
+        credit: `${formatAmount(entry.credit as number)}`,
       });
     }
   }, [form, entry]);
@@ -66,8 +67,9 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
 
   const onSubmit = async (data: EntryFormData) => {
     setLoading(true);
-    setLoading(true);
     try {
+      data.debit = removeAmountComma(data.debit as string);
+      data.credit = removeAmountComma(data.credit as string);
       const result = await kfiAxios.put(`/acknowledgement/entries/${entry.acknowledgement}/${entry._id}`, data);
       const { success, entry: updatedEntry } = result.data;
       if (success) {

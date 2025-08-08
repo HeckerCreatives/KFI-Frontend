@@ -2,11 +2,11 @@ import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from
 import React, { useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { trashBin } from 'ionicons/icons';
-import { ExpenseVoucher } from '../../../../../types/types';
+import { JournalVoucher } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
 
 type DeleteJournalVoucherProps = {
-  journalVoucher: ExpenseVoucher;
+  journalVoucher: JournalVoucher;
   getJournalVouchers: (page: number, keyword?: string, sort?: string) => void;
   searchkey: string;
   sortKey: string;

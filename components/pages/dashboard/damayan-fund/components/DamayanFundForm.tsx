@@ -1,12 +1,10 @@
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import InputText from '../../../../ui/forms/InputText';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import BankSelection from '../../../../ui/selections/BankSelection';
-import SupplierSelection from '../../../../ui/selections/SupplierSelection';
 import { DamayanFundFormData } from '../../../../../validations/damayan-fund.schema';
-import classNames from 'classnames';
+import CenterSelection from '../../../../ui/selections/CenterSelection';
 
 type TForm = {
   form: UseFormReturn<DamayanFundFormData>;
@@ -27,7 +25,7 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
               label="JV#"
               placeholder="Type here"
               className="!px-1 !py-1 rounded-md !text-[0.7rem] "
-              labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-16 !text-slate-600 text-end"
+              labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-20 !text-slate-600 text-end"
             />
           </FormIonItem>
           <div className="flex items-start gap-2 flex-nowrap">
@@ -35,22 +33,16 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
               <InputText
                 disabled={loading}
                 readOnly
-                name="supplierLabel"
+                name="centerLabel"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                label="Supplier"
-                placeholder="Click find to search for supplier"
+                label="Center Code"
+                placeholder="Click find to search for center code"
                 className="!px-1 !py-1 rounded-md !text-[0.7rem] "
-                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-16 !text-slate-600 text-end"
+                labelClassName="truncate min-w-[7.6rem] !text-[0.7rem] lg:min-w-20 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <SupplierSelection
-              supplierLabel="supplierLabel"
-              supplierValue="supplier"
-              clearErrors={form.clearErrors}
-              setValue={form.setValue}
-              className="!min-h-6 h-[1.65rem] text-xs"
-            />
+            <CenterSelection centerLabel="centerLabel" centerValue="centerValue" clearErrors={form.clearErrors} setValue={form.setValue} className="!min-h-6 h-[1.65rem] text-xs" />
           </div>
         </div>
         <div className="space-y-1">
@@ -164,6 +156,7 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
             placeholder="Type here"
             className="!px-1 !py-1 rounded-md !text-[0.7rem] "
             labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
+            isAmount
           />
         </FormIonItem>
       </div>

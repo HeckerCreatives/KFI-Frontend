@@ -158,7 +158,7 @@ const ReleaseSelection = <T extends FieldValues>({ releaseLabel, releaseValue, s
                 {!data.loading &&
                   data.releases.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">CV#{data.code}</TableCell>
+                      <TableCell className="">{data.code}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

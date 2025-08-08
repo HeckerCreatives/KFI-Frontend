@@ -15,6 +15,7 @@ import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { TData } from '../LoanRelease';
+import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type UpdateLoanReleaseProps = {
   transaction: Transaction;
@@ -29,7 +30,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
   const form = useForm<UpdateLoanReleaseFormData>({
     resolver: zodResolver(updateLoanReleaseSchema),
     defaultValues: {
-      amount: '',
+      amount: '0',
       cycle: '',
       interestRate: '',
     },
@@ -38,7 +39,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
   useEffect(() => {
     if (transaction) {
       form.reset({
-        amount: `${transaction.amount}`,
+        amount: `${formatAmount(transaction.amount)}`,
         cycle: `${transaction.cycle}`,
         interestRate: `${transaction.interest}`,
       });
@@ -53,6 +54,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
   async function onSubmit(data: UpdateLoanReleaseFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
       const result = await kfiAxios.put(`transaction/loan-release/${transaction._id}`, data);
       const { success, transaction: updatedTransaction } = result.data;
       if (success) {
@@ -113,7 +115,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
             <div className="grid grid-cols-3 gap-2">
               <div className="space-y-1">
-                <LoanReleaseViewCard label="CV#" value={`CV#${transaction.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                <LoanReleaseViewCard label="CV#" value={`${transaction.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
                 <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} labelClassName="min-w-20 text-end !text-slate-600" />
                 <LoanReleaseViewCard label="Name" value={transaction.center.description} labelClassName="min-w-20 text-end !text-slate-600" />
               </div>
@@ -129,7 +131,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
               <div className="space-y-1">
                 <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
                 <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
-                <LoanReleaseViewCard label="Bank Code" value={transaction.bank.description} labelClassName="min-w-28 text-end !text-slate-600" />
+                <LoanReleaseViewCard label="Bank Code" value={transaction.bank.code} labelClassName="min-w-28 text-end !text-slate-600" />
                 <FormIonItem className=" [--min-height:0]">
                   <InputText
                     disabled={loading}
@@ -140,6 +142,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                     placeholder="Type here"
                     className="!px-1 !py-1 rounded-md !text-[0.7rem]"
                     labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600 text-end"
+                    isAmount
                   />
                 </FormIonItem>
               </div>

@@ -12,6 +12,7 @@ import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
+import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type CreateJournalVoucherProps = {
   getJournalVouchers: (page: number, keyword?: string, sort?: string) => void;
@@ -26,8 +27,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
     resolver: zodResolver(journalVoucherSchema),
     defaultValues: {
       code: '',
-      supplier: '',
-      supplierId: '',
+      nature: '',
       refNo: '',
       date: formatDateInput(new Date().toISOString()),
       acctMonth: `${new Date().getMonth() + 1}`,
@@ -36,7 +36,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
       checkDate: '',
       bank: '',
       bankLabel: '',
-      amount: '',
+      amount: '0',
       remarks: '',
       entries: [],
       mode: 'create',
@@ -51,6 +51,8 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
   async function onSubmit(data: JournalVoucherFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
+      data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) })) : [];
       const result = await kfiAxios.post('journal-voucher', data);
       const { success } = result.data;
       if (success) {

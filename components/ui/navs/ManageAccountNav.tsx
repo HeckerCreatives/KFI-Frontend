@@ -38,7 +38,7 @@ const ManageAccountNav = () => {
             )}
             strong
           >
-            Client
+            Client Master File
           </IonButton>
         )}
       </div>

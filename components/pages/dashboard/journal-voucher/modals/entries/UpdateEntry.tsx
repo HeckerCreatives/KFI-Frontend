@@ -12,6 +12,7 @@ import EntryForm from '../../components/JVEntryForm';
 import { create } from 'ionicons/icons';
 import { TData } from '../../components/UpdateJVEntries';
 import { JournalVoucherEntryFormData, journalVoucherEntrySchema } from '../../../../../../validations/journal-voucher.schema';
+import { formatAmount, removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type UpdateEntryProps = {
   entry: JournalVoucherEntry;
@@ -43,12 +44,12 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
       form.reset({
         client: entry?.client?._id || '',
         clientLabel: entry?.client?.name || '',
-        particular: entry.particular,
+        particular: entry.particular || '',
         acctCodeId: entry.acctCode._id,
         acctCode: entry.acctCode.code,
         description: entry.acctCode.description,
-        debit: `${entry.debit}`,
-        credit: `${entry.credit}`,
+        debit: `${formatAmount(entry.debit as number)}`,
+        credit: `${formatAmount(entry.credit as number)}`,
         cvForRecompute: entry.cvForRecompute,
       });
     }
@@ -61,8 +62,9 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
 
   const onSubmit = async (data: JournalVoucherEntryFormData) => {
     setLoading(true);
-    setLoading(true);
     try {
+      data.debit = removeAmountComma(data.debit);
+      data.credit = removeAmountComma(data.credit);
       const result = await kfiAxios.put(`/journal-voucher/entries/${entry.journalVoucher}/${entry._id}`, data);
       const { success, entry: updatedEntry } = result.data;
       if (success) {

@@ -100,8 +100,8 @@ const ChartOfAccount = () => {
                     <TableHeadRow>
                       <TableHead>Account Code</TableHead>
                       <TableHead>Description</TableHead>
-                      <TableHead>Classification</TableHead>
                       <TableHead>Nature of Account</TableHead>
+                      <TableHead>Classification</TableHead>
                       <TableHead>Department Status</TableHead>
                       {haveActions(token.role, 'chart of account', token.permissions, ['update']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
@@ -115,8 +115,8 @@ const ChartOfAccount = () => {
                         <TableRow key={i}>
                           <TableCell>{chartAccount.code}</TableCell>
                           <TableCell>{chartAccount.description}</TableCell>
-                          <TableCell>{chartAccount.classification}</TableCell>
                           <TableCell>{chartAccount.nature}</TableCell>
+                          <TableCell>{chartAccount.classification}</TableCell>
                           <TableCell>{chartAccount.deptStatus}</TableCell>
                           {haveActions(token.role, 'chart of account', token.permissions, ['update']) && (
                             <TableCell>

@@ -10,15 +10,10 @@ type EmergencyLoanFormTableProps = {
 };
 
 const EmergencyLoanFormTable = ({ form }: EmergencyLoanFormTableProps) => {
-  const [loading, setLoading] = useState(false);
-  const [didLoad, setDidLoad] = useState(false);
-
   const { fields, replace, remove, append } = useFieldArray({
     control: form.control,
     name: 'entries',
   });
-
-  const handleLoadEntries = async () => {};
 
   const handleAddEntry = () => append({ client: '', clientLabel: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0' });
 

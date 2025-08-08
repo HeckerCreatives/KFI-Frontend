@@ -11,6 +11,7 @@ import kfiAxios from '../../../../../utils/axios';
 import { TData } from '../../components/UpdateEntries';
 import formErrorHandler from '../../../../../utils/form-error-handler';
 import checkError from '../../../../../utils/check-error';
+import { formatAmount, removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type UpdateEntryProps = {
   entry: Entry;
@@ -48,8 +49,8 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
         acctCodeId: entry?.acctCode?._id || '',
         acctCode: entry?.acctCode?.code || '',
         description: entry?.acctCode?.description,
-        debit: entry.debit ? `${entry.debit}` : '',
-        credit: entry.credit ? `${entry.credit}` : '',
+        debit: entry.debit ? `${formatAmount(entry.debit)}` : '',
+        credit: entry.credit ? `${formatAmount(entry.credit)}` : '',
         interest: entry.interest ? `${entry.interest}` : '',
         cycle: entry.cycle ? `${entry.cycle}` : '',
         checkNo: entry.checkNo ? `${entry.checkNo}` : '',
@@ -69,6 +70,8 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
     }
     setLoading(true);
     try {
+      data.debit = removeAmountComma(data.debit as string);
+      data.credit = removeAmountComma(data.credit as string);
       const result = await kfiAxios.put(`transaction/loan-release/entries/${entry.transaction}/${entry._id}`, data);
       const { success, entry: updatedEntry } = result.data;
       if (success) {

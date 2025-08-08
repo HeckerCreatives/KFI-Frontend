@@ -13,6 +13,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import JournalVoucherForm from '../components/JournalVoucherForm';
 import UpdateJVEntries from '../components/UpdateJVEntries';
+import { formatAmount } from '../../../../ui/utils/formatNumber';
 
 type UpdateJournalVoucherProps = {
   journalVoucher: JournalVoucher;
@@ -28,8 +29,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
     resolver: zodResolver(journalVoucherSchema),
     defaultValues: {
       code: '',
-      supplier: '',
-      supplierId: '',
+      nature: '',
       refNo: '',
       remarks: '',
       date: formatDateInput(new Date().toISOString()),
@@ -39,7 +39,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
       checkDate: '',
       bank: '',
       bankLabel: '',
-      amount: '',
+      amount: '0',
       mode: 'update',
     },
   });
@@ -48,8 +48,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
     if (journalVoucher) {
       form.reset({
         code: journalVoucher.code,
-        supplier: `${journalVoucher.supplier.code} - ${journalVoucher.supplier.description}`,
-        supplierId: journalVoucher.supplier._id,
+        nature: journalVoucher.nature,
         refNo: journalVoucher.refNo,
         remarks: journalVoucher.remarks,
         date: formatDateInput(journalVoucher.date),
@@ -58,8 +57,8 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
         checkNo: `${journalVoucher.checkNo}`,
         checkDate: formatDateInput(journalVoucher.checkDate),
         bank: journalVoucher.bankCode._id,
-        bankLabel: `${journalVoucher.bankCode.code} - ${journalVoucher.bankCode.description}`,
-        amount: `${journalVoucher.amount}`,
+        bankLabel: `${journalVoucher.bankCode.code}`,
+        amount: `${formatAmount(journalVoucher.amount)}`,
         mode: 'update',
       });
     }

@@ -187,7 +187,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
                 {!data.loading &&
                   data.loanEntries.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">CV#{data.cvNo}</TableCell>
+                      <TableCell className="">{data.cvNo}</TableCell>
                       <TableCell className="">{formatDateTable(data.dueDate)}</TableCell>
                       <TableCell className="">{data.noOfWeeks}</TableCell>
                       <TableCell className="">{data.name}</TableCell>

@@ -9,6 +9,7 @@ import checkError from '../../../../../utils/check-error';
 import formErrorHandler from '../../../../../utils/form-error-handler';
 import ELEntryForm from '../../components/ELEntryForm';
 import { EmergencyLoanEntryFormData, emergencyLoanEntrySchema } from '../../../../../../validations/emergency-loan.schema';
+import { removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type AddEntryProps = {
   emergencyLoanId: string;
@@ -42,6 +43,8 @@ const AddEntry = ({ emergencyLoanId, getEntries }: AddEntryProps) => {
   const onSubmit = async (data: EmergencyLoanEntryFormData) => {
     setLoading(true);
     try {
+      data.debit = removeAmountComma(data.debit);
+      data.credit = removeAmountComma(data.credit);
       const result = await kfiAxios.post(`/emergency-loan/entries/${emergencyLoanId}`, data);
       const { success } = result.data;
       if (success) {

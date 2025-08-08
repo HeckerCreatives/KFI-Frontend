@@ -9,6 +9,7 @@ import EntryForm from '../../components/EntryForm';
 import kfiAxios from '../../../../../utils/axios';
 import checkError from '../../../../../utils/check-error';
 import formErrorHandler from '../../../../../utils/form-error-handler';
+import { removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type AddEntryProps = {
   transactionId: string;
@@ -46,12 +47,14 @@ const AddEntry = ({ transactionId, centerNo, centerId, getEntries }: AddEntryPro
 
   const onSubmit = async (data: EntryFormData) => {
     if (data.debit === '' && data.credit === '' && data.checkNo === '' && data.cycle === '') {
-      form.setError('root', { message: 'No data to save. Please fill necessary fields.' });
+      form.setError('root', { message: 'No data to save. Please add a debit/credit.' });
       return;
     }
 
     setLoading(true);
     try {
+      data.debit = removeAmountComma(data.debit as string);
+      data.credit = removeAmountComma(data.credit as string);
       const result = await kfiAxios.post(`transaction/loan-release/entries/${transactionId}`, data);
       const { success } = result.data;
       if (success) {

@@ -45,10 +45,10 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
         replace(
           entries.map((entry: EntryOption) => ({
             loanReleaseEntryId: entry._id,
-            cvNo: `CV#${entry.cvNo}`,
+            cvNo: `${entry.cvNo}`,
             dueDate: formatDateTable(entry.dueDate),
             noOfWeeks: `${entry.noOfWeeks}`,
-            name: `${entry.name}`,
+            name: entry.name,
             particular: `${entry.centerNo} - ${entry.name}`,
             acctCodeId: '',
             acctCode: '',

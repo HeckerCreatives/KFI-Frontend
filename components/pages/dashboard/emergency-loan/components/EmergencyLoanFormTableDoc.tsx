@@ -67,12 +67,12 @@ const EmergencyLoanFormTableDoc = ({ entry, index, remove, form }: EmergencyLoan
       </TableCell>
       <TableCell>
         <FormIonItem>
-          <InputText control={form.control} name={`entries.${index}.debit`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm text-end" />
+          <InputText control={form.control} name={`entries.${index}.debit`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm text-end" isAmount />
         </FormIonItem>
       </TableCell>
       <TableCell>
         <FormIonItem>
-          <InputText control={form.control} name={`entries.${index}.credit`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm text-end" />
+          <InputText control={form.control} name={`entries.${index}.credit`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm text-end" isAmount />
         </FormIonItem>
       </TableCell>
       <TableCell>

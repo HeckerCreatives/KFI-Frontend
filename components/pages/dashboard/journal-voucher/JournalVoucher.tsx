@@ -27,8 +27,6 @@ export type TData = {
 };
 
 const JournalVoucher = () => {
-  const arrDummy: string[] = Array.from(Array(10)).fill('');
-
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
 
   const [present] = useIonToast();
@@ -127,7 +125,7 @@ const JournalVoucher = () => {
                     {!data.loading &&
                       data.journalVouchers.map((journalVoucher: JournalVoucherType, i: number) => (
                         <TableRow key={journalVoucher._id}>
-                          <TableCell>JV#{journalVoucher.code}</TableCell>
+                          <TableCell>{journalVoucher.code}</TableCell>
                           <TableCell>{formatDateTable(journalVoucher.date)}</TableCell>
                           <TableCell>{journalVoucher.bankCode.description}</TableCell>
                           <TableCell>{journalVoucher.checkNo}</TableCell>

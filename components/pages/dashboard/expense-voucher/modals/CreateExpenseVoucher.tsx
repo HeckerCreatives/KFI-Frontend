@@ -11,6 +11,7 @@ import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
+import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type CreateExpenseVoucherProps = {
   getExpenseVouchers: (page: number, keyword?: string, sort?: string) => void;
@@ -36,7 +37,7 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
       checkDate: '',
       bank: '',
       bankLabel: '',
-      amount: '',
+      amount: '0',
       remarks: '',
       entries: [],
     },
@@ -50,6 +51,8 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
   async function onSubmit(data: ExpenseVoucherFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
+      data.entries = data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) }));
       const result = await kfiAxios.post('expense-voucher', data);
       const { success } = result.data;
       if (success) {

@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { person } from 'ionicons/icons';
 import React from 'react';
 import { Control, Controller, FieldPath, FieldValues, UseFormClearErrors } from 'react-hook-form';
+import { formatAmount, formatNumber, removeAmountComma } from '../utils/formatNumber';
 
 type TFormInput<T extends FieldValues> = {
   name: FieldPath<T>;
@@ -20,6 +21,7 @@ type TFormInput<T extends FieldValues> = {
   containerClassnames?: string;
   icon?: string;
   errorClassName?: string;
+  isAmount?: boolean;
 };
 
 const InputText = <T extends FieldValues>({
@@ -38,6 +40,7 @@ const InputText = <T extends FieldValues>({
   containerClassnames = '',
   icon = '',
   errorClassName = '',
+  isAmount = false,
 }: TFormInput<T>) => {
   return (
     <Controller
@@ -62,12 +65,19 @@ const InputText = <T extends FieldValues>({
                 aria-label={label || 'no label'}
                 placeholder={placeholder}
                 onIonInput={e => {
-                  field.onChange(e.detail.value);
+                  const value = e.detail.value;
                   clearErrors(name);
                   clearErrors('root');
+                  field.onChange(value);
                 }}
                 disabled={disabled}
                 onIonBlur={field.onBlur}
+                onBlur={() => {
+                  if (isAmount) field.onChange(formatAmount(field.value));
+                }}
+                onFocus={() => {
+                  if (isAmount) field.onChange(removeAmountComma(field.value));
+                }}
                 className={classNames(
                   'text-sm !bg-white ![--highlight-color-focused:none] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:0.75rem] !min-h-[0.75rem]',
                   error && '![--border-color:red] !border-red-600',

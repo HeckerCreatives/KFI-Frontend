@@ -14,6 +14,7 @@ import { createSharp } from 'ionicons/icons';
 import { TData } from '../EmergencyLoan';
 import UpdateELEntries from '../components/UpdateELEntries';
 import { formatDateInput } from '../../../../utils/date-utils';
+import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type UpdateEmergencyLoanProps = {
   emergencyLoan: EmergencyLoan;
@@ -30,8 +31,8 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
     resolver: zodResolver(emergencyLoanSchema),
     defaultValues: {
       code: '',
-      supplier: '',
-      supplierLabel: '',
+      centerLabel: '',
+      centerValue: '',
       refNo: '',
       remarks: '',
       date: formatDateInput(new Date().toISOString()),
@@ -50,8 +51,8 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
     if (emergencyLoan) {
       form.reset({
         code: emergencyLoan.code,
-        supplier: emergencyLoan.supplier._id,
-        supplierLabel: `${emergencyLoan.supplier.code} - ${emergencyLoan.supplier.description}`,
+        centerLabel: emergencyLoan.center.centerNo,
+        centerValue: emergencyLoan.center._id,
         refNo: emergencyLoan.refNo,
         remarks: emergencyLoan.remarks,
         date: formatDateInput(emergencyLoan.date),
@@ -60,8 +61,8 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
         checkNo: emergencyLoan.checkNo,
         checkDate: formatDateInput(emergencyLoan.checkDate),
         bankCode: emergencyLoan.bankCode._id,
-        bankCodeLabel: `${emergencyLoan.bankCode.code} - ${emergencyLoan.bankCode.description}`,
-        amount: `${emergencyLoan.amount}`,
+        bankCodeLabel: `${emergencyLoan.bankCode.code}`,
+        amount: `${formatAmount(emergencyLoan.amount)}`,
         mode: 'update',
       });
     }
@@ -75,6 +76,7 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
   async function onSubmit(data: EmergencyLoanFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
       const result = await kfiAxios.put(`emergency-loan/${emergencyLoan._id}`, data);
       const { success, emergencyLoan: updatedEmergencyLoan } = result.data;
       if (success) {

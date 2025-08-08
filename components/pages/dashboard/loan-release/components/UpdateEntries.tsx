@@ -120,6 +120,22 @@ const UpdateEntries = ({ isOpen, transaction }: UpdateEntriesProps) => {
           </TableBody>
         </Table>
       </div>
+      <div className="px-3">
+        <div className="grid grid-cols-3">
+          <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+            <div>Diff: </div>
+            <div>{`${formatNumber(Math.abs(data.entries.reduce((acc, entry) => acc + Number(entry.debit), 0) - data.entries.reduce((acc, entry) => acc + Number(entry.credit), 0)))}`}</div>
+          </div>
+          <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+            <div>Total Debit: </div>
+            <div>{`${formatNumber(data.entries.reduce((acc, entry) => acc + Number(entry.debit), 0))}`}</div>
+          </div>
+          <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+            <div>Total Credit: </div>
+            <div>{`${formatNumber(data.entries.reduce((acc, entry) => acc + Number(entry.credit), 0))}`}</div>
+          </div>
+        </div>
+      </div>
       <div className="pt-2">
         <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
       </div>

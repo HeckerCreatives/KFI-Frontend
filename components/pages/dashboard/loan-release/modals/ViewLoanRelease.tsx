@@ -45,10 +45,10 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
             <ModalHeader title="Loan Release - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
-        <div className="inner-content h-screen !p-2 space-y-1">
+        <div className="inner-content h-screen !p-2 space-y-1 flex flex-col">
           <div className="grid grid-cols-3 gap-2">
             <div className="space-y-1">
-              <LoanReleaseViewCard label="CV#" value={`CV#${transaction.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
+              <LoanReleaseViewCard label="CV#" value={`${transaction.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
               <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} labelClassName="min-w-20 text-end !text-slate-600" />
               <LoanReleaseViewCard label="Name" value={transaction.center.description} labelClassName="min-w-20 text-end !text-slate-600" />
             </div>
@@ -64,7 +64,7 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
             <div className="space-y-1">
               <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
               <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
-              <LoanReleaseViewCard label="Bank Code" value={transaction.bank.description} labelClassName="min-w-28 text-end !text-slate-600" />
+              <LoanReleaseViewCard label="Bank Code" value={transaction.bank.code} labelClassName="min-w-28 text-end !text-slate-600" />
               <LoanReleaseViewCard label="Amount" value={`${formatNumber(transaction.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
             </div>
           </div>

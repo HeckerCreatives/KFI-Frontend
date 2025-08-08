@@ -52,7 +52,7 @@ const ViewAcknowledgement = ({ acknowledgement }: ViewAcknowledgementProps) => {
           <div className="grid grid-cols-3 gap-2">
             <div className="col-span-2 grid grid-cols-2 gap-2">
               <div className="space-y-1">
-                <AcknowledgementViewCard label="CV#" value={`CV#${acknowledgement.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                <AcknowledgementViewCard label="OR#" value={`${acknowledgement.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
                 <AcknowledgementViewCard label="Center Code" value={`${acknowledgement.center.centerNo}`} labelClassName="min-w-20 text-end !text-slate-600" />
                 <AcknowledgementViewCard label="Name" value={`${acknowledgement.center.description}`} labelClassName="min-w-20 text-end !text-slate-600" />
                 <AcknowledgementViewCard label="Cash Type" value={acknowledgement.type} labelClassName="min-w-20 text-end !text-slate-600" />
@@ -70,7 +70,7 @@ const ViewAcknowledgement = ({ acknowledgement }: ViewAcknowledgementProps) => {
             <div className="space-y-1">
               <AcknowledgementViewCard label="Check Number" value={acknowledgement.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
               <AcknowledgementViewCard label="Check Date" value={formatDateTable(acknowledgement.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
-              <AcknowledgementViewCard label="Bank Code" value={acknowledgement.bankCode.description} labelClassName="min-w-28 text-end !text-slate-600" />
+              <AcknowledgementViewCard label="Bank Code" value={acknowledgement.bankCode.code} labelClassName="min-w-28 text-end !text-slate-600" />
               <AcknowledgementViewCard label="Amount" value={`${formatNumber(acknowledgement.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
               <AcknowledgementViewCard
                 label="Cash Collection"

@@ -158,7 +158,7 @@ const DamayanFundSelection = <T extends FieldValues>({ damayanFundLabel, damayan
                 {!data.loading &&
                   data.damayanFunds.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">JV#{data.code}</TableCell>
+                      <TableCell className="">{data.code}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

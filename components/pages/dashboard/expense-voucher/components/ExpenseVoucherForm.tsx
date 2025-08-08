@@ -148,6 +148,7 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
               placeholder="Type here"
               className="!px-1 !py-1 rounded-md !text-[0.7rem]"
               labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
+              isAmount
             />
           </FormIonItem>
         </div>

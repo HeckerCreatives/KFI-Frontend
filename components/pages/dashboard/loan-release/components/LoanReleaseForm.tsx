@@ -204,6 +204,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               placeholder="Type here"
               className="!px-1 !py-1 rounded-md !text-[0.7rem] lg:max-w-40"
               labelClassName="truncate min-w-24 !text-[0.7rem]  !text-slate-600 text-end"
+              isAmount
             />
           </FormIonItem>
         </div>

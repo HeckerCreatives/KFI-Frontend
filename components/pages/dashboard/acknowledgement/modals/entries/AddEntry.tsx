@@ -10,6 +10,7 @@ import checkError from '../../../../../utils/check-error';
 import formErrorHandler from '../../../../../utils/form-error-handler';
 import { AcknowledgementEntryFormData, acknowledgementEntrySchema } from '../../../../../../validations/acknowledgement.schema';
 import AcknowledgementEntryForm from '../../components/AcknowledgementEntryForm';
+import { removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type AddEntryProps = {
   acknowledgementId: string;
@@ -45,6 +46,8 @@ const AddEntry = ({ acknowledgementId, getEntries }: AddEntryProps) => {
   const onSubmit = async (data: EntryFormData) => {
     setLoading(true);
     try {
+      data.debit = removeAmountComma(data.debit as string);
+      data.credit = removeAmountComma(data.credit as string);
       const result = await kfiAxios.post(`/acknowledgement/entries/${acknowledgementId}`, data);
       const { success } = result.data;
       if (success) {

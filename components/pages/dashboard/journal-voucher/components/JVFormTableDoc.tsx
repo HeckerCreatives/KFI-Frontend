@@ -67,12 +67,12 @@ const JVFormTableDoc = ({ index, entry, remove, form, loading }: JVFormTableDocP
       </TableCell>
       <TableCell>
         <FormIonItem>
-          <InputText control={form.control} name={`entries.${index}.debit`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
+          <InputText control={form.control} name={`entries.${index}.debit`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" isAmount />
         </FormIonItem>
       </TableCell>
       <TableCell>
         <FormIonItem>
-          <InputText control={form.control} name={`entries.${index}.credit`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
+          <InputText control={form.control} name={`entries.${index}.credit`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" isAmount />
         </FormIonItem>
       </TableCell>
       <TableCell>

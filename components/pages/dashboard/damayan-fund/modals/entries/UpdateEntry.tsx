@@ -11,6 +11,7 @@ import { create } from 'ionicons/icons';
 import ELEntryForm from '../../components/DFEntryForm';
 import { TDFData } from '../../components/UpdateDFEntries';
 import { DamayanFundEntryFormData, damayanFundEntrySchema } from '../../../../../../validations/damayan-fund.schema';
+import { formatAmount, removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type UpdateEntryProps = {
   entry: DamayanFundEntry;
@@ -45,8 +46,8 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
         acctCodeId: entry.acctCode._id,
         acctCode: entry.acctCode.code,
         description: entry.acctCode.description,
-        debit: `${entry.debit}`,
-        credit: `${entry.credit}`,
+        debit: `${formatAmount(entry.debit)}`,
+        credit: `${formatAmount(entry.credit)}`,
       });
     }
   }, [form, entry]);
@@ -59,6 +60,8 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
   const onSubmit = async (data: DamayanFundEntryFormData) => {
     setLoading(true);
     try {
+      data.debit = removeAmountComma(data.debit);
+      data.credit = removeAmountComma(data.credit);
       const result = await kfiAxios.put(`/damayan-fund/entries/${entry.damayanFund}/${entry._id}`, data);
       const { success, entry: updatedEntry } = result.data;
       if (success) {

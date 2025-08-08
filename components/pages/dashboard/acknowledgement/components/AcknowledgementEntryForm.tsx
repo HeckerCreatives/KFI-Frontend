@@ -43,7 +43,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
                   name={`cvNo`}
                   clearErrors={form.clearErrors}
                   className="!px-2 !py-2 rounded-md"
-                  labelClassName="truncate !text-slate-600 min-w-20"
+                  labelClassName="truncate !text-slate-600 min-w-24 text-end"
                 />
               </FormIonItem>
               {form.watch('cvNo') && (
@@ -71,7 +71,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               name={`dueDate`}
               clearErrors={form.clearErrors}
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-24 text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -82,7 +82,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               name={`noOfWeeks`}
               clearErrors={form.clearErrors}
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-24 text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -93,7 +93,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               name={`name`}
               clearErrors={form.clearErrors}
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-24 text-end"
             />
           </FormIonItem>
           <div className="flex items-start gap-2 flex-nowrap">
@@ -108,7 +108,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
                   label="Acct. Code"
                   placeholder="Click find to search for account code"
                   className="!px-2 !py-2 rounded-md"
-                  labelClassName="truncate !text-slate-600 min-w-20"
+                  labelClassName="truncate !text-slate-600 min-w-24 text-end"
                 />
               </FormIonItem>
               {form.watch('acctCodeId') && (
@@ -138,7 +138,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               clearErrors={form.clearErrors}
               label="Description"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-24 text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -150,7 +150,8 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               label="Debit"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-24 text-end"
+              isAmount
             />
           </FormIonItem>
           <FormIonItem>
@@ -162,7 +163,8 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               label="Credit"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-24 text-end"
+              isAmount
             />
           </FormIonItem>
         </IonCol>

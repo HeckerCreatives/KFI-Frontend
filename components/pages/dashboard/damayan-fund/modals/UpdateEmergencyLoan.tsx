@@ -13,6 +13,8 @@ import { TData } from '../DamayanFund';
 import { formatDateInput } from '../../../../utils/date-utils';
 import DamayanFundForm from '../components/DamayanFundForm';
 import UpdateDFEntries from '../components/UpdateDFEntries';
+import { DamayanFundFormData, damayanFundSchema } from '../../../../../validations/damayan-fund.schema';
+import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type UpdateDamayanFundProps = {
   damayanFund: DamayanFund;
@@ -25,12 +27,12 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const form = useForm<EmergencyLoanFormData>({
-    resolver: zodResolver(emergencyLoanSchema),
+  const form = useForm<DamayanFundFormData>({
+    resolver: zodResolver(damayanFundSchema),
     defaultValues: {
       code: '',
-      supplier: '',
-      supplierLabel: '',
+      centerLabel: '',
+      centerValue: '',
       refNo: '',
       remarks: '',
       date: formatDateInput(new Date().toISOString()),
@@ -49,8 +51,8 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
     if (damayanFund) {
       form.reset({
         code: damayanFund.code,
-        supplier: damayanFund.supplier._id,
-        supplierLabel: `${damayanFund.supplier.code} - ${damayanFund.supplier.description}`,
+        centerLabel: damayanFund?.center?.centerNo,
+        centerValue: damayanFund?.center?._id,
         refNo: damayanFund.refNo,
         remarks: damayanFund.remarks,
         date: formatDateInput(damayanFund.date),
@@ -59,8 +61,8 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
         checkNo: damayanFund.checkNo,
         checkDate: formatDateInput(damayanFund.checkDate),
         bankCode: damayanFund.bankCode._id,
-        bankCodeLabel: `${damayanFund.bankCode.code} - ${damayanFund.bankCode.description}`,
-        amount: `${damayanFund.amount}`,
+        bankCodeLabel: `${damayanFund.bankCode.code}`,
+        amount: `${formatAmount(damayanFund.amount)}`,
         mode: 'update',
       });
     }
@@ -74,6 +76,7 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
   async function onSubmit(data: EmergencyLoanFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
       const result = await kfiAxios.put(`damayan-fund/${damayanFund._id}`, data);
       const { success, damayanFund: updatedDamayanFund } = result.data;
       if (success) {

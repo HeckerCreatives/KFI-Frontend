@@ -112,7 +112,7 @@ const EmergencyLoanSelection = <T extends FieldValues>({ emergencyLoanLabel, eme
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Damayan Fund Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Emergency Loan Selection" />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !p-2  border-2 !border-slate-400">
@@ -158,7 +158,7 @@ const EmergencyLoanSelection = <T extends FieldValues>({ emergencyLoanLabel, eme
                 {!data.loading &&
                   data.emergencyLoans.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">CV#{data.code}</TableCell>
+                      <TableCell className="">{data.code}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

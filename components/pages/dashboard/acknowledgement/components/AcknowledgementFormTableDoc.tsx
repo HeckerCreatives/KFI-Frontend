@@ -79,12 +79,12 @@ const AcknowledgementFormTableDoc = ({ entry, remove, form, index }: Acknowledge
       </TableCell>
       <TableCell>
         <FormIonItem>
-          <InputText control={form.control} name={`entries.${index}.debit`} clearErrors={form.clearErrors} className="!px-2 !min-w-10 rounded-sm text-end" />
+          <InputText control={form.control} name={`entries.${index}.debit`} clearErrors={form.clearErrors} className="!px-2 !min-w-10 rounded-sm text-end" isAmount />
         </FormIonItem>
       </TableCell>
       <TableCell>
         <FormIonItem>
-          <InputText control={form.control} name={`entries.${index}.credit`} clearErrors={form.clearErrors} className="!px-2 !min-w-10 rounded-sm text-end" />
+          <InputText control={form.control} name={`entries.${index}.credit`} clearErrors={form.clearErrors} className="!px-2 !min-w-10 rounded-sm text-end" isAmount />
         </FormIonItem>
       </TableCell>
       <TableCell>

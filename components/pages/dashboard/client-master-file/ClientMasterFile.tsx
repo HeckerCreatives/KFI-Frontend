@@ -85,7 +85,7 @@ const ClientMasterFile = () => {
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
           <div>
-            <PageTitle pages={['Manage Account', 'Clients']} />
+            <PageTitle pages={['Manage Account', 'Client Master File']} />
           </div>
           <div className="px-3 pb-3 pt-2 flex-1 flex flex-col">
             <ManageAccountNav />

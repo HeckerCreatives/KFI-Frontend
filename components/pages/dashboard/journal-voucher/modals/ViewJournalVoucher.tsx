@@ -49,8 +49,8 @@ const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher
           <div className="space-y-1">
             <div className="grid grid-cols-3">
               <div className="space-y-1">
-                <JournalVoucherViewCard label="CV#" value={`CV#${journalVoucher.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
-                <JournalVoucherViewCard label="Supplier" value={journalVoucher.supplier.description} labelClassName="min-w-20 text-end !text-slate-600" />
+                <JournalVoucherViewCard label="JV#" value={`${journalVoucher.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                <JournalVoucherViewCard label="Nature" value={journalVoucher.nature} labelClassName="min-w-20 text-end !text-slate-600" />
               </div>
               <div className="space-y-1">
                 <JournalVoucherViewCard label="Date" value={formatDateTable(journalVoucher.date)} labelClassName="min-w-20 text-end !text-slate-600" />
@@ -60,7 +60,7 @@ const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher
               <div className="space-y-1">
                 <JournalVoucherViewCard label="Check Number" value={journalVoucher.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
                 <JournalVoucherViewCard label="Check Date" value={formatDateTable(journalVoucher.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
-                <JournalVoucherViewCard label="Bank Code" value={journalVoucher.bankCode.description} labelClassName="min-w-28 text-end !text-slate-600" />
+                <JournalVoucherViewCard label="Bank Code" value={journalVoucher.bankCode.code} labelClassName="min-w-28 text-end !text-slate-600" />
                 <JournalVoucherViewCard label="Amount" value={`${formatNumber(journalVoucher.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
               </div>
             </div>

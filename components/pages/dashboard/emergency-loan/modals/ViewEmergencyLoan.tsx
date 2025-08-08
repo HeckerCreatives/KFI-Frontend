@@ -49,8 +49,8 @@ const ViewEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan }) 
             <div className="grid grid-cols-3 gap-2">
               <div className="col-span-2 grid grid-cols-2 gap-2">
                 <div className="space-y-1">
-                  <JournalVoucherViewCard label="CV#" value={`CV#${emergencyLoan.code}`} labelClassName="min-w-14 text-end !text-slate-600" />
-                  <JournalVoucherViewCard label="Supplier" value={emergencyLoan.supplier.description} labelClassName="min-w-14 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="CV#" value={`${emergencyLoan.code}`} labelClassName="min-w-14 text-end !text-slate-600" />
+                  <JournalVoucherViewCard label="Center Code" value={emergencyLoan?.center?.centerNo || ''} labelClassName="min-w-14 text-end !text-slate-600" />
                 </div>
                 <div className="space-y-1">
                   <JournalVoucherViewCard label="Date" value={formatDateTable(emergencyLoan.date)} labelClassName="min-w-14 text-end !text-slate-600" />
@@ -64,7 +64,7 @@ const ViewEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan }) 
               <div className="space-y-1">
                 <JournalVoucherViewCard label="Check Number" value={emergencyLoan.checkNo} labelClassName="min-w-20 text-end !text-slate-600" />
                 <JournalVoucherViewCard label="Check Date" value={formatDateTable(emergencyLoan.checkDate)} labelClassName="min-w-20 text-end !text-slate-600" />
-                <JournalVoucherViewCard label="Bank Code" value={emergencyLoan.bankCode.description} labelClassName="min-w-20 text-end !text-slate-600" />
+                <JournalVoucherViewCard label="Bank Code" value={emergencyLoan.bankCode.code} labelClassName="min-w-20 text-end !text-slate-600" />
                 <JournalVoucherViewCard label="Amount" value={`${formatNumber(emergencyLoan.amount)}`} labelClassName="min-w-20 text-end !text-slate-600" />
               </div>
             </div>

@@ -71,7 +71,7 @@ const ViewRelease = ({ release }: ViewReleaseProps) => {
               <div className="space-y-1">
                 <ReleaseViewCard label="Check Number" value={release.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
                 <ReleaseViewCard label="Check Date" value={formatDateTable(release.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
-                <ReleaseViewCard label="Bank Code" value={release.bankCode.description} labelClassName="min-w-28 text-end !text-slate-600" />
+                <ReleaseViewCard label="Bank Code" value={release.bankCode.code} labelClassName="min-w-28 text-end !text-slate-600" />
                 <ReleaseViewCard label="Amount" value={`${formatNumber(release.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
                 <ReleaseViewCard label="Cash Collection" value={`${formatNumber(release.cashCollectionAmount || 0)}`} labelClassName="min-w-28 text-end !text-slate-600" />
               </div>

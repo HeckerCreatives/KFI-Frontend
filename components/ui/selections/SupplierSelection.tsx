@@ -80,7 +80,7 @@ const SupplierSelection = <T extends FieldValues>({ supplierLabel, supplierValue
   };
 
   const handleSelect = (supplier: Option) => {
-    const supplierCode = `${supplier.code} - ${supplier.description}` as PathValue<T, Path<T>>;
+    const supplierCode = `${supplier.description}` as PathValue<T, Path<T>>;
     const supplierId = supplier._id as PathValue<T, Path<T>>;
 
     setValue(supplierLabel as Path<T>, supplierCode as any);

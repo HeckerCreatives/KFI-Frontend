@@ -11,6 +11,7 @@ import { DamayanFundFormData, damayanFundSchema } from '../../../../../validatio
 import DamayanFundForm from '../components/DamayanFundForm';
 import DamayanFundFormTable from '../components/DamayanFundFormTable';
 import { formatDateInput } from '../../../../utils/date-utils';
+import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type CreateDamayanFundProps = {
   getDamayanFunds: (page: number, keyword?: string, sort?: string) => void;
@@ -25,8 +26,8 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
     resolver: zodResolver(damayanFundSchema),
     defaultValues: {
       code: '',
-      supplier: '',
-      supplierLabel: '',
+      centerValue: '',
+      centerLabel: '',
       refNo: '',
       remarks: '',
       date: formatDateInput(new Date().toISOString()),
@@ -50,6 +51,8 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
   async function onSubmit(data: DamayanFundFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
+      data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) })) : [];
       const result = await kfiAxios.post('/damayan-fund', data);
       const { success } = result.data;
       if (success) {

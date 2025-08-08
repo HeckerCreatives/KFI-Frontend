@@ -1,13 +1,9 @@
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import InputText from '../../../../ui/forms/InputText';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import { JournalVoucherFormData } from '../../../../../validations/journal-voucher.schema';
-import SupplierSelection from '../../../../ui/selections/SupplierSelection';
-import InputTextarea from '../../../../ui/forms/InputTextarea';
 import BankSelection from '../../../../ui/selections/BankSelection';
-import classNames from 'classnames';
 
 type TForm = {
   form: UseFormReturn<JournalVoucherFormData>;
@@ -34,23 +30,16 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
           <div className="flex items-start gap-2 flex-nowrap">
             <FormIonItem className="flex-1 [--min-height:0]">
               <InputText
-                readOnly
-                name="supplier"
+                name="nature"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                label="Supplier"
-                placeholder="Click find to search for supplier"
+                label="Nature"
+                placeholder="Type here"
                 className="!px-1 !py-1 rounded-md !text-[0.7rem]"
                 labelClassName="truncate !text-[0.7rem] min-w-14 !text-slate-600 text-end"
+                disabled={loading}
               />
             </FormIonItem>
-            <SupplierSelection
-              supplierLabel="supplier"
-              supplierValue="supplierId"
-              setValue={form.setValue}
-              clearErrors={form.clearErrors}
-              className="!min-h-6 h-[1.65rem] text-xs"
-            />
           </div>
         </div>
         <div className="space-y-1">
@@ -148,6 +137,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
               placeholder="Type here"
               className="!px-1 !py-1 rounded-md !text-[0.7rem]"
               labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
+              isAmount
             />
           </FormIonItem>
         </div>

@@ -13,6 +13,7 @@ import { TData } from '../Acknowledgement';
 import { AcknowledgementFormData, acknowledgementSchema } from '../../../../../validations/acknowledgement.schema';
 import AcknowledgementForm from '../components/AcknowledgementForm';
 import UpdateAcknowledgementEntries from '../components/UpdateAcknowledgementEntries';
+import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type UpdateAcknowledgementProps = {
   acknowledgement: Acknowledgement;
@@ -65,8 +66,8 @@ const UpdateAcknowledgement = ({ acknowledgement, setData }: UpdateAcknowledgeme
         checkDate: formatDateInput(acknowledgement.checkDate),
         type: acknowledgement.type,
         bankCode: acknowledgement.bankCode._id,
-        bankCodeLabel: `${acknowledgement.bankCode.code} - ${acknowledgement.bankCode.description}`,
-        amount: `${acknowledgement.amount}`,
+        bankCodeLabel: `${acknowledgement.bankCode.code}`,
+        amount: `${formatAmount(acknowledgement.amount)}`,
         cashCollection: `${acknowledgement.cashCollectionAmount || 0}`,
         mode: 'update',
       });
@@ -81,6 +82,8 @@ const UpdateAcknowledgement = ({ acknowledgement, setData }: UpdateAcknowledgeme
   async function onSubmit(data: AcknowledgementFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
+      data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
       const result = await kfiAxios.put(`acknowledgement/${acknowledgement._id}`, data);
       const { success, acknowledgement: updatedAcknowledgement } = result.data;
       if (success) {

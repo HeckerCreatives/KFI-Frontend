@@ -124,7 +124,7 @@ const EmergencyLoan = () => {
                       data.emergencyLoans.length > 0 &&
                       data.emergencyLoans.map((emergencyLoan: EmergencyLoanType, i: number) => (
                         <TableRow key={emergencyLoan._id}>
-                          <TableCell>CV#{emergencyLoan.code}</TableCell>
+                          <TableCell>{emergencyLoan.code}</TableCell>
                           <TableCell>{formatDateTable(emergencyLoan.date)}</TableCell>
                           <TableCell>{emergencyLoan.bankCode.description}</TableCell>
                           <TableCell>{emergencyLoan.checkNo}</TableCell>

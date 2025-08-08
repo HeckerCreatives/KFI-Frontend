@@ -42,7 +42,7 @@ const ELEntryForm = ({ form, loading = false }: TForm) => {
                   label="Name"
                   placeholder="Click find to search for name"
                   className="!px-2 !py-2 rounded-md"
-                  labelClassName="truncate !text-slate-600 min-w-20"
+                  labelClassName="truncate !text-slate-600 min-w-24 text-end"
                 />
               </FormIonItem>
               {form.watch('client') && (
@@ -67,7 +67,7 @@ const ELEntryForm = ({ form, loading = false }: TForm) => {
               label="Particular"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-24 text-end"
             />
           </FormIonItem>
           <div className="flex items-start gap-2 flex-nowrap">
@@ -82,7 +82,7 @@ const ELEntryForm = ({ form, loading = false }: TForm) => {
                   label="Acct. Code"
                   placeholder="Click find to search for account code"
                   className="!px-2 !py-2 rounded-md"
-                  labelClassName="truncate !text-slate-600 min-w-20"
+                  labelClassName="truncate !text-slate-600 min-w-24 text-end"
                 />
               </FormIonItem>
               {form.watch('acctCodeId') && (
@@ -113,7 +113,7 @@ const ELEntryForm = ({ form, loading = false }: TForm) => {
               label="Description"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-24 text-end"
             />
           </FormIonItem>
           <FormIonItem>
@@ -125,7 +125,8 @@ const ELEntryForm = ({ form, loading = false }: TForm) => {
               label="Debit"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-24 text-end"
+              isAmount
             />
           </FormIonItem>
           <FormIonItem>
@@ -137,7 +138,8 @@ const ELEntryForm = ({ form, loading = false }: TForm) => {
               label="Credit"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-20"
+              labelClassName="truncate !text-slate-600 min-w-24 text-end"
+              isAmount
             />
           </FormIonItem>
         </IonCol>

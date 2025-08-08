@@ -65,7 +65,7 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
         checkDate: formatDateInput(release.checkDate),
         type: release.type,
         bankCode: release.bankCode._id,
-        bankCodeLabel: `${release.bankCode.code} - ${release.bankCode.description}`,
+        bankCodeLabel: `${release.bankCode.code}`,
         amount: `${release.amount}`,
         cashCollection: `${release.cashCollectionAmount || 0}`,
         mode: 'update',

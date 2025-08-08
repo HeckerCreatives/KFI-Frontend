@@ -13,6 +13,7 @@ import UpdateExpenseVoucherEntries from '../components/UpdateExpenseVoucherEntri
 import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type UpdateExpenseVoucherProps = {
   expenseVoucher: ExpenseVoucher;
@@ -39,7 +40,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
       checkDate: '',
       bank: '',
       bankLabel: '',
-      amount: '',
+      amount: '0',
     },
   });
 
@@ -47,7 +48,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
     if (expenseVoucher) {
       form.reset({
         code: expenseVoucher.code,
-        supplier: `${expenseVoucher.supplier.code} - ${expenseVoucher.supplier.description}`,
+        supplier: `${expenseVoucher.supplier.description}`,
         supplierId: expenseVoucher.supplier._id,
         refNo: expenseVoucher.refNo,
         remarks: expenseVoucher.remarks,
@@ -57,8 +58,8 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
         checkNo: `${expenseVoucher.checkNo}`,
         checkDate: formatDateInput(expenseVoucher.checkDate),
         bank: expenseVoucher.bankCode._id,
-        bankLabel: `${expenseVoucher.bankCode.code} - ${expenseVoucher.bankCode.description}`,
-        amount: `${expenseVoucher.amount}`,
+        bankLabel: `${expenseVoucher.bankCode.code}`,
+        amount: `${formatAmount(expenseVoucher.amount)}`,
       });
     }
   }, [expenseVoucher, form]);
@@ -71,6 +72,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
   async function onSubmit(data: UpdateExpenseVoucherFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
       const result = await kfiAxios.put(`expense-voucher/${expenseVoucher._id}`, data);
       const { success, expenseVoucher: updatedExpenseVoucher } = result.data;
       if (success) {

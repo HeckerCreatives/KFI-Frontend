@@ -11,21 +11,24 @@ export const journalVoucherEntrySchema = z.object({
     .string()
     .min(1, 'Debit is required')
     .max(255, 'Debit must only consist of 255 characters')
-    .refine(value => !isNaN(Number(value)), 'Debit must be a number'),
+    .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Debit must be a number'),
   credit: z
     .string()
     .min(1, 'Credit is required')
     .max(255, 'Credit must only consist of 255 characters')
-    .refine(value => !isNaN(Number(value)), 'Credit must be a number'),
+    .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Credit must be a number'),
   cvForRecompute: z.string().optional().or(z.literal('')),
   root: z.string().optional().or(z.literal('')),
 });
 
 export const journalVoucherSchema = z
   .object({
-    code: z.string().min(1, 'JV # is required').max(255, 'JV # must only consist of 255 characters'),
-    supplier: z.string().min(1, 'Supplier is required').max(255, 'Supplier must only consist of 255 characters'),
-    supplierId: z.string().min(1, 'Supplier is required').max(255, 'Supplier must only consist of 255 characters'),
+    code: z
+      .string()
+      .min(1, 'JV # is required')
+      .max(255, 'JV # must only consist of 255 characters')
+      .regex(/^JV#[\d-]+$/i, { message: 'Must start with JV# followed by numbers or hyphens' }),
+    nature: z.string().min(1, 'Nature is required').max(255, 'Nature must only consist of 255 characters').optional().or(z.literal('')),
     refNo: z.string().min(1, 'Reference Number is required').max(255, 'Reference Number must only consist of 255 characters').optional().or(z.literal('')),
     date: z.string().min(1, 'Date is required').max(255, 'Date must only consist of 255 characters'),
     acctMonth: z
@@ -47,7 +50,7 @@ export const journalVoucherSchema = z
       .string()
       .min(1, 'Amount is required')
       .max(255, 'Amount must only consist of 255 characters')
-      .refine(value => !isNaN(Number(value)), 'Amount must be a number'),
+      .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Amount must be a number'),
     remarks: z.string().min(1, 'Particular is required').max(255, 'Particular must only consist of 255 characters').optional().or(z.literal('')),
     entries: z.array(journalVoucherEntrySchema).optional(),
     mode: z.string().refine(value => ['create', 'update'].includes(value), 'Mode is required'),

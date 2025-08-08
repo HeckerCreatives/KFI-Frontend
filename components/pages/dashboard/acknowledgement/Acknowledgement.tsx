@@ -108,7 +108,7 @@ const Acknowledgement = () => {
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>CV Number</TableHead>
+                      <TableHead>OR Number</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Bank</TableHead>
                       <TableHead>CHK. No.</TableHead>
@@ -124,7 +124,7 @@ const Acknowledgement = () => {
                       data.acknowledgements.length > 0 &&
                       data.acknowledgements.map((acknowledgement: AcknowledgementType) => (
                         <TableRow key={acknowledgement._id}>
-                          <TableCell>CV#{acknowledgement.code}</TableCell>
+                          <TableCell>{acknowledgement.code}</TableCell>
                           <TableCell>{formatDateTable(acknowledgement.date)}</TableCell>
                           <TableCell>{acknowledgement.bankCode.description}</TableCell>
                           <TableCell>{acknowledgement.checkNo}</TableCell>

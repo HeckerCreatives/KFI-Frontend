@@ -21,7 +21,7 @@ export const loanReleaseSchema = z.object({
     .string()
     .min(1, 'CV # is required')
     .max(255, 'CV # must only consist of 255 characters')
-    .refine(value => !isNaN(Number(value)), 'CV # must be a number'),
+    .regex(/^CV#[\d-]+$/i, { message: 'Must start with CV# followed by numbers or hyphens' }),
   center: z.string().min(1, 'Center Code is required').max(255, 'Center Code must only consist of 255 characters'),
   centerLabel: z.string().min(1, 'Center Code is required').max(255, 'Center Code must only consist of 255 characters'),
   name: z.string().min(1, 'Name is required').max(255, 'Name must only consist of 255 characters'),
@@ -54,7 +54,7 @@ export const loanReleaseSchema = z.object({
     .string()
     .min(1, 'Amount is required')
     .max(255, 'Amount must only consist of 255 characters')
-    .refine(value => !isNaN(Number(value)), 'Amount must be a number'),
+    .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Amount must be a number'),
   cycle: z.string().min(1, 'Cycle is required').max(255, 'Cycle must only consist of 255 characters'),
   interestRate: z
     .string()
@@ -70,7 +70,7 @@ export const updateLoanReleaseSchema = z.object({
     .string()
     .min(1, 'Amount is required')
     .max(255, 'Amount must only consist of 255 characters')
-    .refine(value => !isNaN(Number(value)), 'Amount must be a number'),
+    .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Amount must be a number'),
   cycle: z.string().min(1, 'Cycle is required').max(255, 'Cycle must only consist of 255 characters'),
   interestRate: z
     .string()

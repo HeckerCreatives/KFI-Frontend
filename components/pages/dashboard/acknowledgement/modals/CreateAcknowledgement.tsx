@@ -11,6 +11,7 @@ import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
+import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type CreateAcknowledgementProps = {
   getAcknowledgements: (page: number, keyword?: string, sort?: string) => void;
@@ -54,6 +55,9 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
   async function onSubmit(data: AcknowledgementFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
+      data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
+      data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.debit) })) : [];
       const result = await kfiAxios.post('acknowledgement', data);
       const { success } = result.data;
       if (success) {

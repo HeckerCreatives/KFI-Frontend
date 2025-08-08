@@ -9,6 +9,7 @@ import checkError from '../../../../../utils/check-error';
 import formErrorHandler from '../../../../../utils/form-error-handler';
 import DFEntryForm from '../../components/DFEntryForm';
 import { DamayanFundEntryFormData, damayanFundEntrySchema } from '../../../../../../validations/damayan-fund.schema';
+import { removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type AddEntryProps = {
   damayanFundId: string;
@@ -42,6 +43,8 @@ const AddEntry = ({ damayanFundId, getEntries }: AddEntryProps) => {
   const onSubmit = async (data: DamayanFundEntryFormData) => {
     setLoading(true);
     try {
+      data.debit = removeAmountComma(data.debit);
+      data.credit = removeAmountComma(data.credit);
       const result = await kfiAxios.post(`/damayan-fund/entries/${damayanFundId}`, data);
       const { success } = result.data;
       if (success) {

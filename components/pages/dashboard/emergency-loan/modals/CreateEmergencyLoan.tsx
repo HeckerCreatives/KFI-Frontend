@@ -11,6 +11,7 @@ import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
+import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type CreateEmergencyLoanProps = {
   getEmergencyLoans: (page: number, keyword?: string, sort?: string) => void;
@@ -25,8 +26,8 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
     resolver: zodResolver(emergencyLoanSchema),
     defaultValues: {
       code: '',
-      supplier: '',
-      supplierLabel: '',
+      centerValue: '',
+      centerLabel: '',
       refNo: '',
       remarks: '',
       date: formatDateInput(new Date().toISOString()),
@@ -50,6 +51,8 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
   async function onSubmit(data: EmergencyLoanFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
+      data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) })) : [];
       const result = await kfiAxios.post('/emergency-loan', data);
       const { success } = result.data;
       if (success) {
@@ -80,7 +83,7 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
       <div className="text-end">
         <IonButton
           fill="clear"
-          id="create-loanRelease-modal"
+          id="create-emergencyLoan-modal"
           className="max-h-10 min-h-6 min-w-32 max-w-32 w-32 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
           strong
         >
@@ -89,7 +92,7 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
       </div>
       <IonModal
         ref={modal}
-        trigger="create-loanRelease-modal"
+        trigger="create-emergencyLoan-modal"
         backdropDismiss={false}
         className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
       >

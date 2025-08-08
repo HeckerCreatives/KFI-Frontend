@@ -85,12 +85,12 @@ const LoanReleaseFormTableDoc = ({ entry, index, remove, form }: LoanReleaseForm
       </TableCell>
       <TableCell>
         <FormIonItem>
-          <InputText control={form.control} name={`entries.${index}.debit`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm" />
+          <InputText control={form.control} name={`entries.${index}.debit`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm" isAmount />
         </FormIonItem>
       </TableCell>
       <TableCell>
         <FormIonItem>
-          <InputText control={form.control} name={`entries.${index}.credit`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm" />
+          <InputText control={form.control} name={`entries.${index}.credit`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm" isAmount />
         </FormIonItem>
       </TableCell>
       <TableCell>

@@ -90,7 +90,7 @@ const ViewJVEntries = ({ isOpen, journalVoucher }: ViewEntriesProps) => {
             {!data.loading && data.entries.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
             {!data.loading &&
               data.entries.map((entry: JournalVoucherEntry, index: number) => (
-                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2">
+                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[1.1rem]">
                   <TableCell>{entry?.client?.name || ''}</TableCell>
                   <TableCell>{entry?.particular || ''}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>

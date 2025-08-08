@@ -11,20 +11,23 @@ export const emergencyLoanEntrySchema = z.object({
     .string()
     .min(1, 'Debit is required')
     .max(255, 'Debit must only consist of 255 characters')
-    .refine(value => !isNaN(Number(value)), 'Debit must be a number'),
+    .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Debit must be a number'),
   credit: z
     .string()
     .min(1, 'Credit is required')
     .max(255, 'Credit must only consist of 255 characters')
-    .refine(value => !isNaN(Number(value)), 'Credit must be a number'),
+    .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Credit must be a number'),
   root: z.string().optional().or(z.literal('')),
 });
 
 export const emergencyLoanSchema = z
   .object({
-    code: z.string().min(1, 'CV # is required'),
-    supplier: z.string().min(1, 'Supplier is required'),
-    supplierLabel: z.string().min(1, 'Supplier is required'),
+    code: z
+      .string()
+      .min(1, 'CV # is required')
+      .regex(/^CV#[\d-]+$/i, { message: 'Must start with CV# followed by numbers or hyphens' }),
+    centerLabel: z.string().min(1, 'Center code is required'),
+    centerValue: z.string().min(1, 'Center code is required'),
     refNo: z.string().optional().or(z.literal('')),
     remarks: z.string().optional().or(z.literal('')),
     date: z.string().min(1, 'Date is required').max(255, 'Date must only consist of 255 characters'),
@@ -47,7 +50,7 @@ export const emergencyLoanSchema = z
       .string()
       .min(1, 'Amount is required')
       .max(255, 'Amount must only consist of 255 characters')
-      .refine(value => !isNaN(Number(value)), 'Amount must be a number'),
+      .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Amount must be a number'),
     entries: z.array(emergencyLoanEntrySchema).optional(),
     mode: z.string().refine(value => ['create', 'update'].includes(value), 'Mode is required'),
   })

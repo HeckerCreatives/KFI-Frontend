@@ -13,6 +13,7 @@ import { ExpenseVoucherEntryFormData, expenseVoucherEntrySchema } from '../../..
 import EntryForm from '../../components/EVEntryForm';
 import { TData } from '../../components/UpdateExpenseVoucherEntries';
 import { create } from 'ionicons/icons';
+import { formatAmount, removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type UpdateEntryProps = {
   entry: ExpenseVoucherEntry;
@@ -48,8 +49,8 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
         acctCodeId: entry.acctCode._id,
         acctCode: entry.acctCode.code,
         description: entry.acctCode.description,
-        debit: `${entry.debit}`,
-        credit: `${entry.credit}`,
+        debit: `${formatAmount(entry.debit as number)}`,
+        credit: `${formatAmount(entry.credit as number)}`,
         cvForRecompute: entry.cvForRecompute,
       });
     }
@@ -64,6 +65,8 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
     setLoading(true);
     setLoading(true);
     try {
+      data.credit = removeAmountComma(data.credit as string);
+      data.debit = removeAmountComma(data.debit as string);
       const result = await kfiAxios.put(`/expense-voucher/entries/${entry.expenseVoucher}/${entry._id}`, data);
       const { success, entry: updatedEntry } = result.data;
       if (success) {

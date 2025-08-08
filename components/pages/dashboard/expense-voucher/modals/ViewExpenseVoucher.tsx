@@ -52,7 +52,7 @@ const ViewExpenseVoucher = ({ expenseVoucher }: ViewExpenseVoucherType) => {
           <div className="space-y-1">
             <div className="grid grid-cols-3 gap-2">
               <div className="space-y-1">
-                <ExpenseVoucherViewCard label="CV#" value={`CV#${expenseVoucher.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                <ExpenseVoucherViewCard label="CV#" value={`${expenseVoucher.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
                 <ExpenseVoucherViewCard label="Supplier" value={expenseVoucher.supplier.description} labelClassName="min-w-20 text-end !text-slate-600" />
               </div>
               <div className="space-y-1">
@@ -63,7 +63,7 @@ const ViewExpenseVoucher = ({ expenseVoucher }: ViewExpenseVoucherType) => {
               <div className="space-y-1">
                 <ExpenseVoucherViewCard label="Check Number" value={expenseVoucher.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
                 <ExpenseVoucherViewCard label="Check Date" value={formatDateTable(expenseVoucher.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
-                <ExpenseVoucherViewCard label="Bank Code" value={expenseVoucher.bankCode.description} labelClassName="min-w-28 text-end !text-slate-600" />
+                <ExpenseVoucherViewCard label="Bank Code" value={expenseVoucher.bankCode.code} labelClassName="min-w-28 text-end !text-slate-600" />
                 <ExpenseVoucherViewCard label="Amount" value={`${formatNumber(expenseVoucher.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
               </div>
             </div>

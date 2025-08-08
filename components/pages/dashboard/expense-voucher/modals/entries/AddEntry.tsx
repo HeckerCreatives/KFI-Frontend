@@ -11,6 +11,7 @@ import checkError from '../../../../../utils/check-error';
 import formErrorHandler from '../../../../../utils/form-error-handler';
 import { ExpenseVoucherEntryFormData, expenseVoucherEntrySchema } from '../../../../../../validations/expense-voucher.schema';
 import EntryForm from '../../components/EVEntryForm';
+import { removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type AddEntryProps = {
   expenseVoucherId: string;
@@ -45,6 +46,8 @@ const AddEntry = ({ expenseVoucherId, getEntries }: AddEntryProps) => {
   const onSubmit = async (data: EntryFormData) => {
     setLoading(true);
     try {
+      data.credit = removeAmountComma(data.credit as string);
+      data.debit = removeAmountComma(data.debit as string);
       const result = await kfiAxios.post(`/expense-voucher/entries/${expenseVoucherId}`, data);
       const { success } = result.data;
       if (success) {

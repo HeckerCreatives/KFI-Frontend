@@ -125,7 +125,7 @@ const DamayanFund = () => {
                       data.damayanFunds.length > 0 &&
                       data.damayanFunds.map((damayanFund: DamayanFundType, i: number) => (
                         <TableRow key={damayanFund._id}>
-                          <TableCell>JV#{damayanFund.code}</TableCell>
+                          <TableCell>{damayanFund.code}</TableCell>
                           <TableCell>{formatDateTable(damayanFund.date)}</TableCell>
                           <TableCell>{damayanFund.bankCode.description}</TableCell>
                           <TableCell>{damayanFund.checkNo}</TableCell>

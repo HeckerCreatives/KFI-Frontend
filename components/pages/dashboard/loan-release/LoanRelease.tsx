@@ -125,7 +125,7 @@ const LoanRelease = () => {
                       data.transactions.length > 0 &&
                       data.transactions.map((transaction: Transaction, i: number) => (
                         <TableRow key={transaction._id}>
-                          <TableCell>CV#{transaction.code}</TableCell>
+                          <TableCell>{transaction.code}</TableCell>
                           <TableCell>{formatDateTable(transaction.date)}</TableCell>
                           <TableCell className="max-w-52 truncate">{transaction.bank.description}</TableCell>
                           <TableCell>{transaction.checkNo}</TableCell>
