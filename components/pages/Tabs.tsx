@@ -122,8 +122,8 @@ const Tabs = () => {
           <Route path="/dashboard/loan-release" render={() => <LoanRelease />} exact={true} />
           <Route path="/dashboard/expense-voucher" render={() => <ExpenseVoucher />} exact={true} />
           <Route path="/dashboard/journal-voucher" render={() => <JournalVoucher />} exact={true} />
-          <Route path="/dashboard/acknowledgement" render={() => <Acknowledgement />} exact={true} />
-          <Route path="/dashboard/release" render={() => <Release />} exact={true} />
+          <Route path="/dashboard/official-receipt" render={() => <Acknowledgement />} exact={true} />
+          <Route path="/dashboard/acknowledgement" render={() => <Release />} exact={true} />
           <Route path="/dashboard/emergency-loan" render={() => <EmergencyLoan />} exact={true} />
           <Route path="/dashboard/damayan-fund" render={() => <DamayanFund />} exact={true} />
           {/* Transactions Ends */}

@@ -24,13 +24,13 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
                 name="code"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                label="CV#"
+                label="AR#"
                 placeholder="Type here"
                 className="!px-1 !py-1 rounded-md !text-[0.7rem]"
                 labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <div className="flex items-center gap-2">
+            <div className="flex items-start gap-2">
               <FormIonItem className="flex-1 [--min-height:0]">
                 <InputText
                   disabled={loading}
@@ -50,7 +50,7 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
                 centerDescription="centerName"
                 clearErrors={form.clearErrors}
                 setValue={form.setValue}
-                className="!min-h-6 h-[1.65rem] text-xs"
+                className="!min-h-6 h-[1.5rem] text-xs"
               />
             </div>
             <FormIonItem className="[--min-height:0]">
@@ -207,6 +207,7 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
               placeholder="Type here"
               className="!px-1 !py-1 rounded-md !text-[0.7rem]"
               labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
+              isAmount
             />
           </FormIonItem>
           <div>
@@ -221,6 +222,7 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
                 placeholder="Type here"
                 className="!px-1 !py-1 rounded-md  !text-[0.7rem]"
                 labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
+                isAmount
               />
             </FormIonItem>
           </div>

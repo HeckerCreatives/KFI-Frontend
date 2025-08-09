@@ -40,12 +40,12 @@ const ExportAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowled
       const url = window.URL.createObjectURL(new Blob([result.data]));
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'acknowledgement.xlsx';
+      a.download = 'official-receipts.xlsx';
       a.click();
       window.URL.revokeObjectURL(url);
     } catch (error: any) {
       present({
-        message: 'Failed to export the acknowledgement records. Please try again',
+        message: 'Failed to export the official receipts records. Please try again',
         duration: 1000,
       });
     } finally {
@@ -78,7 +78,7 @@ const ExportAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowled
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Acknowledgement - Export" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Official Receipt - Export" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">
@@ -86,7 +86,7 @@ const ExportAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowled
             <PrintExportOptionForm form={form} loading={loading} />
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold">
-                {loading ? 'Exporting Acknowledgement...' : 'Export Acknowledgement'}
+                {loading ? 'Exporting Official Receipt...' : 'Export Official Receipt'}
               </IonButton>
             </div>
           </form>

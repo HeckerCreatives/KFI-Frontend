@@ -38,49 +38,49 @@ const ViewRecentMember = ({ member }: { member: Member }) => {
         <div className="inner-content">
           <div className="grid grid-cols-2 gap-2">
             <div className="space-y-2">
-              <DetailsCard label="Name" value={member?.name || ''} labelClassName="min-w-20 !text-end" />
-              <DetailsCard label="Address" value={member?.address || ''} labelClassName="min-w-20 !text-end" />
+              <DetailsCard label="Name" value={member?.name || ''} labelClassName="min-w-24 !text-end" />
+              <DetailsCard label="Address" value={member?.address || ''} labelClassName="min-w-24 !text-end" />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="City" value={member?.city || ''} labelClassName="min-w-20 !text-end" />
-                <DetailsCard label="Zip Code" value={member?.zipCode || ''} labelClassName="min-w-20 !text-end" />
+                <DetailsCard label="City" value={member?.city || ''} labelClassName="min-w-24 !text-end" />
+                <DetailsCard label="Zip Code" value={member?.zipCode || ''} labelClassName="min-w-24 !text-end" />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Telephone No." value={member?.telNo || ''} labelClassName="min-w-20 !text-end" />
-                <DetailsCard label="Mobile" value={member?.mobileNo || ''} labelClassName="min-w-20 !text-end" />
+                <DetailsCard label="Telephone No." value={member?.telNo || ''} labelClassName="min-w-24 !text-end" />
+                <DetailsCard label="Mobile" value={member?.mobileNo || ''} labelClassName="min-w-24 !text-end" />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Birthdate" value={formatDateTable(member?.birthdate) || ''} labelClassName="min-w-20 !text-end" />
-                <DetailsCard label="Birthplace" value={member?.birthplace || ''} labelClassName="min-w-20 !text-end" />
+                <DetailsCard label="Birthdate" value={formatDateTable(member?.birthdate) || ''} labelClassName="min-w-24 !text-end" />
+                <DetailsCard label="Birthplace" value={member?.birthplace || ''} labelClassName="min-w-24 !text-end" />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Age" value={`${member?.age}` || ''} labelClassName="min-w-20 !text-end" />
-                <DetailsCard label="Sex" value={member?.sex || ''} labelClassName="min-w-20 !text-end" />
+                <DetailsCard label="Age" value={`${member?.age}` || ''} labelClassName="min-w-24 !text-end" />
+                <DetailsCard label="Sex" value={member?.sex || ''} labelClassName="min-w-24 !text-end" />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Parent" value={member?.parent || ''} labelClassName="min-w-20 !text-end" />
-                <DetailsCard label="Spouse" value={member?.spouse || ''} labelClassName="min-w-20 !text-end" />
+                <DetailsCard label="Parent" value={member?.parent || ''} labelClassName="min-w-24 !text-end" />
+                <DetailsCard label="Spouse" value={member?.spouse || ''} labelClassName="min-w-24 !text-end" />
               </div>
             </div>
             <div className="space-y-2">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Civil Status" value={member?.civilStatus || ''} labelClassName="min-w-24 !text-end" />
-                <DetailsCard label="Position" value={member?.position || ''} labelClassName="min-w-24 !text-end" />
+                <DetailsCard label="Civil Status" value={member?.civilStatus || ''} labelClassName="min-w-28 !text-end" />
+                <DetailsCard label="Position" value={member?.position || ''} labelClassName="min-w-28 !text-end" />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Member Status" value={member?.memberStatus || ''} labelClassName="min-w-24 !text-end" />
-                <DetailsCard label="Center" value={`${member?.center.centerNo} - ${member?.center.description}` || ''} labelClassName="min-w-24 !text-end" />
+                <DetailsCard label="Member Status" value={member?.memberStatus || ''} labelClassName="min-w-28 !text-end" />
+                <DetailsCard label="Center" value={`${member?.center.centerNo} - ${member?.center.description}` || ''} labelClassName="min-w-28 !text-end" />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Account Officer" value={member.acctOfficer || ''} labelClassName="min-w-24 !text-end" />
-                <DetailsCard label="Date Release" value={formatDateTable(member.dateRelease) || ''} labelClassName="min-w-24 !text-end" />
+                <DetailsCard label="Account Officer" value={member.acctOfficer || ''} labelClassName="min-w-28 !text-end" />
+                <DetailsCard label="Date Release" value={formatDateTable(member.dateRelease) || ''} labelClassName="min-w-28 !text-end" />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Business" value={`${member?.business.type}` || ''} labelClassName="min-w-24 !text-end" />
-                <DetailsCard label="Account Number" value={member?.acctNumber || ''} labelClassName="min-w-24 !text-end" />
+                <DetailsCard label="Business" value={`${member?.business.type}` || ''} labelClassName="min-w-28 !text-end" />
+                <DetailsCard label="Account Number" value={member?.acctNumber || ''} labelClassName="min-w-28 !text-end" />
               </div>
-              <DetailsCard label="Reason" value={member?.reason || ''} labelClassName="min-w-24 !text-end" />
-              <DetailsCard label="Children" value={member?.children.map(child => child.name).join(', ') || ''} labelClassName="min-w-24 !text-end" />
-              <DetailsCard label="Beneficiary" value={member?.beneficiaries.map(child => child.name).join(', ') || ''} labelClassName="min-w-24 !text-end" />
+              <DetailsCard label="Reason" value={member?.reason || ''} labelClassName="min-w-28 !text-end" />
+              <DetailsCard label="Children" value={member?.children.map(child => child.name).join(', ') || ''} labelClassName="min-w-28 !text-end" />
+              <DetailsCard label="Beneficiary" value={member?.beneficiaries.map(child => child.name).join(', ') || ''} labelClassName="min-w-28 !text-end" />
             </div>
           </div>
         </div>

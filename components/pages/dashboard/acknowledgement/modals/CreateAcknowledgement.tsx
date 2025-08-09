@@ -63,14 +63,14 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
       if (success) {
         getAcknowledgements(1);
         present({
-          message: 'Acknowledgement successfully added.',
+          message: 'Official Receipt successfully added.',
           duration: 1000,
         });
         dismiss();
         return;
       }
       present({
-        message: 'Failed to add a new acknowledgement. Please try again.',
+        message: 'Failed to add a new official receipt. Please try again.',
         duration: 1000,
       });
     } catch (error: any) {
@@ -102,7 +102,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Acknowledgement - Add Record" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Official Receipt - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content h-screen !px-0">

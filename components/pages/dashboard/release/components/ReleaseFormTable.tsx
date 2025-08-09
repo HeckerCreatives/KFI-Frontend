@@ -48,7 +48,7 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
             cvNo: `CV#${entry.cvNo}`,
             dueDate: formatDateTable(entry.dueDate),
             noOfWeeks: `${entry.noOfWeeks}`,
-            name: `${entry.name}`,
+            name: entry.name ? `${entry.name}` : '',
             particular: `${entry.centerNo} - ${entry.name}`,
             acctCodeId: '',
             acctCode: '',
@@ -73,7 +73,7 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
     <div className="p-2">
       <div className="text-start my-2">
         <IonButton
-          disabled={!center}
+          disabled={!center || didLoad}
           onClick={handleLoadEntries}
           type="button"
           fill="clear"

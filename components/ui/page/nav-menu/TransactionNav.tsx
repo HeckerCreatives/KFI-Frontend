@@ -29,8 +29,8 @@ const TransactionNav = () => {
       label: 'Receipt',
       resource: ['acknowledgement', 'release'],
       children: [
-        { path: '/dashboard/acknowledgement', label: 'Acknowledgement', resource: 'acknowledgement' },
-        { path: '/dashboard/release', label: 'Release', resource: 'release' },
+        { path: '/dashboard/official-receipt', label: 'Official Receipt', resource: 'acknowledgement' },
+        { path: '/dashboard/acknowledgement', label: 'Acknowledgement', resource: 'release' },
       ],
     },
     { path: '/dashboard/emergency-loan', label: 'Emergency Loan', resource: 'emergency loan' },

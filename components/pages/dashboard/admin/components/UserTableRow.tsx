@@ -31,7 +31,9 @@ const UserTableRow = ({ permission, setPermissions }: UserTableRowProps) => {
 
   return (
     <TableRow>
-      <TableCell className="capitalize max-w-32">{permission.resource}</TableCell>
+      <TableCell className="capitalize max-w-32">
+        {permission.resource === 'acknowledgement' ? 'Official Receipt' : permission.resource === 'release' ? 'Acknowledgement' : permission.resource}
+      </TableCell>
       <TableCell className="text-center">
         <IonCheckbox checked={permission.actions.visible} value="visible" onIonChange={handleChecked} />
       </TableCell>

@@ -64,7 +64,7 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryP
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Acknowledgement - Delete Entry" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Official Receipt - Delete Entry" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0 !pb-0">

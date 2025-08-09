@@ -106,7 +106,7 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader title="Acknowledgement - Edit Entry" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader title="Official Receipt - Edit Entry" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">

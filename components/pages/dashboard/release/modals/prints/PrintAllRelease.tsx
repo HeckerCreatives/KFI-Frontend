@@ -50,7 +50,7 @@ const PrintAllRelease = () => {
       setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
     } catch (error: any) {
       present({
-        message: 'Failed to print the release records. Please try again',
+        message: 'Failed to print the acknowledgement records. Please try again',
         duration: 1000,
       });
     } finally {
@@ -71,7 +71,7 @@ const PrintAllRelease = () => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Release - Print All" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Acknowledgement - Print All" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">
@@ -79,7 +79,7 @@ const PrintAllRelease = () => {
             <PrintExportFilterForm form={form} loading={loading} />
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold">
-                {loading ? 'Printing Release...' : 'Print Release'}
+                {loading ? 'Printing Acknowledgement...' : 'Print Acknowledgement'}
               </IonButton>
             </div>
           </form>

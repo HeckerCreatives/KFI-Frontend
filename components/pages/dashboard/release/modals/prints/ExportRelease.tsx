@@ -40,7 +40,7 @@ const ExportRelease = ({ release }: { release: Release }) => {
       const url = window.URL.createObjectURL(new Blob([result.data]));
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'releases.xlsx';
+      a.download = 'acknowledgement.xlsx';
       a.click();
       window.URL.revokeObjectURL(url);
     } catch (error: any) {
@@ -78,7 +78,7 @@ const ExportRelease = ({ release }: { release: Release }) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Release - Export" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Acknowledgement - Export" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">
@@ -86,7 +86,7 @@ const ExportRelease = ({ release }: { release: Release }) => {
             <PrintExportOptionForm form={form} loading={loading} />
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold">
-                {loading ? 'Exporting Release...' : 'Export Release'}
+                {loading ? 'Exporting Acknowledgement...' : 'Export Acknowledgement'}
               </IonButton>
             </div>
           </form>

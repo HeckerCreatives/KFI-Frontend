@@ -20,7 +20,7 @@ export async function generateStaticParams() {
     { all: ['dashboard', 'expense-voucher'] },
     { all: ['dashboard', 'journal-voucher'] },
     { all: ['dashboard', 'acknowledgement'] },
-    { all: ['dashboard', 'release'] },
+    { all: ['dashboard', 'official-receipt'] },
     { all: ['dashboard', 'emergency-loan'] },
     { all: ['dashboard', 'damayan-fund'] },
 

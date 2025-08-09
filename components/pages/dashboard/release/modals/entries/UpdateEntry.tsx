@@ -12,6 +12,7 @@ import { TData } from '../../components/UpdateReleaseEntries';
 import AcknowledgementEntryForm from '../../components/ReleaseEntryForm';
 import { formatDateTable } from '../../../../../utils/date-utils';
 import { ReleaseEntryFormData, releaseEntrySchema } from '../../../../../../validations/release.schema';
+import { formatAmount } from '../../../../../ui/utils/formatNumber';
 
 type UpdateEntryProps = {
   entry: ReleaseEntry;
@@ -52,8 +53,8 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
         acctCodeId: entry.acctCode._id,
         acctCode: entry.acctCode.code,
         description: entry.acctCode.description,
-        debit: `${entry.debit}`,
-        credit: `${entry.credit}`,
+        debit: `${formatAmount(entry.debit as number)}`,
+        credit: `${formatAmount(entry.credit as number)}`,
       });
     }
   }, [form, entry]);
@@ -103,7 +104,7 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader title="Release - Edit Entry" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader title="Acknowledgement - Edit Entry" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">

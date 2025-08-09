@@ -11,6 +11,7 @@ import { ReleaseFormData, releaseSchema } from '../../../../../validations/relea
 import ReleaseForm from '../components/ReleaseForm';
 import ReleaseFormTable from '../components/ReleaseFormTable';
 import { formatDateInput } from '../../../../utils/date-utils';
+import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type CreateReleaseProps = {
   getReleases: (page: number, keyword?: string, sort?: string) => void;
@@ -54,19 +55,22 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
   async function onSubmit(data: ReleaseFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
+      data.cashCollection = removeAmountComma(data.cashCollection as string);
+      data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) })) : [];
       const result = await kfiAxios.post('release', data);
       const { success } = result.data;
       if (success) {
         getReleases(1);
         present({
-          message: 'Release successfully added.',
+          message: 'Acknowledgement successfully added.',
           duration: 1000,
         });
         dismiss();
         return;
       }
       present({
-        message: 'Failed to add a new release. Please try again.',
+        message: 'Failed to add a new acknowledgement. Please try again.',
         duration: 1000,
       });
     } catch (error: any) {
@@ -98,7 +102,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Release - Add Record" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Acknowledgement - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content h-screen !px-0">

@@ -32,7 +32,7 @@ const DeleteRelease = ({ release, getRelease, searchkey, sortKey, rowLength, cur
         const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
         getRelease(page, searchkey, sortKey);
         present({
-          message: 'Release successfully deleted',
+          message: 'Acknowledgement successfully deleted',
           duration: 1000,
         });
         dismiss();
@@ -41,7 +41,7 @@ const DeleteRelease = ({ release, getRelease, searchkey, sortKey, rowLength, cur
     } catch (error: any) {
       const message = error.response.data.error.message || error?.response?.data?.msg;
       present({
-        message: message || 'Failed to delete the release record. Please try again',
+        message: message || 'Failed to delete the acknowledgement record. Please try again',
         duration: 1000,
       });
     } finally {
@@ -73,7 +73,7 @@ const DeleteRelease = ({ release, getRelease, searchkey, sortKey, rowLength, cur
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Release - Delete Record" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Acknowledgement - Delete Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0 !pb-0">

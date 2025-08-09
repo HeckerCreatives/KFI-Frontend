@@ -13,6 +13,7 @@ import { TData } from '../Release';
 import AcknowledgementForm from '../components/ReleaseForm';
 import { ReleaseFormData, releaseSchema } from '../../../../../validations/release.schema';
 import UpdateReleaseEntries from '../components/UpdateReleaseEntries';
+import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type UpdateReleaseProps = {
   release: Release;
@@ -66,8 +67,8 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
         type: release.type,
         bankCode: release.bankCode._id,
         bankCodeLabel: `${release.bankCode.code}`,
-        amount: `${release.amount}`,
-        cashCollection: `${release.cashCollectionAmount || 0}`,
+        amount: `${formatAmount(release.amount)}`,
+        cashCollection: `${formatAmount(release.cashCollectionAmount || 0)}`,
         mode: 'update',
       });
     }
@@ -81,6 +82,8 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
   async function onSubmit(data: ReleaseFormData) {
     setLoading(true);
     try {
+      data.amount = removeAmountComma(data.amount);
+      data.cashCollection = removeAmountComma(data.cashCollection as string);
       const result = await kfiAxios.put(`release/${release._id}`, data);
       const { success, release: updatedRelease } = result.data;
       if (success) {
@@ -91,13 +94,13 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
           return { ...prev };
         });
         present({
-          message: 'Release successfully updated.',
+          message: 'Acknowledgement successfully updated.',
           duration: 1000,
         });
         return;
       }
       present({
-        message: 'Failed to update the release',
+        message: 'Failed to update the acknowledgement',
         duration: 1000,
       });
     } catch (error: any) {
@@ -136,7 +139,7 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader title="Release - Edit Record" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader title="Acknowledgement - Edit Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content h-screen !px-0 flex flex-col">

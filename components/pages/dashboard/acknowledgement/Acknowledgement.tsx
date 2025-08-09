@@ -73,7 +73,7 @@ const Acknowledgement = () => {
       }
     } catch (error) {
       present({
-        message: 'Failed to get acknowledgement records. Please try again',
+        message: 'Failed to get official receipt records. Please try again',
         duration: 1000,
       });
     } finally {
@@ -91,7 +91,7 @@ const Acknowledgement = () => {
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
-          <PageTitle pages={['Transaction', 'Acknowledgement']} />
+          <PageTitle pages={['Transaction', 'Official Receipt']} />
           <div className="px-3 pb-3 flex-1 flex flex-col">
             <div className=" bg-white p-3 rounded-2xl shadow-lg my-3 flex flex-col lg:flex-row-reverse gap-2 flex-wrap">
               <div className="w-full flex-1 flex items-center justify-end">
@@ -119,7 +119,7 @@ const Acknowledgement = () => {
                   </TableHeader>
                   <TableBody>
                     {data.loading && <TableLoadingRow colspan={8} />}
-                    {!data.loading && data.acknowledgements.length < 1 && <TableNoRows label="No Acknowledgement Record Found" colspan={8} />}
+                    {!data.loading && data.acknowledgements.length < 1 && <TableNoRows label="No Official Receipt Record Found" colspan={8} />}
                     {!data.loading &&
                       data.acknowledgements.length > 0 &&
                       data.acknowledgements.map((acknowledgement: AcknowledgementType) => (

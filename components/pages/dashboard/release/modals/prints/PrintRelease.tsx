@@ -76,7 +76,7 @@ const PrintRelease = ({ release }: { release: Release }) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Release - Print" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Acknowledgement - Print" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">
@@ -84,7 +84,7 @@ const PrintRelease = ({ release }: { release: Release }) => {
             <PrintExportOptionForm form={form} loading={loading} />
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold">
-                {loading ? 'Printing Release...' : 'Print Release'}
+                {loading ? 'Printing Acknowledgement...' : 'Print Acknowledgement'}
               </IonButton>
             </div>
           </form>

@@ -11,6 +11,7 @@ import formErrorHandler from '../../../../../utils/form-error-handler';
 import { AcknowledgementEntryFormData, acknowledgementEntrySchema } from '../../../../../../validations/acknowledgement.schema';
 import AcknowledgementEntryForm from '../../components/ReleaseEntryForm';
 import { ReleaseEntryFormData, releaseEntrySchema } from '../../../../../../validations/release.schema';
+import { removeAmountComma } from '../../../../../ui/utils/formatNumber';
 
 type AddEntryProps = {
   releaseId: string;
@@ -46,6 +47,8 @@ const AddEntry = ({ releaseId, getEntries }: AddEntryProps) => {
   const onSubmit = async (data: ReleaseEntryFormData) => {
     setLoading(true);
     try {
+      data.debit = removeAmountComma(data.debit);
+      data.credit = removeAmountComma(data.credit);
       const result = await kfiAxios.post(`/release/entries/${releaseId}`, data);
       const { success } = result.data;
       if (success) {
@@ -77,7 +80,7 @@ const AddEntry = ({ releaseId, getEntries }: AddEntryProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader title="Release - Add Entry" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader title="Acknowledgement - Add Entry" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !px-0">

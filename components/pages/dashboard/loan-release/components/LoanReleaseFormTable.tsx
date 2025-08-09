@@ -58,7 +58,7 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
     <div className="px-2">
       <div className="text-start my-2">
         <IonButton
-          disabled={loading || center === '' || typeOfLoan === ''}
+          disabled={loading || center === '' || typeOfLoan === '' || didLoad}
           onClick={handleLoadEntries}
           type="button"
           fill="clear"

@@ -45,7 +45,7 @@ const ViewRelease = ({ release }: ViewReleaseProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader title="Release - View Record" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader title="Acknowledgement - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content h-screen !p-2 flex flex-col">
@@ -53,7 +53,7 @@ const ViewRelease = ({ release }: ViewReleaseProps) => {
             <div className="grid grid-cols-3 gap-2">
               <div className="col-span-2 grid grid-cols-2 gap-2">
                 <div className="space-y-1">
-                  <ReleaseViewCard label="CV#" value={`CV#${release.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
+                  <ReleaseViewCard label="AR#" value={`${release.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
                   <ReleaseViewCard label="Center Code" value={`${release.center.centerNo}`} labelClassName="min-w-20 text-end !text-slate-600" />
                   <ReleaseViewCard label="Name" value={`${release.center.description}`} labelClassName="min-w-20 text-end !text-slate-600" />
                   <ReleaseViewCard label="Cash Type" value={release.type} labelClassName="min-w-20 text-end !text-slate-600" />

@@ -27,7 +27,7 @@ const ViewLoanDetails = ({ loan }: { loan: Member }) => {
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:33rem] md:[--width:100%] lg:[--max-width:33rem] lg:[--width:33rem]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:50rem] md:[--width:100%] lg:[--max-width:50rem] lg:[--width:50rem]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
@@ -36,14 +36,38 @@ const ViewLoanDetails = ({ loan }: { loan: Member }) => {
         </IonHeader>
         <div className="inner-content">
           <div className="space-y-2">
-            <DetailsCard label="Client" value={loan?.client?.name || ''} labelClassName="min-w-20 !text-end" />
-            <DetailsCard label="Particular" value={loan?.particular || ''} labelClassName="min-w-20 !text-end" />
-            <DetailsCard label="Center" value={loan?.center ? `${loan.center.centerNo} - ${loan.center?.description || ''}` : ''} labelClassName="min-w-20 !text-end" />
-            <DetailsCard label="Account Code" value={loan?.acctCode ? `${loan.acctCode.code} - ${loan.acctCode?.description || ''}` : ''} labelClassName="min-w-20 !text-end" />
-            <DetailsCard label="Debit" value={formatNumber(loan.debit)} labelClassName="min-w-20 !text-end" />
-            <DetailsCard label="Credit" value={formatNumber(loan.credit)} labelClassName="min-w-20 !text-end" />
-            <DetailsCard label="Interest" value={loan?.interest} labelClassName="min-w-20 !text-end" />
+            <DetailsCard label="Client" value={loan?.client?.name || ''} labelClassName="min-w-24 !text-end" />
+            <DetailsCard label="Particular" value={loan?.particular || ''} labelClassName="min-w-24 !text-end" />
+            <DetailsCard label="Center" value={loan?.center ? `${loan.center.centerNo} - ${loan.center?.description || ''}` : ''} labelClassName="min-w-24 !text-end" />
+            <DetailsCard label="Account Code" value={loan?.acctCode ? `${loan.acctCode.code} - ${loan.acctCode?.description || ''}` : ''} labelClassName="min-w-24 !text-end" />
+            <DetailsCard label="Debit" value={formatNumber(loan.debit)} labelClassName="min-w-24 !text-end" />
+            <DetailsCard label="Credit" value={formatNumber(loan.credit)} labelClassName="min-w-24 !text-end" />
+            <DetailsCard label="Interest" value={loan?.interest} labelClassName="min-w-24 !text-end" />
           </div>
+          {/* <div className="grid grid-cols-3 border border-b-0 [&>div]:p-2 text-sm">
+            <div className="border-r">Client</div>
+            <div className="col-span-2">{loan?.client?.name || ''}</div>
+          </div>
+          <div className="grid grid-cols-3 border border-b-0 [&>div]:p-2 text-sm">
+            <div className="border-r">Client</div>
+            <div className="col-span-2">{loan?.client?.name || ''}</div>
+          </div>
+          <div className="grid grid-cols-3 border border-b-0 [&>div]:p-2 text-sm">
+            <div className="border-r">Client</div>
+            <div className="col-span-2">{loan?.client?.name || ''}</div>
+          </div>
+          <div className="grid grid-cols-3 border border-b-0 [&>div]:p-2 text-sm">
+            <div className="border-r">Client</div>
+            <div className="col-span-2">{loan?.client?.name || ''}</div>
+          </div>
+          <div className="grid grid-cols-3 border border-b-0 [&>div]:p-2 text-sm">
+            <div className="border-r">Client</div>
+            <div className="col-span-2">{loan?.client?.name || ''}</div>
+          </div>
+          <div className="grid grid-cols-3 border [&>div]:p-2 text-sm">
+            <div className="border-r">Client</div>
+            <div className="col-span-2">{loan?.client?.name || ''}</div>
+          </div> */}
         </div>
       </IonModal>
     </>

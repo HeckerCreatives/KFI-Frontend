@@ -94,13 +94,13 @@ const UpdateAcknowledgement = ({ acknowledgement, setData }: UpdateAcknowledgeme
           return { ...prev };
         });
         present({
-          message: 'Acknowledgement successfully updated.',
+          message: 'Official Receipt successfully updated.',
           duration: 1000,
         });
         return;
       }
       present({
-        message: 'Failed to update the acknowledgement',
+        message: 'Failed to update the official receipt',
         duration: 1000,
       });
     } catch (error: any) {
@@ -139,7 +139,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData }: UpdateAcknowledgeme
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader title="Acknowledgement - Edit Record" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader title="Official Receipt - Edit Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content h-screen !px-0 flex flex-col">

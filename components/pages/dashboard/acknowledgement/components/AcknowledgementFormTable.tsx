@@ -73,7 +73,7 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
     <div className="p-2">
       <div className="text-start my-2">
         <IonButton
-          disabled={!center}
+          disabled={!center || didLoad}
           onClick={handleLoadEntries}
           type="button"
           fill="clear"

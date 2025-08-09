@@ -92,7 +92,7 @@ const Release = () => {
     <IonPage className="">
       <IonContent className="[--background:#F1F1F1]" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start">
-          <PageTitle pages={['Transaction', 'Release']} />
+          <PageTitle pages={['Transaction', 'Acknowledgement']} />
           <div className="px-3 pb-3 flex-1 flex flex-col">
             <div className=" bg-white p-3 rounded-2xl shadow-lg my-3 flex flex-col lg:flex-row-reverse gap-2 flex-wrap">
               <div className="w-full flex-1 flex items-center justify-end">
@@ -110,7 +110,7 @@ const Release = () => {
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>CV Number</TableHead>
+                      <TableHead>AR Number</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Bank</TableHead>
                       <TableHead>CHK. No.</TableHead>
@@ -121,12 +121,12 @@ const Release = () => {
                   </TableHeader>
                   <TableBody>
                     {data.loading && <TableLoadingRow colspan={8} />}
-                    {!data.loading && data.releases.length < 1 && <TableNoRows label="No Release Record Found" colspan={8} />}
+                    {!data.loading && data.releases.length < 1 && <TableNoRows label="No Acknowledgement Record Found" colspan={8} />}
                     {!data.loading &&
                       data.releases.length > 0 &&
                       data.releases.map((release: ReleaseType) => (
                         <TableRow key={release._id}>
-                          <TableCell>CV#{release.code}</TableCell>
+                          <TableCell>{release.code}</TableCell>
                           <TableCell>{formatDateTable(release.date)}</TableCell>
                           <TableCell>{release.bankCode.description}</TableCell>
                           <TableCell>{release.checkNo}</TableCell>

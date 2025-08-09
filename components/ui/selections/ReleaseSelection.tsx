@@ -112,7 +112,7 @@ const ReleaseSelection = <T extends FieldValues>({ releaseLabel, releaseValue, s
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Release Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Acknowledgement Selection" />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !p-2  border-2 !border-slate-400">

@@ -118,7 +118,7 @@ const AcknowledgementSelection = <T extends FieldValues>({
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Acknowledgement Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Official Receipt Selection" />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content !p-2  border-2 !border-slate-400">

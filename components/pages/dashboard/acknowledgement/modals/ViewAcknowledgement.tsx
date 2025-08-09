@@ -45,7 +45,7 @@ const ViewAcknowledgement = ({ acknowledgement }: ViewAcknowledgementProps) => {
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader title="Acknowledgement - View Record" sub="Transaction" dismiss={dismiss} />
+            <ModalHeader title="Official Receipt - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader>
         <div className="inner-content h-screen !p-2 flex flex-col gap-2">

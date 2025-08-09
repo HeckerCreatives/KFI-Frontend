@@ -14,18 +14,21 @@ export const releaseEntrySchema = z.object({
     .string()
     .min(1, 'Debit is required')
     .max(255, 'Debit must only consist of 255 characters')
-    .refine(value => !isNaN(Number(value)), 'Debit must be a number'),
+    .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Debit must be a number'),
   credit: z
     .string()
     .min(1, 'Credit is required')
     .max(255, 'Credit must only consist of 255 characters')
-    .refine(value => !isNaN(Number(value)), 'Credit must be a number'),
+    .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Credit must be a number'),
   root: z.string().optional().or(z.literal('')),
 });
 
 export const releaseSchema = z
   .object({
-    code: z.string().min(1, 'CV # is required'),
+    code: z
+      .string()
+      .min(1, 'AR # is required')
+      .regex(/^AR#[\d-]+$/i, { message: 'Must start with AR# followed by numbers or hyphens' }),
     center: z.string().min(1, 'Center is required'),
     centerLabel: z.string().min(1, 'Center is required'),
     centerName: z.string().optional().or(z.literal('')),
@@ -56,12 +59,13 @@ export const releaseSchema = z
       .string()
       .min(1, 'Amount is required')
       .max(255, 'Amount must only consist of 255 characters')
-      .refine(value => !isNaN(Number(value)), 'Amount must be a number'),
+      .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Amount must be a number'),
     cashCollection: z
       .string()
       .min(1, 'Amount is required')
       .max(255, 'Amount must only consist of 255 characters')
       .refine(value => !isNaN(Number(value)), 'Amount must be a number')
+      .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Amount must be a number')
       .optional()
       .or(z.literal('')),
     entries: z.array(releaseEntrySchema).optional(),
