@@ -92,6 +92,7 @@ const Loans = () => {
                   <TableHeader>
                     <TableHeadRow>
                       <TableHead>Code</TableHead>
+                      <TableHead>Description</TableHead>
                       {haveActions(token.role, 'product', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
@@ -103,6 +104,7 @@ const Loans = () => {
                       data.loans.map((loan: Loan) => (
                         <TableRow key={loan._id}>
                           <TableCell>{loan.code}</TableCell>
+                          <TableCell>{loan.description}</TableCell>
                           {haveActions(token.role, 'product', token.permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <LoanActions

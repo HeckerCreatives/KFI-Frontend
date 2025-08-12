@@ -24,6 +24,7 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
     resolver: zodResolver(updateProductSchema),
     defaultValues: {
       code: loan.code,
+      description: loan.description,
     },
   });
 
@@ -31,6 +32,7 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
     if (loan) {
       form.reset({
         code: loan.code,
+        description: loan.description,
       });
     }
   }, [loan, form]);
@@ -102,7 +104,7 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
         <div className="inner-content">
           <div>
             <div className="flex items-start gap-2">
-              <FormIonItem>
+              <FormIonItem className="flex-1">
                 <InputText
                   disabled={loading}
                   name="code"
@@ -110,7 +112,18 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
                   clearErrors={form.clearErrors}
                   label="Code"
                   placeholder="Type here"
-                  className="!px-2 !py-2 rounded-md max-w-64"
+                  className="!px-2 !py-2 rounded-md"
+                />
+              </FormIonItem>
+              <FormIonItem className="flex-1">
+                <InputText
+                  disabled={loading}
+                  name="description"
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  label="Description"
+                  placeholder="Type here"
+                  className="!px-2 !py-2 rounded-md"
                 />
               </FormIonItem>
               <IonButton

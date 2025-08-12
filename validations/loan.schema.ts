@@ -19,6 +19,7 @@ export const updateCodeSchema = z.object({
 export const productSchema = z
   .object({
     code: z.string().min(1, 'Code is required'),
+    description: z.string().optional().or(z.literal('')),
     loanCodes: z.array(loanCodeSchema),
   })
   .superRefine((data, ctx) => {
@@ -33,6 +34,7 @@ export const productSchema = z
 
 export const updateProductSchema = z.object({
   code: z.string().min(1, 'Code is required'),
+  description: z.string().optional().or(z.literal('')),
 });
 
 export type ProductLoanFormData = z.infer<typeof productSchema>;

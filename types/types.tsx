@@ -80,6 +80,7 @@ export type LoanCode = {
 export type Loan = {
   _id: string;
   code: string;
+  description: string;
   loanCodes: LoanCode[];
   createdAt?: string;
 };
