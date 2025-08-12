@@ -21,8 +21,8 @@ type EVFormTableDocProps = {
 
 const EVFormTableDoc = ({ index, entry, remove, form, loading = false }: EVFormTableDocProps) => {
   return (
-    <TableRow className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2">
-      <TableCell className="min-w-fit">
+    <TableRow className="[&>td]:border-2 [&>td]:!py-0 [&>td]:!px-2 [&>td]:!bg-white">
+      <TableCell className="sticky left-0 min-w-[20rem] max-w-[20rem] z-10">
         <div className="flex items-start gap-1">
           <FormIonItem>
             <InputText readOnly control={form.control} name={`entries.${index}.clientLabel`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
@@ -39,12 +39,12 @@ const EVFormTableDoc = ({ index, entry, remove, form, loading = false }: EVFormT
           </div>
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="sticky left-[20rem] min-w-[20rem] max-w-[20rem] z-10">
         <FormIonItem>
           <InputText disabled={loading} control={form.control} name={`entries.${index}.particular`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
         </FormIonItem>
       </TableCell>
-      <TableCell>
+      <TableCell className="sticky left-[40rem] min-w-[10rem] max-w-[10rem] z-10">
         <div className="flex items-start gap-1">
           <FormIonItem>
             <InputText control={form.control} readOnly name={`entries.${index}.acctCode`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm" />

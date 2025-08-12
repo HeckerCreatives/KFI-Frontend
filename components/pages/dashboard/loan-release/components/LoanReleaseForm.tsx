@@ -89,6 +89,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               max="9999-12-31"
               className="!px-1 !py-1 rounded-md !text-[0.7rem] lg:max-w-32"
               labelClassName="truncate min-w-[7.5rem] !text-[0.7rem]  !text-slate-600 text-end"
+              readOnly
             />
           </FormIonItem>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">

@@ -18,83 +18,101 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
   return (
     <div className="space-y-1 px-2">
       <div className="grid grid-cols-3 gap-2 ">
-        <div className="space-y-1">
-          <FormIonItem className="[--min-height:0]">
-            <InputText
-              disabled={loading}
-              name="code"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="CV#"
-              placeholder="Type here"
-              className="!px-1 !py-1 rounded-md !text-[0.7rem]"
-              labelClassName="truncate min-w-20 !text-[0.7rem] !text-slate-600 text-end"
-            />
-          </FormIonItem>
-          <div className="flex items-start gap-2 flex-nowrap">
-            <FormIonItem className="flex-1 [--min-height:0]">
+        <div className="grid grid-cols-2 gap-2 col-span-2">
+          <div className="space-y-1">
+            <FormIonItem className="[--min-height:0]">
               <InputText
-                readOnly
-                name="supplier"
+                disabled={loading}
+                name="code"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                label="Supplier"
-                placeholder="Click find to search for supplier"
+                label="CV#"
+                placeholder="Type here"
                 className="!px-1 !py-1 rounded-md !text-[0.7rem]"
                 labelClassName="truncate min-w-20 !text-[0.7rem] !text-slate-600 text-end"
               />
             </FormIonItem>
-            <SupplierSelection
-              supplierLabel="supplier"
-              supplierValue="supplierId"
-              setValue={form.setValue}
-              clearErrors={form.clearErrors}
-              className="!min-h-6 h-[1.65rem] text-xs"
-            />
+            <div className="flex items-start gap-2 flex-nowrap">
+              <FormIonItem className="flex-1 [--min-height:0]">
+                <InputText
+                  readOnly
+                  name="supplier"
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  label="Supplier"
+                  placeholder="Click find to search for supplier"
+                  className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                  labelClassName="truncate min-w-20 !text-[0.7rem] !text-slate-600 text-end"
+                />
+              </FormIonItem>
+              <SupplierSelection
+                supplierLabel="supplier"
+                supplierValue="supplierId"
+                setValue={form.setValue}
+                clearErrors={form.clearErrors}
+                className="!min-h-6 h-[1.65rem] text-xs"
+              />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <FormIonItem className="[--min-height:0]">
+              <InputText
+                name="date"
+                type="date"
+                disabled={loading}
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Date"
+                placeholder="Type here"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-24 !text-[0.7rem] !text-slate-600 text-end"
+                max="9999-12-31"
+                readOnly
+              />
+            </FormIonItem>
+            <FormIonItem className="[--min-height:0]">
+              <InputText
+                name="acctMonth"
+                disabled={loading}
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Account Month"
+                placeholder="Type here"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
+                readOnly
+              />
+            </FormIonItem>
+            <FormIonItem className="[--min-height:0]">
+              <InputText
+                name="acctYear"
+                disabled={loading}
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Account Year"
+                placeholder="Type here"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
+                readOnly
+              />
+            </FormIonItem>
+          </div>
+          <div className="col-span-2 space-y-1">
+            <FormIonItem className="[--min-height:0]">
+              <InputText
+                name="remarks"
+                disabled={loading}
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Particular"
+                placeholder="Type here"
+                className="!px-1 !py-1 rounded-md !text-[0.7rem]"
+                labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
+              />
+            </FormIonItem>
           </div>
         </div>
-        <div className="space-y-1">
-          <FormIonItem className="[--min-height:0]">
-            <InputText
-              name="date"
-              type="date"
-              disabled={loading}
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Date"
-              placeholder="Type here"
-              className="!px-1 !py-1 rounded-md !text-[0.7rem]"
-              labelClassName="truncate min-w-24 !text-[0.7rem] !text-slate-600 text-end"
-              max="9999-12-31"
-            />
-          </FormIonItem>
-          <FormIonItem className="[--min-height:0]">
-            <InputText
-              name="acctMonth"
-              disabled={loading}
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Account Month"
-              placeholder="Type here"
-              className="!px-1 !py-1 rounded-md !text-[0.7rem]"
-              labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
-              readOnly
-            />
-          </FormIonItem>
-          <FormIonItem className="[--min-height:0]">
-            <InputText
-              name="acctYear"
-              disabled={loading}
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Account Year"
-              placeholder="Type here"
-              className="!px-1 !py-1 rounded-md !text-[0.7rem]"
-              labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
-              readOnly
-            />
-          </FormIonItem>
-        </div>
+
         <div className="space-y-1">
           <FormIonItem className="[--min-height:0]">
             <InputText
@@ -152,20 +170,6 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
             />
           </FormIonItem>
         </div>
-      </div>
-      <div>
-        <FormIonItem className="[--min-height:0]">
-          <InputText
-            name="remarks"
-            disabled={loading}
-            control={form.control}
-            clearErrors={form.clearErrors}
-            label="Particular"
-            placeholder="Type here"
-            className="!px-1 !py-1 rounded-md !text-[0.7rem]"
-            labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
-          />
-        </FormIonItem>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ type TableProps = {
 } & React.TableHTMLAttributes<HTMLTableElement>;
 
 const Table = ({ className, children, ...props }: TableProps) => (
-  <table className={classNames('w-full text-sm text-left rtl:text-right text-slate-800', className)} {...props}>
+  <table className={classNames('w-full text-sm text-left rtl:text-right text-slate-800 border-separate', className)} {...props}>
     {children}
   </table>
 );
@@ -45,7 +45,7 @@ const TableRow = ({ className, children, ...props }: TableRowProps) => (
 TableRow.displayName = 'TableRow';
 
 const TableHeadRow = ({ className, children, ...props }: TableRowProps) => (
-  <tr className={classNames('border-b-4 border-b-slate-200 truncate bg-[#FDF1E8] !rounded-xl', className)} {...props}>
+  <tr className={classNames('border-b-4 border-b-slate-200 truncate [&>th]:bg-[#FDF1E8] !rounded-xl', className)} {...props}>
     {children}
   </tr>
 );

@@ -76,7 +76,7 @@ const ViewAcknowledgementEntries = ({ isOpen, acknowledgement }: ViewEntriesProp
       <div className="relative overflow-auto flex-1">
         <Table>
           <TableHeader>
-            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!px-2 [&>th]:!py-1.5 [&>th]:!font-normal ">
+            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!px-2 [&>th]:!py-1.5 [&>th]:!font-normal  [&>th]:!text-xs">
               <TableHead>CV#</TableHead>
               <TableHead>Due Date</TableHead>
               <TableHead>Week</TableHead>

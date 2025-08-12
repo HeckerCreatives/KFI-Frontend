@@ -102,11 +102,11 @@ const ClientMasterFile = () => {
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>Account No.</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Center No.</TableHead>
-                      <TableHead>Account Officer</TableHead>
-                      <TableHead>Member Status</TableHead>
+                      <TableHead className="sticky left-0 min-w-[10rem] max-w-[10rem]">Account No.</TableHead>
+                      <TableHead className="sticky left-[10rem] min-w-[10rem] max-w-[10rem]">Name</TableHead>
+                      <TableHead className="lg:sticky left-[20rem] min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
+                      <TableHead className="lg:sticky left-[30rem] min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
+                      <TableHead className="lg:sticky left-[42rem] min-w-[10rem] max-w-[10rem]">Member Status</TableHead>
                       <TableHead>Address</TableHead>
                       <TableHead>City</TableHead>
                       <TableHead>Zip Code</TableHead>
@@ -120,12 +120,12 @@ const ClientMasterFile = () => {
                     {!data.loading &&
                       data.clients.length > 0 &&
                       data.clients.map((client: ClientMasterFileType) => (
-                        <TableRow key={client._id}>
-                          <TableCell>{client.acctNumber}</TableCell>
-                          <TableCell>{client.name}</TableCell>
-                          <TableCell>{client.center.centerNo}</TableCell>
-                          <TableCell>{client.acctOfficer}</TableCell>
-                          <TableCell>{client.memberStatus}</TableCell>
+                        <TableRow key={client._id} className="[&>td]:bg-white">
+                          <TableCell className="sticky left-0 min-w-[10rem] max-w-[10rem]">{client.acctNumber}</TableCell>
+                          <TableCell className="sticky left-[10rem] min-w-[10rem] max-w-[10rem]">{client.name}</TableCell>
+                          <TableCell className="lg:sticky left-[20rem] min-w-[5rem] max-w-[5rem]">{client.center.centerNo}</TableCell>
+                          <TableCell className="lg:sticky left-[30rem] min-w-[12rem] max-w-[12rem]">{client.acctOfficer}</TableCell>
+                          <TableCell className="lg:sticky left-[42rem] min-w-[10rem] max-w-[10rem]">{client.memberStatus}</TableCell>
                           <TableCell>{client.address}</TableCell>
                           <TableCell>{client.city}</TableCell>
                           <TableCell>{client.zipCode}</TableCell>

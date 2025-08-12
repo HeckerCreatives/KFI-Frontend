@@ -192,7 +192,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
             </div>
           </form>
           <div className="border-t border-t-slate-400 pt-5 flex-1">
-            <UpdateEntries isOpen={isOpen} transaction={transaction} />
+            <UpdateEntries isOpen={isOpen} transaction={transaction} currentAmount={`${transaction.amount}`} />
           </div>
         </div>
       </IonModal>

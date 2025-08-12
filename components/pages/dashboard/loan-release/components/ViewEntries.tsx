@@ -78,7 +78,7 @@ const ViewEntries = ({ isOpen, transaction }: ViewEntriesProps) => {
       <div className="relative overflow-auto flex-1">
         <Table>
           <TableHeader>
-            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal">
+            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal  [&>th]:!text-xs">
               <TableHead>Line</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>

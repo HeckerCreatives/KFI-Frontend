@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useState } from 'react';
 import ModalHeader from '../../../../../ui/page/ModalHeader';
-import { TErrorData, TFormError } from '../../../../../../types/types';
+import { Entry, TErrorData, TFormError } from '../../../../../../types/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { entriesSchema, EntryFormData } from '../../../../../../validations/loan-release.schema';
@@ -16,9 +16,11 @@ type AddEntryProps = {
   centerNo: string;
   centerId: string;
   getEntries: (page: number) => void;
+  currentAmount: string;
+  entries: Entry[];
 };
 
-const AddEntry = ({ transactionId, centerNo, centerId, getEntries }: AddEntryProps) => {
+const AddEntry = ({ transactionId, centerNo, centerId, getEntries, currentAmount, entries }: AddEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -55,6 +57,20 @@ const AddEntry = ({ transactionId, centerNo, centerId, getEntries }: AddEntryPro
     try {
       data.debit = removeAmountComma(data.debit as string);
       data.credit = removeAmountComma(data.credit as string);
+
+      let totalDebit = Number(data.debit);
+      let totalCredit = Number(data.credit);
+
+      entries.map(entry => {
+        totalDebit += Number(entry.debit);
+        totalCredit += Number(entry.credit);
+      });
+
+      if (totalDebit + totalCredit !== Number(removeAmountComma(currentAmount))) {
+        form.setError('root', { message: 'Total of debit and credit must be balanced with the amount' });
+        return;
+      }
+
       const result = await kfiAxios.post(`transaction/loan-release/entries/${transactionId}`, data);
       const { success } = result.data;
       if (success) {

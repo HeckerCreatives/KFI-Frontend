@@ -58,6 +58,7 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
               max="9999-12-31"
               className="!px-1 !py-1 rounded-md !text-[0.7rem] "
               labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-16 !text-slate-600 text-end"
+              readOnly
             />
           </FormIonItem>
           <FormIonItem className="[--min-height:0]">

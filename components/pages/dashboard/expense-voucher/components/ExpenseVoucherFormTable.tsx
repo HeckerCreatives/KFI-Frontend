@@ -35,12 +35,12 @@ const ExpenseVoucherFormTable = ({ form, loading = false }: ExpenseVoucherFormTa
         </IonButton>
       </div>
       <div className="relative overflow-auto">
-        <Table>
+        <Table className="border-2">
           <TableHeader>
-            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!font-normal [&>th]:!py-1.5">
-              <TableHead>Name</TableHead>
-              <TableHead>Particular</TableHead>
-              <TableHead>Acct. Code</TableHead>
+            <TableHeadRow className="bg-slate-100 [&>th]:border-2 [&>th]:!font-normal [&>th]:!py-1.5 [&>th]:!text-xs">
+              <TableHead className="sticky left-0 min-w-[20rem] max-w-[20rem] z-10">Name</TableHead>
+              <TableHead className="sticky left-[20rem] min-w-[20rem] max-w-[20rem] z-10">Particular</TableHead>
+              <TableHead className="sticky left-[40rem] min-w-[10rem] max-w-[10rem] z-10">Acct. Code</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Debit</TableHead>
               <TableHead>Credit</TableHead>

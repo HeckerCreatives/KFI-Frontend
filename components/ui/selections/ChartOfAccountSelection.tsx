@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SelectionHeader from './SelectionHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../table/Table';
 import FormIonItem from '../utils/FormIonItem';
@@ -71,7 +71,7 @@ const ChartOfAccountSelection = <T extends FieldValues>({
     const value = ionInputRef.current?.value || '';
     setLoading(true);
     try {
-      const filter: any = { keyword: value, page, limit: 15 };
+      const filter: any = { keyword: value, page, limit: 10 };
       const result = await kfiAxios.get('chart-of-account/selection', { params: filter });
       const { success, chartOfAccounts, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
@@ -113,6 +113,10 @@ const ChartOfAccountSelection = <T extends FieldValues>({
   };
 
   const handlePagination = (page: number) => handleSearch(page);
+
+  useEffect(() => {
+    isOpen && handleSearch(1);
+  }, [isOpen]);
 
   return (
     <>

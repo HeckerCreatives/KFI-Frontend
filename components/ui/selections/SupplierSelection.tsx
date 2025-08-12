@@ -59,7 +59,7 @@ const SupplierSelection = <T extends FieldValues>({ supplierLabel, supplierValue
     const value = ionInputRef.current?.value || '';
     setLoading(true);
     try {
-      const filter: any = { keyword: value, page };
+      const filter: any = { keyword: value, page, limit: 10 };
       const result = await kfiAxios.get('supplier/selection', { params: filter });
       const { success, suppliers, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
@@ -132,14 +132,14 @@ const SupplierSelection = <T extends FieldValues>({ supplierLabel, supplierValue
                   />
                 </FormIonItem>
                 <IonButton
-                  disabled={data.loading}
+                  disabled={loading}
                   onClick={() => handleSearch(1)}
                   type="button"
                   fill="clear"
                   className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
                   strong
                 >
-                  {data.loading ? 'Finding...' : 'Find'}
+                  {loading ? 'Finding...' : 'Find'}
                 </IonButton>
               </div>
             </div>
@@ -153,9 +153,9 @@ const SupplierSelection = <T extends FieldValues>({ supplierLabel, supplierValue
                 </TableHeadRow>
               </TableHeader>
               <TableBody>
-                {data.loading && <TableLoadingRow colspan={2} />}
-                {!data.loading && data.suppliers.length < 1 && <TableNoRows colspan={2} label="No supplier found" />}
-                {!data.loading &&
+                {loading && <TableLoadingRow colspan={2} />}
+                {!loading && data.suppliers.length < 1 && <TableNoRows colspan={2} label="No supplier found" />}
+                {!loading &&
                   data.suppliers.map((data: Option) => (
                     <TableRow onClick={() => handleSelect(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.code}</TableCell>

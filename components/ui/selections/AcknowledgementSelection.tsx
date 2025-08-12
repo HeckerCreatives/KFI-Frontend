@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SelectionHeader from './SelectionHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../table/Table';
 import FormIonItem from '../utils/FormIonItem';
@@ -62,9 +62,9 @@ const AcknowledgementSelection = <T extends FieldValues>({
 
   const handleSearch = async (page: number) => {
     const value = ionInputRef.current?.value || '';
-    setLoading(true);
+    setData(prev => ({ ...prev, loading: true }));
     try {
-      const filter: any = { keyword: value, page };
+      const filter: any = { keyword: value, page, limit: 10 };
       const result = await kfiAxios.get('acknowledgement/selection', { params: filter });
       const { success, acknowledgements, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
@@ -80,7 +80,7 @@ const AcknowledgementSelection = <T extends FieldValues>({
       }
     } catch (error) {
     } finally {
-      setLoading(false);
+      setData(prev => ({ ...prev, loading: false }));
     }
   };
 
@@ -103,6 +103,10 @@ const AcknowledgementSelection = <T extends FieldValues>({
   };
 
   const handlePagination = (page: number) => handleSearch(page);
+
+  useEffect(() => {
+    if (isOpen) handlePagination(1);
+  }, [isOpen]);
 
   return (
     <>
@@ -160,7 +164,7 @@ const AcknowledgementSelection = <T extends FieldValues>({
               </TableHeader>
               <TableBody>
                 {data.loading && <TableLoadingRow colspan={1} />}
-                {!data.loading && data.acknowledgements.length < 1 && <TableNoRows colspan={1} label="No expense voucher found" />}
+                {!data.loading && data.acknowledgements.length < 1 && <TableNoRows colspan={1} label="No official receipt found" />}
                 {!data.loading &&
                   data.acknowledgements.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">

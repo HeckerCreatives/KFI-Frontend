@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SelectionHeader from './SelectionHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../table/Table';
 import FormIonItem from '../utils/FormIonItem';
@@ -77,7 +77,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
     const value = ionInputRef.current?.value || '';
     setLoading(true);
     try {
-      const filter: any = { keyword: value, page };
+      const filter: any = { keyword: value, page, limit: 10 };
       const result = await kfiAxios.get('transaction/entries/selection', { params: filter });
       const { success, loanEntries, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
@@ -123,6 +123,10 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
   };
 
   const handlePagination = (page: number) => handleSearch(page);
+
+  useEffect(() => {
+    isOpen && handleSearch(1);
+  }, [isOpen]);
 
   return (
     <>
@@ -182,9 +186,9 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
                 </TableHeadRow>
               </TableHeader>
               <TableBody>
-                {data.loading && <TableLoadingRow colspan={4} />}
-                {!data.loading && data.loanEntries.length < 1 && <TableNoRows colspan={4} label="No Loan Release Entry Found" />}
-                {!data.loading &&
+                {loading && <TableLoadingRow colspan={4} />}
+                {!loading && data.loanEntries.length < 1 && <TableNoRows colspan={4} label="No Loan Release Entry Found" />}
+                {!loading &&
                   data.loanEntries.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.cvNo}</TableCell>

@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SelectionHeader from './SelectionHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../table/Table';
 import FormIonItem from '../utils/FormIonItem';
@@ -58,7 +58,7 @@ const ReleaseSelection = <T extends FieldValues>({ releaseLabel, releaseValue, s
     const value = ionInputRef.current?.value || '';
     setLoading(true);
     try {
-      const filter: any = { keyword: value, page };
+      const filter: any = { keyword: value, page, limit: 10 };
       const result = await kfiAxios.get('release/selection', { params: filter });
       const { success, releases, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
@@ -98,6 +98,10 @@ const ReleaseSelection = <T extends FieldValues>({ releaseLabel, releaseValue, s
 
   const handlePagination = (page: number) => handleSearch(page);
 
+  useEffect(() => {
+    isOpen && handleSearch(1);
+  }, [isOpen]);
+
   return (
     <>
       <div className="text-end">
@@ -133,14 +137,14 @@ const ReleaseSelection = <T extends FieldValues>({ releaseLabel, releaseValue, s
                   />
                 </FormIonItem>
                 <IonButton
-                  disabled={data.loading}
+                  disabled={loading}
                   onClick={() => handleSearch(1)}
                   type="button"
                   fill="clear"
                   className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
                   strong
                 >
-                  {data.loading ? 'Finding...' : 'Find'}
+                  {loading ? 'Finding...' : 'Find'}
                 </IonButton>
               </div>
             </div>
@@ -153,9 +157,9 @@ const ReleaseSelection = <T extends FieldValues>({ releaseLabel, releaseValue, s
                 </TableHeadRow>
               </TableHeader>
               <TableBody>
-                {data.loading && <TableLoadingRow colspan={1} />}
-                {!data.loading && data.releases.length < 1 && <TableNoRows colspan={1} label="No expense voucher found" />}
-                {!data.loading &&
+                {loading && <TableLoadingRow colspan={1} />}
+                {!loading && data.releases.length < 1 && <TableNoRows colspan={1} label="No acknowledgement receipt found" />}
+                {!loading &&
                   data.releases.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.code}</TableCell>

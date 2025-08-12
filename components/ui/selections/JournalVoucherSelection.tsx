@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SelectionHeader from './SelectionHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../table/Table';
 import FormIonItem from '../utils/FormIonItem';
@@ -58,7 +58,7 @@ const JournalVoucherSelection = <T extends FieldValues>({ journalVoucherLabel, j
     const value = ionInputRef.current?.value || '';
     setLoading(true);
     try {
-      const filter: any = { keyword: value, page };
+      const filter: any = { keyword: value, page, limit: 10 };
       const result = await kfiAxios.get('journal-voucher/selection', { params: filter });
       const { success, journalVouchers, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
@@ -97,6 +97,10 @@ const JournalVoucherSelection = <T extends FieldValues>({ journalVoucherLabel, j
   };
 
   const handlePagination = (page: number) => handleSearch(page);
+
+  useEffect(() => {
+    isOpen && handleSearch(1);
+  }, [isOpen]);
 
   return (
     <>
@@ -153,9 +157,9 @@ const JournalVoucherSelection = <T extends FieldValues>({ journalVoucherLabel, j
                 </TableHeadRow>
               </TableHeader>
               <TableBody>
-                {data.loading && <TableLoadingRow colspan={1} />}
-                {!data.loading && data.journalVouchers.length < 1 && <TableNoRows colspan={1} label="No expense voucher found" />}
-                {!data.loading &&
+                {loading && <TableLoadingRow colspan={1} />}
+                {!loading && data.journalVouchers.length < 1 && <TableNoRows colspan={1} label="No journal voucher found" />}
+                {!loading &&
                   data.journalVouchers.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.code}</TableCell>

@@ -23,9 +23,10 @@ export type TData = {
 type UpdateEntriesProps = {
   isOpen: boolean;
   transaction: Transaction;
+  currentAmount: string;
 };
 
-const UpdateEntries = ({ isOpen, transaction }: UpdateEntriesProps) => {
+const UpdateEntries = ({ isOpen, transaction, currentAmount }: UpdateEntriesProps) => {
   const [present] = useIonToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -76,12 +77,19 @@ const UpdateEntries = ({ isOpen, transaction }: UpdateEntriesProps) => {
   return (
     <div className="pb-2 flex flex-col h-full">
       <div>
-        <AddEntry transactionId={transaction._id} centerId={transaction.center._id} centerNo={transaction.center.centerNo} getEntries={getEntries} />
+        <AddEntry
+          transactionId={transaction._id}
+          centerId={transaction.center._id}
+          centerNo={transaction.center.centerNo}
+          getEntries={getEntries}
+          currentAmount={currentAmount}
+          entries={data.entries}
+        />
       </div>
       <div className="relative overflow-auto flex-1">
         <Table>
           <TableHeader>
-            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal">
+            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal [&>th]:!text-xs">
               <TableHead>Line</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>

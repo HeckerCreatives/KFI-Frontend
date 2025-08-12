@@ -60,8 +60,32 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
       form.setError('entries', { message: 'Atleast 1 entry is required' });
       return;
     }
-    data.entries = glEntries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit as string), credit: removeAmountComma(entry.credit as string) }));
+
+    let totalDebit = 0;
+    let totalCredit = 0;
+
+    data.entries = glEntries.map(entry => {
+      const debit = removeAmountComma(entry.debit as string);
+      const credit = removeAmountComma(entry.credit as string);
+
+      totalDebit += Number(debit);
+      totalCredit += Number(credit);
+
+      return { ...entry, debit, credit };
+    });
     data.amount = removeAmountComma(data.amount);
+    data.root = '';
+
+    if (totalCredit !== totalDebit) {
+      form.setError('root', { message: 'Debit and Credit must be balanced.' });
+      return;
+    }
+
+    if (totalCredit + totalDebit !== Number(data.amount)) {
+      form.setError('root', { message: 'Total of debit and credit must be balanced with the amount field.' });
+      return;
+    }
+
     setLoading(true);
     try {
       const result = await kfiAxios.post('transaction/loan-release', data);
@@ -121,6 +145,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
               <div className="overflow-auto flex-1">
                 <LoanReleaseFormTable form={form} />
               </div>
+              {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
               <div className="px-3">
                 <div className="grid grid-cols-3">
                   <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">

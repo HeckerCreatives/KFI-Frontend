@@ -63,6 +63,7 @@ export const loanReleaseSchema = z.object({
     .refine(value => !isNaN(Number(value)), 'Interest rate must be a number'),
   entries: z.array(entriesSchema).min(1, 'Pease add atleast 1 entry'),
   isEduc: z.boolean().optional().or(z.literal(false)),
+  root: z.string().optional().or(z.literal('')),
 });
 
 export const updateLoanReleaseSchema = z.object({

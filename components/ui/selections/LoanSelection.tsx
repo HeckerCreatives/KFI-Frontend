@@ -1,6 +1,5 @@
-import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import { arrowBackCircle, caretForwardOutline } from 'ionicons/icons';
-import React, { useRef, useState } from 'react';
+import { IonButton, IonHeader, IonInput, IonModal, IonToolbar } from '@ionic/react';
+import React, { useEffect, useRef, useState } from 'react';
 import SelectionHeader from './SelectionHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../table/Table';
 import FormIonItem from '../utils/FormIonItem';
@@ -9,10 +8,12 @@ import kfiAxios from '../../utils/axios';
 import TableLoadingRow from '../forms/TableLoadingRow';
 import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
+import TablePagination from '../forms/TablePagination';
 
 type Option = {
   _id: string;
   code: string;
+  description: string;
 };
 
 type LoanSelectionProps<T extends FieldValues> = {
@@ -23,29 +24,53 @@ type LoanSelectionProps<T extends FieldValues> = {
   className?: string;
 };
 
+export type TData = {
+  datas: Option[];
+  totalPages: number;
+  nextPage: boolean;
+  prevPage: boolean;
+  loading: boolean;
+};
+
 const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, clearErrors, className = '' }: LoanSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [datas, setDatas] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
   const ionInputRef = useRef<HTMLIonInputElement>(null);
 
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const [data, setData] = useState<TData>({
+    datas: [],
+    loading: false,
+    totalPages: 0,
+    nextPage: false,
+    prevPage: false,
+  });
+
   function dismiss() {
     setIsOpen(false);
-    setDatas([]);
   }
 
   const handleOpen = () => {
     setIsOpen(true);
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (page: number) => {
     const value = ionInputRef.current?.value;
     setLoading(true);
     try {
-      const result = await kfiAxios.get('/loan/selection', { params: { keyword: value } });
-      const { success, loans } = result.data;
+      const filter: any = { keyword: value, page, limit: 10 };
+      const result = await kfiAxios.get('/loan/selection', { params: filter });
+      const { success, loans, totalPages, hasNextPage, hasPrevPage } = result.data;
       if (success) {
-        setDatas(loans);
+        setData(prev => ({
+          ...prev,
+          datas: loans,
+          totalPages: totalPages,
+          nextPage: hasNextPage,
+          prevPage: hasPrevPage,
+        }));
+        setCurrentPage(page);
         return;
       }
     } catch (error) {
@@ -61,8 +86,21 @@ const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, 
     setValue(loanValue as Path<T>, idValue as any);
     clearErrors(loanLabel);
     clearErrors(loanValue);
+    setData({
+      datas: [],
+      loading: false,
+      totalPages: 0,
+      nextPage: false,
+      prevPage: false,
+    });
     dismiss();
   };
+
+  const handlePagination = (page: number) => handleSearch(page);
+
+  useEffect(() => {
+    isOpen && handleSearch(1);
+  }, [isOpen]);
 
   return (
     <>
@@ -97,7 +135,13 @@ const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, 
                     )}
                   />
                 </FormIonItem>
-                <IonButton onClick={handleSearch} type="button" fill="clear" className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                <IonButton
+                  onClick={() => handleSearch(1)}
+                  type="button"
+                  fill="clear"
+                  className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                  strong
+                >
                   {loading ? 'Finding...' : 'Find'}
                 </IonButton>
               </div>
@@ -108,20 +152,23 @@ const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, 
               <TableHeader>
                 <TableHeadRow className="border-b-0 bg-slate-100">
                   <TableHead className="!py-2">Code</TableHead>
+                  <TableHead className="!py-2">Description</TableHead>
                 </TableHeadRow>
               </TableHeader>
               <TableBody>
                 {loading && <TableLoadingRow colspan={2} />}
-                {!loading && datas.length < 1 && <TableNoRows colspan={2} label="No loan type found" />}
+                {!loading && data.datas.length < 1 && <TableNoRows colspan={2} label="No loan type found" />}
                 {!loading &&
-                  datas.map((data: Option) => (
+                  data.datas.map((data: Option) => (
                     <TableRow onClick={() => handleSelectBusinessType(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.code}</TableCell>
+                      <TableCell className="">{data.description}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
             </Table>
           </div>
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonModal>
     </>
