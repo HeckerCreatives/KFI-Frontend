@@ -37,7 +37,7 @@ const LoanReleaseFormTableDoc = ({ entry, index, remove, form }: LoanReleaseForm
   }, [name]);
 
   return (
-    <TableRow className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2">
+    <TableRow className="border-b-0 [&>td]:border-2 [&>td]:!py-0 [&>td]:!px-2 [&>td]:bg-white">
       <TableCell className="text-center">{index + 1}</TableCell>
       <TableCell className="min-w-fit">
         <div className="flex items-start gap-1">
@@ -61,7 +61,7 @@ const LoanReleaseFormTableDoc = ({ entry, index, remove, form }: LoanReleaseForm
           <InputText readOnly control={form.control} name={`entries.${index}.particular`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
         </FormIonItem>
       </TableCell>
-      <TableCell>
+      <TableCell className="min-w-40 max-w-40 sticky left-0 z-10">
         <div className="flex items-start gap-1">
           <FormIonItem>
             <InputText control={form.control} readOnly name={`entries.${index}.acctCode`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm" />

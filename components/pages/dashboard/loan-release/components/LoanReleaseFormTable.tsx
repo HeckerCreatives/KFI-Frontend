@@ -72,11 +72,11 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
       <div className="relative overflow-auto">
         <Table>
           <TableHeader>
-            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal [&>th]:!text-xs">
+            <TableHeadRow className="border-2 bg-slate-100 [&>th]:border-2 [&>th]:!py-1.5 [&>th]:!font-normal [&>th]:!text-xs">
               <TableHead>Line</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>
-              <TableHead>Acct. Code</TableHead>
+              <TableHead className="min-w-40 max-w-40 sticky left-0">Acct. Code</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Debit</TableHead>
               <TableHead>Credit</TableHead>

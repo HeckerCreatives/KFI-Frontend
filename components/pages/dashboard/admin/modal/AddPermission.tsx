@@ -10,6 +10,7 @@ import TransactionPermission from '../components/permissions/TransactionPermissi
 import GeneralLedgerPermission from '../components/permissions/GeneralLedgerPermission';
 import SystemPermission from '../components/permissions/SystemPermission';
 import DiagnosticsPermission from '../components/permissions/DiagnosticsPermission';
+import DashboardPermission from '../components/permissions/DashboardPermission';
 
 type AddPermissionProps = {
   user: User;
@@ -92,6 +93,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
         </IonHeader>
         <div className="inner-content space-y-4">
           {/* <ManageAccountPermission permissions={permissions} setPermissions={setPermissions} /> */}
+          <DashboardPermission permissions={permissions} setPermissions={setPermissions} />
           <TransactionPermission permissions={permissions} setPermissions={setPermissions} />
           <GeneralLedgerPermission permissions={permissions} setPermissions={setPermissions} />
           <SystemPermission permissions={permissions} setPermissions={setPermissions} />

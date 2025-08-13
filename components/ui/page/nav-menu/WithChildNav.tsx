@@ -26,7 +26,7 @@ const WithChildNav = ({ label, resource, childPaths }: WithChildNavProps) => {
         {label}
         <IonIcon icon={chevronForwardOutline} className="text-xs" />
       </div>
-      <IonPopover showBackdrop={false} trigger={`${label}-childPaths`} triggerAction="click" alignment="start" side="right" className="![--max-width:12rem]">
+      <IonPopover showBackdrop={false} trigger={`${label}-childPaths`} triggerAction="click" alignment="start" side="right" className="![--max-width:15rem]">
         <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
           {childPaths.map(
             child =>

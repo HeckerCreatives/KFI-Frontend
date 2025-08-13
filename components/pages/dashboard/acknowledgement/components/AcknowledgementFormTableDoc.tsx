@@ -19,8 +19,8 @@ type AcknowledgementFormTableDocProps = {
 
 const AcknowledgementFormTableDoc = ({ entry, remove, form, index }: AcknowledgementFormTableDocProps) => {
   return (
-    <TableRow className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2 [&>td]:align-text-top">
-      <TableCell className="min-w-fit">
+    <TableRow className="border-b-0 [&>td]:border-2 [&>td]:!py-0 [&>td]:!px-2 [&>td]:!bg-white [&>td]:align-text-top">
+      <TableCell className="min-w-48 max-w-48 sticky left-0 z-10">
         <div className="flex items-start gap-1">
           <FormIonItem>
             <InputText readOnly control={form.control} name={`entries.${index}.cvNo`} clearErrors={form.clearErrors} className="!px-2 !min-w-32 rounded-sm" />
@@ -40,22 +40,22 @@ const AcknowledgementFormTableDoc = ({ entry, remove, form, index }: Acknowledge
           </div>
         </div>
       </TableCell>
-      <TableCell className="min-w-fit">
+      <TableCell className="min-w-32 max-w-32 sticky left-[12rem] z-10">
         <FormIonItem>
           <InputText readOnly control={form.control} name={`entries.${index}.dueDate`} clearErrors={form.clearErrors} className="!px-2 !min-w-16 rounded-sm" />
         </FormIonItem>
       </TableCell>
-      <TableCell className="min-w-fit">
-        <FormIonItem>
-          <InputText readOnly control={form.control} name={`entries.${index}.noOfWeeks`} clearErrors={form.clearErrors} className="!px-2 !min-w-16 rounded-sm" />
+      <TableCell className="min-w-20 max-w-20 sticky left-[20rem] z-10">
+        <FormIonItem className="">
+          <InputText readOnly control={form.control} name={`entries.${index}.noOfWeeks`} clearErrors={form.clearErrors} className="!px-2 min-w-full rounded-sm" />
         </FormIonItem>
       </TableCell>
-      <TableCell>
+      <TableCell className="min-w-60 max-w-60 sticky left-[25rem] z-10">
         <FormIonItem>
-          <InputText readOnly control={form.control} name={`entries.${index}.name`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
+          <InputText readOnly control={form.control} name={`entries.${index}.name`} clearErrors={form.clearErrors} className="!px-2 !min-w-50 rounded-sm" />
         </FormIonItem>
       </TableCell>
-      <TableCell>
+      <TableCell className="min-w-40 max-w-40 sticky left-[40rem] z-10">
         <div className="flex items-start gap-1">
           <FormIonItem>
             <InputText control={form.control} readOnly name={`entries.${index}.acctCode`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm" />

@@ -109,7 +109,7 @@ const LoanRelease = () => {
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>CV Number</TableHead>
+                      <TableHead className="min-w-44 max-w-44 sticky left-0">CV Number</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Bank</TableHead>
                       <TableHead>CHK. No.</TableHead>
@@ -125,7 +125,7 @@ const LoanRelease = () => {
                       data.transactions.length > 0 &&
                       data.transactions.map((transaction: Transaction, i: number) => (
                         <TableRow key={transaction._id}>
-                          <TableCell>{transaction.code}</TableCell>
+                          <TableCell className="min-w-44 max-w-44 sticky left-0 bg-white">{transaction.code}</TableCell>
                           <TableCell>{formatDateTable(transaction.date)}</TableCell>
                           <TableCell className="max-w-52 truncate">{transaction.bank.description}</TableCell>
                           <TableCell>{transaction.checkNo}</TableCell>

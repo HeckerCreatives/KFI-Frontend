@@ -1,14 +1,19 @@
 import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react';
 import React, { useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
-import { documentAttachOutline } from 'ionicons/icons';
+import { eyeOutline } from 'ionicons/icons';
 import DetailsCard from '../components/DetailsCard';
-import { formatNumber } from '../../../../ui/utils/formatNumber';
 import { Member } from '../components/RecentMembers';
 import { formatDateTable } from '../../../../utils/date-utils';
+import AccountInformation from '../../../../ui/member-details/AccountInformation';
+import AccountDetails from '../../../../ui/member-details/AccountDetails';
+import OtherDetails from '../../../../ui/member-details/OtherDetails';
+import classNames from 'classnames';
+import ContactInformation from '../../../../ui/member-details/ContactInformation';
 
 const ViewRecentMember = ({ member }: { member: Member }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [active, setActive] = useState<'personal' | 'account' | 'contact' | 'other'>('personal');
 
   const dismiss = () => {
     setIsOpen(false);
@@ -20,15 +25,14 @@ const ViewRecentMember = ({ member }: { member: Member }) => {
         onClick={() => setIsOpen(true)}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-28 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-lg w-6 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
       >
-        <IonIcon icon={documentAttachOutline} className="text-xs" />
-        <span>View Details</span>
+        <IonIcon icon={eyeOutline} className="text-xs" />
       </IonButton>
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:80%] lg:[--width:80%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:50rem] md:[--width:50rem] lg:[--max-width:50rem] lg:[--width:50rem]"
       >
         <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
@@ -36,51 +40,58 @@ const ViewRecentMember = ({ member }: { member: Member }) => {
           </IonToolbar>
         </IonHeader>
         <div className="inner-content">
-          <div className="grid grid-cols-2 gap-2">
-            <div className="space-y-2">
-              <DetailsCard label="Name" value={member?.name || ''} labelClassName="min-w-24 !text-end" />
-              <DetailsCard label="Address" value={member?.address || ''} labelClassName="min-w-24 !text-end" />
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="City" value={member?.city || ''} labelClassName="min-w-24 !text-end" />
-                <DetailsCard label="Zip Code" value={member?.zipCode || ''} labelClassName="min-w-24 !text-end" />
+          <div className="px-2 py-1">
+            <div className="mb-3">
+              <h5 className="m-0 !font-semibold text-slate-600">Member Details</h5>
+              <p className="m-0 text-sm text-slate-600">Comprehensive member information and account management</p>
+            </div>
+            <div className="mb-3 flex items-center gap-2">
+              <div
+                onClick={() => setActive('personal')}
+                role="button"
+                className={classNames(
+                  'text-[0.8rem] border w-fit px-5 py-1 rounded-xl',
+                  active === 'personal' ? 'text-orange-600 border-orange-300' : 'text-slate-700  border-slate-400',
+                )}
+              >
+                Account Information
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Telephone No." value={member?.telNo || ''} labelClassName="min-w-24 !text-end" />
-                <DetailsCard label="Mobile" value={member?.mobileNo || ''} labelClassName="min-w-24 !text-end" />
+              <div
+                onClick={() => setActive('account')}
+                role="button"
+                className={classNames(
+                  'text-[0.8rem] border w-fit px-5 py-1 rounded-xl',
+                  active === 'account' ? 'text-orange-600 border-orange-300' : 'text-slate-700  border-slate-400',
+                )}
+              >
+                Account Details
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Birthdate" value={formatDateTable(member?.birthdate) || ''} labelClassName="min-w-24 !text-end" />
-                <DetailsCard label="Birthplace" value={member?.birthplace || ''} labelClassName="min-w-24 !text-end" />
+              <div
+                onClick={() => setActive('contact')}
+                role="button"
+                className={classNames(
+                  'text-[0.8rem] border w-fit px-5 py-1 rounded-xl',
+                  active === 'contact' ? 'text-orange-600 border-orange-300' : 'text-slate-700  border-slate-400',
+                )}
+              >
+                Contact Information
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Age" value={`${member?.age}` || ''} labelClassName="min-w-24 !text-end" />
-                <DetailsCard label="Sex" value={member?.sex || ''} labelClassName="min-w-24 !text-end" />
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Parent" value={member?.parent || ''} labelClassName="min-w-24 !text-end" />
-                <DetailsCard label="Spouse" value={member?.spouse || ''} labelClassName="min-w-24 !text-end" />
+              <div
+                onClick={() => setActive('other')}
+                role="button"
+                className={classNames(
+                  'text-[0.8rem] border w-fit px-5 py-1 rounded-xl',
+                  active === 'other' ? 'text-orange-600 border-orange-300' : 'text-slate-700  border-slate-400',
+                )}
+              >
+                Other Details
               </div>
             </div>
-            <div className="space-y-2">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Civil Status" value={member?.civilStatus || ''} labelClassName="min-w-28 !text-end" />
-                <DetailsCard label="Position" value={member?.position || ''} labelClassName="min-w-28 !text-end" />
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Member Status" value={member?.memberStatus || ''} labelClassName="min-w-28 !text-end" />
-                <DetailsCard label="Center" value={`${member?.center.centerNo} - ${member?.center.description}` || ''} labelClassName="min-w-28 !text-end" />
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Account Officer" value={member.acctOfficer || ''} labelClassName="min-w-28 !text-end" />
-                <DetailsCard label="Date Release" value={formatDateTable(member.dateRelease) || ''} labelClassName="min-w-28 !text-end" />
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <DetailsCard label="Business" value={`${member?.business.type}` || ''} labelClassName="min-w-28 !text-end" />
-                <DetailsCard label="Account Number" value={member?.acctNumber || ''} labelClassName="min-w-28 !text-end" />
-              </div>
-              <DetailsCard label="Reason" value={member?.reason || ''} labelClassName="min-w-28 !text-end" />
-              <DetailsCard label="Children" value={member?.children.map(child => child.name).join(', ') || ''} labelClassName="min-w-28 !text-end" />
-              <DetailsCard label="Beneficiary" value={member?.beneficiaries.map(child => child.name).join(', ') || ''} labelClassName="min-w-28 !text-end" />
+            <div>
+              {active === 'personal' && <AccountInformation member={member} />}
+              {active === 'account' && <AccountDetails member={member} />}
+              {active === 'contact' && <ContactInformation member={member} />}
+              {active === 'other' && <OtherDetails member={member} />}
             </div>
           </div>
         </div>
