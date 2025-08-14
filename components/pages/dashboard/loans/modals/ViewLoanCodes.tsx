@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { IonModal, IonHeader, IonToolbar, IonIcon, IonButton } from '@ionic/react';
-import { document } from 'ionicons/icons';
+import { document, eye } from 'ionicons/icons';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { Loan, LoanCode } from '../../../../../types/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
@@ -28,7 +28,7 @@ const ViewLoanCodes = ({ loan }: { loan: Loan }) => {
         fill="clear"
         className="space-x-1 rounded-lg w-44 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
       >
-        <IonIcon icon={document} className="text-xs" />
+        <IonIcon icon={eye} className="text-xs" />
         <span>View Loan Codes</span>
       </IonButton>
       <IonModal

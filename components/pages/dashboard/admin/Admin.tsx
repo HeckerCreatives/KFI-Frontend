@@ -40,6 +40,13 @@ const Admin = () => {
     prevPage: false,
   });
 
+  const [statistics, setStatistics] = useState({
+    loading: false,
+    banned: 0,
+    active: 0,
+    inactive: 0,
+  });
+
   const getUsers = async (page: number, keyword: string = '', sort: string = '') => {
     setData(prev => ({ ...prev, loading: true }));
     try {
@@ -56,6 +63,7 @@ const Admin = () => {
           nextPage: hasNextPage,
           prevPage: hasPrevPage,
         }));
+        getStatistics();
         setCurrentPage(page);
         setSearchKey(keyword);
         setSortKey(sort);
@@ -68,6 +76,22 @@ const Admin = () => {
       });
     } finally {
       setData(prev => ({ ...prev, loading: false }));
+    }
+  };
+
+  const getStatistics = async () => {
+    try {
+      setStatistics(prev => ({ ...prev, loading: true }));
+      const result = await kfiAxios.get('/user/statistics');
+      const { banned, active, inactive } = result.data;
+      setStatistics(prev => ({ ...prev, banned, active, inactive }));
+    } catch (error) {
+      present({
+        message: 'Failed to get user statistics. Please try again',
+        duration: 1000,
+      });
+    } finally {
+      setStatistics(prev => ({ ...prev, loading: false }));
     }
   };
 
@@ -101,7 +125,7 @@ const Admin = () => {
             <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg my-3">
               <div className="flex items-center gap-2">
                 <CreateUser getUsers={getUsers} />
-                <BanUser selected={selected} setSelected={setSelected} refetch={refetch} />
+                <BanUser selected={selected} setSelected={setSelected} refetch={refetch} banned={statistics.banned} active={statistics.active} />
               </div>
               <UserFilter getUsers={getUsers} />
             </div>
@@ -128,7 +152,7 @@ const Admin = () => {
                             <IonCheckbox value={user._id} onIonChange={handleSelected} />
                           </TableCell>
                           <TableCell>{user.username}</TableCell>
-                          <TableCell className="uppercase">
+                          <TableCell className="capitalize">
                             <div className={classNames('!font-semibold', user.status === 'banned' ? 'text-red-600' : 'text-green-600')}>{user.status}</div>
                           </TableCell>
                           <TableCell>{formatDateTable(user.createdAt)}</TableCell>

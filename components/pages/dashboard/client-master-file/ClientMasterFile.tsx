@@ -18,6 +18,7 @@ import PrintAllClient from './modals/PrintAllClient';
 import ExportAllClient from './modals/ExportAllClient';
 import ManageAccountNav from '../../../ui/navs/ManageAccountNav';
 import { create, eye, trash } from 'ionicons/icons';
+import ClientStatistics from './components/ClientStatistics';
 
 export type TClientMasterFile = {
   clients: ClientMasterFileType[];
@@ -43,8 +44,36 @@ const ClientMasterFile = () => {
     prevPage: false,
   });
 
+  const [statistics, setStatistics] = useState({
+    loading: false,
+    totalClient: 0,
+    resigned: 0,
+    activeOnLeave: 0,
+    activeExisting: 0,
+    activeNew: 0,
+    activePastDue: 0,
+    activeReturnee: 0,
+  });
+
+  const getStatistics = async () => {
+    try {
+      setStatistics(prev => ({ ...prev, loading: true }));
+      const result = await kfiAxios.get('/customer/statistics');
+      const { totalClient, resigned, activeOnLeave, activeExisting, activeNew, activePastDue, activeReturnee } = result.data;
+      setStatistics(prev => ({ ...prev, totalClient, resigned, activeOnLeave, activeExisting, activeNew, activePastDue, activeReturnee }));
+    } catch (error) {
+      present({
+        message: 'Failed to get client statistics. Please try again',
+        duration: 1000,
+      });
+    } finally {
+      setStatistics(prev => ({ ...prev, loading: false }));
+    }
+  };
+
   const getClients = async (page: number, keyword: string = '', sort: string = '') => {
     setData(prev => ({ ...prev, loading: true }));
+
     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
       if (keyword) filter.search = keyword;
@@ -59,6 +88,7 @@ const ClientMasterFile = () => {
           nextPage: hasNextPage,
           prevPage: hasPrevPage,
         }));
+        getStatistics();
         setCurrentPage(page);
         setSearchKey(keyword);
         setSortKey(sort);
@@ -98,6 +128,9 @@ const ClientMasterFile = () => {
               <ClientMasterFileFilter getClients={getClients} />
             </div>
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+              <div className="pb-1">
+                <ClientStatistics data={statistics} />
+              </div>
               <div className="relative overflow-auto rounded-xl">
                 <Table>
                   <TableHeader>

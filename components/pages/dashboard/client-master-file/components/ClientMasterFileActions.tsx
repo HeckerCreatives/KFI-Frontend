@@ -1,12 +1,8 @@
-import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
-import { ellipsisVertical, print } from 'ionicons/icons';
 import React from 'react';
 import { AccessToken, ClientMasterFile } from '../../../../../types/types';
 import { TClientMasterFile } from '../ClientMasterFile';
 import UpdateClientMasterFile from '../modals/UpdateClientMasterFile';
 import DeleteClientMasterFile from '../modals/DeleteClientMasterFile';
-import ViewBeneficiaries from '../modals/ViewBeneficiaries';
-import ViewChildrens from '../modals/ViewChildrens';
 import { canDoAction } from '../../../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
 import PrintClient from '../modals/PrintClient';

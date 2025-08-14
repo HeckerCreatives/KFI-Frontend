@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react';
 import React, { useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
-import { businessOutline, documentAttachOutline, documentTextOutline, eyeOutline, idCardOutline, personOutline } from 'ionicons/icons';
+import { businessOutline, documentAttachOutline, documentTextOutline, eye, eyeOutline, idCardOutline, personOutline } from 'ionicons/icons';
 import { Member } from '../components/RecentLoans';
 import DetailsCard from '../components/DetailsCard';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
@@ -22,9 +22,10 @@ const ViewLoanDetails = ({ loan }: { loan: Member }) => {
         onClick={() => setIsOpen(true)}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-6 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-lg h-6 w-16 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
       >
-        <IonIcon icon={eyeOutline} className="text-xs" />
+        <IonIcon icon={eye} className="text-xs" />
+        &nbsp;View
       </IonButton>
       <IonModal isOpen={isOpen} backdropDismiss={false} className=" [--border-radius:0.35rem] auto-height md:[--max-width:50rem] lg:[--max-width:50rem] lg:[--width:50rem]">
         <IonHeader>

@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react';
 import React, { useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
-import { eyeOutline } from 'ionicons/icons';
+import { eye, eyeOutline } from 'ionicons/icons';
 import DetailsCard from '../components/DetailsCard';
 import { Member } from '../components/RecentMembers';
 import { formatDateTable } from '../../../../utils/date-utils';
@@ -25,9 +25,10 @@ const ViewRecentMember = ({ member }: { member: Member }) => {
         onClick={() => setIsOpen(true)}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-6 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
       >
-        <IonIcon icon={eyeOutline} className="text-xs" />
+        <IonIcon icon={eye} className="text-xs" />
+        &nbsp;View
       </IonButton>
       <IonModal
         isOpen={isOpen}

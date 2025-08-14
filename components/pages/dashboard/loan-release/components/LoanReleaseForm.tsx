@@ -253,9 +253,9 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               labelClassName="truncate min-w-24 !text-[0.7rem]  !text-slate-600 text-end"
             />
           </FormIonItem>
-          <FormIonItem className="w-full [--min-height:0] ps-[6.5rem]">
+          {/* <FormIonItem className="w-full [--min-height:0] ps-[6.5rem]">
             <InputCheckbox disabled={loading} name="isEduc" control={form.control} label="EDUC" className="!h-6 text-xs" />
-          </FormIonItem>
+          </FormIonItem> */}
         </div>
       </div>
     </div>

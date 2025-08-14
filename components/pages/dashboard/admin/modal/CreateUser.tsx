@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast, IonIcon } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
@@ -9,6 +9,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import UserForm from '../components/UserForm';
 import { UserFormData, userSchema } from '../../../../../validations/user.schema';
+import { personAdd } from 'ionicons/icons';
 
 type CreateUserProps = {
   getUsers: (page: number, keyword?: string, sort?: string) => void;
@@ -63,7 +64,7 @@ const CreateUser = ({ getUsers }: CreateUserProps) => {
     <>
       <div className="text-end">
         <IonButton fill="clear" id="create-user-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-          Create Account
+          + Create Account
         </IonButton>
       </div>
       <IonModal

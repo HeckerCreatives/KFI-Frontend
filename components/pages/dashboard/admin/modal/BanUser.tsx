@@ -1,4 +1,4 @@
-import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/react';
+import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { useForm } from 'react-hook-form';
@@ -7,14 +7,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import kfiAxios from '../../../../utils/axios';
+import { ban } from 'ionicons/icons';
 
 type BanUserProps = {
   selected: string[];
   setSelected: React.Dispatch<React.SetStateAction<string[]>>;
   refetch: () => void;
+  banned: number;
+  active: number;
 };
 
-const BanUser = ({ selected, setSelected, refetch }: BanUserProps) => {
+const BanUser = ({ selected, setSelected, refetch, banned, active }: BanUserProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -74,7 +77,8 @@ const BanUser = ({ selected, setSelected, refetch }: BanUserProps) => {
     <>
       <div className="text-end">
         <IonButton onClick={handleOpen} fill="clear" className="max-h-10 min-h-6 bg-red-600 text-white capitalize font-semibold rounded-md" strong>
-          Ban / Activate
+          <IonIcon icon={ban} className="text-sm" />
+          &nbsp;Ban({banned}) / Activate({active})
         </IonButton>
       </div>
       <IonModal

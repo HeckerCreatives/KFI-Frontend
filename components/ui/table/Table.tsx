@@ -57,7 +57,7 @@ interface ThProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
 }
 
 const TableHead = ({ className, children, ...props }: ThProps) => (
-  <th className={classNames('px-5 py-3.5 truncate !font-[600]  text-sm uppercase text-orange-800', className)} {...props}>
+  <th className={classNames('px-5 py-3.5 truncate !font-[600]  text-sm capitalize text-orange-800', className)} {...props}>
     {children}
   </th>
 );

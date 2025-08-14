@@ -1,4 +1,4 @@
-import { IonButton } from '@ionic/react';
+import { IonButton, IonIcon } from '@ionic/react';
 import classNames from 'classnames';
 import { jwtDecode } from 'jwt-decode';
 import { usePathname } from 'next/navigation';
@@ -6,6 +6,7 @@ import React from 'react';
 import { AccessToken, Permission } from '../../../types/types';
 import { isVisible } from '../../utils/permissions';
 import { manageAccountResource } from '../../utils/constants';
+import { key, people } from 'ionicons/icons';
 
 const ManageAccountNav = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -24,7 +25,8 @@ const ManageAccountNav = () => {
             )}
             strong
           >
-            Admin
+            <IonIcon icon={key} className="text-sm" />
+            &nbsp;Admin
           </IonButton>
         )}
 
@@ -38,7 +40,8 @@ const ManageAccountNav = () => {
             )}
             strong
           >
-            Client Master File
+            <IonIcon icon={people} className="text-sm" />
+            &nbsp;Client Master File
           </IonButton>
         )}
       </div>

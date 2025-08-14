@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react';
 import React, { useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
-import { documentAttachOutline } from 'ionicons/icons';
+import { eye } from 'ionicons/icons';
 import { formatDateTable } from '../../../../utils/date-utils';
 import { ClientMasterFile } from '../../../../../types/types';
 import ViewClientCard from '../components/ViewClientCard';
@@ -21,7 +21,7 @@ const ViewClientMasterFile = ({ member }: { member: ClientMasterFile }) => {
         fill="clear"
         className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
       >
-        <IonIcon icon={documentAttachOutline} className="text-xs" />
+        <IonIcon icon={eye} className="text-xs" />
         <span>View</span>
       </IonButton>
       <IonModal
