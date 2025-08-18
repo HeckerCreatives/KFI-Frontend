@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
-import { IonButton } from '@ionic/react';
+import { IonButton, IonIcon } from '@ionic/react';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { EntryFormData, LoanReleaseFormData } from '../../../../../validations/loan-release.schema';
 import kfiAxios from '../../../../utils/axios';
 import LoanReleaseFormTableDoc from './LoanReleaseFormTableDoc';
+import { arrowBack, arrowForward } from 'ionicons/icons';
 
 type LoanReleaseFormTableProps = {
   form: UseFormReturn<LoanReleaseFormData>;
@@ -14,6 +15,9 @@ type LoanReleaseFormTableProps = {
 const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
   const [loading, setLoading] = useState(false);
   const [didLoad, setDidLoad] = useState(false);
+
+  const [page, setPage] = useState(1);
+  const limit = 15;
 
   const { fields, replace, remove, append } = useFieldArray({
     control: form.control,
@@ -53,6 +57,22 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
       setLoading(false);
     }
   };
+
+  const handleNextPage = () => {
+    if (page !== Math.ceil(fields.length / limit)) {
+      setPage(prev => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 0) {
+      setPage(prev => prev - 1);
+    }
+  };
+
+  const currentPageItems = React.useMemo(() => {
+    return fields.slice((page - 1) * limit, page * limit);
+  }, [fields, page, limit]);
 
   return (
     <div className="px-2">
@@ -94,13 +114,49 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
                 </TableCell>
               </TableRow>
             )}
-            {fields.map((entry: EntryFormData & { id: string }, i: number) => (
-              <LoanReleaseFormTableDoc key={`entry-${entry.id}`} entry={entry} index={i} remove={remove} form={form} />
+            {currentPageItems.map((entry: EntryFormData & { id: string }, i: number) => (
+              <LoanReleaseFormTableDoc
+                key={`entry-${entry.id}`}
+                entry={entry}
+                index={(page - 1) * limit + i}
+                remove={remove}
+                form={form}
+                setPage={setPage}
+                currentLength={currentPageItems.length}
+              />
             ))}
           </TableBody>
         </Table>
       </div>
       {form.formState.errors.entries && <div className="text-red-600 text-xs text-center my-2">{form.formState.errors.entries.message}</div>}
+      <div>
+        {fields.length > 0 && (
+          <div className="w-full pb-3">
+            <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">
+              <div>
+                <IonButton onClick={handlePrevPage} disabled={page === 1} fill="clear" className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md">
+                  <IonIcon icon={arrowBack} />
+                </IonButton>
+              </div>
+              <div>
+                <div className="text-sm !font-semibold  px-3 py-1.5 rounded-lg text-slate-700">
+                  {page} / {Math.ceil(fields.length / limit)}
+                </div>
+              </div>
+              <div>
+                <IonButton
+                  onClick={handleNextPage}
+                  disabled={page === Math.ceil(fields.length / limit)}
+                  fill="clear"
+                  className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                >
+                  <IonIcon icon={arrowForward} />
+                </IonButton>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
       <div className="text-start my-2">
         <IonButton
           onClick={() =>

@@ -28,7 +28,11 @@ type TableBodyProps = {
   children?: React.ReactNode;
 } & React.TableHTMLAttributes<HTMLTableSectionElement>;
 
-const TableBody = ({ className, children, ...props }: TableBodyProps) => <tbody className={classNames('[&_tr:last-child]:border-0', className)}>{children}</tbody>;
+const TableBody = ({ className, children, ...props }: TableBodyProps) => (
+  <tbody className={classNames('[&_tr:last-child]:border-0', className)} {...props}>
+    {children}
+  </tbody>
+);
 
 TableBody.displayName = 'TableBody';
 

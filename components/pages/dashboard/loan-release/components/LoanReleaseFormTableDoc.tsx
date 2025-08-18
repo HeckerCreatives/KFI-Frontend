@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { SetStateAction, useEffect } from 'react';
 import { TableCell, TableRow } from '../../../../ui/table/Table';
 import { IonButton, IonIcon } from '@ionic/react';
 import { trash } from 'ionicons/icons';
@@ -15,14 +15,24 @@ type LoanReleaseFormTableDocProps = {
   index: number;
   remove: UseFieldArrayRemove;
   form: UseFormReturn<LoanReleaseFormData>;
+  setPage: React.Dispatch<SetStateAction<number>>;
+  currentLength: number;
 };
 
-const LoanReleaseFormTableDoc = ({ entry, index, remove, form }: LoanReleaseFormTableDocProps) => {
+const LoanReleaseFormTableDoc = ({ entry, index, remove, form, setPage, currentLength }: LoanReleaseFormTableDocProps) => {
   const debit = form.watch(`entries.${index}.debit`);
   const credit = form.watch(`entries.${index}.credit`);
   const cycle = form.watch(`entries.${index}.cycle`);
   const checkNo = form.watch(`entries.${index}.checkNo`);
   const name = form.watch(`entries.${index}.client`);
+
+  const handleRemove = () => {
+    remove(index);
+    setPage(prev => {
+      if (currentLength - 1 === 0 && prev - 1 !== 0) return prev - 1;
+      return prev;
+    });
+  };
 
   useEffect(() => {
     if (debit !== '' || credit !== '' || checkNo !== '' || cycle !== '') {
@@ -111,7 +121,7 @@ const LoanReleaseFormTableDoc = ({ entry, index, remove, form }: LoanReleaseForm
       <TableCell>
         <div className="text-center">
           <IonButton
-            onClick={() => remove(index)}
+            onClick={handleRemove}
             title="Delete Entry"
             fill="clear"
             className="bg-red-600 rounded-md text-white ![--padding-start:0.25rem] ![--padding-end:0.25rem] [--padding-top:0.25rem] [--padding-bottom:0.25rem] min-h-0"

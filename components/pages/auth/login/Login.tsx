@@ -7,13 +7,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginFormData, loginSchema } from '../../../../validations/login.schema';
 import kfiAxios from '../../../utils/axios';
 import checkError from '../../../utils/check-error';
-import { TErrorData, TFormError } from '../../../../types/types';
+import { AccessToken, TErrorData, TFormError } from '../../../../types/types';
 import formErrorHandler from '../../../utils/form-error-handler';
 import InputPassword from '../../../ui/forms/InputPassword';
 import logo from '../../../assets/images/logo-nobg.png';
 import Image from 'next/image';
 import { Capacitor } from '@capacitor/core';
 import { lockClosed, person } from 'ionicons/icons';
+import { jwtDecode } from 'jwt-decode';
+import { arrangedResource } from '../../../utils/constants';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -48,8 +50,23 @@ const Login = () => {
       const result = await kfiAxios.post('/auth/login', data);
       const { success, access } = result.data;
       if (success) {
+        const token = jwtDecode(access) as AccessToken;
+        const permissions = token.permissions;
+        let path = '';
+        if (token.role === 'superadmin') {
+          path = '/dashboard/home';
+        } else {
+          let i = 0;
+          while (i <= arrangedResource.length && !path) {
+            const resource = permissions.find(e => e.resource === arrangedResource[i].resource);
+            if (resource?.actions.visible) {
+              path = arrangedResource[i].path;
+            }
+            i++;
+          }
+        }
         localStorage.setItem('auth', access);
-        router.push('/dashboard/home');
+        router.push(path);
         if (isPlatform('capacitor')) {
           (window as any).location.reload(true);
         } else if (isPlatform('electron')) {
