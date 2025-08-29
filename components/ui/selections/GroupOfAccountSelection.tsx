@@ -9,6 +9,7 @@ import TableLoadingRow from '../forms/TableLoadingRow';
 import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
+import { Search01Icon } from 'hugeicons-react';
 
 type Option = {
   _id: string;
@@ -103,21 +104,24 @@ const GroupOfAccountSelection = <T extends FieldValues>({ groupOfAccountLabel, g
   return (
     <>
       <div className="text-end">
-        <IonButton onClick={handleOpen} fill="clear" className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0" strong>
+        <IonButton onClick={handleOpen} fill="clear" className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0 text-xs" strong>
+          <Search01Icon size={15} stroke='.8' className=' mr-1'/>
           Find
         </IonButton>
       </div>
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
             <SelectionHeader dismiss={dismiss} disabled={loading} title="Group of Account Selection" />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !p-2  border-2 !border-slate-100">
+        </IonHeader> */}
+        <div className="inner-content !p-6  border-2 !border-slate-100">
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Group of Account Selection" />
+
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">
               <div className="flex items-center min-w-20">
@@ -138,9 +142,11 @@ const GroupOfAccountSelection = <T extends FieldValues>({ groupOfAccountLabel, g
                   onClick={() => handleSearch(1)}
                   type="button"
                   fill="clear"
-                  className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                  className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md text-xs"
                   strong
                 >
+          <Search01Icon size={15} stroke='.8' className=' mr-1'/>
+
                   {loading ? 'Finding...' : 'Find'}
                 </IonButton>
               </div>

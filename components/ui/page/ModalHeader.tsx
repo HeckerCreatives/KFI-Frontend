@@ -11,19 +11,16 @@ type TProps = {
 
 const ModalHeader = ({ dismiss, title, sub, disabled = false }: TProps) => {
   return (
-    <div className=" bg-modalHeader bg-center h-12">
-      <div className="h-12 flex items-center justify-between bg-slate-900/40">
-        <div slot="start" className="h-12 grid place-items-center">
-          <div className="px-5 leading-3">
+    <div className=" bg-center h-fit">
+      <div className="h-fit flex items-start justify-between ">
+        <div className=" flex flex-col gap-1">
             {/* <span className="text-xs">{sub}</span> */}
-            <h6 className="font-semibold leading-5 m-0 text-lg">{title}</h6>
+            <p className="!font-semibold text-lg ">{title}</p>
+            <p className=" text-zinc-800 text-sm">{sub}</p>
           </div>
-        </div>
-        <div slot="end" className="h-12 grid place-items-center">
-          <IonButton disabled={disabled} onClick={dismiss} fill="clear" className="" color="light">
-            <IonIcon icon={closeSharp} size="medium" />
+          <IonButton disabled={disabled} onClick={dismiss} fill="clear" className=" h-fit " color='dark'>
+            <IonIcon icon={closeSharp} size="small" />
           </IonButton>
-        </div>
       </div>
     </div>
   );

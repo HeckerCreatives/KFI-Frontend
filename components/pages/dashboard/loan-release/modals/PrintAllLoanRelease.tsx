@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PrintExportFilterForm from '../components/PrintExportFilterForm';
+import { PrinterIcon } from 'hugeicons-react';
+
 
 export const loanReleaseFilterSchema = z.object({
   docNoFrom: z.string().optional().or(z.literal('')),
@@ -63,24 +65,27 @@ const PrintAllLoanRelease = () => {
   return (
     <>
       <IonButton fill="clear" id="print_all_loan_release" className="max-h-10 w-32 min-w-32 max-w-32 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-        Print All
+       <PrinterIcon stroke='.8' size={15} className=' mr-1'/> Print All
       </IonButton>
       <IonModal
         ref={modal}
         trigger={`print_all_loan_release`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:30rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Loan Release - Print All" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Loan Release - Print All" sub="Manage loan release documents." dismiss={dismiss} />
+
           <form onSubmit={form.handleSubmit(handlePrint)}>
             <PrintExportFilterForm form={form} loading={loading} />
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold">
+                <PrinterIcon size={20} stroke='.8' className=' mr-2'/>
                 {loading ? 'Printing Loan Release...' : 'Print Loan Release'}
               </IonButton>
             </div>

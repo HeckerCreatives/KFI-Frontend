@@ -91,7 +91,7 @@ const UpdateCenter = ({ center, setData }: { center: Center; setData: React.Disp
         id={`update-center-modal-${center._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff9a00] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-blue-50 text-blue-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={createSharp} className="text-xs" />
         <span>Edit</span>
@@ -100,18 +100,20 @@ const UpdateCenter = ({ center, setData }: { center: Center; setData: React.Disp
         ref={modal}
         trigger={`update-center-modal-${center._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Center - Edit Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Center - Edit Record" sub="Manage center records." dismiss={dismiss} />
+
           <div>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className=' mt-4'>
               <CenterForm form={form} loading={loading} />
-              <div className="text-end border-t mt-2 pt-1 space-x-2">
+              <div className="text-end mt-6 space-x-2">
                 <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   Save
                 </IonButton>

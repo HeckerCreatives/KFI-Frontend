@@ -26,7 +26,7 @@ const ViewLoanCodes = ({ loan }: { loan: Loan }) => {
         id={`view-loan-code-${loan._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-44 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-40 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={eye} className="text-xs" />
         <span>View Loan Codes</span>
@@ -35,14 +35,16 @@ const ViewLoanCodes = ({ loan }: { loan: Loan }) => {
         ref={modal}
         trigger={`view-loan-code-${loan._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%]"
+        className=" [--border-radius:0.7rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:70%] lg:[--width:70%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title={`Product - ${loan.code} - View Loan Code Record`} sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader title={`Product - ${loan.code} - View Loan Code Record`} sub="Manage product records." dismiss={dismiss} />
+
           <div className="mt-2">
             <div className="relative overflow-auto">
               <Table>

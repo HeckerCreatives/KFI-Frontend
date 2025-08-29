@@ -15,7 +15,7 @@ const CenterForm = ({ form, loading }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
-        <IonCol size="6" className="space-y-2">
+        <IonCol size="12" sizeMd='6' className="space-y-2">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -47,13 +47,13 @@ const CenterForm = ({ form, loading }: TForm) => {
               clearErrors={form.clearErrors}
               label="Description"
               placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
+              className="!px-2 !py-2 rounded-md text-xs "
               disabled={loading}
-              labelClassNames="truncate !text-slate-600 min-w-28 !text-sm text-end"
+              labelClassNames="truncate !text-slate-600  !text-sm text-end"
             />
           </FormIonItem>
         </IonCol>
-        <IonCol size="6" className="space-y-2">
+        <IonCol size="12" sizeMd='6' className="space-y-2">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -86,8 +86,8 @@ const CenterForm = ({ form, loading }: TForm) => {
               clearErrors={form.clearErrors}
               label="Location"
               placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-              labelClassNames="truncate !text-slate-600 min-w-28 !text-sm text-end"
+              className="!px-2 !py-2 rounded-md flex-1 text-xs"
+              labelClassNames="truncate !text-slate-600 !text-sm text-end"
             />
           </FormIonItem>
         </IonCol>

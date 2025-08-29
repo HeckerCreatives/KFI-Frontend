@@ -20,9 +20,9 @@ const UpdateLoanCodes = ({ loan, setData }: UpdateLoanCodesProps) => {
           <Table>
             <TableHeader>
               <TableHeadRow className="border-b-0 bg-slate-100">
-                <TableHead>Module</TableHead>
-                <TableHead>Loan Type</TableHead>
-                <TableHead>Account Code</TableHead>
+                <TableHead className=' !min-w-[15rem]'>Module</TableHead>
+                <TableHead className=' !min-w-[15rem]'>Loan Type</TableHead>
+                <TableHead className=' !min-w-[15rem]'>Account Code</TableHead>
                 <TableHead className="max-w-10">Sort Order</TableHead>
                 <TableHead className="text-center max-w-10">Actions</TableHead>
               </TableHeadRow>

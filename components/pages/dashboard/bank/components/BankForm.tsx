@@ -36,7 +36,7 @@ const BankForm = ({ form, loading }: TForm) => {
               clearErrors={form.clearErrors}
               label="Description"
               placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
+              className="!px-2 !py-2 rounded-md text-xs"
               labelClassNames="!text-slate-600 truncate min-w-20 !text-sm text-end"
             />
           </FormIonItem>

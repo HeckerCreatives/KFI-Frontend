@@ -4,6 +4,7 @@ import InputText from '../../../../ui/forms/InputText';
 import { IonButton } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
+import { Search01Icon } from 'hugeicons-react';
 
 type TSearch = {
   code: string;
@@ -47,7 +48,7 @@ const ActionLogFilter = ({ getActions }: ActionLogFilterProps) => {
                 { label: 'Username A - Z', value: 'username-asc' },
                 { label: 'Username Z - A', value: 'username-desc' },
               ]}
-              className="!border-orange-500 rounded-md !w-full !py-1.5"
+              className="!border-orange-500 rounded-md !w-full !py-1.5 max-w-[12rem]"
             />
           </FormIonItem>
           <div className="flex items-center min-w-20">
@@ -61,7 +62,8 @@ const ActionLogFilter = ({ getActions }: ActionLogFilterProps) => {
                 className="!px-3 !py-0.5 !min-h-[1rem] rounded-md !border-orange-500"
               />
             </FormIonItem>
-            <IonButton type="submit" fill="clear" className="max-h-10 min-h-[2.3rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+            <IonButton type="submit" fill="clear" className="max-h-10 min-h-[2.3rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md text-xs" strong>
+              <Search01Icon size={15} stroke='.8' className=' mr-1'/>
               Search
             </IonButton>
           </div>

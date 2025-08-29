@@ -127,7 +127,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData }: UpdateAcknowledgeme
         onClick={() => setIsOpen(true)}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff9a00] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-blue-50 text-blue-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={createSharp} className="text-xs" />
         <span>Edit</span>
@@ -135,14 +135,16 @@ const UpdateAcknowledgement = ({ acknowledgement, setData }: UpdateAcknowledgeme
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:74rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Official Receipt - Edit Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content h-screen !px-0 flex flex-col">
+        </IonHeader> */}
+        <div className="inner-content max-h-[90%] h-full !p-6 flex flex-col">
+            <ModalHeader title="Official Receipt - Edit Record" sub="Manage official reciept." dismiss={dismiss} />
+
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div>
               <AcknowledgementForm form={form} loading={loading} />

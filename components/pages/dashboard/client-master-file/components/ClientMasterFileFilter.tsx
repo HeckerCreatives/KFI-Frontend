@@ -33,10 +33,10 @@ const ClientMasterFileFilter = ({ getClients }: ClientMasterFileFilterProps) => 
   return (
     <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center justify-between ">
       <div className="w-full flex-1 md:flex-none">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap justify-end gap-2">
-          <FormIonItem className="w-full max-w-72 min-w-20">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
+          <FormIonItem className=" min-w-44 ">
             <InputSelect
-              label="Sort By"
+              // label="Sort By"
               name="sort"
               showLabel={false}
               placeholder="Sort By"
@@ -49,7 +49,7 @@ const ClientMasterFileFilter = ({ getClients }: ClientMasterFileFilterProps) => 
                 { label: 'Name A - Z', value: 'name-asc' },
                 { label: 'Name Z - A', value: 'name-desc' },
               ]}
-              className="!border-orange-500 rounded-md !w-full !py-1.5"
+              className="!border-orange-500 rounded-md !min-w-20 !py-1"
             />
           </FormIonItem>
           <div className="flex items-center min-w-20">

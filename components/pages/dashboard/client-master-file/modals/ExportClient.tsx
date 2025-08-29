@@ -4,6 +4,7 @@ import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { ClientMasterFile } from '../../../../../types/types';
 import { download, print } from 'ionicons/icons';
+import { FileExportIcon } from 'hugeicons-react';
 
 const ExportClient = ({ client }: { client: ClientMasterFile }) => {
   const [present] = useIonToast();
@@ -49,7 +50,7 @@ const ExportClient = ({ client }: { client: ClientMasterFile }) => {
         type="button"
         fill="clear"
         id={`export_client_${client._id}`}
-        className="space-x-1 w-20 h-6 rounded-lg ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff8848] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 w-20 h-7 rounded-md ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-pink-50 text-pink-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={download} className="text-xs" />
         <span>Export</span>
@@ -58,23 +59,46 @@ const ExportClient = ({ client }: { client: ClientMasterFile }) => {
         ref={modal}
         trigger={`export_client_${client._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:24rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Client - Export" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Client - Export" sub="Manage client documents." dismiss={dismiss} />
+
           <div></div>
-          <div className="text-end border-t mt-2 pt-1 space-x-2">
+          <div className="text-end mt-4 space-x-2">
             <div className="text-center">
-              <IonButton disabled={loading} onClick={handlePrintClientProfile} fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md max-w-[70%] font-semibold">
-                {loading ? 'Printing Client Profile...' : 'Client Profile'}
+              <IonButton disabled={loading} onClick={handlePrintClientProfile} fill="clear" className="w-full bg-zinc-50 rounded-lg">
+                {/* {loading ? 'Printing Client Profile...' : 'Client Profile'} */}
+                <div className=' flex items-center justify-center gap-2 bg-zinc-50 !border-zinc-300 !border-1 p-3 w-full rounded-md'>
+                  <div className=' p-2 bg-green-100 rounded-md flex items-center text-green-800'>
+                    <FileExportIcon size={20} stroke='.8' className=' '/>
+                  </div>
+                  <div className=' flex flex-col !text-sm !text-black !font-medium capitalize text-start'>
+                    {loading ? 'Exporting Client Profiles...' : 'Client Profiles'}
+                    <p className=' text-xs text-zinc-500 capitalize'>Spreadsheet Format</p>
+
+                  </div>
+                </div>
               </IonButton>
-              <IonButton fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md max-w-[70%] font-semibold">
+              <IonButton fill="clear" className="w-full bg-zinc-50 rounded-lg">
                 {/* {loading ? 'Printing Statement of Account...' : 'Statement of Account'} */}
-                Statement of Account
+               
+
+                 <div className=' flex items-center justify-center gap-2 bg-zinc-50 !border-zinc-300 !border-1 p-3 w-full rounded-md'>
+                  <div className=' p-2 bg-red-100 rounded-md flex items-center text-red-500'>
+                    <FileExportIcon size={20} stroke='.8' className=' '/>
+                  </div>
+                  <div className=' flex flex-col !text-sm !text-black !font-medium capitalize text-start'>
+                    {loading ? 'Exporting  Statement of Account...' : ' Statement of Account'}
+                    <p className=' text-xs text-zinc-500 capitalize'>Spreadsheet Format</p>
+
+                  </div>
+                </div>
               </IonButton>
             </div>
           </div>

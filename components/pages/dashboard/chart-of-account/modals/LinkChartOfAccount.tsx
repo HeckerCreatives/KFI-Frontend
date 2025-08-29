@@ -85,7 +85,7 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
         id={`update-coa-modal-${chartAccount._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-48 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-48 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={link} className="text-xs" />
         <span>Link to Group Account</span>
@@ -94,15 +94,17 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
         ref={modal}
         trigger={`update-coa-modal-${chartAccount._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Chart of Account - Link to Group Account" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
-          <div className="space-y-3">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Chart of Account - Link to Group Account" sub="System" dismiss={dismiss} />
+
+          <div className="space-y-3 mt-4">
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-2">
               <ChartOfAccountCard label="Account Code" value={chartAccount.code} labelClassName="min-w-24 text-end" />
               <ChartOfAccountCard label="Description" value={chartAccount.description} labelClassName="min-w-24 text-end" />
@@ -130,7 +132,7 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
                   <GroupOfAccountSelection groupOfAccountLabel="groupAccountLabel" groupOfAccountValue="groupAccount" setValue={form.setValue} clearErrors={form.clearErrors} />
                 </div>
               </div>
-              <div className="text-end border-t mt-2 pt-1 space-x-2">
+              <div className="text-end mt-6 space-x-2">
                 <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   {loading ? 'Linking...' : 'Link'}
                 </IonButton>

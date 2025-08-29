@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import PrintExportFilterForm from '../../components/PrintExportFilterForm';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FileExportIcon, Search01Icon } from 'hugeicons-react';
 
 export const damayanFundFilterSchema = z.object({
   docNoFrom: z.string().optional().or(z.literal('')),
@@ -62,24 +63,30 @@ const ExportAllDamayanFund = () => {
   return (
     <>
       <IonButton fill="clear" id="export_all_damayan_fund" className="max-h-10 w-32 min-w-32 max-w-32 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        <FileExportIcon size={15} stroke='.8' className=' mr-1'/>
+
         Export All
       </IonButton>
       <IonModal
         ref={modal}
         trigger={`export_all_damayan_fund`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Damayan Fund - Export All" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
-          <form onSubmit={form.handleSubmit(handlePrint)}>
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+          <ModalHeader disabled={loading} title="Damayan Fund - Export All" sub="Manage damayan fund records." dismiss={dismiss} />
+          
+          <form onSubmit={form.handleSubmit(handlePrint)} className=' mt-4'>
             <PrintExportFilterForm form={form} loading={loading} />
             <div className="mt-3">
-              <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold">
+              <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
+                
+                <FileExportIcon size={15} stroke='.8' className=' mr-1'/>
                 {loading ? 'Exporting Damayan Fund...' : 'Export Damayan Fund'}
               </IonButton>
             </div>

@@ -67,18 +67,20 @@ const CreateGroupAccount = ({ getGroupAccounts }: CreateGroupAccount) => {
         ref={modal}
         trigger="create-group-account-modal"
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Group Account - Add Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Group Account - Add Record" sub="Manage group account records." dismiss={dismiss} />
+
           <div>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <GroupAccountForm form={form} loading={loading} />
-              <div className="text-end border-t mt-2 pt-1 space-x-2">
+              <div className="text-end mt-6 space-x-2">
                 <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   {loading ? 'Saving...' : 'Save'}
                 </IonButton>

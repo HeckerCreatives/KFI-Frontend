@@ -71,7 +71,7 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
       <IonButton
         fill="clear"
         id={`update-password-modal-${user._id}`}
-        className="space-x-1 rounded-lg w-40 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff9a00] text-slate-700 capitalize min-h-4 px-2 py-1 text-xs"
+        className="space-x-1 rounded-md w-44 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-blue-50 text-blue-900 capitalize text-xs"
       >
         <IonIcon icon={documentLockSharp} className="text-xs" />
         <span>Change Password</span>
@@ -80,18 +80,20 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
         ref={modal}
         trigger={`update-password-modal-${user._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%]"
+        className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:36rem] rounded-xl"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Admin - Change Password" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Admin - Change Password" sub="Manage user password." dismiss={dismiss} />
+
           <div>
-            <h6 className="font-bold">
+            <p className="!font-medium my-4">
               Change Password for <span className="text-orange-600">{user.username}</span>
-            </h6>
+            </p>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
               <FormIonItem>
                 <InputPassword
@@ -120,7 +122,7 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
                 />
               </FormIonItem>
               {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
-              <div className="text-end border-t pt-1 space-x-2">
+              <div className="text-end !mt-6 space-x-2">
                 <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   {loading ? 'Saving...' : 'Save'}
                 </IonButton>

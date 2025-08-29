@@ -26,7 +26,7 @@ const ViewBank = ({ bank }: { bank: Bank }) => {
         id={`view-bank-modal-${bank._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={eye} className="text-xs" />
         <span>View</span>
@@ -35,21 +35,23 @@ const ViewBank = ({ bank }: { bank: Bank }) => {
         ref={modal}
         trigger={`view-bank-modal-${bank._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Bank - View Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content space-y-2">
-          <div className="w-full flex items-start gap-2 text-slate-600">
-            <div className={classNames('text-slate-600 text-[0.85rem]  font-semibold truncate w-fit min-w-20 text-end')}>Code</div>
-            <div className={classNames('border border-slate-400 min-h-8 text-[0.7rem] py-0 px-3 text-sm flex items-center flex-1 rounded-md capitalize')}>{bank.code}</div>
+        </IonHeader> */}
+        <div className="inner-content !p-6 space-y-2">
+            <ModalHeader title="Bank - View Record" sub="Manage bank records." dismiss={dismiss} />
+
+          <div className="w-full flex items-start gap-2 text-slate-600 !mt-4">
+            <div className={classNames(' text-black text-[0.85rem]  font-semibold truncate w-fit min-w-20 text-end')}>Code</div>
+            <div className={classNames('border text-black border-slate-200 min-h-8 text-[0.7rem] py-0 px-3 text-sm flex items-center flex-1 rounded-md capitalize')}>{bank.code}</div>
           </div>
           <div className="w-full flex items-start gap-2 text-slate-600">
-            <div className={classNames('text-slate-600 text-[0.85rem]  font-semibold truncate w-fit min-w-20 text-end')}>Description</div>
-            <div className={classNames('border border-slate-400 min-h-8 text-[0.7rem] py-0 px-3 text-sm flex items-center flex-1 rounded-md capitalize')}>{bank.description}</div>
+            <div className={classNames(' text-black text-[0.85rem]  font-semibold truncate w-fit min-w-20 text-end')}>Description</div>
+            <div className={classNames('border text-black border-slate-200 min-h-8 text-[0.7rem] py-0 px-3 text-sm flex items-center flex-1 rounded-md capitalize')}>{bank.description}</div>
           </div>
         </div>
       </IonModal>

@@ -8,6 +8,8 @@ import { formatNumber } from '../../../../ui/utils/formatNumber';
 import UserIcon from '../../../../ui/icons/UserIcon';
 import HashIcon from '../../../../ui/icons/HashIcon';
 import CalculatorIcon from '../../../../ui/icons/CalculatorIcon';
+import { ViewIcon} from 'hugeicons-react';
+
 
 const ViewLoanDetails = ({ loan }: { loan: Member }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,18 +24,20 @@ const ViewLoanDetails = ({ loan }: { loan: Member }) => {
         onClick={() => setIsOpen(true)}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg h-6 w-16 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-lg w-16 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-orange-50 text-orange-700 capitalize text-xs"
       >
-        <IonIcon icon={eye} className="text-xs" />
+        <ViewIcon size={15} stroke='.8' className="text-xs" />
         &nbsp;View
       </IonButton>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className=" [--border-radius:0.35rem] auto-height md:[--max-width:50rem] lg:[--max-width:50rem] lg:[--width:50rem]">
-        <IonHeader>
+      <IonModal isOpen={isOpen} backdropDismiss={false} className=" [--border-radius:0.7rem] auto-height [--max-width:50rem] [--width:95%]">
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Loan Details" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader title="Loan Details" sub="" dismiss={dismiss} />
+
           <div>
             <div className=" p-2 rounded-md">
               <h6 className="text-[0.9rem] px-2 m-0  text-slate-600 flex items-center gap-1">

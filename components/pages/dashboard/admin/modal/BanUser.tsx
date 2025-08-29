@@ -76,25 +76,33 @@ const BanUser = ({ selected, setSelected, refetch, banned, active }: BanUserProp
   return (
     <>
       <div className="text-end">
-        <IonButton onClick={handleOpen} fill="clear" className="max-h-10 min-h-6 bg-red-600 text-white capitalize font-semibold rounded-md" strong>
+        {/* <IonButton onClick={handleOpen} fill="clear" className="max-h-10 min-h-6 bg-red-600 text-white capitalize font-semibold rounded-md" strong>
           <IonIcon icon={ban} className="text-sm" />
           &nbsp;Ban({banned}) / Activate({active})
+        </IonButton> */}
+
+        <IonButton onClick={handleOpen} fill="clear" className="max-h-10 min-h-6 bg-red-600 text-white capitalize font-semibold rounded-md" strong>
+          <IonIcon icon={ban} className="text-sm" />
+          &nbsp;Ban / Activate
         </IonButton>
       </div>
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:35rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:35rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="User - Ban / Activate Users" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
-          <div className="p-3">
-            <p className="text-lg">Are you sure, you want to ban/active this user?</p>
-            <p className="text-sm">This action cannot be undone. This will permanently ban the user account.</p>
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+
+            <ModalHeader disabled={loading} title="User - Ban / Activate Users" sub="Manage user account." dismiss={dismiss} />
+
+          <div className=" mt-6">
+            <p className="text-sm">Are you sure, you want to ban/active this user?</p>
+            <p className="text-xs text-zinc-500">This action cannot be undone. This will permanently ban the user account.</p>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormIonItem className="w-full max-w-72 min-w-20 mt-3">
                 <InputSelect
@@ -111,7 +119,7 @@ const BanUser = ({ selected, setSelected, refetch, banned, active }: BanUserProp
                   disabled={loading}
                 />
               </FormIonItem>
-              <div className="text-end border-t mt-2 pt-1 space-x-2">
+              <div className="text-end mt-6 space-x-2">
                 <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                   {loading ? 'Banning...' : 'Yes'}
                 </IonButton>

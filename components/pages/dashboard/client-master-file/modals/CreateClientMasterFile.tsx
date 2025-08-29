@@ -88,20 +88,22 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
         ref={modal}
         trigger="create-cmf-modal"
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" ![--border-radius:.7rem] auto-height [--max-width:84rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Client - Add Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !px-0">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Client - Add Record" sub="Enter client deatils below." dismiss={dismiss} />
+
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div>
+            <div className=' mt-4'>
               <CMFPersonalForm form={form} loading={loading} />
               {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
             </div>
-            <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
+            <div className="text-end !mt-8 space-x-2 px-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                 {loading ? 'Saving...' : 'Save'}
               </IonButton>

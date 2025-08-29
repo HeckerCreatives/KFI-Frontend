@@ -13,6 +13,7 @@ import { TClientMasterFile } from '../ClientMasterFile';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { createSharp } from 'ionicons/icons';
 import { jwtDecode } from 'jwt-decode';
+import classNames from 'classnames';
 
 type UpdateClientMasterFileProps = {
   client: ClientMasterFile;
@@ -141,7 +142,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         type="button"
         id={`update-cmf-modal-${client._id}`}
         fill="clear"
-        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff9a00] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-blue-50 text-blue-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={createSharp} className="text-xs" />
         <span>Edit</span>
@@ -150,14 +151,14 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         ref={modal}
         trigger={`update-cmf-modal-${client._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:74rem] [--width:100%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Client - Edit Record" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !px-0">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
           {/* <div className="px-2 text-end">
             {canDoAction(token.role, token.permissions, 'clients', 'visible') && (
               <>
@@ -166,10 +167,13 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
               </>
             )}
           </div> */}
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <ModalHeader disabled={loading} title="Client - Edit Record" sub="Manage client record." dismiss={dismiss} />
+
+
+          <form onSubmit={form.handleSubmit(onSubmit) }>
             <CMFPersonalForm form={form} loading={loading} />
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
-            <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
+            <div className="text-end mt-8 space-x-2 px-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                 {loading ? 'Saving...' : 'Save'}
               </IonButton>

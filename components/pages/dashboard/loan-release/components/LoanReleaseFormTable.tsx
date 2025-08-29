@@ -96,7 +96,7 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
               <TableHead>Line</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>
-              <TableHead className="min-w-40 max-w-40 sticky left-0">Acct. Code</TableHead>
+              <TableHead className="min-w-48  sticky left-0">Acct. Code</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Debit</TableHead>
               <TableHead>Credit</TableHead>

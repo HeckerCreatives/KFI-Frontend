@@ -7,7 +7,7 @@ import UserTableRow from '../UserTableRow';
 const DiagnosticsPermission = ({ permissions, setPermissions }: { permissions: Permission[]; setPermissions: React.Dispatch<React.SetStateAction<Permission[]>> }) => {
   return (
     <div>
-      <h6 className="font-semibold m-0 mt-2">Diagnostics</h6>
+      <h6 className="!font-medium m-0 mt-2">Diagnostics</h6>
       <div className="relative overflow-auto">
         <Table>
           <TableHeader>

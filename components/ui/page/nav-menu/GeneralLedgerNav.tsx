@@ -7,6 +7,8 @@ import WithChildNav from './WithChildNav';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
+import { CollectionsBookmarkIcon  } from 'hugeicons-react';
+
 
 const GeneralLedgerNav = () => {
   const pathname = usePathname();
@@ -24,13 +26,14 @@ const GeneralLedgerNav = () => {
       <IonButton
         fill="clear"
         className={classNames(
-          'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-lg [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+          'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1 [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
           isOpen && '!font-semibold',
           fileLinks.map(link => link.path).includes(pathname) ? 'bg-orange-600 text-white' : 'bg-transparent',
         )}
         id="general-ledgers"
         onClick={() => setIsOpen(true)}
       >
+        <CollectionsBookmarkIcon size={15} stroke='.8' className=' mr-1 mb-1' />
         General Ledgers&nbsp;
         <IonIcon icon={chevronDownOutline} className="text-xs" />
       </IonButton>

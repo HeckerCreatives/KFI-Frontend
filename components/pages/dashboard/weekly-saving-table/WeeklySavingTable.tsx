@@ -80,23 +80,24 @@ const WeeklySavingTable = () => {
   });
 
   return (
-    <IonPage className="">
-      <IonContent className="[--background:#F1F1F1]" fullscreen>
-        <div className="h-full flex flex-col items-stretch justify-start">
+    <IonPage className="w-full flex items-center justify-center h-full bg-zinc-100">
+      <IonContent className="[--background:#F1F1F1] max-w-[1920px] h-full" fullscreen>
+        <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
           <div>
             <PageTitle pages={['System', 'Weekly Savings']} />
           </div>
           <div className="px-3 pb-3 flex-1">
-            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
-              <div>
-                {canDoAction(token.role, token.permissions, 'weekly savings', 'print') && <PrintAllWeeklySavingsTable />}
-                {canDoAction(token.role, token.permissions, 'weekly savings', 'export') && <ExportAllWeeklySavingsTable />}
-              </div>
-              <WeeklySavingTableFilter getWeeklySavings={getWeeklySavings} />
-            </div>
+            
 
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
-              <div className="relative overflow-auto rounded-xl">
+              <div className="flex flex-col lg:flex-row items-start justify-start gap-3 ">
+                <div className=' flex flex-wrap'>
+                  {canDoAction(token.role, token.permissions, 'weekly savings', 'print') && <PrintAllWeeklySavingsTable />}
+                  {canDoAction(token.role, token.permissions, 'weekly savings', 'export') && <ExportAllWeeklySavingsTable />}
+                </div>
+                <WeeklySavingTableFilter getWeeklySavings={getWeeklySavings} />
+              </div>
+              <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>

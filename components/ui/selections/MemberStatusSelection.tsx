@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import TableLoadingRow from '../forms/TableLoadingRow';
 import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
+import { Search01Icon } from 'hugeicons-react';
 
 type Option = {
   label: string;
@@ -52,22 +53,26 @@ const MemberStatusSelection = <T extends FieldValues>({ memberStatusLabel, membe
 
   return (
     <>
-      <IonButton onClick={handleOpen} fill="clear" className={classNames('max-h-9 min-h-9 btn-color text-white capitalize font-semibold !m-0 rounded-md', className)} strong>
+      <IonButton onClick={handleOpen} fill="clear" className={classNames('max-h-9 min-h-9 btn-color text-white capitalize font-semibold !m-0 rounded-md text-xs', className)} strong>
+        <Search01Icon size={15} stroke='.8' className=' mr-1'/>
         Find
       </IonButton>
 
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" ![--border-radius:1rem] auto-height [--max-width:32rem] [--width:100%] "
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
             <SelectionHeader dismiss={dismiss} disabled={loading} title="Member Status Selection" />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !p-2  border-2 !border-slate-400">
-          <div className="relative overflow-auto">
+        </IonHeader> */}
+        <div className="inner-content !p-6  border-2 !border-slate-400">
+
+          <SelectionHeader dismiss={dismiss} disabled={loading} title="Member Status Selection" />
+
+          <div className="relative overflow-auto mt-2">
             <Table>
               <TableHeader>
                 <TableHeadRow className="border-b-0 bg-slate-100">

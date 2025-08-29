@@ -4,6 +4,7 @@ import { cashSharp, peopleSharp, personAddSharp, personRemoveSharp } from 'ionic
 import kfiAxios from '../../../../utils/axios';
 import { useIonViewWillEnter } from '@ionic/react';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
+import { UserMultiple02Icon, Wallet03Icon, UserMinus01Icon} from 'hugeicons-react';
 
 const CardStatistics = () => {
   const [loading, setLoading] = useState(false);
@@ -31,12 +32,12 @@ const CardStatistics = () => {
   });
 
   return (
-    <div className="overflow-auto py-2">
-      <div className="flex flex-nowrap items-center justify-around gap-2">
-        <DashboardCard title="Total Members" value={`${data.totalMembers}`} icon={peopleSharp} loading={loading} />
-        <DashboardCard title="Total Active Members" value={`${data.totalActiveMembers}`} icon={personAddSharp} loading={loading} />
-        <DashboardCard title="Total Inactive Members" value={`${data.totalInactiveMembers}`} icon={personRemoveSharp} loading={loading} />
-        <DashboardCard title="Total Loan Amount" value={`${formatNumber(data.totalLoan)}`} icon={cashSharp} loading={loading} />
+    <div className="overflow-auto">
+      <div className="flex flex-nowrap items-center justify-around gap-4">
+        <DashboardCard title="Total Members" value={`${data.totalMembers}`} icon={<UserMultiple02Icon stroke='.8' size={20}/>} loading={loading} />
+        <DashboardCard title="Total Active Members" value={`${data.totalActiveMembers}`} icon={<UserMultiple02Icon stroke='.8' size={20}/>} loading={loading} />
+        <DashboardCard title="Total Inactive Members" value={`${data.totalInactiveMembers}`} icon={<UserMinus01Icon stroke='.8' size={20}/>} loading={loading} />
+        <DashboardCard title="Total Loan Amount" value={`${formatNumber(data.totalLoan)}`} icon={<Wallet03Icon stroke='.8' size={20}/>} loading={loading} />
       </div>
     </div>
   );

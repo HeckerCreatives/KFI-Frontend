@@ -60,15 +60,15 @@ const CreateLoanCodeForm = ({ productId, setData }: CreateLoanCodeFormProps) => 
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2 items-center mb-2">
-      <FormIonItem className="flex-1">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2 items-center !flex-wrap mb-2">
+      <FormIonItem className="flex-1 !min-w-32">
         <InputSelect
           disabled={loading}
           name={`module`}
           control={form.control}
           clearErrors={form.clearErrors}
           placeholder="Type here"
-          className="!px-2 !py-2 rounded-md"
+          className="!px-2 !py-2 rounded-md !min-w-32"
           options={[
             { label: 'LR - Loan Release', value: 'LR' },
             { label: 'OR - Official Receipt', value: 'OR' },
@@ -76,14 +76,14 @@ const CreateLoanCodeForm = ({ productId, setData }: CreateLoanCodeFormProps) => 
         />
       </FormIonItem>
 
-      <FormIonItem className="flex-1">
+      <FormIonItem className="flex-1 !min-w-32">
         <InputSelect
           disabled={loading}
           name={`loanType`}
           control={form.control}
           clearErrors={form.clearErrors}
           placeholder="Loan type"
-          className="!px-2 !py-2 rounded-md w-[10rem]"
+          className="!px-2 !py-2 rounded-md !min-w-32"
           options={[
             { label: 'OTHER ( For LR )', value: 'OTHER' },
             { label: 'EDUC - Educational ( For LR & OR )', value: 'EDUC' },
@@ -94,7 +94,7 @@ const CreateLoanCodeForm = ({ productId, setData }: CreateLoanCodeFormProps) => 
         />
       </FormIonItem>
 
-      <div className="flex items-center justify-start gap-1 flex-1">
+      <div className="flex items-center justify-start gap-1 flex-wrap">
         <FormIonItem className="flex-1">
           <InputText
             disabled={loading}

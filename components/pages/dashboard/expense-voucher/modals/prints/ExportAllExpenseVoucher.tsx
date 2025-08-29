@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import PrintExportFilterForm from '../../components/PrintExportFilterForm';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FileExportIcon } from 'hugeicons-react';
+
 
 export const expenseVoucherFilterSchema = z.object({
   docNoFrom: z.string().optional().or(z.literal('')),
@@ -67,24 +69,28 @@ const ExportAllExpenseVoucher = () => {
         className="max-h-10 w-32 min-w-32 max-w-32 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
         strong
       >
+        <FileExportIcon stroke='.8' size={15} className=' mr-2'/>
         Export All
       </IonButton>
       <IonModal
         ref={modal}
         trigger={`export_all_expense_voucher`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:40%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Expense Voucher - Export All" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Expense Voucher - Export All" sub="Manage expense voucher documents." dismiss={dismiss} />
+
           <form onSubmit={form.handleSubmit(handlePrint)}>
             <PrintExportFilterForm form={form} loading={loading} />
             <div className="mt-3">
-              <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold">
+              <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
+                <FileExportIcon size={15} stroke='.8' className=' mr-1'/>
                 {loading ? 'Exporting Expense Voucher...' : 'Export Expense Voucher'}
               </IonButton>
             </div>

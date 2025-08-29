@@ -78,9 +78,43 @@ const RecentMembers = () => {
   }, []);
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="relative overflow-auto flex-1">
+     <div className="relative max-h-[500px] h-full flex flex-col !rounded-xl">
+       <div className=' w-full absolute top-0 z-[9999]'>
         <Table>
+          <TableHeader>
+            <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
+              <TableHead className="  !font-[600] bg-zinc-100">Name</TableHead>
+              <TableHead className="  !font-[600] bg-zinc-100">Center</TableHead>
+              <TableHead className="   !font-[600] bg-zinc-100">Actions</TableHead>
+            </TableHeadRow>
+           
+          </TableHeader>
+           <TableBody
+                style={{ visibility: 'collapse' }}
+            
+            >
+            {data.loading && <TableLoadingRow colspan={3} />}
+            {!data.loading && data.clients.length < 1 && <TableNoRows label="No Recent Member Found" colspan={3} />}
+            {!data.loading &&
+              data.clients.length > 0 &&
+              data.clients.map((client: Member, i: number) => (
+                <TableRow key={`${client.name}-${i}`} className="!border-0  [&>td]:text-[0.8rem]">
+                  <TableCell className="">{client.name}</TableCell>
+                  <TableCell className="">
+                    {client.center.centerNo} - {client.center.description}
+                  </TableCell>
+                  <TableCell className="">
+                    <ViewRecentMember member={client} />
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+         
+        </Table>
+      </div>
+     <div className="relative max-h-[500px] overflow-auto flex-1 !rounded-xl ">
+     
+      <Table>
           <TableHeader>
             <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
               <TableHead className=" text-orange-700 !font-[600]">Name</TableHead>
@@ -94,20 +128,51 @@ const RecentMembers = () => {
             {!data.loading &&
               data.clients.length > 0 &&
               data.clients.map((client: Member, i: number) => (
-                <TableRow key={`${client.name}-${i}`} className="!border-0 odd:bg-orange-50 [&>td]:text-[0.8rem]">
+                <TableRow key={`${client.name}-${i}`} className="!border-0  [&>td]:text-[0.8rem]">
                   <TableCell className="">{client.name}</TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="">
                     {client.center.centerNo} - {client.center.description}
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="">
                     <ViewRecentMember member={client} />
                   </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
-      </div>
     </div>
+
+    </div>
+    // <div className="h-full flex flex-col">
+    //   <div className="relative overflow-auto flex-1">
+    //     <Table>
+    //       <TableHeader>
+    //         <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
+    //           <TableHead className=" text-orange-700 !font-[600]">Name</TableHead>
+    //           <TableHead className="text-center  text-orange-700 !font-[600]">Center</TableHead>
+    //           <TableHead className="text-center  text-orange-700 !font-[600]">Actions</TableHead>
+    //         </TableHeadRow>
+    //       </TableHeader>
+    //       <TableBody>
+    //         {data.loading && <TableLoadingRow colspan={3} />}
+    //         {!data.loading && data.clients.length < 1 && <TableNoRows label="No Recent Member Found" colspan={3} />}
+    //         {!data.loading &&
+    //           data.clients.length > 0 &&
+    //           data.clients.map((client: Member, i: number) => (
+    //             <TableRow key={`${client.name}-${i}`} className="!border-0 odd:bg-orange-50 [&>td]:text-[0.8rem]">
+    //               <TableCell className="">{client.name}</TableCell>
+    //               <TableCell className="text-center">
+    //                 {client.center.centerNo} - {client.center.description}
+    //               </TableCell>
+    //               <TableCell className="text-center">
+    //                 <ViewRecentMember member={client} />
+    //               </TableCell>
+    //             </TableRow>
+    //           ))}
+    //       </TableBody>
+    //     </Table>
+    //   </div>
+    // </div>
   );
 };
 

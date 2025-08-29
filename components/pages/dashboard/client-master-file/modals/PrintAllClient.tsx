@@ -2,6 +2,8 @@ import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/
 import React, { useRef, useState } from 'react';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
+import { PrinterIcon } from 'hugeicons-react';
+
 
 const PrintAllClient = () => {
   const [present] = useIonToast();
@@ -34,25 +36,37 @@ const PrintAllClient = () => {
   return (
     <>
       <IonButton fill="clear" id="print_all_client" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-        Print
+       <PrinterIcon stroke='.8' size={15} className=' mr-2'/> Print
       </IonButton>
       <IonModal
         ref={modal}
         trigger={`print_all_client`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:24rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Client - Print All" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Client - Print All" sub="Print client details." dismiss={dismiss} />
+
           <div></div>
-          <div className="text-end border-t mt-2 pt-1 space-x-2">
+          <div className="text-end mt-4 space-x-2">
             <div className="text-center">
-              <IonButton disabled={loading} onClick={handlePrintClientProfile} fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md max-w-[70%] font-semibold">
-                {loading ? 'Printing Client Profile...' : 'Client Profile'}
+              <IonButton disabled={loading} onClick={handlePrintClientProfile} fill="clear" className="w-full bg-zinc-50 rounded-lg ">
+                <div className=' flex items-center justify-center gap-2 bg-zinc-50 !border-zinc-300 !border-1 p-3 w-full rounded-md'>
+                  <div className=' p-2 bg-green-100 rounded-md flex items-center text-green-800'>
+                    <PrinterIcon size={20} stroke='.8' className=' '/>
+                  </div>
+                  <div className=' flex flex-col !text-sm !text-black !font-medium capitalize text-start'>
+                    {loading ? 'Printing Client Profiles...' : 'Client Profiles'}
+                    <p className=' text-xs text-zinc-500 capitalize'>Portable Document Format</p>
+
+                  </div>
+                </div>
+                {/* {loading ? 'Printing Client Profile...' : 'Client Profile'} */}
               </IonButton>
             </div>
           </div>

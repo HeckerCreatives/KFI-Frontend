@@ -7,6 +7,8 @@ import WithChildNav from './WithChildNav';
 import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
+import { Task02Icon  } from 'hugeicons-react';
+
 
 const TransactionNav = () => {
   const pathname = usePathname();
@@ -42,7 +44,7 @@ const TransactionNav = () => {
       <IonButton
         fill="clear"
         className={classNames(
-          'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-lg [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+          'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1 [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
           isOpen && '!font-semibold',
           fileLinks
             .map(link => (link.children ? link.children.map(child => child.path) : link.path))
@@ -54,6 +56,7 @@ const TransactionNav = () => {
         id="transactions"
         onClick={() => setIsOpen(true)}
       >
+        <Task02Icon size={15} stroke='.8' className=' mr-1 mb-1' />
         Transactions&nbsp;
         <IonIcon icon={chevronDownOutline} className="text-xs" />
       </IonButton>

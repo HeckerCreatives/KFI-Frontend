@@ -95,7 +95,7 @@ const UpdateELEntries = ({ isOpen, emergencyLoan }: UpdateELEntriesProps) => {
             {!data.loading && data.entries.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
             {!data.loading &&
               data.entries.map((entry: EmergencyLoanEntry, index: number) => (
-                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[1.1rem]">
+                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]">
                   <TableCell>{entry?.client?.name || ''}</TableCell>
                   <TableCell>{entry.particular || ''}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>

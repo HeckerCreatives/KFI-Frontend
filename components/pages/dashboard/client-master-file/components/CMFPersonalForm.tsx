@@ -29,10 +29,10 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
   });
 
   return (
-    <div>
-      <IonGrid className="py-0">
+    <div className=' mt-6'>
+      <IonGrid className="py-0 overflow-y-auto">
         <IonRow>
-          <IonCol size="6" className="space-y-1">
+          <IonCol size="12" sizeMd="6" className="space-y-2">
             <FormIonItem>
               <InputText
                 disabled={loading}
@@ -41,7 +41,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                 clearErrors={form.clearErrors}
                 label="Name"
                 placeholder="Type here"
-                className="!px-2 !py-2 rounded-md max-w-96"
+                className="!px-2 !py-2 rounded-md w-full"
                 labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
               />
             </FormIonItem>
@@ -158,8 +158,8 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   clearErrors={form.clearErrors}
                   label="Sex"
                   placeholder="Type here"
-                  className="!px-2 !py-2 rounded-md"
-                  labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
+                  className="!px-2 !py-2 rounded-md w-full min-w-[17rem]"
+                  labelClassName="truncate w-full !text-slate-600 !text-sm"
                   options={[
                     { label: 'Male', value: 'male' },
                     { label: 'Female', value: 'female' },
@@ -194,7 +194,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
               </FormIonItem>
             </div>
           </IonCol>
-          <IonCol size="6" className="space-y-1">
+          <IonCol size="12" sizeMd="6" className="space-y-2">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
               <FormIonItem>
                 <InputSelect
@@ -203,8 +203,8 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   control={form.control}
                   clearErrors={form.clearErrors}
                   label="Civil Status"
-                  placeholder="Type here"
-                  className="!px-2 !py-2 rounded-md"
+                  placeholder="Select"
+                  className="!px-2 !py-2 rounded-md min-w-[17rem]"
                   options={[
                     { label: 'Single', value: 'single' },
                     { label: 'Married', value: 'married' },
@@ -212,7 +212,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     { label: 'Separated', value: 'separated' },
                     { label: 'Divorced', value: 'divorced' },
                   ]}
-                  labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
+                  labelClassName="truncate min-w-28 !text-slate-600 !text-sm"
                 />
               </FormIonItem>
               <FormIonItem>
@@ -230,7 +230,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
               <div className="grid grid-cols-1 lg:grid-cols-1 gap-2">
-                <div className="flex items-start gap-2 flex-nowrap">
+                <div className="flex items-center gap-2 flex-nowrap">
                   <FormIonItem className="flex-1">
                     <InputText
                       disabled={loading}
@@ -244,14 +244,14 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                       readOnly
                     />
                   </FormIonItem>
-                  <div className={classNames(form.formState.errors.memberStatusLabel ? 'mt-0' : 'mt-1.5')}>
+                  <div className={classNames(form.formState.errors.memberStatusLabel ? 'mt-0' : '')}>
                     <MemberStatusSelection memberStatusLabel="memberStatusLabel" memberStatusValue="memberStatus" setValue={form.setValue} clearErrors={form.clearErrors} />
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-1 gap-2">
-                <div className="flex items-start gap-2 flex-nowrap">
+                <div className="flex items-center gap-2 flex-nowrap">
                   <FormIonItem className="flex-1">
                     <InputText
                       disabled={loading}
@@ -265,7 +265,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                       labelClassName="truncate min-w-28 lg:min-w-28 !text-slate-600 !text-sm text-end"
                     />
                   </FormIonItem>
-                  <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : 'mt-1.5')}>
+                  <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : '')}>
                     <CenterSelection centerLabel="centerLabel" centerValue="center" setValue={form.setValue} clearErrors={form.clearErrors} />
                   </div>
                 </div>
@@ -301,7 +301,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
               </FormIonItem>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-              <div className="flex items-start gap-2 flex-nowrap">
+              <div className="flex items-center gap-2 flex-nowrap">
                 <FormIonItem className="flex-1">
                   <InputText
                     disabled={loading}
@@ -315,7 +315,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     labelClassName="truncate min-w-28 lg:min-w-28 !text-slate-600 !text-sm text-end"
                   />
                 </FormIonItem>
-                <div className={classNames(form.formState.errors.businessLabel ? 'mt-0' : 'mt-1.5')}>
+                <div className={classNames(form.formState.errors.businessLabel ? 'mt-0' : '')}>
                   <BusinessTypeSelection businessTypeLabel="businessLabel" businessTypeValue="business" setValue={form.setValue} clearErrors={form.clearErrors} />
                 </div>
               </div>

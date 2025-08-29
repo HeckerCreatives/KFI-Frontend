@@ -34,7 +34,7 @@ const LoanCodes = ({ form, loading }: { form: UseFormReturn<ProductLoanFormData>
           <TableHeader>
             <TableHeadRow className="border-b-0 bg-slate-100">
               <TableHead>Module</TableHead>
-              <TableHead>Loan Type</TableHead>
+              <TableHead className=' '>Loan Type</TableHead>
               <TableHead>Account Code</TableHead>
               <TableHead className="max-w-10">Sort Order</TableHead>
               {fields.length > 1 && <TableHead className="text-center max-w-10">Actions</TableHead>}
@@ -43,7 +43,7 @@ const LoanCodes = ({ form, loading }: { form: UseFormReturn<ProductLoanFormData>
           <TableBody>
             {fields.map((_, index) => (
               <TableRow key={`loanCodes-${index}`} className="border-b-0">
-                <TableCell className="border-4 border-slate-100 align-top max-w-40 min-w-40">
+                <TableCell className="border-4 border-slate-100 align-top">
                   <FormIonItem className="flex-1">
                     <InputSelect
                       disabled={loading}
@@ -51,7 +51,7 @@ const LoanCodes = ({ form, loading }: { form: UseFormReturn<ProductLoanFormData>
                       control={form.control}
                       clearErrors={form.clearErrors}
                       placeholder="Type here"
-                      className="!px-2 !py-2 rounded-md"
+                      className="!px-2 !py-2 rounded-md !min-w-40"
                       options={[
                         { label: 'LR - Loan Release', value: 'LR' },
                         { label: 'OR - Official Receipt', value: 'OR' },
@@ -59,7 +59,7 @@ const LoanCodes = ({ form, loading }: { form: UseFormReturn<ProductLoanFormData>
                     />
                   </FormIonItem>
                 </TableCell>
-                <TableCell className="border-4 border-slate-100 align-top max-w-40 min-w-40">
+                <TableCell className="border-4 border-slate-100 align-top ">
                   <FormIonItem>
                     <InputSelect
                       disabled={loading}
@@ -67,7 +67,7 @@ const LoanCodes = ({ form, loading }: { form: UseFormReturn<ProductLoanFormData>
                       control={form.control}
                       clearErrors={form.clearErrors}
                       placeholder="Loan type"
-                      className="!px-2 !py-2 rounded-md w-[10rem]"
+                      className="!px-2 !py-2 rounded-md !min-w-40"
                       options={[
                         { label: 'OTHER ( For LR )', value: 'OTHER' },
                         { label: 'EDUC - Educational ( For LR & OR )', value: 'EDUC' },
@@ -87,7 +87,7 @@ const LoanCodes = ({ form, loading }: { form: UseFormReturn<ProductLoanFormData>
                         control={form.control}
                         clearErrors={form.clearErrors}
                         placeholder="Account Code"
-                        className="!px-2 !py-2 rounded-md"
+                        className="!px-2 !py-2 rounded-md !min-w-40"
                         readOnly
                       />
                     </FormIonItem>

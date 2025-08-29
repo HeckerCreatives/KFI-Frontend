@@ -2,6 +2,7 @@ import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/
 import React, { useRef, useState } from 'react';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
+import { FileExportIcon } from 'hugeicons-react';
 
 const ExportAllWeeklySavingsTable = () => {
   const [present] = useIonToast();
@@ -36,24 +37,38 @@ const ExportAllWeeklySavingsTable = () => {
   return (
     <>
       <IonButton fill="clear" id="export_all_wst" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        <FileExportIcon size={15} stroke='.8' className=' mr-1'/>
         Export
       </IonButton>
       <IonModal
         ref={modal}
         trigger={`export_all_wst`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:32rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Weekly Savings - Export All" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
-          <div className="text-end border-t mt-2 pt-1 space-x-2">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Weekly Savings - Export All" sub="System" dismiss={dismiss} />
+
+          <div></div>
+          <div className="text-end mt-4 space-x-2">
             <div className="text-center">
-              <IonButton disabled={loading} onClick={handlePrint} fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md max-w-[70%] font-semibold">
-                {loading ? 'Exporting Weekly Saving List...' : 'Weekly Saving List'}
+              <IonButton disabled={loading} onClick={handlePrint} fill="clear" className="w-full bg-zinc-50 rounded-lg ">
+                <div className=' flex items-center justify-center gap-2 bg-zinc-50 !border-zinc-300 !border-1 p-3 w-full rounded-md'>
+                  <div className=' p-2 bg-green-100 rounded-md flex items-center text-green-800'>
+                    <FileExportIcon size={20} stroke='.8' className=' '/>
+                  </div>
+                  <div className=' flex flex-col !text-sm !text-black !font-medium capitalize text-start'>
+                    {loading ? 'Exporting...' : 'Weekly Savings'}
+                    <p className=' text-xs text-zinc-500 capitalize'>Spreadsheet Format</p>
+
+                  </div>
+                </div>
+                {/* {loading ? 'Printing Client Profile...' : 'Client Profile'} */}
               </IonButton>
             </div>
           </div>

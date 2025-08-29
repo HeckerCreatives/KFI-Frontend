@@ -37,37 +37,37 @@ const UserTableRow = ({ permission, setPermissions, validPermission = ['create',
       </TableCell>
       {validPermission.includes('visible') && (
         <TableCell className="text-center">
-          <IonCheckbox checked={permission.actions.visible} value="visible" onIonChange={handleChecked} />
+          <IonCheckbox checked={permission.actions.visible} value="visible" onIonChange={handleChecked} className=' [--size:14px]' />
         </TableCell>
       )}
       {validPermission.includes('create') && (
         <TableCell className="text-center">
-          <IonCheckbox checked={permission.actions.create} value="create" onIonChange={handleChecked} />
+          <IonCheckbox checked={permission.actions.create} value="create" onIonChange={handleChecked} className=' [--size:14px]'/>
         </TableCell>
       )}
       {validPermission.includes('view') && (
         <TableCell className="text-center">
-          <IonCheckbox checked={permission.actions.view} value="view" onIonChange={handleChecked} />
+          <IonCheckbox checked={permission.actions.view} value="view" onIonChange={handleChecked} className=' [--size:14px]'/>
         </TableCell>
       )}
       {validPermission.includes('update') && (
         <TableCell className="text-center">
-          <IonCheckbox checked={permission.actions.update} value="update" onIonChange={handleChecked} />
+          <IonCheckbox checked={permission.actions.update} value="update" onIonChange={handleChecked} className=' [--size:14px]'/>
         </TableCell>
       )}
       {validPermission.includes('delete') && (
         <TableCell className="text-center">
-          <IonCheckbox checked={permission.actions.delete} value="delete" onIonChange={handleChecked} />
+          <IonCheckbox checked={permission.actions.delete} value="delete" onIonChange={handleChecked} className=' [--size:14px]'/>
         </TableCell>
       )}
       {validPermission.includes('print') && (
         <TableCell className="text-center">
-          <IonCheckbox checked={permission.actions.print} value="print" onIonChange={handleChecked} />
+          <IonCheckbox checked={permission.actions.print} value="print" onIonChange={handleChecked} className=' [--size:14px]'/>
         </TableCell>
       )}
       {validPermission.includes('export') && (
         <TableCell className="text-center">
-          <IonCheckbox checked={permission.actions.export} value="export" onIonChange={handleChecked} />
+          <IonCheckbox checked={permission.actions.export} value="export" onIonChange={handleChecked} className=' [--size:14px] '/>
         </TableCell>
       )}
     </TableRow>

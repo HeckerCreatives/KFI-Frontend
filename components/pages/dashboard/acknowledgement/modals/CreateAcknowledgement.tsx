@@ -98,15 +98,17 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:74rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Official Receipt - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content h-screen !px-0">
-          <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col">
+        </IonHeader> */}
+        <div className="inner-content max-h-[90%] h-full !p-6">
+            <ModalHeader disabled={loading} title="Official Receipt - Add Record" sub="Manage official reciept." dismiss={dismiss} />
+
+          <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col mt-6">
             <div className="mb-3 flex-1">
               <div>
                 <AcknowledgementForm form={form} loading={loading} />

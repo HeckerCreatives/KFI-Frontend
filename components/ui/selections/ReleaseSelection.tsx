@@ -9,6 +9,7 @@ import TableLoadingRow from '../forms/TableLoadingRow';
 import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
+import { Search01Icon } from 'hugeicons-react';
 
 type Option = {
   _id: string;
@@ -105,21 +106,24 @@ const ReleaseSelection = <T extends FieldValues>({ releaseLabel, releaseValue, s
   return (
     <>
       <div className="text-end">
-        <IonButton onClick={handleOpen} fill="clear" className={classNames('max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0', className)} strong>
+        <IonButton onClick={handleOpen} fill="clear" className={classNames('max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0 text-xs', className)} strong>
+          <Search01Icon size={15} stroke='.8' className=' mr-1'/>
           Find
         </IonButton>
       </div>
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.7rem] auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
             <SelectionHeader dismiss={dismiss} disabled={loading} title="Acknowledgement Selection" />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !p-2  border-2 !border-slate-400">
+        </IonHeader> */}
+        <div className="inner-content !p-6  border-2 !border-slate-200">
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Acknowledgement Selection" />
+
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">
               <div className="flex items-center min-w-20">
@@ -144,6 +148,7 @@ const ReleaseSelection = <T extends FieldValues>({ releaseLabel, releaseValue, s
                   className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
                   strong
                 >
+                  <Search01Icon size={15} stroke='.8' className=' mr-1'/>
                   {loading ? 'Finding...' : 'Find'}
                 </IonButton>
               </div>

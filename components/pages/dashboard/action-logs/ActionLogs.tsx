@@ -72,15 +72,15 @@ const ActionLogs = () => {
   });
 
   return (
-    <IonPage className="">
-      <IonContent className="[--background:#F1F1F1]" fullscreen>
-        <div className="h-full flex flex-col items-stretch justify-start">
+    <IonPage className="w-full flex items-center justify-center h-full bg-zinc-100">
+      <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
+        <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
           <PageTitle pages={['Diagnostics', 'Action Logs']} />
-          <div className="px-3 pb-3 flex-1">
-            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg mt-3 mb-4">
+          <div className="p-4 flex-1 bg-white rounded-xl shadow-lg">
+            <div className="flex items-center justify-center">
               <ActionLogFilter getActions={getActions} />
             </div>
-            <div className="relative overflow-auto">
+            <div className="relative overflow-auto mt-4">
               <Table>
                 <TableHeader>
                   <TableHeadRow>

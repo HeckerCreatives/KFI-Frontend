@@ -111,25 +111,26 @@ const ClientMasterFile = () => {
   });
 
   return (
-    <IonPage className="">
-      <IonContent className="[--background:#F1F1F1]" fullscreen>
-        <div className="h-full flex flex-col items-stretch justify-start">
+    <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
+      <IonContent className="[--background:#F4F4F5] max-w-[1920px]" fullscreen>
+        <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start p-4">
           <div>
             <PageTitle pages={['Manage Account', 'Client Master File']} />
           </div>
-          <div className="px-3 pb-3 pt-2 flex-1 flex flex-col">
+          <div className=" flex-1 flex flex-col gap-4">
             <ManageAccountNav />
-            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg my-3">
-              <div className="flex">
-                {canDoAction(token.role, token.permissions, 'clients', 'create') && <CreateClientMasterFile getClients={getClients} />}
-                {canDoAction(token.role, token.permissions, 'clients', 'print') && <PrintAllClient />}
-                {canDoAction(token.role, token.permissions, 'clients', 'export') && <ExportAllClient />}
-              </div>
-              <ClientMasterFileFilter getClients={getClients} />
-            </div>
-            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
-              <div className="pb-1">
+           
+            <div className="pb-1">
                 <ClientStatistics data={statistics} />
+              </div>
+            <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+               <div className="flex items-start lg:items-center lg:flex-row flex-col flex-wrap gap-2 my-2">
+                <div className="flex flex-wrap">
+                  {canDoAction(token.role, token.permissions, 'clients', 'create') && <CreateClientMasterFile getClients={getClients} />}
+                  {canDoAction(token.role, token.permissions, 'clients', 'print') && <PrintAllClient />}
+                  {canDoAction(token.role, token.permissions, 'clients', 'export') && <ExportAllClient />}
+                </div>
+                <ClientMasterFileFilter getClients={getClients} />
               </div>
               <div className="relative overflow-auto rounded-xl">
                 <Table>

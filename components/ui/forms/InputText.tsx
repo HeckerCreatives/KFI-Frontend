@@ -48,10 +48,10 @@ const InputText = <T extends FieldValues>({
       control={control}
       render={({ field, fieldState: { error } }) => (
         <div className="w-full">
-          <div className={classNames('w-full flex items-start gap-2', containerClassnames)}>
+          <div className={classNames('w-full flex  items-start gap-1', containerClassnames)}>
             {label && (
-              <div className="flex justify-between">
-                <IonLabel class="custom" className={classNames('text-sm font-semibold text-slate-600', labelClassName)}>
+              <div className="">
+                <IonLabel class="custom" className={classNames('!text-xs !text-black !font-medium text-end w-24')}>
                   {label}
                 </IonLabel>
               </div>
@@ -79,8 +79,8 @@ const InputText = <T extends FieldValues>({
                   if (isAmount) field.onChange(removeAmountComma(field.value));
                 }}
                 className={classNames(
-                  'text-sm !bg-white ![--highlight-color-focused:none] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:0.75rem] !min-h-[0.75rem]',
-                  error && '![--border-color:red] !border-red-600',
+                  'text-xs  !bg-white ![--background:white] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-zinc-300 ![--min-height:0.75rem] !min-h-[0.75rem]',
+                  error && '![--border-color:red] !border-red-600 !text-black',
                   className,
                 )}
                 readonly={readOnly}

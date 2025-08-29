@@ -12,18 +12,20 @@ type TForm = {
 
 const GroupAccountForm = ({ form, loading }: TForm) => {
   return (
-    <IonGrid>
+    <IonGrid className=' !mt-4'>
       <IonRow>
         <IonCol size="12" className="space-y-2">
-          <FormIonItem>
+          <FormIonItem className=' flex items-start !gap-2'>
+            <label htmlFor="code" className=' text-xs mr-2'>Code</label>
             <InputText
               disabled={loading}
               name="code"
               control={form.control}
               clearErrors={form.clearErrors}
-              label="Code"
+              // label="Code"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
+              labelClassName=' !w-4'
             />
           </FormIonItem>
         </IonCol>

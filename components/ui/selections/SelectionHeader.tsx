@@ -10,15 +10,15 @@ type SelectionHeaderProps = {
 
 const SelectionHeader = ({ disabled = false, dismiss, title }: SelectionHeaderProps) => {
   return (
-    <div className=" bg-modalHeader bg-center h-10">
-      <div className="h-10 flex items-center justify-between bg-slate-900/40">
-        <div slot="start" className="h-10 grid place-items-center">
-          <div className="px-5">
-            <h6 className="font-semibold m-0 text-sm leading-3">{title}</h6>
+    <div className=" bg-center">
+      <div className=" flex items-center justify-between ">
+        <div slot="start" className=" grid place-items-center">
+          <div className="">
+            <h6 className="!font-semibold m-0 text-sm">{title}</h6>
           </div>
         </div>
         <div slot="end" className="h-10 grid place-items-center">
-          <IonButton disabled={disabled} onClick={dismiss} fill="clear" className="" color="light">
+          <IonButton disabled={disabled} onClick={dismiss} fill="clear" className="" color="dark">
             <IonIcon icon={closeSharp} size="small" />
           </IonButton>
         </div>

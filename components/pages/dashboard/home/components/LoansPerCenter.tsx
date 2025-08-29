@@ -77,17 +77,17 @@ const LoansPerCenter = () => {
   });
 
   return (
-    <div className="flex-1 flex flex-col">
-      <div className="bg-white shadow-lg rounded-sm px-3 pt-1 pb-2 flex-1 flex flex-col">
-        <div className="flex items-center justify-between border-b w-full">
-          <h3 className="text-[0.9rem] !font-semibold pb-2 text-orange-700">Loans per Account Officer</h3>
-          <div className="flex items-center">
+    <div className=" relative h-fit flex-1 flex flex-col bg-white shadow-lg rounded-xl">
+      <div className=" pb-2 flex-1 flex flex-col">
+        <div className="flex items-center justify-between w-full py-2 bg-orange-50 p-4 px-8 rounded-t-xl">
+          <h3 className="text-[0.9rem] pb-2 text-black !font-medium">Loans per Account Officer</h3>
+          <div className="flex items-center gap-2">
             <IonInput
               ref={ionInputRef}
               aria-label={'no label'}
               placeholder="Search"
               labelPlacement="stacked"
-              className={'!border text-[0.9rem] bg-orange-50 border-orange-400 [--highlight-color-focused:none] rounded-md !px-2 !py-1 text-sm !min-h-[1.2rem]'}
+              className={'!border text-[0.9rem] border-orange-400 !bg-orange-50 ![--background:transparent] [--highlight-color-focused:none] rounded-md !px-2 !py-1 text-sm !min-h-[1.2rem]'}
             ></IonInput>
             <div>
               <IonButton
@@ -101,32 +101,73 @@ const LoansPerCenter = () => {
             </div>
           </div>
         </div>
-        <div className="relative overflow-auto flex-1">
-          <Table>
-            <TableHeader>
-              <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
-                <TableHead className="text-orange-700 !font-[600]">Account Officer</TableHead>
-                <TableHead className="text-center text-orange-700 !font-[600]">Center</TableHead>
-                <TableHead className="text-center text-orange-700 !font-[600]">Total Members</TableHead>
-                <TableHead className="text-center text-orange-700 !font-[600]">Total Loan Amount</TableHead>
-              </TableHeadRow>
-            </TableHeader>
-            <TableBody>
-              {data.loading && <TableLoadingRow colspan={4} />}
-              {!data.loading && data.loans.length < 1 && <TableNoRows label="No Loans Found" colspan={4} />}
-              {!data.loading &&
-                data.loans.length > 0 &&
-                data.loans.map((loan: Loan, i: number) => (
-                  <TableRow key={`${loan._id}-${i}`} className="!border-0 odd:bg-orange-50 [&>td]:text-[0.8rem]">
-                    <TableCell className="">{loan.acctOfficer}</TableCell>
-                    <TableCell className="text-center">{loan.description}</TableCell>
-                    <TableCell className="text-center">{loan.members}</TableCell>
-                    <TableCell className="text-center">{formatNumber(loan.loans)}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </div>
+
+       
+          
+          <div className=" flex-1 p-4 ">
+            <div className='relative overflow-auto max-h-[500px] '>
+               <div className=' w-full sticky top-0 z-[999] bg-white'>
+              <Table>
+              <TableHeader>
+                <TableHeadRow className="!bg-white !border-0">
+                  <TableHead className=" !font-[600]">Account Officer</TableHead>
+                  <TableHead className=" !font-[400] text-start">Center</TableHead>
+                  <TableHead className=" !font-[400]">Total Members</TableHead>
+                  <TableHead className=" !font-[400]">Total Loan Amount</TableHead>
+                </TableHeadRow>
+              </TableHeader>
+              <TableBody
+                style={{ visibility: 'collapse' }}
+              
+              >
+                {data.loading && <TableLoadingRow colspan={4} />}
+                {!data.loading && data.loans.length < 1 && <TableNoRows label="No Loans Found" colspan={4} />}
+                {!data.loading &&
+                  data.loans.length > 0 &&
+                  data.loans.map((loan: Loan, i: number) => (
+                    <TableRow key={`${loan._id}-${i}`} className="!border-1 [&>td]:text-[0.7rem] py-2">
+                      <TableCell className="">{loan.acctOfficer}</TableCell>
+                      <TableCell className="">{loan.description}</TableCell>
+                      <TableCell className="">{loan.members}</TableCell>
+                      <TableCell className="">{formatNumber(loan.loans)}</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+              
+            </Table>
+            </div>
+            <Table>
+              <TableHeader
+              >
+                <TableHeadRow className="!bg-white !border-0"
+                style={{ visibility: 'collapse' }}
+                
+                >
+                  <TableHead className=" !font-[600]">Account Officer</TableHead>
+                  <TableHead className=" !font-[400] text-start">Center</TableHead>
+                  <TableHead className=" !font-[400]">Total Members</TableHead>
+                  <TableHead className=" !font-[400]">Total Loan Amount</TableHead>
+                </TableHeadRow>
+              </TableHeader>
+              <TableBody>
+                {data.loading && <TableLoadingRow colspan={4} />}
+                {!data.loading && data.loans.length < 1 && <TableNoRows label="No Loans Found" colspan={4} />}
+                {!data.loading &&
+                  data.loans.length > 0 &&
+                  data.loans.map((loan: Loan, i: number) => (
+                    <TableRow key={`${loan._id}-${i}`} className="!border-1 [&>td]:text-[0.7rem] py-2">
+                      <TableCell className="">{loan.acctOfficer}</TableCell>
+                      <TableCell className="">{loan.description}</TableCell>
+                      <TableCell className="">{loan.members}</TableCell>
+                      <TableCell className="">{formatNumber(loan.loans)}</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+            </div>
+           
+          </div>
+        
       </div>
       <div>
         <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

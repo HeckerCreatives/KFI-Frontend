@@ -92,7 +92,7 @@ const ViewAcknowledgementEntries = ({ isOpen, acknowledgement }: ViewEntriesProp
             {!data.loading && data.entries.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
             {!data.loading &&
               data.entries.map((entry: AcknowledgementEntry, index: number) => (
-                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!text-[1.1rem] [&>td]:!px-2">
+                <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!text-[.8rem] [&>td]:!px-2">
                   <TableCell>{entry?.loanReleaseEntryId?.transaction?.code ? `CV#${entry?.loanReleaseEntryId?.transaction?.code}` : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId?.transaction?.dueDate ? formatDateTable(entry?.loanReleaseEntryId?.transaction?.dueDate) : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId?.transaction?.noOfWeeks}</TableCell>

@@ -75,15 +75,17 @@ const AddEntry = ({ acknowledgementId, getEntries }: AddEntryProps) => {
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Official Receipt - Add Entry" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !px-0">
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader title="Official Receipt - Add Entry" sub="Transaction" dismiss={dismiss} />
+
+          <form onSubmit={form.handleSubmit(onSubmit)} className=' mt-4'>
             <AcknowledgementEntryForm form={form} loading={loading} />
             {form.formState.errors.root && <div className="text-sm text-center italic text-red-600">{form.formState.errors.root.message}</div>}
             <div className="text-end space-x-1 px-2">

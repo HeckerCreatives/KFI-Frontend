@@ -9,6 +9,7 @@ import TableLoadingRow from '../forms/TableLoadingRow';
 import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
+import { Search01Icon } from 'hugeicons-react';
 
 type Option = {
   _id: string;
@@ -103,21 +104,24 @@ const BusinessTypeSelection = <T extends FieldValues>({ businessTypeLabel, busin
   return (
     <>
       <div className="text-end">
-        <IonButton onClick={handleOpen} fill="clear" className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0" strong>
+        <IonButton onClick={handleOpen} fill="clear" className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0 text-xs" strong>
+          <Search01Icon size={15} stroke='.8' className=' mr-1'/>
           Find
         </IonButton>
       </div>
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" ![--border-radius:.8rem] auto-height [--max-width:32rem] [--width:100%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
             <SelectionHeader dismiss={dismiss} disabled={loading} title="Business Type Selection" />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !p-2  border-2 !border-slate-100">
+        </IonHeader> */}
+        <div className="inner-content !p-6  border-2 !border-slate-100">
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Business Type Selection" />
+
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">
               <div className="flex items-center min-w-20">
@@ -130,7 +134,7 @@ const BusinessTypeSelection = <T extends FieldValues>({ businessTypeLabel, busin
                     placeholder="Type here"
                     disabled={loading}
                     className={classNames(
-                      'text-sm !bg-white rounded-md !px-2 ![--highlight-color-focused:none] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:1rem] !min-h-[1rem]',
+                      'text-sm !bg-white rounded-md !px-2 ![--highlight-color-focused:none] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-zinc-300 ![--min-height:1rem] !min-h-[1rem]',
                     )}
                   />
                 </FormIonItem>
@@ -138,9 +142,10 @@ const BusinessTypeSelection = <T extends FieldValues>({ businessTypeLabel, busin
                   onClick={() => handleSearch(1)}
                   type="button"
                   fill="clear"
-                  className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                  className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md text-xs"
                   strong
                 >
+                  <Search01Icon size={15} stroke='.8' className=' mr-1'/>
                   {loading ? 'Finding...' : 'Find'}
                 </IonButton>
               </div>

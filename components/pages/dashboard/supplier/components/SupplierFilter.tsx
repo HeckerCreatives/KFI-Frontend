@@ -4,6 +4,7 @@ import InputText from '../../../../ui/forms/InputText';
 import { IonButton } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
+import { Search01Icon } from 'hugeicons-react';
 
 type TSearchProps = {
   code: string;
@@ -33,10 +34,10 @@ const SupplierFilter = ({ getSuppliers }: SupplierFilterProps) => {
   return (
     <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center justify-between ">
       <div className="w-full flex-1 md:flex-none">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap justify-end gap-2">
-          <FormIonItem className="w-full max-w-72 min-w-20">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
+          <FormIonItem className="">
             <InputSelect
-              label="Sort By"
+              // label="Sort By"
               name="sort"
               showLabel={false}
               placeholder="Sort By"
@@ -49,7 +50,7 @@ const SupplierFilter = ({ getSuppliers }: SupplierFilterProps) => {
                 { label: 'Description A - Z', value: 'description-asc' },
                 { label: 'Description Z - A', value: 'description-desc' },
               ]}
-              className="!border-orange-500 rounded-md !w-full !py-1.5"
+              className="!border-orange-500 rounded-md !w-[11rem] !py-1"
             />
           </FormIonItem>
           <div className="flex items-center min-w-20">
@@ -60,10 +61,11 @@ const SupplierFilter = ({ getSuppliers }: SupplierFilterProps) => {
                 type="search"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
+                className="!px-3 !min-h-[1rem] rounded-md !border-orange-500 max-w-[12rem]"
               />
             </FormIonItem>
-            <IonButton type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+            <IonButton type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md text-xs" strong>
+              <Search01Icon size={15} stroke='.8' className=' mr-1'/>
               Search
             </IonButton>
           </div>

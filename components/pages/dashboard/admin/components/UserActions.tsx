@@ -28,7 +28,7 @@ const UserActions = ({ user, setData }: UserActionsProps) => {
       </div> */}
       <IonButton
         fill="clear"
-        className="space-x-1 rounded-lg w-28 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff8848] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-28 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-pink-50 text-pink-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={logIn} className="text-xs" />
         <span>Login Logs</span>

@@ -28,7 +28,7 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
       <IonButton
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-24 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-20 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
         onClick={() => setIsOpen(true)}
       >
         <IonIcon icon={eye} className="text-xs" />
@@ -38,47 +38,57 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
         isOpen={isOpen}
         trigger={`view-leanRelease-modal-${transaction._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:84rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Loan Release - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content h-screen !p-2 space-y-1 flex flex-col">
-          <div className="grid grid-cols-3 gap-2">
+        </IonHeader> */}
+        <div className="inner-content h-[80vh] !p-6 space-y-1 flex flex-col">
+            <ModalHeader title="Loan Release - View Record" sub="Manage loan release records." dismiss={dismiss} />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 !mt-4">
             <div className="space-y-1">
-              <LoanReleaseViewCard label="CV#" value={`${transaction.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
-              <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} labelClassName="min-w-20 text-end !text-slate-600" />
-              <LoanReleaseViewCard label="Name" value={transaction.center.description} labelClassName="min-w-20 text-end !text-slate-600" />
+              <LoanReleaseViewCard label="CV#" value={`${transaction.code}`} labelClassName=" w-24" />
+              <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} labelClassName="" />
+              <LoanReleaseViewCard label="Name" value={transaction.center.description} labelClassName="" />
             </div>
             <div className="space-y-1">
-              <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} labelClassName="min-w-28 text-end !text-slate-600" />
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} labelClassName="min-w-28 text-end !text-slate-600" />
-                <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="min-w-28 text-end !text-slate-600" />
-              </div>
-              <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} labelClassName="min-w-28 text-end !text-slate-600" />
-              <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} labelClassName="min-w-28 text-end !text-slate-600" />
+              <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} labelClassName="" />
+                <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} labelClassName="" />
+                <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="" />
+              {/* <div className="grid grid-cols-1 lg:grid-cols-2 mr-l ">
+                <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} labelClassName="" />
+                <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="" />
+              </div> */}
+              <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} labelClassName="" />
+              <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} labelClassName="" />
             </div>
             <div className="space-y-1">
-              <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
-              <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
-              <LoanReleaseViewCard label="Bank Code" value={transaction.bank.code} labelClassName="min-w-28 text-end !text-slate-600" />
-              <LoanReleaseViewCard label="Amount" value={`${formatNumber(transaction.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
+              <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} labelClassName="" />
+              <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} labelClassName="" />
+              <LoanReleaseViewCard label="Bank Code" value={transaction.bank.code} labelClassName="" />
+              <LoanReleaseViewCard label="Amount" value={`${formatNumber(transaction.amount)}`} labelClassName="" />
+            </div>
+
+             <div className=" lg:hidden space-y-1">
+              <LoanReleaseViewCard label="Particular" value={transaction.remarks} labelClassName="" />
+              <LoanReleaseViewCard label="Cycle" value={`${transaction.cycle}`} labelClassName="" />
+              <LoanReleaseViewCard label="Interest Rate" value={`${transaction.interest}`} labelClassName="" />
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="hidden lg:grid grid-cols-3 gap-2">
             <div className="col-span-2">
-              <LoanReleaseViewCard label="Particular" value={transaction.remarks} labelClassName="min-w-20 text-end !text-slate-600" />
+              <LoanReleaseViewCard label="Particular" value={transaction.remarks} labelClassName="" />
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-              <LoanReleaseViewCard label="Cycle" value={`${transaction.cycle}`} labelClassName="min-w-28 text-end !text-slate-600" />
-              <LoanReleaseViewCard label="Interest Rate" value={`${transaction.interest}`} labelClassName="min-w-28 text-end !text-slate-600" />
+              <LoanReleaseViewCard label="Cycle" value={`${transaction.cycle}`} labelClassName="" />
+              <LoanReleaseViewCard label="Interest Rate" value={`${transaction.interest}`} labelClassName="" />
             </div>
           </div>
-          <div>
-            <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} labelClassName="min-w-20 text-end !text-slate-600" containerClassName="max-w-40" />
+          <div className=' pt-1'>
+            <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} labelClassName="" containerClassName="" />
           </div>
 
           <div className="flex-1">

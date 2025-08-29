@@ -10,10 +10,24 @@ type TProps = {
 
 const ExpenseVoucherViewCard = ({ label, value, labelClassName = '', containerClassName = '' }: TProps) => {
   return (
-    <div className="w-full flex items-start gap-2 text-slate-600">
-      <div className={classNames('text-slate-800 text-[0.7rem] font-semibold truncate w-fit', labelClassName)}>{label}</div>
-      <div className={classNames('border border-slate-400 min-h-5 text-[0.7rem] py-0 px-3 text-sm flex items-end flex-1 rounded-md', containerClassName)}>{value}</div>
-    </div>
+     <div className="flex gap-1">
+              <span
+                className={classNames(
+                  'text-xs !font-medium text-black w-24 text-end',
+                  labelClassName
+                )}
+              >
+                {label}
+              </span>
+              <div
+                className={classNames(
+                  'border border-zinc-200 rounded-lg px-3 py-2 text-sm !font-medium text-black shadow-sm hover:shadow transition flex-1',
+                  containerClassName
+                )}
+              >
+                {value || '—'}
+              </div>
+            </div>
   );
 };
 

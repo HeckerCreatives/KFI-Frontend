@@ -9,6 +9,7 @@ import { close } from 'ionicons/icons';
 import AcknowledgementSelection from '../../../../ui/selections/AcknowledgementSelection';
 import { ReleaseFilterFormData } from '../modals/prints/PrintAllRelease';
 import ReleaseSelection from '../../../../ui/selections/ReleaseSelection';
+import { DocumentAttachmentIcon } from 'hugeicons-react';
 
 type PrintExportFilterFormProps = {
   loading: boolean;
@@ -31,17 +32,21 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
   return (
     <div className="space-y-1">
       <div className="border p-3 rounded-md border-slate-300">
-        <h6 className="m-0 mb-1">Document No.</h6>
+        <h6 className="m-0 mb-2 text-sm !font-semibold flex items-center gap-2">
+          <DocumentAttachmentIcon size={25} stroke='.8' className=' p-1 rounded-md bg-green-100 text-green-700'/>
+          Document No.</h6>
         <div className="flex flex-col gap-1 flex-wrap">
-          <div className="flex items-start gap-2">
+          <div className="flex items-end gap-2">
             <div className="flex-1 relative">
-              <FormIonItem className="flex-1 min-w-64">
+              <p className=' text-xs'>From</p>
+
+              <FormIonItem className="flex-1">
                 <InputText
                   disabled={loading}
                   name="docNoFromLabel"
                   control={form.control}
                   clearErrors={form.clearErrors}
-                  label="From"
+                  // label="From"
                   placeholder="Click find to search for document no."
                   className="!px-2 !py-2 rounded-md"
                   readOnly
@@ -56,19 +61,21 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
                 />
               )}
             </div>
-            <div className="mt-1.5">
+            <div className="mb-1.5">
               <ReleaseSelection releaseLabel="docNoFromLabel" releaseValue="docNoFrom" clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>
-          <div className="flex items-start gap-2">
+          <div className="flex items-end gap-2">
             <div className="flex-1 relative">
-              <FormIonItem className="flex-1 min-w-64">
+              <p className=' text-xs'>To</p>
+
+              <FormIonItem className="flex-1">
                 <InputText
                   disabled={loading}
                   name="docNoToLabel"
                   control={form.control}
                   clearErrors={form.clearErrors}
-                  label="To"
+                  // label="To"
                   placeholder="Click find to search for document no."
                   className="!px-2 !py-2 rounded-md"
                   readOnly
@@ -83,14 +90,14 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
                 />
               )}
             </div>
-            <div className="mt-1.5">
+            <div className="mb-1.5">
               <ReleaseSelection releaseLabel="docNoToLabel" releaseValue="docNoTo" clearErrors={form.clearErrors} setValue={form.setValue} />
             </div>
           </div>
         </div>
       </div>
       <div className="border p-3 rounded-md border-slate-300">
-        <h6 className="m-0 mb-1">Options</h6>
+        <p className="mb-2 text-sm !font-semibold ">Options</p>
         <InputRadio
           control={form.control}
           name="option"

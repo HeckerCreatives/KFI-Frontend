@@ -96,7 +96,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
         onClick={() => setIsOpen(true)}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff9a00] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-blue-50 text-blue-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={createSharp} className="text-xs" />
         <span>Edit</span>
@@ -104,34 +104,38 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.7rem] auto-height [--max-width:84rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Loan Release - Edit Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content h-screen flex flex-col gap-3 !p-2">
+        </IonHeader> */}
+        <div className="inner-content h-screen flex flex-col gap-3 !p-6">
+          <ModalHeader disabled={loading} title="Loan Release - Edit Record" sub="Manage loan release records." dismiss={dismiss} />
+
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-4">
               <div className="space-y-1">
-                <LoanReleaseViewCard label="CV#" value={`${transaction.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
-                <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} labelClassName="min-w-20 text-end !text-slate-600" />
-                <LoanReleaseViewCard label="Name" value={transaction.center.description} labelClassName="min-w-20 text-end !text-slate-600" />
+                <LoanReleaseViewCard label="CV#" value={`${transaction.code}`} labelClassName="" />
+                <LoanReleaseViewCard label="Center Code" value={transaction.center.centerNo} labelClassName="" />
+                <LoanReleaseViewCard label="Name" value={transaction.center.description} labelClassName="" />
               </div>
               <div className="space-y-1">
-                <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} labelClassName="min-w-28 text-end !text-slate-600" />
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} labelClassName="min-w-28 text-end !text-slate-600" containerClassName="w-full" />
-                  <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="min-w-28 text-end !text-slate-600" />
-                </div>
-                <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} labelClassName="min-w-28 text-end !text-slate-600" />
-                <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} labelClassName="" />
+                 <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} labelClassName="" containerClassName="w-full" />
+                  <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="" />
+                {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                  <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} labelClassName="" containerClassName="w-full" />
+                  <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="" />
+                </div> */}
+                <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} labelClassName="" />
+                <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} labelClassName="" />
               </div>
               <div className="space-y-1">
-                <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
-                <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
-                <LoanReleaseViewCard label="Bank Code" value={transaction.bank.code} labelClassName="min-w-28 text-end !text-slate-600" />
+                <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} labelClassName="" />
+                <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} labelClassName="" />
+                <LoanReleaseViewCard label="Bank Code" value={transaction.bank.code} labelClassName="" />
                 <FormIonItem className=" [--min-height:0]">
                   <InputText
                     disabled={loading}
@@ -140,20 +144,16 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                     clearErrors={form.clearErrors}
                     label="Amount"
                     placeholder="Type here"
-                    className="!px-1 !py-1 rounded-md !text-[0.7rem]"
-                    labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600 text-end"
+                    className="!p-2 rounded-md !text-[0.7rem] w-full"
+                    labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600"
                     isAmount
                   />
                 </FormIonItem>
               </div>
-            </div>
 
-            <div className="grid grid-cols-3 gap-2">
-              <div className="col-span-2">
-                <LoanReleaseViewCard label="Particular" value={transaction.remarks} labelClassName="min-w-20 text-end !text-slate-600" />
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <FormIonItem className="flex-1 [--min-height:0]">
+              <div className=" lg:hidden space-y-1">
+                <LoanReleaseViewCard label="Particular" value={transaction.remarks} labelClassName=" text-end !text-slate-600" />
+                 <FormIonItem className=" [--min-height:0]">
                   <InputText
                     disabled={loading}
                     name="cycle"
@@ -161,12 +161,12 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                     clearErrors={form.clearErrors}
                     label="Cycle"
                     placeholder="Type here"
-                    className="!px-1 !py-1 rounded-md !text-[0.7rem]"
-                    labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600 text-end"
+                    className="!p-2 rounded-md !text-[0.7rem] "
+                    labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600 !w-24"
                   />
                 </FormIonItem>
 
-                <FormIonItem className="flex-1 [--min-height:0]">
+                <FormIonItem className=" [--min-height:0]">
                   <InputText
                     disabled={loading}
                     name="interestRate"
@@ -174,15 +174,48 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                     clearErrors={form.clearErrors}
                     label="Interest Rate (%)"
                     placeholder="Type here"
-                    className="!px-1 !py-1 rounded-md !text-[0.7rem]"
-                    labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600 text-end"
+                    className="!p-2 rounded-md !text-[0.7rem]"
+                    labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600"
+                  />
+                </FormIonItem>
+              </div>
+            </div>
+
+            <div className=" hidden lg:grid grid-cols-3 gap-2">
+              <div className="col-span-2">
+                <LoanReleaseViewCard label="Particular" value={transaction.remarks} labelClassName=" text-end !text-slate-600" />
+              </div>
+              <div className="grid grid-cols-1 gap-2">
+                <FormIonItem className=" [--min-height:0]">
+                  <InputText
+                    disabled={loading}
+                    name="cycle"
+                    control={form.control}
+                    clearErrors={form.clearErrors}
+                    label="Cycle"
+                    placeholder="Type here"
+                    className="!p-2 rounded-md !text-[0.7rem] "
+                    labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600 !w-24"
+                  />
+                </FormIonItem>
+
+                <FormIonItem className=" [--min-height:0]">
+                  <InputText
+                    disabled={loading}
+                    name="interestRate"
+                    control={form.control}
+                    clearErrors={form.clearErrors}
+                    label="Interest Rate (%)"
+                    placeholder="Type here"
+                    className="!p-2 rounded-md !text-[0.7rem]"
+                    labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600"
                   />
                 </FormIonItem>
               </div>
             </div>
 
             <div>
-              <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} labelClassName="min-w-20 text-end !text-slate-600" containerClassName="max-w-32" />
+              <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} labelClassName="" containerClassName="" />
             </div>
 
             <div className="text-end space-x-1 px-0 pb-2">

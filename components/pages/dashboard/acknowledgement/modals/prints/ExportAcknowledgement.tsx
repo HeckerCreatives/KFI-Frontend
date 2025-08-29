@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Acknowledgement, ExpenseVoucher } from '../../../../../../types/types';
 import { fileTrayFullSharp } from 'ionicons/icons';
 import PrintExportOptionForm from '../../components/PrintExportOptionForm';
+import { FileExportIcon } from 'hugeicons-react';
 
 export const acknowledgementOptionSchema = z.object({
   option: z.string().optional().or(z.literal('')),
@@ -65,7 +66,7 @@ const ExportAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowled
         id={`export_acknowledgement_${acknowledgement._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 w-20 h-6 rounded-lg ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ff8848] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 w-20 h-7 rounded-md ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-pink-50 text-pink-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={fileTrayFullSharp} className="text-xs" />
         <span>Export</span>
@@ -74,18 +75,21 @@ const ExportAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowled
         ref={modal}
         trigger={`export_acknowledgement_${acknowledgement._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Official Receipt - Export" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
-          <form onSubmit={form.handleSubmit(handlePrint)}>
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Official Receipt - Export" sub="Manage official reciept." dismiss={dismiss} />
+
+          <form onSubmit={form.handleSubmit(handlePrint)} className=' mt-4'>
             <PrintExportOptionForm form={form} loading={loading} />
             <div className="mt-3">
-              <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold">
+              <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
+                <FileExportIcon size={15} stroke='.8' className=' mr-1'/>
                 {loading ? 'Exporting Official Receipt...' : 'Export Official Receipt'}
               </IonButton>
             </div>

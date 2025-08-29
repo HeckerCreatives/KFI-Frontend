@@ -94,15 +94,17 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
         ref={modal}
         trigger="create-damayan-fund-modal"
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:84rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Damayan Fund - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content h-screen !px-0">
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
+        </IonHeader> */}
+        <div className="inner-content max-h-[90%] !p-6">
+            <ModalHeader disabled={loading} title="Damayan Fund - Add Record" sub="Manage damayan fund records." dismiss={dismiss} />
+
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full mt-4">
             <div className="mb-3 flex-1">
               <DamayanFundForm form={form} loading={loading} />
               <DamayanFundFormTable form={form} />

@@ -43,13 +43,14 @@ const InputSelect = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <div className={classNames('w-full flex items-start gap-2', containerClassnames)}>
-          {label && showLabel && (
-            <IonLabel class="custom" className={classNames('text-sm font-semibold text-slate-600', labelClassName)}>
-              {label}
-              {required && <span className="text-red-500"> *</span>}
-            </IonLabel>
-          )}
+        <div className={classNames('w-full flex items-start gap-1', containerClassnames)}>
+         {label && (
+             <div className="">
+               <IonLabel class="custom" className={classNames('!text-xs !text-black !font-medium text-end w-24')}>
+                 {label}
+               </IonLabel>
+             </div>
+           )}
           <div className="flex-1">
             <IonSelect
               aria-label={label || 'no label'}
@@ -65,13 +66,13 @@ const InputSelect = <T extends FieldValues>({
               labelPlacement="stacked"
               onIonBlur={field.onBlur}
               className={classNames(
-                '!border border-slate-400 [--highlight-color-focused:none] !px-2 !py-1 text-sm !min-h-[0.75rem] min-w-full',
-                error && '![--border-color:red] !border-red-600',
+                '!border border-zinc-300 [--highlight-color-focused:none] !px-2 !py-1 text-xs !min-h-[0.5rem] !min-w-full',
+                error && '![--border-color:red] !border-red-600 !text-black',
                 className,
               )}
             >
               {options.map(option => (
-                <IonSelectOption key={option.value} value={option.value} className="text-sm [--min-height:0.5rem]">
+                <IonSelectOption key={option.value} value={option.value} className="text-xs [--min-height:0.5rem]">
                   {option.label}
                 </IonSelectOption>
               ))}

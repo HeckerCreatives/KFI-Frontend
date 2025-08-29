@@ -13,8 +13,11 @@ type TForm = {
 
 const UserForm = ({ form, loading }: TForm) => {
   return (
-    <div className="grid grid-cols-1">
+    <div className="grid grid-cols-1 gap-2">
       <FormIonItem>
+        <div>
+
+        </div>
         <InputText
           disabled={loading}
           name="name"

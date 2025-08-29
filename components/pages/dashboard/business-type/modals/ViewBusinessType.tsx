@@ -26,7 +26,7 @@ const ViewBusinessType = ({ businessType }: { businessType: BusinessType }) => {
         id={`view-businessType-modal-${businessType._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={eye} className="text-xs" />
         <span>View</span>
@@ -35,17 +35,19 @@ const ViewBusinessType = ({ businessType }: { businessType: BusinessType }) => {
         ref={modal}
         trigger={`view-businessType-modal-${businessType._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Business Type - View Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content space-y-2 !px-5">
-          <div className="w-full flex items-start gap-2 text-slate-600">
-            <div className={classNames('text-slate-600 text-[0.85rem]  font-semibold truncate w-fit min-w-20 text-end')}>Business Type</div>
-            <div className={classNames('border border-slate-400 min-h-8 text-[0.7rem] py-0 px-3 text-sm flex items-center flex-1 rounded-md capitalize')}>{businessType.type}</div>
+        </IonHeader> */}
+        <div className="inner-content space-y-2 !p-6">
+            <ModalHeader title="Business Type - View Record" sub="Manage business type records." dismiss={dismiss} />
+
+          <div className="w-full flex items-start gap-2 !mt-4">
+            <div className={classNames('text-black text-xs  font-semibold truncate w-fit min-w-20 text-end')}>Business Type</div>
+            <div className={classNames('border text-black border-slate-400 min-h-8 text-xs py-0 px-3 text-sm flex items-center flex-1 rounded-md capitalize')}>{businessType.type}</div>
           </div>
         </div>
       </IonModal>

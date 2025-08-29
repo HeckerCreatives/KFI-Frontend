@@ -86,22 +86,24 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.7rem] auto-height [--max-width:74rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Expense Voucher - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !px-0 h-screen flex flex-col">
-          <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col">
+        </IonHeader> */}
+        <div className="inner-content !p-6 max-h-[85%] h-full flex flex-col">
+            <ModalHeader title="Expense Voucher - Add Record" sub="Manage expense voucher records." dismiss={dismiss} />
+
+          <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col mt-4">
             <div>
               <ExpenseVoucherForm form={form as UseFormReturn<ExpenseVoucherFormData | UpdateExpenseVoucherFormData>} loading={loading} />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 mt-2">
               <ExpenseVoucherFormTable form={form} loading={loading} />
             </div>
-            <div className="text-end border-t pt-1 space-x-2 px-3">
+            <div className="text-end mt-6 px-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                 {loading ? 'Saving...' : 'Save'}
               </IonButton>

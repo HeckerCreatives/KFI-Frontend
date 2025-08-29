@@ -4,6 +4,7 @@ import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { ClientMasterFile } from '../../../../../types/types';
 import { print } from 'ionicons/icons';
+import { PrinterIcon } from 'hugeicons-react';
 
 const PrintClient = ({ client }: { client: ClientMasterFile }) => {
   const [present] = useIonToast();
@@ -47,7 +48,7 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
         type="button"
         fill="clear"
         id={`print_client_${client._id}`}
-        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffa319] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-purple-100 text-purple-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={print} className="text-xs" />
         <span>Print</span>
@@ -56,23 +57,45 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
         ref={modal}
         trigger={`print_client_${client._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:24rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Client - Print" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Client - Print" sub="Manage client documents." dismiss={dismiss} />
+
           <div></div>
-          <div className="text-end border-t mt-2 pt-1 space-x-2">
+          <div className="text-end mt-4 flex flex-col gap-2">
             <div className="text-center">
-              <IonButton disabled={loading} onClick={handlePrintClientProfile} fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md max-w-[70%] font-semibold">
-                {loading ? 'Printing Client Profile...' : 'Client Profile'}
+              <IonButton disabled={loading} onClick={handlePrintClientProfile} fill="clear" className="w-full bg-zinc-50 rounded-lg ">
+                {/* {loading ? 'Printing Client Profile...' : 'Client Profile'} */}
+                <div className=' flex items-center justify-center gap-2 bg-zinc-50 !border-zinc-300 !border-1 p-3 w-full rounded-md'>
+                  <div className=' p-2 bg-green-100 rounded-md flex items-center text-green-800'>
+                    <PrinterIcon size={20} stroke='.8' className=' '/>
+                  </div>
+                  <div className=' flex flex-col !text-sm !text-black !font-medium capitalize text-start'>
+                    {loading ? 'Printing Client Profiles...' : 'Client Profiles'}
+                    <p className=' text-xs text-zinc-500 capitalize'>Portable Document Format</p>
+
+                  </div>
+                </div>
               </IonButton>
-              <IonButton fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md max-w-[70%] font-semibold">
+              <IonButton fill="clear" className="w-full bg-zinc-50 rounded-lg ">
                 {/* {loading ? 'Printing Statement of Account...' : 'Statement of Account'} */}
-                Statement Of Account
+                {/* Statement Of Account */}
+                 <div className=' flex items-center justify-center gap-2 bg-zinc-50 !border-zinc-300 !border-1 p-3 w-full rounded-md'>
+                  <div className=' p-2 bg-red-100 rounded-md flex items-center text-red-500'>
+                    <PrinterIcon size={20} stroke='.8' className=' '/>
+                  </div>
+                  <div className=' flex flex-col !text-sm !text-black !font-medium capitalize text-start'>
+                    {loading ? 'Printing...' : 'Statement of Account'}
+                    <p className=' text-xs text-zinc-500 capitalize'>Portable Document Format</p>
+
+                  </div>
+                </div>
               </IonButton>
             </div>
           </div>

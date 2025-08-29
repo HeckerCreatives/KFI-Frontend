@@ -60,17 +60,19 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryP
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Loan Release - Delete Entry" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !px-0 !pb-0">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader disabled={loading} title="Loan Release - Delete Entry" sub="Are you sure you want to delete this record?" dismiss={dismiss} />
+
           <div className="p-2">
-            <p className="text-lg text-center py-5">Are you sure you want to delete this record?</p>
-            <div className="text-end border-t mt-2 pt-1 space-x-2">
+            {/* <p className="text-lg text-center py-5">Are you sure you want to delete this record?</p> */}
+            <div className="text-end mt-6 space-x-2">
               <IonButton onClick={handleDelete} disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                 {loading ? 'Deleting...' : 'Yes'}
               </IonButton>

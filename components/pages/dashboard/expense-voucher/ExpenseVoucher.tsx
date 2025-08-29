@@ -87,24 +87,27 @@ const ExpenseVoucher = () => {
     getExpenseVouchers(currentPage);
   });
   return (
-    <IonPage className="">
-      <IonContent className="[--background:#F1F1F1]" fullscreen>
-        <div className="h-full flex flex-col items-stretch justify-start">
+    <IonPage className="w-full flex items-center justify-center h-full bg-zinc-100">
+      <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
+        <div className="h-full flex flex-col gap-4 items-stretch justify-start py-6">
           <PageTitle pages={['Transaction', 'Expense Voucher']} />
           <div className="px-3 pb-3 flex-1 flex flex-col">
-            <div className=" bg-white p-3 rounded-2xl shadow-lg my-3 flex flex-col lg:flex-row-reverse gap-2 flex-wrap">
-              <div className="w-full flex-1 flex items-center justify-end">
-                <ExpenseVoucherFilter getExpenseVouchers={getExpenseVouchers} />
-              </div>
-              <div className="flex items-start w-fit">
-                <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'create') && <CreateExpenseVoucher getExpenseVouchers={getExpenseVouchers} />}</div>
-                <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'print') && <PrintAllExpenseVoucher />}</div>
-                <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'export') && <ExportAllExpenseVoucher />}</div>
-              </div>
-            </div>
+           
 
-            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
-              <div className="relative overflow-auto rounded-xl">
+            <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+               <div className=" flex flex-col gap-4 flex-wrap">
+              
+                <div className="flex items-start flex-wrap w-fit">
+                  <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'create') && <CreateExpenseVoucher getExpenseVouchers={getExpenseVouchers} />}</div>
+                  <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'print') && <PrintAllExpenseVoucher />}</div>
+                  <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'export') && <ExportAllExpenseVoucher />}</div>
+                </div>
+
+                  <div className="w-full flex-1 flex">
+                  <ExpenseVoucherFilter getExpenseVouchers={getExpenseVouchers} />
+                </div>
+              </div>
+              <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>

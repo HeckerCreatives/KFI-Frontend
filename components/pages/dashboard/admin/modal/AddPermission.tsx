@@ -75,7 +75,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
         id={`update-permissions-modal-${user._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-44 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-44 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-orange-100 text-orange-900 capitalize text-xs"
       >
         <IonIcon icon={shieldCheckmarkSharp} className="text-xs" />
         <span>Manage Permissions</span>
@@ -84,14 +84,16 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
         ref={modal}
         trigger={`update-permissions-modal-${user._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.7rem] auto-height [--max-width:58rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Admin - Manage Permissions" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content space-y-4">
+        </IonHeader> */}
+        <div className="inner-content space-y-4 !p-6">
+            <ModalHeader disabled={loading} title="Admin - Manage Permissions" sub="Manage admin permissions." dismiss={dismiss} />
+
           {/* <ManageAccountPermission permissions={permissions} setPermissions={setPermissions} /> */}
           <DashboardPermission permissions={permissions} setPermissions={setPermissions} />
           <TransactionPermission permissions={permissions} setPermissions={setPermissions} />

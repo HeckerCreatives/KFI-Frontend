@@ -86,19 +86,21 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:74rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Journal Voucher - Add Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content h-screen !px-0 flex flex-col">
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col">
+        </IonHeader> */}
+        <div className="inner-content h-screen !p-6 flex flex-col">
+            <ModalHeader title="Journal Voucher - Add Record" sub="Manage journal voucher." dismiss={dismiss} />
+
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col mt-4">
             <div>
               <JournalVoucherForm form={form} loading={loading} />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 mt-4">
               <JournalVoucherFormTable form={form} loading={loading} />
             </div>
             <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">

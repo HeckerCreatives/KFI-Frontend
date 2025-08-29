@@ -30,7 +30,7 @@ const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher
         type="button"
         onClick={() => setIsOpen(true)}
         fill="clear"
-        className="space-x-1 rounded-lg w-24 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-20 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={eye} className="text-xs" />
         <span>View</span>
@@ -38,35 +38,37 @@ const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:95%] md:[--width:100%] lg:[--max-width:95%] lg:[--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:84rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Journal Voucher - View Record" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content h-screen !p-2 flex flex-col">
-          <div className="space-y-1">
-            <div className="grid grid-cols-3">
+        </IonHeader> */}
+        <div className="inner-content mx-h-[90%] h-full !p-6 flex flex-col">
+            <ModalHeader title="Journal Voucher - View Record" sub="Transaction" dismiss={dismiss} />
+
+          <div className="space-y-1 !mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               <div className="space-y-1">
-                <JournalVoucherViewCard label="JV#" value={`${journalVoucher.code}`} labelClassName="min-w-20 text-end !text-slate-600" />
-                <JournalVoucherViewCard label="Nature" value={journalVoucher.nature} labelClassName="min-w-20 text-end !text-slate-600" />
+                <JournalVoucherViewCard label="JV#" value={`${journalVoucher.code}`} labelClassName="min-w-28 text-end" />
+                <JournalVoucherViewCard label="Nature" value={journalVoucher.nature} labelClassName="min-w-28 text-end " />
               </div>
               <div className="space-y-1">
-                <JournalVoucherViewCard label="Date" value={formatDateTable(journalVoucher.date)} labelClassName="min-w-20 text-end !text-slate-600" />
-                <JournalVoucherViewCard label="Account Month" value={`${journalVoucher.acctMonth}`} labelClassName="min-w-28 text-end !text-slate-600" />
-                <JournalVoucherViewCard label="Account Year" value={`${journalVoucher.acctYear}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                <JournalVoucherViewCard label="Date" value={formatDateTable(journalVoucher.date)} labelClassName="min-w-28 text-end " />
+                <JournalVoucherViewCard label="Account Month" value={`${journalVoucher.acctMonth}`} labelClassName="min-w-28 text-end " />
+                <JournalVoucherViewCard label="Account Year" value={`${journalVoucher.acctYear}`} labelClassName="min-w-28 text-end " />
               </div>
               <div className="space-y-1">
-                <JournalVoucherViewCard label="Check Number" value={journalVoucher.checkNo} labelClassName="min-w-28 text-end !text-slate-600" />
-                <JournalVoucherViewCard label="Check Date" value={formatDateTable(journalVoucher.checkDate)} labelClassName="min-w-28 text-end !text-slate-600" />
-                <JournalVoucherViewCard label="Bank Code" value={journalVoucher.bankCode.code} labelClassName="min-w-28 text-end !text-slate-600" />
-                <JournalVoucherViewCard label="Amount" value={`${formatNumber(journalVoucher.amount)}`} labelClassName="min-w-28 text-end !text-slate-600" />
+                <JournalVoucherViewCard label="Check Number" value={journalVoucher.checkNo} labelClassName="min-w-28 text-end" />
+                <JournalVoucherViewCard label="Check Date" value={formatDateTable(journalVoucher.checkDate)} labelClassName="min-w-28 text-end " />
+                <JournalVoucherViewCard label="Bank Code" value={journalVoucher.bankCode.code} labelClassName="min-w-28 text-end " />
+                <JournalVoucherViewCard label="Amount" value={`${formatNumber(journalVoucher.amount)}`} labelClassName="min-w-28 text-end " />
               </div>
             </div>
             <div className="space-y-1">
-              <JournalVoucherViewCard label="Particular" value={journalVoucher.remarks} labelClassName="min-w-20 text-end !text-slate-600" />
-              <JournalVoucherViewCard label="User" value={journalVoucher.encodedBy.username} labelClassName="min-w-20 text-end !text-slate-600" containerClassName="max-w-40" />
+              <JournalVoucherViewCard label="Particular" value={journalVoucher.remarks} labelClassName="min-w-28 text-end " />
+              <JournalVoucherViewCard label="User" value={journalVoucher.encodedBy.username} labelClassName="min-w-28 text-end " containerClassName="" />
             </div>
           </div>
           <div className="flex-1 mt-1">

@@ -98,14 +98,16 @@ const AddEntry = ({ transactionId, centerNo, centerId, getEntries, currentAmount
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:30rem] md:[--width:100%] lg:[--max-width:30rem] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:30rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Loan Release - Add Entry" sub="Transaction" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !px-0">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader title="Loan Release - Add Entry" sub="Transaction" dismiss={dismiss} />
+
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <EntryForm form={form} center={centerId} centerNo={centerNo} loading={loading} />
             {form.formState.errors.root && <div className="text-sm text-center italic text-red-600">{form.formState.errors.root.message}</div>}

@@ -15,6 +15,8 @@ import { formatDateTable } from '../../../utils/date-utils';
 import BanUser from './modal/BanUser';
 import ManageAccountNav from '../../../ui/navs/ManageAccountNav';
 import classNames from 'classnames';
+import DashboardCard from '../home/components/DashboardCard';
+import { UserMultiple02Icon, UserBlock01Icon, UserMinus01Icon } from 'hugeicons-react';
 
 export type TUser = {
   users: User[];
@@ -114,23 +116,38 @@ const Admin = () => {
   const refetch = () => getUsers(currentPage, searchKey, sortKey);
 
   return (
-    <IonPage className="">
-      <IonContent className="[--background:#F1F1F1]" fullscreen>
-        <div className="h-full flex flex-col items-stretch justify-start">
+    <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100 ">
+      <IonContent className="[--background:#f4f4f5] max-w-[1920px] h-full" fullscreen>
+        <div className="h-full flex flex-col gap-4 items-stretch justify-start p-4">
+
           <div>
             <PageTitle pages={['Manage Account', 'Admin']} />
           </div>
-          <div className="px-3 pb-3 pt-2 flex-1 flex flex-col">
             <ManageAccountNav />
-            <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg my-3">
+
+           <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(clamp(250px,30vw,280px),1fr))]">
+            <DashboardCard title="Active" value={`${statistics.active}`} icon={<UserMultiple02Icon stroke='.8' size={20}/>} />
+            <DashboardCard title="Banned" value={`${statistics.banned}`} icon={<UserBlock01Icon stroke='.8' size={20}/>} />
+            <DashboardCard title="Inactive" value={`${statistics.inactive}`} icon={<UserMinus01Icon stroke='.8' size={20}/>} />
+
+           </div>
+          <div className=" flex-1 flex flex-col gap-4">
+            {/* <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg my-3">
               <div className="flex items-center gap-2">
                 <CreateUser getUsers={getUsers} />
                 <BanUser selected={selected} setSelected={setSelected} refetch={refetch} banned={statistics.banned} active={statistics.active} />
               </div>
               <UserFilter getUsers={getUsers} />
-            </div>
+            </div> */}
+
+            
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
-              <div className="relative overflow-auto rounded-xl">
+
+              <div className=' w-fit flex items-center flex-wrap gap-1'>
+                <CreateUser getUsers={getUsers} />
+                <BanUser selected={selected} setSelected={setSelected} refetch={refetch} banned={statistics.banned} active={statistics.active} />
+              </div>
+              <div className="relative overflow-auto rounded-xl mt-2">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
@@ -149,11 +166,13 @@ const Admin = () => {
                       data.users.map((user: User) => (
                         <TableRow key={user._id}>
                           <TableCell className="!min-w-5 !max-w-5">
-                            <IonCheckbox value={user._id} onIonChange={handleSelected} />
+                            <IonCheckbox 
+                             style={{ '--size': '14px' }} 
+                            value={user._id} onIonChange={handleSelected} />
                           </TableCell>
                           <TableCell>{user.username}</TableCell>
                           <TableCell className="capitalize">
-                            <div className={classNames('!font-semibold', user.status === 'banned' ? 'text-red-600' : 'text-green-600')}>{user.status}</div>
+                            <div className={classNames('!font-medium px-2 py-1 text-[.7rem] w-fit rounded-full', user.status === 'banned' ? 'text-red-600 bg-red-50' : 'text-green-600 bg-green-50')}>{user.status}</div>
                           </TableCell>
                           <TableCell>{formatDateTable(user.createdAt)}</TableCell>
                           <TableCell>

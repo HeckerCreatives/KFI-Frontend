@@ -71,24 +71,27 @@ const CreateUser = ({ getUsers }: CreateUserProps) => {
         ref={modal}
         trigger="create-user-modal"
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:40%] lg:[--width:40%]"
+        className=" [--border-radius:0.7rem] auto-height [--width:95%] [--max-width:36rem]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader disabled={loading} title="Admin - Create Account" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className=" p-6 flex flex-col gap-6">
+            <ModalHeader disabled={loading} title="Admin - Create Account" sub="Enter admin details below." dismiss={dismiss} />
+
           <div>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <UserForm form={form} loading={loading} />
-              <div className="text-end border-t mt-2 pt-1 space-x-2">
-                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
-                  {loading ? 'Saving...' : 'Save'}
-                </IonButton>
-                <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
+              <div className="text-end mt-8 space-x-2">
+                 <IonButton disabled={loading} onClick={dismiss} color="light" type="button" className="!text-xs !shadow-none capitalize rounded-md">
                   Cancel
                 </IonButton>
+                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px rounded-md" strong={true}>
+                  {loading ? 'Saving...' : 'Save'}
+                </IonButton>
+               
               </div>
             </form>
           </div>

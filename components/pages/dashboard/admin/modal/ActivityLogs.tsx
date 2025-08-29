@@ -92,7 +92,7 @@ const ActivityLogs = ({ user }: AddPermissionProps) => {
       <IonButton
         fill="clear"
         onClick={handleOpen}
-        className="space-x-1 rounded-lg w-28 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffa319] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md min-w-32 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-purple-50 text-purple-900 capitalize text-xs"
       >
         <IonIcon icon={list} className="text-xs" />
         <span>Action Logs</span>
@@ -100,19 +100,21 @@ const ActivityLogs = ({ user }: AddPermissionProps) => {
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--width:95%] md:[--max-width:90%] md:[--width:95%] lg:[--max-width:50%] lg:[--width:50%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:0.5rem] h-12">
             <ModalHeader disabled={data.loading} title="Admin - User Action Logs" sub="Manage Account" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content space-y-4">
+        </IonHeader> */}
+        <div className="inner-content space-y-4 !p-6">
+            <ModalHeader disabled={data.loading} title="Admin - User Action Logs" sub="Manage user action logs." dismiss={dismiss} />
+
           <div className="h-full flex flex-col items-stretch justify-start">
-            <div className="px-3 pb-3 flex-1">
-              <h5>
-                Action Logs of <strong>{user.username}</strong>
-              </h5>
+            <div className="flex-1">
+              <p className=' text-sm !font-medium'>
+                Action Logs of <span className=' text-orange-500'>{user.username}</span>
+              </p>
               <div className="relative overflow-auto">
                 <Table>
                   <TableHeader>

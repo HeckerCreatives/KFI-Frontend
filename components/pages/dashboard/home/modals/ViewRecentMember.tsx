@@ -25,7 +25,7 @@ const ViewRecentMember = ({ member }: { member: Member }) => {
         onClick={() => setIsOpen(true)}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-lg w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-[#ffe808] text-slate-700 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-16 h-6 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-5 text-xs"
       >
         <IonIcon icon={eye} className="text-xs" />
         &nbsp;View
@@ -33,20 +33,22 @@ const ViewRecentMember = ({ member }: { member: Member }) => {
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:50rem] md:[--width:50rem] lg:[--max-width:50rem] lg:[--width:50rem]"
+        className=" [--border-radius:0.7rem] auto-height [--max-width:50rem] [--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Recent Member Details" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="inner-content !p-6">
+            <ModalHeader title="Recent Member Details" sub="" dismiss={dismiss} />
+
           <div className="px-2 py-1">
             <div className="mb-3">
               <h5 className="m-0 !font-semibold text-slate-600">Member Details</h5>
               <p className="m-0 text-sm text-slate-600">Comprehensive member information and account management</p>
             </div>
-            <div className="mb-3 flex items-center gap-2">
+            <div className="mb-3 flex items-center gap-2 overflow-y-auto">
               <div
                 onClick={() => setActive('personal')}
                 role="button"

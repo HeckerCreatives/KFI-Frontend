@@ -32,7 +32,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
     <IonGrid>
       <IonRow>
         <IonCol size="12" className="space-y-1">
-          <div className="flex items-start gap-2 flex-nowrap">
+          <div className="flex items-end gap-2 flex-nowrap">
             <div className="flex-1 relative">
               <FormIonItem>
                 <InputText
@@ -47,7 +47,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
                 />
               </FormIonItem>
               {form.watch('cvNo') && (
-                <IonIcon onClick={clearCV} icon={close} className="absolute top-3 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400" />
+                <IonIcon onClick={clearCV} icon={close} className="absolute bottom-2 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400" />
               )}
             </div>
             <div className="mt-1.5">
@@ -96,7 +96,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
               labelClassName="truncate !text-slate-600 min-w-24 text-end"
             />
           </FormIonItem>
-          <div className="flex items-start gap-2 flex-nowrap">
+          <div className="flex items-end gap-2 flex-nowrap">
             <div className="flex-1 relative">
               <FormIonItem>
                 <InputText
@@ -115,7 +115,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
                 <IonIcon
                   onClick={clearAcctCode}
                   icon={close}
-                  className="absolute top-3 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
+                  className="absolute bottom-2 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
                 />
               )}
             </div>

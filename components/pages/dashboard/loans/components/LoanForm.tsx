@@ -15,7 +15,7 @@ const LoanForm = ({ form, loading = false }: TForm) => {
   return (
     <IonGrid>
       <IonRow>
-        <IonCol size="6" className="space-y-2">
+        <IonCol size="12" sizeMd='6' className="space-y-2">
           <FormIonItem>
             <InputText
               disabled={loading}
@@ -29,7 +29,7 @@ const LoanForm = ({ form, loading = false }: TForm) => {
             />
           </FormIonItem>
         </IonCol>
-        <IonCol size="6" className="space-y-2">
+        <IonCol size="12" sizeMd='6' className="space-y-2">
           <FormIonItem>
             <InputText
               disabled={loading}

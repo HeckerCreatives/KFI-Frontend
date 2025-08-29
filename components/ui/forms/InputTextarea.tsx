@@ -36,9 +36,9 @@ const InputTextarea = <T extends FieldValues>({
       control={control}
       render={({ field, fieldState: { error } }) => (
         <div className="w-full">
-          <div className={classNames('w-full flex items-start gap-2', containerClassnames)}>
+          <div className={classNames('w-full flex items-start gap-1', containerClassnames)}>
             {label && (
-              <IonLabel class="custom" className={classNames('!text-sm font-semibold !text-slate-600', labelClassNames)}>
+              <IonLabel class="custom" className={classNames('!text-xs text-end !text-black !font-medium w-[7.5rem]',)}>
                 {label}
               </IonLabel>
             )}
@@ -57,8 +57,8 @@ const InputTextarea = <T extends FieldValues>({
                 disabled={disabled}
                 onIonBlur={field.onBlur}
                 className={classNames(
-                  'text-sm !bg-white ![--highlight-color-focused:none] ![--padding-bottom:0] !mt-0 ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:1rem]',
-                  error && '![--border-color:red] !border-red-600',
+                  'text-sm !bg-white ![--highlight-color-focused:none] ![--padding-bottom:0] !mt-0 ![--padding-top:0] ![--padding-start:0] border border-slate-200 ![--min-height:1rem]',
+                  error && '![--border-color:red] !border-red-600 !text-xs !text-black',
                   className,
                 )}
               />
