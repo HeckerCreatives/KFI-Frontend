@@ -16,12 +16,43 @@ type EmergencyLoanFormTableDocProps = {
   index: number;
   remove: UseFieldArrayRemove;
   form: UseFormReturn<EmergencyLoanFormData>;
+  sticky?: boolean
 };
 
-const EmergencyLoanFormTableDoc = ({ entry, index, remove, form }: EmergencyLoanFormTableDocProps) => {
+const EmergencyLoanFormTableDoc = ({ entry, index, remove, form, sticky }: EmergencyLoanFormTableDocProps) => {
+
+  if(sticky){
+    return(
+      <TableRow className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2 [&>td]:align-text-top">
+        <TableCell className="min-w-fit hidden md:table-cell">
+          <div className="flex items-start gap-1">
+            <FormIonItem>
+              <InputText readOnly control={form.control} name={`entries.${index}.clientLabel`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
+            </FormIonItem>
+            <div className={classNames('mt-2.5', form?.formState.errors?.entries && form.formState.errors.entries[index]?.clientLabel && '!mt-0.5')}>
+              <ClientSelection
+                clientLabel={`entries.${index}.clientLabel`}
+                clientValue={`entries.${index}.client`}
+                clientParticular={`entries.${index}.particular`}
+                setValue={form.setValue}
+                clearErrors={form.clearErrors}
+                className="!min-h-3.5 text-[0.5rem]"
+              />
+            </div>
+          </div>
+        </TableCell>
+        <TableCell className=' hidden lg:table-cell'>
+          <FormIonItem>
+            <InputText readOnly control={form.control} name={`entries.${index}.particular`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
+          </FormIonItem>
+        </TableCell>
+        
+      </TableRow>
+    )
+  }
   return (
     <TableRow className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2 [&>td]:align-text-top">
-      <TableCell className="min-w-fit">
+      <TableCell className="min-w-fit md:hidden">
         <div className="flex items-start gap-1">
           <FormIonItem>
             <InputText readOnly control={form.control} name={`entries.${index}.clientLabel`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
@@ -38,7 +69,7 @@ const EmergencyLoanFormTableDoc = ({ entry, index, remove, form }: EmergencyLoan
           </div>
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className='lg:hidden'>
         <FormIonItem>
           <InputText readOnly control={form.control} name={`entries.${index}.particular`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
         </FormIonItem>

@@ -18,7 +18,7 @@ const Dashboard = () => {
             <div className=" h-full gap-2">
               <div className="md:col-span-1 lg:col-span-2 flex flex-col space-y-4">
                 <CardStatistics />
-                <div className=' w-full grid grid-cols-1 md:grid-cols-[60%_1fr] gap-4'>
+                <div className=' w-full grid grid-cols-1 lg:grid-cols-[60%_1fr] gap-4'>
                   <LoansPerCenter />
 
                   <div className=" flex flex-col space-y-2 bg-white rounded-xl shadow-lg">

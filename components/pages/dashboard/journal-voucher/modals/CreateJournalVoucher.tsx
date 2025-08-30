@@ -103,6 +103,8 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
             <div className="flex-1 mt-4">
               <JournalVoucherFormTable form={form} loading={loading} />
             </div>
+            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
             <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                 Save

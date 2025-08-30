@@ -113,6 +113,8 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
                 <EmergencyLoanFormTable form={form} />
               </div>
             </div>
+            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
             <div className="text-end space-x-1 px-2">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                 {loading ? 'Saving...' : 'Save'}

@@ -15,11 +15,13 @@ type AcknowledgementFormTableDocProps = {
   remove: UseFieldArrayRemove;
   form: UseFormReturn<AcknowledgementFormData>;
   index: number;
+  sticky?: boolean
 };
 
-const AcknowledgementFormTableDoc = ({ entry, remove, form, index }: AcknowledgementFormTableDocProps) => {
-  return (
-    <TableRow className="border-b-0 [&>td]:border-2 [&>td]:!py-0 [&>td]:!px-2 [&>td]:!bg-white [&>td]:align-text-top">
+const AcknowledgementFormTableDoc = ({ entry, remove, form, index, sticky }: AcknowledgementFormTableDocProps) => {
+  if(sticky){
+    return(
+      <TableRow className="border-b-0 [&>td]:border-2 [&>td]:!py-0 [&>td]:!px-2 [&>td]:!bg-white [&>td]:align-text-top">
       <TableCell className="min-w-48 max-w-48 sticky left-0 z-10">
         <div className="flex items-start gap-1">
           <FormIonItem>
@@ -40,22 +42,80 @@ const AcknowledgementFormTableDoc = ({ entry, remove, form, index }: Acknowledge
           </div>
         </div>
       </TableCell>
-      <TableCell className="min-w-32 max-w-32 sticky left-[12rem] z-10">
+      <TableCell className="min-w-32 max-w-32 sticky left-[12rem] z-10 hidden lg:table-cell">
         <FormIonItem>
           <InputText readOnly control={form.control} name={`entries.${index}.dueDate`} clearErrors={form.clearErrors} className="!px-2 !min-w-16 rounded-sm" />
         </FormIonItem>
       </TableCell>
-      <TableCell className="min-w-20 max-w-20 sticky left-[20rem] z-10">
+      <TableCell className="min-w-20 max-w-20 sticky left-[20rem] z-10 hidden lg:table-cell">
         <FormIonItem className="">
           <InputText readOnly control={form.control} name={`entries.${index}.noOfWeeks`} clearErrors={form.clearErrors} className="!px-2 min-w-full rounded-sm" />
         </FormIonItem>
       </TableCell>
-      <TableCell className="min-w-60 max-w-60 sticky left-[25rem] z-10">
+      <TableCell className="min-w-60 max-w-60 sticky left-[25rem] z-10 hidden lg:table-cell">
         <FormIonItem>
           <InputText readOnly control={form.control} name={`entries.${index}.name`} clearErrors={form.clearErrors} className="!px-2 !min-w-50 rounded-sm" />
         </FormIonItem>
       </TableCell>
-      <TableCell className="min-w-40 max-w-40 sticky left-[40rem] z-10">
+      <TableCell className="min-w-40 max-w-40 sticky left-[40rem] z-10 hidden lg:table-cell">
+        <div className="flex items-start gap-1">
+          <FormIonItem>
+            <InputText control={form.control} readOnly name={`entries.${index}.acctCode`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm" />
+          </FormIonItem>
+          <div className={classNames('mt-2.5', form?.formState.errors?.entries && form.formState.errors.entries[index]?.acctCode && '!mt-0.5')}>
+            <ChartOfAccountSelection
+              chartOfAccountLabel={`entries.${index}.acctCode`}
+              chartOfAccountValue={`entries.${index}.acctCodeId`}
+              chartOfAccountDescription={`entries.${index}.description`}
+              setValue={form.setValue}
+              clearErrors={form.clearErrors}
+              className="!min-h-3.5 text-[0.5rem]"
+            />
+          </div>
+        </div>
+      </TableCell>
+     
+    </TableRow>
+    )
+  }
+  return (
+    <TableRow className="border-b-0 [&>td]:border-2 [&>td]:!py-0 [&>td]:!px-2 [&>td]:!bg-white [&>td]:align-text-top">
+      <TableCell className="min-w-48 max-w-48 z-10 table-cell md:hidden">
+        <div className="flex items-start gap-1">
+          <FormIonItem>
+            <InputText readOnly control={form.control} name={`entries.${index}.cvNo`} clearErrors={form.clearErrors} className="!px-2 !min-w-32 rounded-sm" />
+          </FormIonItem>
+          <div className={classNames('mt-2.5', form?.formState.errors?.entries && form.formState.errors.entries[index]?.cvNo && '!mt-0.5')}>
+            <LoanReleaseEntrySelection
+              loanReleaseEntryId={`entries.${index}.loanReleaseEntryId`}
+              cvNo={`entries.${index}.cvNo`}
+              dueDate={`entries.${index}.dueDate`}
+              noOfWeeks={`entries.${index}.noOfWeeks`}
+              name={`entries.${index}.name`}
+              particular={`entries.${index}.particular`}
+              setValue={form.setValue}
+              clearErrors={form.clearErrors}
+              className="!min-h-3.5 text-[0.5rem]"
+            />
+          </div>
+        </div>
+      </TableCell>
+      <TableCell className="min-w-32 max-w-32 z-10 table-cell lg:hidden">
+        <FormIonItem>
+          <InputText readOnly control={form.control} name={`entries.${index}.dueDate`} clearErrors={form.clearErrors} className="!px-2 !min-w-16 rounded-sm" />
+        </FormIonItem>
+      </TableCell>
+      <TableCell className="min-w-20 max-w-20 z-10 table-cell lg:hidden">
+        <FormIonItem className="">
+          <InputText readOnly control={form.control} name={`entries.${index}.noOfWeeks`} clearErrors={form.clearErrors} className="!px-2 min-w-full rounded-sm" />
+        </FormIonItem>
+      </TableCell>
+      <TableCell className="min-w-60 max-w-60 z-10 table-cell lg:hidden">
+        <FormIonItem>
+          <InputText readOnly control={form.control} name={`entries.${index}.name`} clearErrors={form.clearErrors} className="!px-2 !min-w-50 rounded-sm" />
+        </FormIonItem>
+      </TableCell>
+      <TableCell className="min-w-40 max-w-40 z-10 table-cell lg:hidden">
         <div className="flex items-start gap-1">
           <FormIonItem>
             <InputText control={form.control} readOnly name={`entries.${index}.acctCode`} clearErrors={form.clearErrors} className="!px-2 !min-w-24 rounded-sm" />

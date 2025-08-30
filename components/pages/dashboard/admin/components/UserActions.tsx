@@ -6,6 +6,7 @@ import { TUser } from '../Admin';
 import AddPermission from '../modal/AddPermission';
 import ChangePassword from '../modal/ChangePassword';
 import ActivityLogs from '../modal/ActivityLogs';
+import ViewAdmin from '../modal/ViewAdmin';
 
 type UserActionsProps = {
   user: User;
@@ -15,6 +16,7 @@ type UserActionsProps = {
 const UserActions = ({ user, setData }: UserActionsProps) => {
   return (
     <div>
+      <ViewAdmin user={user} setData={setData}/>
       <AddPermission user={user} setData={setData} />
       <ChangePassword user={user} />
       <ActivityLogs user={user} />

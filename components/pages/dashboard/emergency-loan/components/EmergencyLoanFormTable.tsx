@@ -24,33 +24,57 @@ const EmergencyLoanFormTable = ({ form }: EmergencyLoanFormTableProps) => {
           + Add Entries
         </IonButton>
       </div>
-      <div className="relative overflow-auto">
-        <Table>
+      <div className="relative overflow-auto flex">
+        <Table className=' sticky left-0 md:table hidden z-50'>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal [&>th]:!text-xs">
-              <TableHead>Name</TableHead>
-              <TableHead>Particular</TableHead>
-              <TableHead>Acct. Code</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Debit</TableHead>
-              <TableHead>Credit</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
+              <TableHead className=' whitespace-nowrap hidden md:table-cell'>Name</TableHead>
+              <TableHead className=' whitespace-nowrap hidden lg:table-cell'>Particular</TableHead>
+              
             </TableHeadRow>
           </TableHeader>
           <TableBody>
-            {fields.length < 1 && (
+            {/* {fields.length < 1 && (
               <TableRow>
                 <TableCell colSpan={10} className="text-center">
                   No Entries Yet
                 </TableCell>
               </TableRow>
-            )}
+            )} */}
+            {fields.map((entry: EmergencyLoanEntryFormData & { id: string }, i: number) => (
+              <EmergencyLoanFormTableDoc key={`entry-${entry.id}`} entry={entry} index={i} remove={remove} form={form} sticky={true} />
+            ))}
+          </TableBody>
+        </Table>
+        <Table>
+          <TableHeader>
+            <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal [&>th]:!text-xs">
+              <TableHead className=' whitespace-nowrap md:hidden'>Name</TableHead>
+              <TableHead className=' whitespace-nowrap lg:hidden'>Particular</TableHead>
+              <TableHead className=' whitespace-nowrap '>Acct. Code</TableHead>
+              <TableHead className=' whitespace-nowrap '>Description</TableHead>
+              <TableHead className=' whitespace-nowrap '>Debit</TableHead>
+              <TableHead className=' whitespace-nowrap '>Credit</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
+            </TableHeadRow>
+          </TableHeader>
+          <TableBody>
+            {/* {fields.length < 1 && (
+              <TableRow>
+                <TableCell colSpan={10} className="text-center">
+                  No Entries Yet
+                </TableCell>
+              </TableRow>
+            )} */}
             {fields.map((entry: EmergencyLoanEntryFormData & { id: string }, i: number) => (
               <EmergencyLoanFormTableDoc key={`entry-${entry.id}`} entry={entry} index={i} remove={remove} form={form} />
             ))}
           </TableBody>
         </Table>
       </div>
+       {fields.length < 1 && (
+        <p className=' text-xs text-zinc-800 w-full text-center mt-4'>No Entries Yet</p>   
+      )}
       {form.formState.errors.entries && <div className="text-red-600 text-xs text-center my-2">{form.formState.errors.entries.message}</div>}
     </div>
   );

@@ -71,20 +71,20 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
       totalDebit += Number(debit);
       totalCredit += Number(credit);
 
-      return { ...entry, debit, credit };
+      return {...entry, debit, credit };
     });
     data.amount = removeAmountComma(data.amount);
     data.root = '';
 
-    if (totalCredit !== totalDebit) {
-      form.setError('root', { message: 'Debit and Credit must be balanced.' });
-      return;
-    }
+    // if (totalCredit !== totalDebit) {
+    //   form.setError('root', { message: 'Debit and Credit must be balanced.' });
+    //   return;
+    // }
 
-    if (totalCredit + totalDebit !== Number(data.amount)) {
-      form.setError('root', { message: 'Total of debit and credit must be balanced with the amount field.' });
-      return;
-    }
+    // if (totalCredit + totalDebit !== Number(data.amount)) {
+    //   form.setError('root', { message: 'Total of debit and credit must be balanced with the amount field.' });
+    //   return;
+    // }
 
     setLoading(true);
     try {
@@ -112,6 +112,10 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
       setLoading(false);
     }
   }
+
+
+  const amount = form.watch("amount") || 0;
+
 
   return (
     <>
@@ -154,14 +158,23 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
                     <div>Diff: </div>
                     <div>{`${formatNumber(Math.abs(form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`}</div>
                   </div>
-                  <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+
+                  <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
+                    <div>Total: </div>
+                    <div>{`${amount.toLocaleString('en-US', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2,
+                        useGrouping: false,
+                      })}`}</div>
+                  </div>
+                  {/* <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
                     <div>Total Debit: </div>
                     <div>{`${formatNumber(form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0))}`}</div>
                   </div>
                   <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
                     <div>Total Credit: </div>
                     <div>{`${formatNumber(form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0))}`}</div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

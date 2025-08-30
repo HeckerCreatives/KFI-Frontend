@@ -74,6 +74,8 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount }: UpdateEntriesProp
     }
   }, [isOpen]);
 
+
+
   return (
     <div className="pb-2 flex flex-col h-full">
       <div>
@@ -134,14 +136,22 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount }: UpdateEntriesProp
             <div>Diff: </div>
             <div>{`${formatNumber(Math.abs(data.entries.reduce((acc, entry) => acc + Number(entry.debit), 0) - data.entries.reduce((acc, entry) => acc + Number(entry.credit), 0)))}`}</div>
           </div>
-          <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+           <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
+              <div>Total: </div>
+              <div>{`${transaction.amount.toLocaleString('en-US', {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 2,
+                  useGrouping: false,
+                })}`}</div>
+            </div>
+          {/* <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
             <div>Total Debit: </div>
             <div>{`${formatNumber(data.entries.reduce((acc, entry) => acc + Number(entry.debit), 0))}`}</div>
           </div>
           <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
             <div>Total Credit: </div>
             <div>{`${formatNumber(data.entries.reduce((acc, entry) => acc + Number(entry.credit), 0))}`}</div>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="pt-2">

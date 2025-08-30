@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonIcon, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonIcon, IonPage, IonSpinner, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
@@ -132,34 +132,59 @@ const ClientMasterFile = () => {
                 </div>
                 <ClientMasterFileFilter getClients={getClients} />
               </div>
-              <div className="relative overflow-auto rounded-xl">
-                <Table>
-                  <TableHeader>
-                    <TableHeadRow>
-                      <TableHead className="sticky left-0 min-w-[10rem] max-w-[10rem]">Account No.</TableHead>
-                      <TableHead className="sticky left-[10rem] min-w-[10rem] max-w-[10rem]">Name</TableHead>
-                      <TableHead className="lg:sticky left-[20rem] min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
-                      <TableHead className="lg:sticky left-[30rem] min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
-                      <TableHead className="lg:sticky left-[42rem] min-w-[10rem] max-w-[10rem]">Member Status</TableHead>
-                      <TableHead>Address</TableHead>
-                      <TableHead>City</TableHead>
-                      <TableHead>Zip Code</TableHead>
-                      <TableHead>Mobile No.</TableHead>
-                      {haveActions(token.role, 'clients', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
+              <div className="relative flex overflow-auto rounded-xl">
+                <Table className=' sticky z-50 top-0 left-0 md:table hidden'>
+                  <TableHeader className=''>
+                    <TableHeadRow className=''>
+                      <TableHead className=" hidden lg:table-cell min-w-[10rem] max-w-[10rem] py-4">Account No.</TableHead>
+                      <TableHead className=" hidden md:table-cell min-w-[10rem] max-w-[10rem] py-4">Name</TableHead>
+                      <TableHead className="hidden lg:table-cell min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
+                      <TableHead className="hidden lg:table-cell min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
+                    
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
-                    {data.loading && <TableLoadingRow colspan={25} />}
-                    {!data.loading && data.clients.length < 1 && <TableNoRows label="No Client Record Found" colspan={25} />}
+                    {/* {data.loading && <TableLoadingRow colspan={25} />} */}
+                    {/* {!data.loading && data.clients.length < 1 && <TableNoRows label="No Client Record Found" colspan={25} />} */}
                     {!data.loading &&
                       data.clients.length > 0 &&
                       data.clients.map((client: ClientMasterFileType) => (
                         <TableRow key={client._id} className="[&>td]:bg-white">
-                          <TableCell className="sticky left-0 min-w-[10rem] max-w-[10rem]">{client.acctNumber}</TableCell>
-                          <TableCell className="sticky left-[10rem] min-w-[10rem] max-w-[10rem]">{client.name}</TableCell>
-                          <TableCell className="lg:sticky left-[20rem] min-w-[5rem] max-w-[5rem]">{client.center.centerNo}</TableCell>
-                          <TableCell className="lg:sticky left-[30rem] min-w-[12rem] max-w-[12rem]">{client.acctOfficer}</TableCell>
-                          <TableCell className="lg:sticky left-[42rem] min-w-[10rem] max-w-[10rem]">{client.memberStatus}</TableCell>
+                          <TableCell className="hidden lg:table-cell min-w-[10rem] max-w-[10rem]">{client.acctNumber}</TableCell>
+                          <TableCell className=" min-w-[10rem] max-w-[10rem]">{client.name}</TableCell>
+                          <TableCell className="hidden lg:table-cell min-w-[5rem] max-w-[5rem]">{client.center.centerNo}</TableCell>
+                          <TableCell className="hidden lg:table-cell min-w-[12rem] max-w-[12rem]">{client.acctOfficer}</TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+                <Table className=' '>
+                  <TableHeader>
+                    <TableHeadRow>
+                      <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">Account No.</TableHead>
+                      <TableHead className=" md:hidden min-w-[10rem] max-w-[10rem]">Name</TableHead>
+                      <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
+                      <TableHead className=" lg:hidden min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
+                      <TableHead className=" min-w-[10rem] max-w-[10rem]">Member Status</TableHead>
+                      <TableHead className=' whitespace-nowrap'>Address</TableHead>
+                      <TableHead className=' whitespace-nowrap'>City</TableHead>
+                      <TableHead className=' whitespace-nowrap'>Zip Code</TableHead>
+                      <TableHead className=' whitespace-nowrap'>Mobile No.</TableHead>
+                      {haveActions(token.role, 'clients', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {/* {data.loading && <TableLoadingRow colspan={25} />} */}
+                    {/* {!data.loading && data.clients.length < 1 && <TableNoRows label="No Client Record Found" colspan={25} />} */}
+                    {!data.loading &&
+                      data.clients.length > 0 &&
+                      data.clients.map((client: ClientMasterFileType) => (
+                        <TableRow key={client._id} className="[&>td]:bg-white">
+                          <TableCell className=" lg:hidden min-w-[10rem] max-w-[10rem]">{client.acctNumber}</TableCell>
+                          <TableCell className=" md:hidden min-w-[10rem] max-w-[10rem]">{client.name}</TableCell>
+                          <TableCell className=" lg:hidden min-w-[5rem] max-w-[5rem]">{client.center.centerNo}</TableCell>
+                          <TableCell className=" lg:hidden min-w-[12rem] max-w-[12rem]">{client.acctOfficer}</TableCell>
+                          <TableCell className=" min-w-[10rem] max-w-[10rem]">{client.memberStatus}</TableCell>
                           <TableCell>{client.address}</TableCell>
                           <TableCell>{client.city}</TableCell>
                           <TableCell>{client.zipCode}</TableCell>
@@ -182,7 +207,19 @@ const ClientMasterFile = () => {
                       ))}
                   </TableBody>
                 </Table>
+
+                
               </div>
+               {!data.loading && data.clients.length < 1 &&(
+                  <p className=' text-xs text-zinc-800 w-full text-center mt-4'>No Client Record Found</p>   
+                )}
+
+                {data.loading && (
+                  <div className=' w-full mt-4 flex items-center justify-center'>
+                <IonSpinner name="lines-small" />
+
+                  </div>
+                )}
             </div>
           </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />

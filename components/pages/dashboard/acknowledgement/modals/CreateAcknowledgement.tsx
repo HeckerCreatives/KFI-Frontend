@@ -98,7 +98,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height [--max-width:74rem] [--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:84rem] [--width:95%]"
       >
         {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
@@ -117,6 +117,9 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
                 <AcknowledgementFormTable form={form} />
               </div>
             </div>
+
+            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
             <div className="text-end space-x-1 px-2">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                 {loading ? 'Saving...' : 'Save'}
