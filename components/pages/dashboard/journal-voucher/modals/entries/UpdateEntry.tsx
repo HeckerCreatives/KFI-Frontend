@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import ModalHeader from '../../../../../ui/page/ModalHeader';
-import { ExpenseVoucherEntry, JournalVoucherEntry, TErrorData, TFormError } from '../../../../../../types/types';
+import { ExpenseVoucherEntry, JournalVoucher, JournalVoucherEntry, TErrorData, TFormError } from '../../../../../../types/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import kfiAxios from '../../../../../utils/axios';
@@ -17,9 +17,12 @@ import { formatAmount, removeAmountComma } from '../../../../../ui/utils/formatN
 type UpdateEntryProps = {
   entry: JournalVoucherEntry;
   setData: React.Dispatch<React.SetStateAction<TData>>;
+  transaction: JournalVoucher;
+  entries: JournalVoucherEntry[];
+  setEntries: React.Dispatch<React.SetStateAction<JournalVoucherEntry[]>>;
 };
 
-const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
+const UpdateEntry = ({ entry, setData, setEntries }: UpdateEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -61,33 +64,61 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
   }
 
   const onSubmit = async (data: JournalVoucherEntryFormData) => {
-    setLoading(true);
-    try {
-      data.debit = removeAmountComma(data.debit);
-      data.credit = removeAmountComma(data.credit);
-      const result = await kfiAxios.put(`/journal-voucher/entries/${entry.journalVoucher}/${entry._id}`, data);
-      const { success, entry: updatedEntry } = result.data;
-      if (success) {
-        setData((prev: TData) => {
-          const index = prev.entries.findIndex((entry: JournalVoucherEntry) => entry._id === updatedEntry._id);
-          if (index < 0) return prev;
-          prev.entries[index] = { ...updatedEntry };
-          return { ...prev };
-        });
-        present({ message: 'Entry successfully updated', duration: 1000 });
-        dismiss();
-        return;
-      }
-      present({ message: 'Failed to update the entry', duration: 1000 });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
-    }
-  };
+     setLoading(true);
+     try {
+       const debitStr = removeAmountComma(data.debit as string);
+       const creditStr = removeAmountComma(data.credit as string);
+ 
+       const debit = Number(debitStr);
+       const credit = Number(creditStr);
+ 
+       if (isNaN(debit) || isNaN(credit)) {
+         form.setError("root", { message: "Debit and Credit must be valid numbers." });
+         setLoading(false);
+         return;
+       }
+ 
+       const updatedEntry: JournalVoucherEntry = {
+         ...entry,
+         ...data,
+         journalVoucher: '',
+         acctCode: {
+           _id: data.acctCodeId ?? '',
+           code: data.acctCode ?? '',
+           description: data.description ?? '',
+         },
+         debit,
+         credit,
+         particular: data.particular ?? '',
+         cvForRecompute: data.cvForRecompute ?? '',
+         createdAt: new Date().toISOString(),
+         client: {
+           _id: data.client ?? '',
+           name: data.clientLabel ?? '',
+           center: {
+             _id: '',
+             centerNo: '',
+           },
+         },
+       };
+ 
+       setData((prev: TData) => {
+         const updatedEntries = prev.entries.map((e) =>
+           e._id === entry._id ? updatedEntry : e
+         );
+ 
+        setEntries(updatedEntries);
+         return { ...prev, entries: updatedEntries };
+       });
+ 
+       present({ message: 'Entry successfully updated', duration: 1000 });
+       dismiss();
+     } catch (error: any) {
+       present({ message: 'Failed to update entry locally', duration: 1000 });
+     } finally {
+       setLoading(false);
+     }
+   };
 
   return (
     <>

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { createSharp } from 'ionicons/icons';
-import { Release, TErrorData, TFormError } from '../../../../../types/types';
+import { AcknowledgementEntry, Release, ReleaseEntry, TErrorData, TFormError } from '../../../../../types/types';
 import { formatDateInput } from '../../../../utils/date-utils';
 import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
@@ -24,6 +24,9 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+   const [entries, setEntries] = useState<ReleaseEntry[]>(release.entries || []);
+    const [preventries, setPrevEntries] = useState<ReleaseEntry[]>(release.entries || []);
+    const [deletedIds, setDeletedIds] = useState<string[]>([]);
 
   const form = useForm<ReleaseFormData>({
     resolver: zodResolver(releaseSchema),
@@ -77,14 +80,50 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
   function dismiss() {
     form.reset();
     setIsOpen(false);
+    setDeletedIds([])
+  }
+
+  function normalizeCVNumber(cv: string): string {
+    if (!cv) return "";
+
+    return cv.replace(/^(CV#)+/, "CV#");
+  }
+
+  function removeCVTag(cv: string): string {
+    if (!cv) return "";
+    return cv.replace(/CV#/g, "");
   }
 
   async function onSubmit(data: ReleaseFormData) {
     setLoading(true);
     try {
+       const finalDeletedIds = deletedIds.filter((id) =>
+      preventries.some((e) => e._id === id)
+      );
+
+      const prevIds = new Set(preventries.map((e) => e._id));
+
+      const formattedEntries = entries.map((entry, index) => {
+        const isExisting = prevIds.has(entry._id);
+        return {
+            _id: isExisting ? entry._id : undefined,
+            loanReleaseEntryId: entry.loanReleaseEntryId._id,
+            cvNo: normalizeCVNumber(entry.cvNo),
+            // dueDate: acknowledgement.date,
+            noOfWeeks: entry.loanReleaseEntryId.transaction.noOfWeeks,
+            name: entry.loanReleaseEntryId.client.name,
+            particular: entry.particular,
+            acctCodeId: entry.acctCode._id,
+            acctCode: entry.acctCode.code ?? '',
+            description: entry.acctCode.description ?? '',
+            debit: entry.debit?.toString() ?? "",
+            credit: entry.credit?.toString() ?? "",
+            dueDate: entry.loanReleaseEntryId.transaction.dueDate,
+        };
+      });
       data.amount = removeAmountComma(data.amount);
       data.cashCollection = removeAmountComma(data.cashCollection as string);
-      const result = await kfiAxios.put(`release/${release._id}`, data);
+      const result = await kfiAxios.put(`/release/${release._id}`, {...data, entries: formattedEntries , deletedIds: finalDeletedIds});
       const { success, release: updatedRelease } = result.data;
       if (success) {
         setData(prev => {
@@ -97,6 +136,7 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
           message: 'Acknowledgement successfully updated.',
           duration: 1000,
         });
+        dismiss()
         return;
       }
       present({
@@ -112,6 +152,8 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
       setLoading(false);
     }
   }
+
+  console.log(preventries , deletedIds)
 
   return (
     <>
@@ -155,8 +197,11 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
               </IonButton>
             </div>
           </form>
+
+            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
-            <UpdateReleaseEntries isOpen={isOpen} release={release} />
+            <UpdateReleaseEntries isOpen={isOpen} release={release} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} />
           </div>
         </div>
       </IonModal>

@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { EmergencyLoanFormData, emergencyLoanSchema } from '../../../../../validations/emergency-loan.schema';
 import kfiAxios from '../../../../utils/axios';
-import { DamayanFund, TErrorData, TFormError } from '../../../../../types/types';
+import { DamayanFund, DamayanFundEntry, TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { createSharp } from 'ionicons/icons';
@@ -26,6 +26,9 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+   const [entries, setEntries] = useState<DamayanFundEntry[]>(damayanFund.entries || []);
+    const [preventries, setPrevEntries] = useState<DamayanFundEntry[]>(damayanFund.entries || []);
+    const [deletedIds, setDeletedIds] = useState<string[]>([]);
 
   const form = useForm<DamayanFundFormData>({
     resolver: zodResolver(damayanFundSchema),
@@ -71,13 +74,35 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
   function dismiss() {
     form.reset();
     setIsOpen(false);
+    setDeletedIds([])
   }
 
   async function onSubmit(data: EmergencyLoanFormData) {
     setLoading(true);
     try {
+       const finalDeletedIds = deletedIds.filter((id) =>
+      preventries.some((e) => e._id === id)
+      );
+
+      const prevIds = new Set(preventries.map((e) => e._id));
+
+      const formattedEntries = entries.map((entry, index) => {
+        const isExisting = prevIds.has(entry._id);
+        return {
+            _id: isExisting ? entry._id : undefined,
+            client: entry.client._id,
+            clientLabel: entry.client.name,
+            particular: entry.particular,
+            acctCodeId: entry.acctCode._id,
+            acctCode: entry.acctCode.code,
+            description: entry.acctCode.description,
+            debit: entry.debit,
+            credit: entry.debit,
+          
+        };
+      });
       data.amount = removeAmountComma(data.amount);
-      const result = await kfiAxios.put(`damayan-fund/${damayanFund._id}`, data);
+      const result = await kfiAxios.put(`damayan-fund/${damayanFund._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
       const { success, damayanFund: updatedDamayanFund } = result.data;
       if (success) {
         setData(prev => {
@@ -90,6 +115,7 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
           message: 'Damayan fund successfully updated.',
           duration: 1000,
         });
+        dismiss()
         return;
       }
       present({
@@ -151,8 +177,11 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
             </div>
           </form>
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
-            <UpdateDFEntries isOpen={isOpen} damayanFund={damayanFund} />
+            <UpdateDFEntries isOpen={isOpen} damayanFund={damayanFund} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}  />
           </div>
+
+            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
         </div>
       </IonModal>
     </>

@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { createSharp } from 'ionicons/icons';
 import { ExpenseVoucherFormData, expenseVoucherSchema, UpdateExpenseVoucherFormData, updateExpenseVoucherSchema } from '../../../../../validations/expense-voucher.schema';
-import { ExpenseVoucher, TErrorData, TFormError } from '../../../../../types/types';
+import { ExpenseVoucher, ExpenseVoucherEntry, TErrorData, TFormError } from '../../../../../types/types';
 import { TData } from '../ExpenseVoucher';
 import { formatDateInput } from '../../../../utils/date-utils';
 import ExpenseVoucherForm from '../components/ExpenseVoucherForm';
@@ -24,6 +24,10 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [entries, setEntries] = useState<ExpenseVoucherEntry[]>(expenseVoucher.entries || []);
+  const [preventries, setPrevEntries] = useState<ExpenseVoucherEntry[]>(expenseVoucher.entries || []);
+  const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  
 
   const form = useForm<UpdateExpenseVoucherFormData>({
     resolver: zodResolver(updateExpenseVoucherSchema),
@@ -60,6 +64,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
         bank: expenseVoucher.bankCode._id,
         bankLabel: `${expenseVoucher.bankCode.code}`,
         amount: `${formatAmount(expenseVoucher.amount)}`,
+        
       });
     }
   }, [expenseVoucher, form]);
@@ -67,13 +72,39 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
   function dismiss() {
     form.reset();
     setIsOpen(false);
+    setDeletedIds([])
   }
 
   async function onSubmit(data: UpdateExpenseVoucherFormData) {
     setLoading(true);
     try {
+
+      const finalDeletedIds = deletedIds.filter((id) =>
+      preventries.some((e) => e._id === id)
+      );
+
+      const prevIds = new Set(preventries.map((e) => e._id));
+
+      const formattedEntries = entries.map((entry, index) => {
+        const isExisting = prevIds.has(entry._id);
+        return {
+          _id: isExisting ? entry._id : undefined,
+          client: entry.client?._id ?? "",
+          clientLabel: entry.client.name ?? "",
+          particular: entry.particular,
+          acctCodeId: entry.acctCode?._id ?? "",
+          acctCode: entry.acctCode?.code ?? "",
+          description: entry.acctCode?.description ?? "",
+          debit: entry.debit?.toString() ?? "",
+          credit: entry.credit?.toString() ?? "",
+          cvForRecompute: entry.cvForRecompute
+        };
+      });
+
+
+
       data.amount = removeAmountComma(data.amount);
-      const result = await kfiAxios.put(`expense-voucher/${expenseVoucher._id}`, data);
+      const result = await kfiAxios.put(`/expense-voucher/${expenseVoucher._id}`, {...data, entries: formattedEntries,deletedIds: finalDeletedIds});
       const { success, expenseVoucher: updatedExpenseVoucher } = result.data;
       if (success) {
         setData(prev => {
@@ -86,6 +117,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
           message: 'Expense voucher successfully updated.',
           duration: 1000,
         });
+        dismiss()
         return;
       }
       present({
@@ -149,7 +181,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
 
           </form>
           <div className="border-t border-t-slate-200 mt-2 flex-1 py-2">
-            <UpdateExpenseVoucherEntries isOpen={isOpen} expenseVoucher={expenseVoucher} />
+            <UpdateExpenseVoucherEntries isOpen={isOpen} expenseVoucher={expenseVoucher} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}/>
           </div>
         </div>
       </IonModal>

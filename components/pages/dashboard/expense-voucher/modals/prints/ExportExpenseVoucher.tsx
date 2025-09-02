@@ -34,25 +34,27 @@ const ExportExpenseVoucher = ({ expenseVoucher }: { expenseVoucher: ExpenseVouch
     modal.current?.dismiss();
   }
 
-  async function handlePrint(data: ExpenseVoucherOptionFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.get(`/expense-voucher/export/${data.option}/${expenseVoucher._id}`, { responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([result.data]));
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'expense-voucher.xlsx';
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } catch (error: any) {
-      present({
-        message: 'Failed to export the expense voucher records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
-    }
-  }
+
+  async function handlePrint() {
+          setLoading(true);
+          try {
+                  const result = await kfiAxios.get(`/expense-voucher/export/file/${expenseVoucher._id}`, { responseType: 'blob' });
+
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'clients.xlsx';
+            a.click();
+            window.URL.revokeObjectURL(url);
+          } catch (error: any) {
+            present({
+              message: 'Failed to export records. Please try again',
+              duration: 1000,
+            });
+          } finally {
+            setLoading(false);
+          }
+        }
 
   return (
     <>
@@ -86,7 +88,7 @@ const ExportExpenseVoucher = ({ expenseVoucher }: { expenseVoucher: ExpenseVouch
             <ModalHeader disabled={loading} title="Expense Voucher - Export" sub="Manage expense voucher documents." dismiss={dismiss} />
 
           <form onSubmit={form.handleSubmit(handlePrint)}>
-            <PrintExportOptionForm form={form} loading={loading} />
+            {/* <PrintExportOptionForm form={form} loading={loading} /> */}
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <FileExportIcon size={20} stroke='.8' className=' mr-1'/>

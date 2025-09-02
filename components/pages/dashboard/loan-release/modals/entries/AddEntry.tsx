@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useState } from 'react';
 import ModalHeader from '../../../../../ui/page/ModalHeader';
-import { Entry, TErrorData, TFormError } from '../../../../../../types/types';
+import {Entry, TErrorData, TFormError, Transaction } from '../../../../../../types/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { entriesSchema, EntryFormData } from '../../../../../../validations/loan-release.schema';
@@ -10,6 +10,8 @@ import kfiAxios from '../../../../../utils/axios';
 import checkError from '../../../../../utils/check-error';
 import formErrorHandler from '../../../../../utils/form-error-handler';
 import { removeAmountComma } from '../../../../../ui/utils/formatNumber';
+import { TData } from '../../components/UpdateEntries';
+
 
 type AddEntryProps = {
   transactionId: string;
@@ -18,9 +20,17 @@ type AddEntryProps = {
   getEntries: (page: number) => void;
   currentAmount: string;
   entries: Entry[];
+  setData: React.Dispatch<React.SetStateAction<any>>; 
+  transaction: Transaction;
+  setEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
+
 };
 
-const AddEntry = ({ transactionId, centerNo, centerId, getEntries, currentAmount, entries }: AddEntryProps) => {
+
+
+
+
+const AddEntry = ({ transactionId, centerNo, centerId, getEntries, currentAmount, entries, setData, transaction, setEntries }: AddEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,8 +57,16 @@ const AddEntry = ({ transactionId, centerNo, centerId, getEntries, currentAmount
     setIsOpen(false);
   }
 
-  const onSubmit = async (data: EntryFormData) => {
-    if (data.debit === '' && data.credit === '' && data.checkNo === '' && data.cycle === '') {
+  function generateObjectId(): string {
+  const timestamp = Math.floor(Date.now() / 1000).toString(16);
+  const random = 'xxxxxxxxxxxxxxxx'.replace(/x/g, () =>
+    Math.floor(Math.random() * 16).toString(16)
+  ); 
+  return timestamp + random; 
+}
+
+ const onSubmit = async (data: EntryFormData) => {
+    if (data.debit === '' && data.credit === '') {
       form.setError('root', { message: 'No data to save. Please add a debit/credit.' });
       return;
     }
@@ -58,37 +76,105 @@ const AddEntry = ({ transactionId, centerNo, centerId, getEntries, currentAmount
       data.debit = removeAmountComma(data.debit as string);
       data.credit = removeAmountComma(data.credit as string);
 
-      let totalDebit = Number(data.debit);
-      let totalCredit = Number(data.credit);
+      console.log(data)
 
-      entries.map(entry => {
-        totalDebit += Number(entry.debit);
-        totalCredit += Number(entry.credit);
-      });
+      const debit = Number(removeAmountComma(data.debit));
+      const credit = Number(removeAmountComma(data.credit));
 
-      if (totalDebit + totalCredit !== Number(removeAmountComma(currentAmount))) {
-        form.setError('root', { message: 'Total of debit and credit must be balanced with the amount' });
-        return;
-      }
+      setEntries((prev: Entry[]) => {
+      const nextLine = prev.length > 0 
+        ? Math.max(...prev.map(e => e.line)) + 1 
+        : 1;
 
-      const result = await kfiAxios.post(`transaction/loan-release/entries/${transactionId}`, data);
-      const { success } = result.data;
-      if (success) {
-        getEntries(1);
-        present({ message: 'Entry successfully added', duration: 1000 });
-        dismiss();
-        return;
-      }
-      present({ message: 'Failed to update the entry', duration: 1000 });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
+      const newEntry: Entry = {
+        _id: generateObjectId(),
+        acctCode: { 
+          _id: data.acctCodeId ?? "", 
+          code: data.acctCode ?? "", 
+          description: data.description ?? "" 
+        },
+        client: { 
+          _id: data.clientId ?? "", 
+          name: data.client ?? "" 
+        },
+        product: { 
+          _id: transaction.bank._id, 
+          code: transaction.bank.code 
+        }, 
+        center: { 
+          _id: centerId, 
+          centerNo: centerNo, 
+          description: transaction.center.description 
+        }, 
+        debit,
+        credit,
+        checkNo: data.checkNo ?? "",
+        cycle: Number(data.cycle),
+        interest: Number(data.interest) || null,
+        particular: data.particular ?? "",
+        transaction: "",
+        createdAt: new Date().toISOString(),
+        line: nextLine,
+      };
+
+      return [...prev, newEntry];
+    });
+
+    
+    setData((prev: any) => {
+    const nextLine =
+        prev.entries.length > 0
+          ? Math.max(...prev.entries.map((e: Entry) => e.line)) + 1
+          : 1;
+
+      const newEntry: Entry = {
+        _id: generateObjectId(),
+        acctCode: {
+          _id: data.acctCodeId ?? "",
+          code: data.acctCode ?? "",
+          description: data.description ?? "",
+        },
+        client: {
+          _id: data.clientId ?? "",
+          name: data.client ?? "",
+        },
+        product: {
+          _id: transaction.bank._id,
+          code: transaction.bank.code,
+        },
+        center: {
+          _id: centerId,
+          centerNo: centerNo,
+          description: transaction.center.description,
+        },
+        debit,
+        credit,
+        checkNo: data.checkNo ?? "",
+        cycle: Number(data.cycle),
+        interest: Number(data.interest) || null,
+        particular: data.particular ?? "",
+        transaction: "",
+        createdAt: new Date().toISOString(),
+        line: nextLine,
+      };
+
+      return {
+        ...prev,
+        entries: [...prev.entries, newEntry],
+      };
+    });
+
+
+
+      present({ message: 'Entry added successfully', duration: 1200 });
+      dismiss();
+    } catch (err) {
+      present({ message: 'Failed to add entry locally', duration: 1200 });
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import ModalHeader from '../../../../../ui/page/ModalHeader';
-import { AcknowledgementEntry, ExpenseVoucherEntry, TErrorData, TFormError } from '../../../../../../types/types';
+import { Acknowledgement, AcknowledgementEntry, ExpenseVoucherEntry, TErrorData, TFormError } from '../../../../../../types/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EntryFormData } from '../../../../../../validations/loan-release.schema';
@@ -18,9 +18,13 @@ import { formatAmount, removeAmountComma } from '../../../../../ui/utils/formatN
 type UpdateEntryProps = {
   entry: AcknowledgementEntry;
   setData: React.Dispatch<React.SetStateAction<TData>>;
+
+   transaction: Acknowledgement;
+  entries: AcknowledgementEntry[];
+  setEntries: React.Dispatch<React.SetStateAction<AcknowledgementEntry[]>>;
 };
 
-const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
+const UpdateEntry = ({ entry, setData, transaction, entries, setEntries }: UpdateEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -65,30 +69,94 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
     setIsOpen(false);
   }
 
-  const onSubmit = async (data: EntryFormData) => {
+  // const onSubmit = async (data: EntryFormData) => {
+  //   setLoading(true);
+  //   try {
+  //     data.debit = removeAmountComma(data.debit as string);
+  //     data.credit = removeAmountComma(data.credit as string);
+  //     const result = await kfiAxios.put(`/acknowledgement/entries/${entry.acknowledgement}/${entry._id}`, data);
+  //     const { success, entry: updatedEntry } = result.data;
+  //     if (success) {
+  //       setData((prev: TData) => {
+  //         const index = prev.entries.findIndex((entry: AcknowledgementEntry) => entry._id === updatedEntry._id);
+  //         if (index < 0) return prev;
+  //         prev.entries[index] = { ...updatedEntry };
+  //         return { ...prev };
+  //       });
+  //       present({ message: 'Entry successfully updated', duration: 1000 });
+  //       dismiss();
+  //       return;
+  //     }
+  //     present({ message: 'Failed to update the entry', duration: 1000 });
+  //   } catch (error: any) {
+  //     const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+  //     const errors: TFormError[] | string = checkError(errs);
+  //     const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+  //     formErrorHandler(errors, form.setError, fields);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
+  const onSubmit = async (data: AcknowledgementEntryFormData) => {
     setLoading(true);
     try {
-      data.debit = removeAmountComma(data.debit as string);
-      data.credit = removeAmountComma(data.credit as string);
-      const result = await kfiAxios.put(`/acknowledgement/entries/${entry.acknowledgement}/${entry._id}`, data);
-      const { success, entry: updatedEntry } = result.data;
-      if (success) {
-        setData((prev: TData) => {
-          const index = prev.entries.findIndex((entry: AcknowledgementEntry) => entry._id === updatedEntry._id);
-          if (index < 0) return prev;
-          prev.entries[index] = { ...updatedEntry };
-          return { ...prev };
+      const debitStr = removeAmountComma(data.debit as string);
+      const creditStr = removeAmountComma(data.credit as string);
+
+      const debit = Number(debitStr);
+      const credit = Number(creditStr);
+
+      if (isNaN(debit) || isNaN(credit)) {
+        form.setError("root", {
+          message: "Debit and Credit must be valid numbers.",
         });
-        present({ message: 'Entry successfully updated', duration: 1000 });
-        dismiss();
+        setLoading(false);
         return;
       }
-      present({ message: 'Failed to update the entry', duration: 1000 });
+
+      const updatedEntry: AcknowledgementEntry = {
+        ...entry, 
+        ...data,
+        
+         loanReleaseEntryId: {
+               _id: data.loanReleaseEntryId ?? '',
+               transaction: {
+                 _id: "",
+                 code: data.cvNo ?? '',
+                dueDate: data.dueDate ?? '',
+
+                 noOfWeeks: 20
+               },
+               client: {
+                 _id: data.client ?? '',
+                 name: data.name ?? ''
+               }},
+        acctCode: {
+          _id: data.acctCodeId,
+          code: data.acctCode,
+          description: data.description ?? "",
+        },
+        debit,
+        credit,
+        particular: data.particular ?? "",
+        createdAt: new Date().toISOString(),
+      };
+
+      setData((prev: TData) => {
+        const updatedEntries = prev.entries.map((e) =>
+          e._id === entry._id ? updatedEntry : e
+        );
+
+        setEntries(updatedEntries);
+        return { ...prev, entries: updatedEntries };
+      });
+
+      present({ message: "Entry successfully updated", duration: 1000 });
+      dismiss();
     } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
+      present({ message: "Failed to update entry locally", duration: 1000 });
     } finally {
       setLoading(false);
     }

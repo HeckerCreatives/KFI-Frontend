@@ -34,23 +34,24 @@ const PrintAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowledg
     modal.current?.dismiss();
   }
 
+
   async function handlePrint(data: AcknowledgementOptionFormData) {
-    try {
-      setLoading(true);
-      const result = await kfiAxios.get(`/acknowledgement/print/${data.option}/${acknowledgement._id}`, { responseType: 'blob' });
-      const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl, '_blank');
-      setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
-    } catch (error: any) {
-      present({
-        message: 'Failed to print the official receipts records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+      try {
+        setLoading(true);
+        const result = await kfiAxios.get(`/acknowledgement/print/file/${acknowledgement._id}`, { responseType: 'blob' });
+        const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, '_blank');
+        setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
+      } catch (error: any) {
+        present({
+          message: 'Failed to print records. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setLoading(false);
+      }
     }
-  }
 
   return (
     <>
@@ -84,7 +85,7 @@ const PrintAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowledg
             <ModalHeader disabled={loading} title="Official Receipt - Print" sub="Manage official reciept." dismiss={dismiss} />
 
           <form onSubmit={form.handleSubmit(handlePrint)} className=' mt-4'>
-            <PrintExportOptionForm form={form} loading={loading} />
+            {/* <PrintExportOptionForm form={form} loading={loading} /> */}
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <PrinterIcon size={15} stroke='.8' className=' mr-1'/>

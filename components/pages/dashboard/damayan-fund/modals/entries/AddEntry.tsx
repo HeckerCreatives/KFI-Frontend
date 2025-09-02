@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useState } from 'react';
 import ModalHeader from '../../../../../ui/page/ModalHeader';
-import { TErrorData, TFormError } from '../../../../../../types/types';
+import { DamayanFund, DamayanFundEntry, TErrorData, TFormError } from '../../../../../../types/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import kfiAxios from '../../../../../utils/axios';
@@ -10,13 +10,19 @@ import formErrorHandler from '../../../../../utils/form-error-handler';
 import DFEntryForm from '../../components/DFEntryForm';
 import { DamayanFundEntryFormData, damayanFundEntrySchema } from '../../../../../../validations/damayan-fund.schema';
 import { removeAmountComma } from '../../../../../ui/utils/formatNumber';
+import { TDFData } from '../../components/UpdateDFEntries';
 
 type AddEntryProps = {
   damayanFundId: string;
   getEntries: (page: number) => void;
+
+  entries: DamayanFundEntry[] 
+  setEntries: React.Dispatch<React.SetStateAction<DamayanFundEntry[]>>;
+  setData: React.Dispatch<React.SetStateAction<TDFData>>;
+  transaction: DamayanFund;
 };
 
-const AddEntry = ({ damayanFundId, getEntries }: AddEntryProps) => {
+const AddEntry = ({ damayanFundId, getEntries, setEntries, setData }: AddEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,29 +46,103 @@ const AddEntry = ({ damayanFundId, getEntries }: AddEntryProps) => {
     setIsOpen(false);
   }
 
-  const onSubmit = async (data: DamayanFundEntryFormData) => {
-    setLoading(true);
-    try {
-      data.debit = removeAmountComma(data.debit);
-      data.credit = removeAmountComma(data.credit);
-      const result = await kfiAxios.post(`/damayan-fund/entries/${damayanFundId}`, data);
-      const { success } = result.data;
-      if (success) {
-        getEntries(1);
-        present({ message: 'Entry successfully added', duration: 1000 });
-        dismiss();
-        return;
-      }
-      present({ message: 'Failed to update the entry', duration: 1000 });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
-    }
-  };
+   function generateObjectId(): string {
+          const timestamp = Math.floor(Date.now() / 1000).toString(16);
+          const random = 'xxxxxxxxxxxxxxxx'.replace(/x/g, () =>
+            Math.floor(Math.random() * 16).toString(16)
+          ); 
+          return timestamp + random; 
+        }
+      
+         function normalizeCVNumber(cv: string): string {
+          if (!cv) return "";
+      
+          return cv.replace(/^(CV#)+/, "CV#");
+        }
+      
+      
+          const onSubmit = async (data: DamayanFundEntryFormData) => {
+               if (data.debit === '' && data.credit === '') {
+                 form.setError('root', { message: 'No data to save. Please add a debit/credit.' });
+                 return;
+               }
+           
+               setLoading(true);
+               try {
+                 data.debit = removeAmountComma(data.debit as string);
+                 data.credit = removeAmountComma(data.credit as string);
+           
+                 console.log(data)
+           
+                 const debit = Number(removeAmountComma(data.debit));
+                 const credit = Number(removeAmountComma(data.credit));
+           
+                 setEntries((prev: DamayanFundEntry[]) => {
+                 const newEntry: DamayanFundEntry = {
+                   _id: generateObjectId(),
+                   damayanFund: '',
+                   client: {
+                     _id: data.client ?? '',
+                     name: data.clientLabel ?? '',
+                     center: {
+                       _id: "68872eebc38229f7552c52ce",
+                       centerNo: "0001"
+                     }
+                   },
+                   particular: data.particular ?? '',
+                   acctCode: {
+                     _id: data.acctCodeId,
+                     code: data.acctCode,
+                     description: data.description ?? ''
+                   },
+                   debit: debit,
+                   credit: credit,
+                   createdAt: new Date().toISOString()
+                 }
+                  
+           
+                 return [...prev, newEntry];
+               });
+           
+               
+               setData((prev: TDFData) => {
+            
+              const newEntry: DamayanFundEntry = {
+                   _id: generateObjectId(),
+                   damayanFund: '',
+                   client: {
+                     _id: data.client ?? '',
+                     name: data.clientLabel ?? '',
+                     center: {
+                       _id: "68872eebc38229f7552c52ce",
+                       centerNo: "0001"
+                     }
+                   },
+                   particular: data.particular ?? '',
+                   acctCode: {
+                     _id: data.acctCodeId,
+                     code: data.acctCode,
+                     description: data.description ?? ''
+                   },
+                   debit: debit,
+                   credit: credit,
+                   createdAt: new Date().toISOString()
+                 }
+           
+                 return {
+                   ...prev,
+                   entries: [...prev.entries, newEntry],
+                 };
+               });
+          
+                 present({ message: 'Entry added successfully', duration: 1200 });
+                 dismiss();
+               } catch (err) {
+                 present({ message: 'Failed to add entry locally', duration: 1200 });
+               } finally {
+                 setLoading(false);
+               }
+             };
 
   return (
     <>

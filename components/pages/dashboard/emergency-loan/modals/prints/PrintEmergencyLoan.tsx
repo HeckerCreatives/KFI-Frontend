@@ -37,14 +37,14 @@ const PrintEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan })
   async function handlePrint(data: EmergencyLoanOptionFormData) {
     try {
       setLoading(true);
-      const result = await kfiAxios.get(`/emergency-loan/print/${data.option}/${emergencyLoan._id}`, { responseType: 'blob' });
+      const result = await kfiAxios.get(`/emergency-loan/print/file/${emergencyLoan._id}`, { responseType: 'blob' });
       const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       window.open(pdfUrl, '_blank');
       setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
     } catch (error: any) {
       present({
-        message: 'Failed to print the emergency loan records. Please try again',
+        message: 'Failed to print records. Please try again',
         duration: 1000,
       });
     } finally {
@@ -84,7 +84,7 @@ const PrintEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan })
             <ModalHeader disabled={loading} title="Emergency Loan - Print" sub="Manage emergency loan records." dismiss={dismiss} />
 
           <form onSubmit={form.handleSubmit(handlePrint)} className='mt-4'>
-            <PrintExportOptionForm form={form} loading={loading} />
+            {/* <PrintExportOptionForm form={form} loading={loading} /> */}
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 

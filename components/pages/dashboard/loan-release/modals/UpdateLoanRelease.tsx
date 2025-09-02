@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { UpdateLoanReleaseFormData, updateLoanReleaseSchema } from '../../../../../validations/loan-release.schema';
 import { createSharp } from 'ionicons/icons';
-import { TErrorData, TFormError, Transaction } from '../../../../../types/types';
+import { Entry, TErrorData, TFormError, Transaction } from '../../../../../types/types';
 import { formatDateTable } from '../../../../utils/date-utils';
 import LoanReleaseViewCard from '../components/LoanReleaseViewCard';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
@@ -26,6 +26,10 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [entries, setEntries] = useState<Entry[]>(transaction.entries || []);
+  const [prevEntries, setPrevEntries] = useState<Entry[]>(transaction.entries || []);
+  const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  
 
   const form = useForm<UpdateLoanReleaseFormData>({
     resolver: zodResolver(updateLoanReleaseSchema),
@@ -48,14 +52,43 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
 
   function dismiss() {
     form.reset();
+    setDeletedIds([])
     setIsOpen(false);
   }
 
   async function onSubmit(data: UpdateLoanReleaseFormData) {
     setLoading(true);
+  
     try {
+      const prevIds = new Set(prevEntries.map((e) => e._id));
+
+      const formattedEntries = entries.map((entry, index) => {
+        const isExisting = prevIds.has(entry._id);
+        return {
+          _id: isExisting ? entry._id : undefined,
+          line: index + 1,
+          clientId: entry.client?._id ?? "",
+          client: entry.client?.name ?? "",
+          particular: `${entry.center?.centerNo ?? ""} - ${entry.client?.name ?? ""}`,
+          acctCodeId: entry.acctCode?._id ?? "",
+          acctCode: entry.acctCode?.code ?? "",
+          description: entry.acctCode?.description ?? "",
+          debit: entry.debit?.toString() ?? "",
+          credit: entry.credit?.toString() ?? "",
+          interest: entry.interest?.toString() ?? "",
+          cycle: entry.cycle?.toString() ?? "",
+          checkNo: entry.checkNo ?? "",
+        };
+      });
+
+     const finalDeletedIds = deletedIds.filter((id) =>
+      prevEntries.some((e) => e._id === id)
+    );
+
+
+
       data.amount = removeAmountComma(data.amount);
-      const result = await kfiAxios.put(`transaction/loan-release/${transaction._id}`, data);
+      const result = await kfiAxios.put(`/transaction/loan-release/${transaction._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
       const { success, transaction: updatedTransaction } = result.data;
       if (success) {
         setData(prev => {
@@ -68,12 +101,16 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
           message: 'Loan release successfully updated.',
           duration: 1000,
         });
+
+        dismiss()
         return;
       }
       present({
         message: 'Failed to update the loan release',
         duration: 1000,
       });
+
+      
     } catch (error: any) {
       const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
       const errors: TFormError[] | string = checkError(errs);
@@ -83,6 +120,10 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
       setLoading(false);
     }
   }
+
+  console.log('New Prev', entries, prevEntries)
+
+
 
   return (
     <>
@@ -162,7 +203,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                     label="Cycle"
                     placeholder="Type here"
                     className="!p-2 rounded-md !text-[0.7rem] "
-                    labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600 !w-24"
+                    labelClassName="truncate !text-[0.7rem] !text-slate-600 !w-24"
                   />
                 </FormIonItem>
 
@@ -175,7 +216,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                     label="Interest Rate (%)"
                     placeholder="Type here"
                     className="!p-2 rounded-md !text-[0.7rem]"
-                    labelClassName="truncate min-w-28 !text-[0.7rem] !text-slate-600"
+                    labelClassName="truncate !text-[0.7rem] !text-slate-600"
                   />
                 </FormIonItem>
               </div>
@@ -225,8 +266,11 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
             </div>
           </form>
           <div className="border-t border-t-slate-400 pt-5 flex-1">
-            <UpdateEntries isOpen={isOpen} transaction={transaction} currentAmount={`${transaction.amount}`} />
+            <UpdateEntries isOpen={isOpen} transaction={transaction} currentAmount={`${transaction.amount}`} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}/>
           </div>
+
+          {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
         </div>
       </IonModal>
     </>

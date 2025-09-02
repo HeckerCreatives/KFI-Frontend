@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import ModalHeader from '../../../../../ui/page/ModalHeader';
-import { EmergencyLoanEntry, ExpenseVoucherEntry, TErrorData, TFormError } from '../../../../../../types/types';
+import { EmergencyLoan, EmergencyLoanEntry, ExpenseVoucherEntry, TErrorData, TFormError } from '../../../../../../types/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import kfiAxios from '../../../../../utils/axios';
@@ -16,9 +16,13 @@ import { formatAmount, removeAmountComma } from '../../../../../ui/utils/formatN
 type UpdateEntryProps = {
   entry: EmergencyLoanEntry;
   setData: React.Dispatch<React.SetStateAction<TELData>>;
+
+  transaction: EmergencyLoan;
+  entries: EmergencyLoanEntry[];
+  setEntries: React.Dispatch<React.SetStateAction<EmergencyLoanEntry[]>>;
 };
 
-const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
+const UpdateEntry = ({ entry, setData, setEntries }: UpdateEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -57,34 +61,65 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
     setIsOpen(false);
   }
 
-  const onSubmit = async (data: EmergencyLoanEntryFormData) => {
-    setLoading(true);
-    try {
-      data.debit = removeAmountComma(data.debit);
-      data.credit = removeAmountComma(data.credit);
-      const result = await kfiAxios.put(`/emergency-loan/entries/${entry.emergencyLoan}/${entry._id}`, data);
-      const { success, entry: updatedEntry } = result.data;
-      if (success) {
+ const onSubmit = async (data: EmergencyLoanEntryFormData) => {
+      setLoading(true);
+      try {
+        const debitStr = removeAmountComma(data.debit as string);
+        const creditStr = removeAmountComma(data.credit as string);
+  
+        const debit = Number(debitStr);
+        const credit = Number(creditStr);
+  
+        if (isNaN(debit) || isNaN(credit)) {
+          form.setError("root", {
+            message: "Debit and Credit must be valid numbers.",
+          });
+          setLoading(false);
+          return;
+        }
+  
+        const updatedEntry: EmergencyLoanEntry = {
+          ...entry, 
+          ...data,
+          emergencyLoan: '',
+          client: {
+            _id: data.client ?? '',
+            name: data.clientLabel ?? '',
+            center: {
+              _id: "68872eebc38229f7552c52ce",
+              centerNo: "0001"
+            }
+          },
+          particular: data.particular ?? '',
+          acctCode: {
+            _id: data.acctCodeId,
+            code: data.acctCode,
+            description: data.description ?? ''
+          },
+          debit: debit,
+          credit: credit,
+          createdAt: new Date().toISOString()
+          
+        
+        };
+  
         setData((prev: TELData) => {
-          const index = prev.entries.findIndex((entry: EmergencyLoanEntry) => entry._id === updatedEntry._id);
-          if (index < 0) return prev;
-          prev.entries[index] = { ...updatedEntry };
-          return { ...prev };
+          const updatedEntries = prev.entries.map((e) =>
+            e._id === entry._id ? updatedEntry : e
+          );
+  
+          setEntries(updatedEntries);
+          return { ...prev, entries: updatedEntries };
         });
-        present({ message: 'Entry successfully updated', duration: 1000 });
+  
+        present({ message: "Entry successfully updated", duration: 1000 });
         dismiss();
-        return;
+      } catch (error: any) {
+        present({ message: "Failed to update entry locally", duration: 1000 });
+      } finally {
+        setLoading(false);
       }
-      present({ message: 'Failed to update the entry', duration: 1000 });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   return (
     <>

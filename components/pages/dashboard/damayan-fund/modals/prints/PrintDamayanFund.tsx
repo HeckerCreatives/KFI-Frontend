@@ -34,17 +34,17 @@ const PrintDamayanFund = ({ damayanFund }: { damayanFund: DamayanFund }) => {
     modal.current?.dismiss();
   }
 
-  async function handlePrint(data: DamayanFundOptionFormData) {
+   async function handlePrint() {
     try {
       setLoading(true);
-      const result = await kfiAxios.get(`/damayan-fund/print/${data.option}/${damayanFund._id}`, { responseType: 'blob' });
+      const result = await kfiAxios.get(`/damayan-fund/print/file/${damayanFund._id}`, { responseType: 'blob' });
       const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       window.open(pdfUrl, '_blank');
       setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
     } catch (error: any) {
       present({
-        message: 'Failed to print the damayan fund records. Please try again',
+        message: 'Failed to print records. Please try again',
         duration: 1000,
       });
     } finally {
@@ -84,7 +84,7 @@ const PrintDamayanFund = ({ damayanFund }: { damayanFund: DamayanFund }) => {
                       <ModalHeader disabled={loading} title="Damayan Fund - Print" sub="Manage damayan fund records." dismiss={dismiss} />
           
           <form onSubmit={form.handleSubmit(handlePrint)} className=' mt-4'>
-            <PrintExportOptionForm form={form} loading={loading} />
+            {/* <PrintExportOptionForm form={form} loading={loading} /> */}
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <PrinterIcon size={15} stroke='.8' className=' mr-1'/>

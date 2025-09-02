@@ -2,7 +2,7 @@ import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from
 import React, { useEffect, useState } from 'react';
 import ModalHeader from '../../../../../ui/page/ModalHeader';
 import { create } from 'ionicons/icons';
-import { Entry, TErrorData, TFormError } from '../../../../../../types/types';
+import { Entry, TErrorData, TFormError, Transaction } from '../../../../../../types/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { entriesSchema, EntryFormData } from '../../../../../../validations/loan-release.schema';
@@ -16,9 +16,13 @@ import { formatAmount, removeAmountComma } from '../../../../../ui/utils/formatN
 type UpdateEntryProps = {
   entry: Entry;
   setData: React.Dispatch<React.SetStateAction<TData>>;
+  transaction: Transaction;
+  entries: Entry[];
+    setEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
+  
 };
 
-const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
+const UpdateEntry = ({ entry, setData, setEntries }: UpdateEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -64,37 +68,76 @@ const UpdateEntry = ({ entry, setData }: UpdateEntryProps) => {
   }
 
   const onSubmit = async (data: EntryFormData) => {
-    if (data.debit === '' && data.credit === '' && data.checkNo === '' && data.cycle === '') {
-      form.setError('root', { message: 'No data to save. Please fill necessary fields.' });
-      return;
-    }
-    setLoading(true);
-    try {
-      data.debit = removeAmountComma(data.debit as string);
-      data.credit = removeAmountComma(data.credit as string);
-      const result = await kfiAxios.put(`transaction/loan-release/entries/${entry.transaction}/${entry._id}`, data);
-      const { success, entry: updatedEntry } = result.data;
-      if (success) {
-        setData((prev: TData) => {
-          const index = prev.entries.findIndex((entry: Entry) => entry._id === updatedEntry._id);
-          if (index < 0) return prev;
-          prev.entries[index] = { ...updatedEntry };
-          return { ...prev };
-        });
-        present({ message: 'Entry successfully updated', duration: 1000 });
-        dismiss();
-        return;
-      }
-      present({ message: 'Failed to update the entry', duration: 1000 });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (
+    data.debit === '' &&
+    data.credit === '' &&
+    data.checkNo === '' &&
+    data.cycle === ''
+  ) {
+    form.setError('root', {
+      message: 'No data to save. Please fill necessary fields.',
+    });
+    return;
+  }
+
+  setLoading(true);
+  try {
+    data.debit = removeAmountComma(data.debit as string);
+    data.credit = removeAmountComma(data.credit as string);
+
+    const updatedEntry: Entry = {
+      ...entry,
+      ...data,
+      transaction: entry.transaction,
+      center: entry.center,
+      client: {
+        ...entry.client,
+        _id: data.clientId || entry.client._id,
+        name: data.client || entry.client.name,
+      },
+      acctCode: {
+        ...entry.acctCode,
+        _id: data.acctCodeId || entry.acctCode?._id,
+        code: data.acctCode || entry.acctCode?.code,
+        description: data.description || entry.acctCode?.description,
+      },
+      debit: data.debit ? Number(data.debit) : 0,
+      credit: data.credit ? Number(data.credit) : 0,
+      interest: data.interest ? Number(data.interest) : 0,
+      cycle: data.cycle ? Number(data.cycle) : 0,
+      checkNo: data.checkNo || '',
+    };
+
+      setData((prev: TData) => {
+        const index = prev.entries.findIndex((e: Entry) => e._id === entry._id);
+        if (index < 0) return prev;
+        const updatedEntries = [...prev.entries];
+        updatedEntries[index] = updatedEntry;
+
+        setEntries(updatedEntries);
+
+        return { ...prev, entries: updatedEntries };
+      });
+
+
+    // setEntries((prev: Entry[]) => {
+    //   const index = prev.findIndex((e) => e._id === entry._id);
+    //   if (index < 0) return prev;
+    //   const updatedEntries = [...prev];
+    //   updatedEntries[index] = updatedEntry;
+    //   return updatedEntries;
+    // });
+
+
+    present({ message: 'Entry successfully updated', duration: 1000 });
+    dismiss();
+  } catch (error: any) {
+    present({ message: 'Failed to update entry locally', duration: 1000 });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <>

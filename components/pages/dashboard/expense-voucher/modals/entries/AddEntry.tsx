@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useState } from 'react';
 import ModalHeader from '../../../../../ui/page/ModalHeader';
-import { TErrorData, TFormError } from '../../../../../../types/types';
+import { ExpenseVoucher, ExpenseVoucherEntry, TErrorData, TFormError, Transaction } from '../../../../../../types/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { entriesSchema, EntryFormData } from '../../../../../../validations/loan-release.schema';
@@ -12,13 +12,19 @@ import formErrorHandler from '../../../../../utils/form-error-handler';
 import { ExpenseVoucherEntryFormData, expenseVoucherEntrySchema } from '../../../../../../validations/expense-voucher.schema';
 import EntryForm from '../../components/EVEntryForm';
 import { removeAmountComma } from '../../../../../ui/utils/formatNumber';
+import { TData } from '../../components/UpdateExpenseVoucherEntries';
 
 type AddEntryProps = {
   expenseVoucherId: string;
   getEntries: (page: number) => void;
+  transaction: ExpenseVoucher;
+  entries: ExpenseVoucherEntry[] 
+  setEntries: React.Dispatch<React.SetStateAction<ExpenseVoucherEntry[]>>;
+  setData: React.Dispatch<React.SetStateAction<TData>>;
+  
 };
 
-const AddEntry = ({ expenseVoucherId, getEntries }: AddEntryProps) => {
+const AddEntry = ({ expenseVoucherId, getEntries, entries, setEntries, transaction, setData }: AddEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -43,30 +49,108 @@ const AddEntry = ({ expenseVoucherId, getEntries }: AddEntryProps) => {
     setIsOpen(false);
   }
 
-  const onSubmit = async (data: EntryFormData) => {
-    setLoading(true);
-    try {
-      data.credit = removeAmountComma(data.credit as string);
-      data.debit = removeAmountComma(data.debit as string);
-      const result = await kfiAxios.post(`/expense-voucher/entries/${expenseVoucherId}`, data);
-      const { success } = result.data;
-      if (success) {
-        getEntries(1);
-        present({ message: 'Entry successfully added', duration: 1000 });
-        dismiss();
+  function generateObjectId(): string {
+    const timestamp = Math.floor(Date.now() / 1000).toString(16);
+    const random = 'xxxxxxxxxxxxxxxx'.replace(/x/g, () =>
+      Math.floor(Math.random() * 16).toString(16)
+    ); 
+    return timestamp + random; 
+  }
+
+
+
+  const onSubmit = async (data: ExpenseVoucherEntryFormData) => {
+      if (data.debit === '' && data.credit === '') {
+        form.setError('root', { message: 'No data to save. Please add a debit/credit.' });
         return;
       }
-      present({ message: 'Failed to update the entry', duration: 1000 });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
+      setLoading(true);
+      try {
+        data.debit = removeAmountComma(data.debit as string);
+        data.credit = removeAmountComma(data.credit as string);
+  
+        console.log(data)
+  
+        const debit = Number(removeAmountComma(data.debit));
+        const credit = Number(removeAmountComma(data.credit));
+  
+        setEntries((prev: ExpenseVoucherEntry[]) => {
+      
+  
+        const newEntry: ExpenseVoucherEntry = {
+          _id: generateObjectId(),
+          expenseVoucher: transaction._id,
+          acctCode: {
+            _id: data.acctCodeId ?? "",
+            code: data.acctCode ?? "",
+            description: data.description ?? ""
+          },
 
+          debit,
+          credit,
+          particular: data.particular ?? "",
+          cvForRecompute: data.cvForRecompute ?? '',
+          // encodedBy: "685f9b8702d3d375e40529c1",
+          createdAt: new Date().toISOString(),
+          client: {
+            _id: data.client ?? '',
+            name: data.clientLabel ?? '',
+            center: {
+              _id: '',
+              centerNo: ''
+            }
+          }
+        };
+  
+        return [...prev, newEntry];
+      });
+  
+      
+      setData((prev: any) => {
+     
+  
+       const newEntry: ExpenseVoucherEntry = {
+          _id: generateObjectId(),
+          expenseVoucher: transaction._id,
+          acctCode: {
+            _id: data.acctCodeId ?? "",
+            code: data.acctCode ?? "",
+            description: data.description ?? ""
+          },
+
+          debit,
+          credit,
+          particular: data.particular ?? "",
+          cvForRecompute: data.cvForRecompute ?? '',
+          // encodedBy: "685f9b8702d3d375e40529c1",
+          createdAt: new Date().toISOString(),
+          client: {
+            _id: data.client ?? '',
+            name: data.clientLabel ?? '',
+            center: {
+              _id: '',
+              centerNo: ''
+            }
+          }
+        };
+  
+        return {
+          ...prev,
+          entries: [...prev.entries, newEntry],
+        };
+      });
+  
+  
+  
+        present({ message: 'Entry added successfully', duration: 1200 });
+        dismiss();
+      } catch (err) {
+        present({ message: 'Failed to add entry locally', duration: 1200 });
+      } finally {
+        setLoading(false);
+      }
+    };
   return (
     <>
       <IonButton onClick={() => setIsOpen(true)} type="button" fill="clear" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>

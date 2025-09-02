@@ -106,6 +106,7 @@ export type Entry = {
   product: { _id: string; code: string };
   transaction: string;
   createdAt: string;
+  line: number
 };
 
 export type EmergencyLoanEntry = {
@@ -143,6 +144,9 @@ export type AcknowledgementEntry = {
   credit: number | null;
   debit: number | null;
   createdAt: string;
+  cvNo: string
+
+  
 };
 
 export type ReleaseEntry = {
@@ -158,6 +162,8 @@ export type ReleaseEntry = {
   credit: number | null;
   debit: number | null;
   createdAt: string;
+  cvNo: string
+
 };
 
 export type ExpenseVoucherEntry = {
@@ -279,6 +285,7 @@ export type EmergencyLoan = {
   bankCode: { _id: string; code: string; description: string };
   amount: number;
   encodedBy: { username: string };
+  entries: any[];
 };
 
 export type DamayanFund = {
@@ -296,6 +303,8 @@ export type DamayanFund = {
   bankCode: { _id: string; code: string; description: string };
   amount: number;
   encodedBy: { username: string };
+  entries: any[];
+
 };
 
 export type Transaction = {

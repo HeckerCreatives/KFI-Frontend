@@ -1,7 +1,7 @@
 import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/react';
 import React, { useState } from 'react';
 import ModalHeader from '../../../../../ui/page/ModalHeader';
-import { TErrorData, TFormError } from '../../../../../../types/types';
+import { Acknowledgement, AcknowledgementEntry, TErrorData, TFormError } from '../../../../../../types/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EntryFormData } from '../../../../../../validations/loan-release.schema';
@@ -11,13 +11,19 @@ import formErrorHandler from '../../../../../utils/form-error-handler';
 import { AcknowledgementEntryFormData, acknowledgementEntrySchema } from '../../../../../../validations/acknowledgement.schema';
 import AcknowledgementEntryForm from '../../components/AcknowledgementEntryForm';
 import { removeAmountComma } from '../../../../../ui/utils/formatNumber';
+import { TData } from '../../components/UpdateAcknowledgementEntries';
 
 type AddEntryProps = {
   acknowledgementId: string;
   getEntries: (page: number) => void;
+  entries: AcknowledgementEntry[] 
+  setEntries: React.Dispatch<React.SetStateAction<AcknowledgementEntry[]>>;
+  setData: React.Dispatch<React.SetStateAction<TData>>;
+  transaction: Acknowledgement;
+  
 };
 
-const AddEntry = ({ acknowledgementId, getEntries }: AddEntryProps) => {
+const AddEntry = ({ acknowledgementId, getEntries, setEntries, setData, transaction }: AddEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -43,29 +49,164 @@ const AddEntry = ({ acknowledgementId, getEntries }: AddEntryProps) => {
     setIsOpen(false);
   }
 
-  const onSubmit = async (data: EntryFormData) => {
-    setLoading(true);
-    try {
-      data.debit = removeAmountComma(data.debit as string);
-      data.credit = removeAmountComma(data.credit as string);
-      const result = await kfiAxios.post(`/acknowledgement/entries/${acknowledgementId}`, data);
-      const { success } = result.data;
-      if (success) {
-        getEntries(1);
-        present({ message: 'Entry successfully added', duration: 1000 });
-        dismiss();
-        return;
-      }
-      present({ message: 'Failed to update the entry', duration: 1000 });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const onSubmit = async (data: EntryFormData) => {
+  //   setLoading(true);
+  //   try {
+  //     data.debit = removeAmountComma(data.debit as string);
+  //     data.credit = removeAmountComma(data.credit as string);
+  //     const result = await kfiAxios.post(`/acknowledgement/entries/${acknowledgementId}`, data);
+  //     const { success } = result.data;
+  //     if (success) {
+  //       getEntries(1);
+  //       present({ message: 'Entry successfully added', duration: 1000 });
+  //       dismiss();
+  //       return;
+  //     }
+  //     present({ message: 'Failed to update the entry', duration: 1000 });
+  //   } catch (error: any) {
+  //     const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+  //     const errors: TFormError[] | string = checkError(errs);
+  //     const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+  //     formErrorHandler(errors, form.setError, fields);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  function generateObjectId(): string {
+    const timestamp = Math.floor(Date.now() / 1000).toString(16);
+    const random = 'xxxxxxxxxxxxxxxx'.replace(/x/g, () =>
+      Math.floor(Math.random() * 16).toString(16)
+    ); 
+    return timestamp + random; 
+  }
+
+   function normalizeCVNumber(cv: string): string {
+    if (!cv) return "";
+
+    return cv.replace(/^(CV#)+/, "CV#");
+  }
+
+
+    const onSubmit = async (data: AcknowledgementEntryFormData) => {
+         if (data.debit === '' && data.credit === '') {
+           form.setError('root', { message: 'No data to save. Please add a debit/credit.' });
+           return;
+         }
+     
+         setLoading(true);
+         try {
+           data.debit = removeAmountComma(data.debit as string);
+           data.credit = removeAmountComma(data.credit as string);
+     
+           console.log(data)
+     
+           const debit = Number(removeAmountComma(data.debit));
+           const credit = Number(removeAmountComma(data.credit));
+     
+           setEntries((prev: AcknowledgementEntry[]) => {
+           const newEntry: AcknowledgementEntry = {
+             _id: generateObjectId(),
+             acknowledgement: '',
+             loanReleaseEntryId: {
+               _id: data.loanReleaseEntryId ?? '',
+               transaction: {
+                 _id: "",
+                 code: normalizeCVNumber(data.cvNo ?? '') ?? '',
+                dueDate: data.dueDate ?? '',
+
+                 noOfWeeks: 20
+               },
+               client: {
+                 _id: data.client ?? '',
+                 name: data.name ?? ''
+               },
+               // center: {
+               //     _id: "",
+               //     centerNo: "",
+               //     description: "",
+               //     locatio: "",
+               //     centerChief: "",
+               //     treasurer: "",
+               //     acctOfficer: "",
+               //     createdAt:""
+               // }
+             },
+             acctCode: {
+               _id: data.acctCodeId,
+               code: data.acctCode,
+               description: data.description ?? ''
+             },
+             debit: debit,
+             credit: credit,
+             particular: data.particular ?? '',
+             createdAt: new Date().toISOString(),
+             cvNo: data.cvNo ?? ''
+           }
+            
+     
+           return [...prev, newEntry];
+         });
+     
+         
+         setData((prev: any) => {
+      
+         const newEntry: AcknowledgementEntry = {
+             _id: generateObjectId(),
+            acknowledgement: '',
+            loanReleaseEntryId: {
+                _id: data.loanReleaseEntryId ?? '',
+                transaction: {
+                    _id: "",
+                    code:normalizeCVNumber(data.cvNo ?? '') ?? '',
+                    dueDate: data.dueDate ?? '',
+                    noOfWeeks: 20
+                },
+                client: {
+                    _id: data.client ?? '',
+                    name: data.name ?? ''
+                },
+                // center: {
+                //     _id: "",
+                //     centerNo: "",
+                //     description: "",
+                //     locatio: "",
+                //     centerChief: "",
+                //     treasurer: "",
+                //     acctOfficer: "",
+                //     createdAt:""
+                // }
+            },
+            acctCode: {
+              _id: data.acctCodeId,
+              code: data.acctCode,
+              description: data.description ?? ''},
+            debit: debit,
+            credit: credit,
+            particular: data.particular ?? '',
+            createdAt: new Date().toISOString(),
+             cvNo: data.cvNo ?? ''
+
+        }
+     
+           return {
+             ...prev,
+             entries: [...prev.entries, newEntry],
+           };
+         });
+     
+     
+     
+           present({ message: 'Entry added successfully', duration: 1200 });
+           dismiss();
+         } catch (err) {
+           present({ message: 'Failed to add entry locally', duration: 1200 });
+         } finally {
+           setLoading(false);
+         }
+       };
+
+
 
   return (
     <>

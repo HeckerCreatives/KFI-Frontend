@@ -6,6 +6,7 @@ export const releaseEntrySchema = z.object({
   dueDate: z.string().optional().or(z.literal('')),
   noOfWeeks: z.string().optional().or(z.literal('')),
   name: z.string().optional().or(z.literal('')),
+  client: z.string().optional().or(z.literal('')),
   particular: z.string().optional().or(z.literal('')),
   acctCodeId: z.string().min(1, 'Account Code Id is required').max(255, 'Account Code Id must only consist of 255 characters'),
   acctCode: z.string().min(1, 'Account Code is required').max(255, 'Account Code must only consist of 255 characters'),

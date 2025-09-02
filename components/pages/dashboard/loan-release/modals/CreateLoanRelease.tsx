@@ -81,10 +81,10 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
       return;
     }
 
-   if (totalCredit + totalDebit !== Number(data.amount)) {
-     form.setError('root', { message: 'Total of debit and credit must be balanced with the amount field.' });
-     return;
-   }
+  //  if (totalCredit + totalDebit !== Number(data.amount)) {
+  //    form.setError('root', { message: 'Total of debit and credit must be balanced with the amount field.' });
+  //    return;
+  //  }
 
     setLoading(true);
     try {

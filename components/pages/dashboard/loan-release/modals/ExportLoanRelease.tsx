@@ -37,7 +37,7 @@ const ExportLoanRelease = ({ transaction }: { transaction: Transaction }) => {
   async function handlePrint(data: LoanReleaseOptionFormData) {
     setLoading(true);
     try {
-      const result = await kfiAxios.get(`/transaction/export/${data.option}/${transaction._id}`, { responseType: 'blob' });
+      const result = await kfiAxios.get(`/transaction/export/file/${transaction._id}`, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([result.data]));
       const a = document.createElement('a');
       a.href = url;
@@ -86,7 +86,7 @@ const ExportLoanRelease = ({ transaction }: { transaction: Transaction }) => {
             <ModalHeader disabled={loading} title="Loan Release - Export" sub="Manage loan release documents." dismiss={dismiss} />
 
           <form onSubmit={form.handleSubmit(handlePrint)}>
-            <PrintExportOptionForm form={form} loading={loading} />
+            {/* <PrintExportOptionForm form={form} loading={loading} /> */}
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <FileExportIcon size={20} stroke='.8' className=' mr-1'/>

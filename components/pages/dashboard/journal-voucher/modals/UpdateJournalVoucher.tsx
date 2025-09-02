@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { createSharp } from 'ionicons/icons';
 import { JournalVoucherFormData, journalVoucherSchema } from '../../../../../validations/journal-voucher.schema';
-import { JournalVoucher, TErrorData, TFormError } from '../../../../../types/types';
+import { JournalVoucher, JournalVoucherEntry, TErrorData, TFormError } from '../../../../../types/types';
 import { TData } from '../JournalVoucher';
 import { formatDateInput } from '../../../../utils/date-utils';
 import kfiAxios from '../../../../utils/axios';
@@ -13,7 +13,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import JournalVoucherForm from '../components/JournalVoucherForm';
 import UpdateJVEntries from '../components/UpdateJVEntries';
-import { formatAmount } from '../../../../ui/utils/formatNumber';
+import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type UpdateJournalVoucherProps = {
   journalVoucher: JournalVoucher;
@@ -24,6 +24,11 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [entries, setEntries] = useState<JournalVoucherEntry[]>(journalVoucher.entries || []);
+  const [preventries, setPrevEntries] = useState<JournalVoucherEntry[]>(journalVoucher.entries || []);
+  const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  
+
 
   const form = useForm<JournalVoucherFormData>({
     resolver: zodResolver(journalVoucherSchema),
@@ -41,6 +46,8 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
       bankLabel: '',
       amount: '0',
       mode: 'update',
+      entries: [],
+
     },
   });
 
@@ -60,6 +67,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
         bankLabel: `${journalVoucher.bankCode.code}`,
         amount: `${formatAmount(journalVoucher.amount)}`,
         mode: 'update',
+         entries: journalVoucher.entries,
       });
     }
   }, [journalVoucher, form]);
@@ -67,12 +75,38 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
   function dismiss() {
     form.reset();
     setIsOpen(false);
+    setDeletedIds([])
   }
 
   async function onSubmit(data: JournalVoucherFormData) {
     setLoading(true);
+    
+
+    data.amount = removeAmountComma(data.amount);
     try {
-      const result = await kfiAxios.put(`journal-voucher/${journalVoucher._id}`, data);
+
+      const finalDeletedIds = deletedIds.filter((id) =>
+      preventries.some((e) => e._id === id)
+      );
+
+      const prevIds = new Set(preventries.map((e) => e._id));
+      const formattedEntries = entries.map((entry, index) => {
+        const isExisting = prevIds.has(entry._id);
+        return {
+          _id: isExisting ? entry._id : undefined,
+          client: entry.client?._id ?? "",
+          clientLabel: entry.client.name ?? "",
+          particular: entry.particular,
+          acctCodeId: entry.acctCode?._id ?? "",
+          acctCode: entry.acctCode?.code ?? "",
+          description: entry.acctCode?.description ?? "",
+          debit: entry.debit?.toString() ?? "",
+          credit: entry.credit?.toString() ?? "",
+          cvForRecompute: entry.cvForRecompute
+        };
+      });
+
+      const result = await kfiAxios.put(`/journal-voucher/${journalVoucher._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
       const { success, journalVoucher: updatedJournalVoucher } = result.data;
       if (success) {
         setData(prev => {
@@ -85,6 +119,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
           message: 'Journal voucher successfully updated.',
           duration: 1000,
         });
+        dismiss()
         return;
       }
       present({
@@ -100,6 +135,8 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
       setLoading(false);
     }
   }
+
+  console.log(entries)
 
   return (
     <>
@@ -143,8 +180,17 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
               </IonButton>
             </div>
           </form>
+
+            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
-            <UpdateJVEntries isOpen={isOpen} journalVoucher={journalVoucher} />
+            <UpdateJVEntries isOpen={isOpen} journalVoucher={journalVoucher} 
+              entries={entries}
+             setEntries={setEntries}
+             setPrevEntries={setPrevEntries}
+             setDeletedIds={setDeletedIds}
+             deletedIds={deletedIds}
+            />
           </div>
         </div>
       </IonModal>

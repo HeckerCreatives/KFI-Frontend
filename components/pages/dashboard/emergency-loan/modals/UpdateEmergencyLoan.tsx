@@ -7,7 +7,7 @@ import { EmergencyLoanFormData, emergencyLoanSchema } from '../../../../../valid
 import EmergencyLoanForm from '../components/EmergencyLoanForm';
 import EmergencyLoanFormTable from '../components/EmergencyLoanFormTable';
 import kfiAxios from '../../../../utils/axios';
-import { EmergencyLoan, TErrorData, TFormError } from '../../../../../types/types';
+import { EmergencyLoan, EmergencyLoanEntry, TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { createSharp } from 'ionicons/icons';
@@ -26,6 +26,9 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [entries, setEntries] = useState<EmergencyLoanEntry[]>(emergencyLoan.entries || []);
+  const [preventries, setPrevEntries] = useState<EmergencyLoanEntry[]>(emergencyLoan.entries || []);
+  const [deletedIds, setDeletedIds] = useState<string[]>([]);
 
   const form = useForm<EmergencyLoanFormData>({
     resolver: zodResolver(emergencyLoanSchema),
@@ -71,13 +74,48 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
   function dismiss() {
     form.reset();
     setIsOpen(false);
+    setDeletedIds([])
   }
+
+  function normalizeCVNumber(cv: string): string {
+    if (!cv) return "";
+
+    return cv.replace(/^(CV#)+/, "CV#");
+  }
+
+  function removeCVTag(cv: string): string {
+    if (!cv) return "";
+    return cv.replace(/CV#/g, "");
+  }
+
+  
 
   async function onSubmit(data: EmergencyLoanFormData) {
     setLoading(true);
     try {
+
+       const finalDeletedIds = deletedIds.filter((id) =>
+      preventries.some((e) => e._id === id)
+      );
+
+      const prevIds = new Set(preventries.map((e) => e._id));
+
+      const formattedEntries = entries.map((entry, index) => {
+        const isExisting = prevIds.has(entry._id);
+        return {
+            _id: isExisting ? entry._id : undefined,
+            client: entry.client._id,
+            clientLabel: entry.client.name,
+            particular: entry.particular,
+            acctCodeId: entry.acctCode._id,
+            acctCode: entry.acctCode.code,
+            description: entry.acctCode.description,
+            debit: entry.debit,
+            credit: entry.debit
+        };
+      });
       data.amount = removeAmountComma(data.amount);
-      const result = await kfiAxios.put(`emergency-loan/${emergencyLoan._id}`, data);
+      const result = await kfiAxios.put(`emergency-loan/${emergencyLoan._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
       const { success, emergencyLoan: updatedEmergencyLoan } = result.data;
       if (success) {
         setData(prev => {
@@ -90,6 +128,7 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
           message: 'Emergency loan successfully updated.',
           duration: 1000,
         });
+        dismiss()
         return;
       }
       present({
@@ -152,8 +191,11 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
             </div>
           </form>
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
-            <UpdateELEntries isOpen={isOpen} emergencyLoan={emergencyLoan} />
+            <UpdateELEntries isOpen={isOpen} emergencyLoan={emergencyLoan} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} />
           </div>
+
+            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
         </div>
       </IonModal>
     </>

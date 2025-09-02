@@ -71,15 +71,7 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
   const isEduc = form.watch('isEduc');
 
   const handleSelectEntries = async () => {
-    // if (center === '') {
-    //   form.setError('centerLabel', { message: 'Center is required' });
-    //   return;
-    // }
-
-    // if (typeOfLoan === '') {
-    //   form.setError('typeOfLoanLabel', { message: 'Type of loan is required' });
-    //   return;
-    // }
+   
 
     try {
       setLoading(true);
@@ -171,43 +163,11 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
                 backdropDismiss={false}
                 className=" [--border-radius:0.35rem] auto-height [--max-width:32rem] [--width:95%]"
               >
-                {/* <IonHeader>
-                  <IonToolbar className=" text-white [--min-height:1rem] h-10">
-                    <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Type Selection" />
-                  </IonToolbar>
-                </IonHeader> */}
+              
                 <div className="inner-content !p-6  border-2 !border-slate-100">
                     <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Type Selection" />
         
-                  <div className="">
-                    <div className="flex items-center flex-wrap justify-start gap-2">
-                      {/* <div className="flex items-center min-w-20">
-                        <FormIonItem className="flex-1">
-                          <IonInput
-                            ref={ionInputRef}
-                            clearInput
-                            type="search"
-                            aria-label="Type here"
-                            placeholder="Type here"
-                            disabled={loading}
-                            className={classNames(
-                              'text-sm !bg-white rounded-md !px-2 ![--highlight-color-focused:none] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-slate-400 ![--min-height:1rem] !min-h-[1rem]',
-                            )}
-                          />
-                        </FormIonItem>
-                        <IonButton
-                          onClick={() => handleSearch(1)}
-                          type="button"
-                          fill="clear"
-                          className="max-h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
-                          strong
-                        >
-                          <Search01Icon size={15} stroke='.8' className=' mr-1'/>
-                          {loading ? 'Finding...' : 'Find'}
-                        </IonButton>
-                      </div> */}
-                    </div>
-                  </div>
+                  
                   <div className="relative overflow-auto !mt-4">
                      <Table>
                     <TableHeader>
@@ -252,9 +212,32 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
 
                       {loading && <p className=' w-full text-center'>Loading...</p>}
 
-                   <div className="flex items-center justify-center gap-2 mt-6">
+                       <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">
+                        <div>
+                          <IonButton onClick={handleClientPrevPage} disabled={clientpage === 1} fill="clear" className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md">
+                            <IonIcon icon={arrowBack} />
+                          </IonButton>
+                        </div>
+                        <div>
+                          <div className="text-sm !font-semibold  px-3 py-1.5 rounded-lg text-slate-700">
+                            {clientpage} / {Math.ceil(client.length / limit)}
+                          </div>
+                        </div>
+                        <div>
+                          <IonButton
+                            onClick={handleClientNextPage}
+                            disabled={clientpage === Math.ceil(client.length / limit)}
+                            fill="clear"
+                            className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                          >
+                            <IonIcon icon={arrowForward} />
+                          </IonButton>
+                        </div>
+                      </div>
+
+                   {/* <div className="flex items-center justify-center gap-2 mt-6">
                       <button
-                        className="px-3 py-1 border rounded disabled:opacity-50 bg-orange-500 text-black"
+                        className="px-3 py-1 border rounded disabled:opacity-50 bg-orange-600 text-black"
                         onClick={handleClientPrevPage}
                         disabled={clientpage === 1}
                       >
@@ -262,13 +245,13 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
                       </button>
                       
                       <button
-                        className="px-3 py-1 border rounded disabled:opacity-50 bg-orange-500 text-black"
+                        className="px-3 py-1 border rounded disabled:opacity-50 bg-orange-600 text-black"
                         onClick={handleClientNextPage}
                         disabled={clientpage === totalPages}
                       >
                       <ArrowRight01Icon size={20}/>
                       </button>
-                    </div>
+                    </div> */}
 
 
 

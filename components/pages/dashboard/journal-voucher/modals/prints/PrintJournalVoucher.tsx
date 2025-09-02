@@ -37,14 +37,14 @@ const PrintJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVouche
   async function handlePrint(data: JournalVoucherOptionFormData) {
     try {
       setLoading(true);
-      const result = await kfiAxios.get(`/journal-voucher/print/${data.option}/${journalVoucher._id}`, { responseType: 'blob' });
+      const result = await kfiAxios.get(`/journal-voucher/print/file/${journalVoucher._id}`, { responseType: 'blob' });
       const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       window.open(pdfUrl, '_blank');
       setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
     } catch (error: any) {
       present({
-        message: 'Failed to print the journal voucher records. Please try again',
+        message: 'Failed to print the expense voucher records. Please try again',
         duration: 1000,
       });
     } finally {
@@ -84,7 +84,7 @@ const PrintJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVouche
             <ModalHeader disabled={loading} title="Journal Voucher - Print" sub="Manage journal voucher documents." dismiss={dismiss} />
 
           <form onSubmit={form.handleSubmit(handlePrint)} className=' mt-4'>
-            <PrintExportOptionForm form={form} loading={loading} />
+            {/* <PrintExportOptionForm form={form} loading={loading} /> */}
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <PrinterIcon size={20} stroke='.8' className=' mr-1'/>

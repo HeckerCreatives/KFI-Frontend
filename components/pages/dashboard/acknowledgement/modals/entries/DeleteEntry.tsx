@@ -4,15 +4,22 @@ import ModalHeader from '../../../../../ui/page/ModalHeader';
 import { trash } from 'ionicons/icons';
 import { AcknowledgementEntry } from '../../../../../../types/types';
 import kfiAxios from '../../../../../utils/axios';
+import { TData } from '../../components/UpdateAcknowledgementEntries';
 
 type DeleteEntryProps = {
   entry: AcknowledgementEntry;
   getEntries: (page: number) => void;
   rowLength: number;
   currentPage: number;
+
+  entries: AcknowledgementEntry[];
+  setEntries: React.Dispatch<React.SetStateAction<AcknowledgementEntry[]>>;
+  deletedIds: string[]
+  setDeletedIds: React.Dispatch<React.SetStateAction<string[]>>
+  setData: React.Dispatch<React.SetStateAction<TData>>;
 };
 
-const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryProps) => {
+const DeleteEntry = ({ entry, getEntries, rowLength, currentPage, entries, setEntries, setDeletedIds, deletedIds, setData }: DeleteEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,31 +28,35 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage }: DeleteEntryP
     setIsOpen(false);
   }
 
-  async function handleDelete() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/acknowledgement/entries/${entry.acknowledgement}/${entry._id}`);
-      const { success } = result.data;
-      if (success) {
-        const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getEntries(page);
+  const handleDelete = async () => {
+      setLoading(true);
+      try {
+        setData((prev: TData) => {
+          const updatedEntries = prev.entries.filter((e) => e._id !== entry._id);
+          setEntries(updatedEntries);
+          return {
+            ...prev,
+            entries: prev.entries.filter((e: AcknowledgementEntry) => e._id !== entry._id),
+          };
+        });
+    
+        setDeletedIds((prev: string[]) => [...prev, entry._id])
+    
+    
         present({
           message: 'Entry successfully deleted',
           duration: 1000,
         });
         dismiss();
-        return;
+      } catch (error: any) {
+        present({
+          message: 'Failed to delete the entry record. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const message = error.response.data.error.message || error?.response?.data?.msg;
-      present({
-        message: message || 'Failed to delete the entry record. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
-    }
-  }
+    };
 
   return (
     <>

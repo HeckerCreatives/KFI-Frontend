@@ -34,25 +34,25 @@ const ExportAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowled
     modal.current?.dismiss();
   }
 
-  async function handlePrint(data: AcknowledgementOptionFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.get(`/acknowledgement/export/${data.option}/${acknowledgement._id}`, { responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([result.data]));
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'official-receipts.xlsx';
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } catch (error: any) {
-      present({
-        message: 'Failed to export the official receipts records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
-    }
-  }
+    async function handlePrint() {
+        setLoading(true);
+        try {
+          const result = await kfiAxios.get(`/acknowledgement/export/file/${acknowledgement._id}`, { responseType: 'blob' });
+          const url = window.URL.createObjectURL(new Blob([result.data]));
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'clients.xlsx';
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } catch (error: any) {
+          present({
+            message: 'Failed to export records. Please try again',
+            duration: 1000,
+          });
+        } finally {
+          setLoading(false);
+        }
+      }
 
   return (
     <>
@@ -86,7 +86,7 @@ const ExportAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowled
             <ModalHeader disabled={loading} title="Official Receipt - Export" sub="Manage official reciept." dismiss={dismiss} />
 
           <form onSubmit={form.handleSubmit(handlePrint)} className=' mt-4'>
-            <PrintExportOptionForm form={form} loading={loading} />
+            {/* <PrintExportOptionForm form={form} loading={loading} /> */}
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <FileExportIcon size={15} stroke='.8' className=' mr-1'/>

@@ -37,14 +37,14 @@ const PrintExpenseVoucher = ({ expenseVoucher }: { expenseVoucher: ExpenseVouche
   async function handlePrint(data: ExpenseVoucherOptionFormData) {
     try {
       setLoading(true);
-      const result = await kfiAxios.get(`/expense-voucher/print/${data.option}/${expenseVoucher._id}`, { responseType: 'blob' });
+      const result = await kfiAxios.get(`/expense-voucher/print/file/${expenseVoucher._id}`, { responseType: 'blob' });
       const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       window.open(pdfUrl, '_blank');
       setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
     } catch (error: any) {
       present({
-        message: 'Failed to print the expense voucher records. Please try again',
+        message: 'Failed to print records. Please try again',
         duration: 1000,
       });
     } finally {
@@ -83,7 +83,7 @@ const PrintExpenseVoucher = ({ expenseVoucher }: { expenseVoucher: ExpenseVouche
         <div className="inner-content !p-6">
             <ModalHeader disabled={loading} title="Expense Voucher - Print" sub="Manage expense voucher documents." dismiss={dismiss} />
           <form onSubmit={form.handleSubmit(handlePrint)}>
-            <PrintExportOptionForm form={form} loading={loading} />
+            {/* <PrintExportOptionForm form={form} loading={loading} /> */}
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <PrinterIcon size={20} stroke='.8' className=' mr-1'/>

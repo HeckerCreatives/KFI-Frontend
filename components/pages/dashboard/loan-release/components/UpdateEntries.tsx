@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, Tabl
 import { Entry, Transaction, TTableFilter } from '../../../../../types/types';
 import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
-import { useIonToast } from '@ionic/react';
+import { IonButton, IonIcon, useIonToast } from '@ionic/react';
 import TablePagination from '../../../../ui/forms/TablePagination';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
 import UpdateEntry from '../modals/entries/UpdateEntry';
@@ -11,32 +11,59 @@ import DeleteEntry from '../modals/entries/DeleteEntry';
 import AddEntry from '../modals/entries/AddEntry';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
+import { arrowBack, arrowForward } from 'ionicons/icons';
 
 export type TData = {
   entries: Entry[];
-  totalPages: number;
-  nextPage: boolean;
-  prevPage: boolean;
-  loading: boolean;
+  // totalPages: number;
+  // nextPage: boolean;
+  // prevPage: boolean;
+  // loading: boolean;
 };
 
 type UpdateEntriesProps = {
   isOpen: boolean;
   transaction: Transaction;
   currentAmount: string;
+  entries: Entry[];
+  setEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
+  deletedIds: string[]
+  setDeletedIds: React.Dispatch<React.SetStateAction<string[]>>
+  setPrevEntries: React.Dispatch<React.SetStateAction<Entry[]>>;
+  
 };
 
-const UpdateEntries = ({ isOpen, transaction, currentAmount }: UpdateEntriesProps) => {
+const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries, deletedIds, setDeletedIds, setPrevEntries }: UpdateEntriesProps) => {
   const [present] = useIonToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [data, setData] = useState<TData>({
     entries: [],
-    loading: false,
-    totalPages: 0,
-    nextPage: false,
-    prevPage: false,
+    // loading: false,
+    // totalPages: 0,
+    // nextPage: false,
+    // prevPage: false,
   });
+
+  const [page, setPage] = useState(1);
+  const limit = 5
+  const totalPages = Math.ceil(data.entries.length / limit)
+
+  const handleNextPage = () => {
+    if (page !== Math.ceil(data.entries.length / limit)) {
+      setPage(prev => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 0) {
+      setPage(prev => prev - 1);
+    }
+  };
+
+  const currentPageItems = React.useMemo(() => {
+      return data.entries.slice((page - 1) * limit, page * limit);
+    }, [data.entries, page, limit]);
 
   const getEntries = async (page: number) => {
     setData(prev => ({ ...prev, loading: true }));
@@ -53,6 +80,8 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount }: UpdateEntriesProp
           nextPage: hasNextPage,
           prevPage: hasPrevPage,
         }));
+        setPrevEntries(entries)
+        setEntries(entries)
         setCurrentPage(page);
         return;
       }
@@ -74,6 +103,9 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount }: UpdateEntriesProp
     }
   }, [isOpen]);
 
+  console.log(data.entries)
+
+
 
 
   return (
@@ -86,6 +118,9 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount }: UpdateEntriesProp
           getEntries={getEntries}
           currentAmount={currentAmount}
           entries={data.entries}
+          setData={setData}
+          transaction={transaction}
+          setEntries={setEntries}
         />
       </div>
       <div className="relative overflow-auto flex-1">
@@ -106,10 +141,8 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount }: UpdateEntriesProp
             </TableHeadRow>
           </TableHeader>
           <TableBody>
-            {data.loading && <TableLoadingRow colspan={11} />}
-            {!data.loading && data.entries.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
-            {!data.loading &&
-              data.entries.map((entry: Entry, index: number) => (
+            
+            {currentPageItems.map((entry: Entry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]">
                   <TableCell className="text-center">{(currentPage - 1) * TABLE_LIMIT + (index + 1)}</TableCell>
                   <TableCell>{entry?.client?.name}</TableCell>
@@ -122,14 +155,41 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount }: UpdateEntriesProp
                   <TableCell className="text-center">{entry?.cycle}</TableCell>
                   <TableCell className="text-center">{entry?.checkNo}</TableCell>
                   <TableCell className="text-center space-x-1">
-                    <UpdateEntry entry={entry} setData={setData} />
-                    <DeleteEntry entry={entry} getEntries={getEntries} rowLength={data.entries.length} currentPage={currentPage} />
+                    <UpdateEntry entry={entry} setData={setData} transaction={transaction} entries={data.entries} setEntries={setEntries} />
+                    <DeleteEntry entry={entry} getEntries={getEntries} rowLength={data.entries.length} currentPage={currentPage} setData={setData} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} />
                   </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </div>
+
+       {data.entries.length > 0 && (
+                <div className="w-full pb-3">
+                  <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">
+                    <div>
+                      <IonButton onClick={handlePrevPage} disabled={page === 1} fill="clear" className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md">
+                        <IonIcon icon={arrowBack} />
+                      </IonButton>
+                    </div>
+                    <div>
+                      <div className="text-sm !font-semibold  px-3 py-1.5 rounded-lg text-slate-700">
+                        {page} / {Math.ceil(data.entries.length / limit)}
+                      </div>
+                    </div>
+                    <div>
+                      <IonButton
+                        onClick={handleNextPage}
+                        disabled={page === Math.ceil(data.entries.length / limit)}
+                        fill="clear"
+                        className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                      >
+                        <IonIcon icon={arrowForward} />
+                      </IonButton>
+                    </div>
+                  </div>
+                </div>
+              )}
       <div className="px-3">
         <div className="grid grid-cols-3">
           <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
@@ -155,7 +215,7 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount }: UpdateEntriesProp
         </div>
       </div>
       <div className="pt-2">
-        <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+        {/* <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} /> */}
       </div>
     </div>
   );
