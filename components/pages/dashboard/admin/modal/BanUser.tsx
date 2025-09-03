@@ -83,7 +83,7 @@ const BanUser = ({ selected, setSelected, refetch, banned, active }: BanUserProp
 
         <IonButton onClick={handleOpen} fill="clear" className="max-h-10 min-h-6 bg-red-600 text-white capitalize font-semibold rounded-md" strong>
           <IonIcon icon={ban} className="text-sm" />
-          &nbsp;Ban / Activate
+          &nbsp; Active / Ban 
         </IonButton>
       </div>
       <IonModal
