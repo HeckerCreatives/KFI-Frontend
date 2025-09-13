@@ -34,7 +34,7 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
       acctMonth: `${new Date().getMonth() + 1}`,
       acctYear: `${new Date().getFullYear()}`,
       checkNo: '',
-      checkDate: '',
+      checkDate: formatDateInput(new Date().toISOString()),
       bank: '',
       bankLabel: '',
       amount: '0',
@@ -48,11 +48,13 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
     setIsOpen(false);
   }
 
+  console.log(form.formState.errors)
+
   async function onSubmit(data: ExpenseVoucherFormData) {
     setLoading(true);
     try {
       data.amount = removeAmountComma(data.amount);
-      data.entries = data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) }));
+      data.entries = data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1}));
       const result = await kfiAxios.post('expense-voucher', data);
       const { success } = result.data;
       if (success) {

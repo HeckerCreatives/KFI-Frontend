@@ -26,6 +26,7 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
                 control={form.control}
                 clearErrors={form.clearErrors}
                 label="CV#"
+                type='number'
                 placeholder="Type here"
                 className="!p-2 rounded-md !text-[0.7rem]"
                 labelClassName="truncate min-w-20 !text-[0.7rem] !text-slate-600 text-end"
@@ -34,7 +35,7 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
             <div className="flex items-end gap-2 flex-nowrap">
               <FormIonItem className="flex-1 [--min-height:0]">
                 <InputText
-                  readOnly
+                  // readOnly
                   name="supplier"
                   control={form.control}
                   clearErrors={form.clearErrors}

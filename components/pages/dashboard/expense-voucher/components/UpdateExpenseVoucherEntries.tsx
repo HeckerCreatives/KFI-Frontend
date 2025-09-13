@@ -94,15 +94,12 @@ const UpdateExpenseVoucherEntries = ({ isOpen, expenseVoucher, entries, setEntri
     }
   };
 
-  const handlePagination = (page: number) => getEntries(page);
-
   useEffect(() => {
     if (isOpen) {
       getEntries(1);
     }
   }, [isOpen]);
 
-  console.log(data.entries)
 
   return (
     <div className="pb-2 h-full flex flex-col">

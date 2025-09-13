@@ -22,7 +22,8 @@ const CreateNature = ({ getNatures }: CreateNatureProps) => {
   const form = useForm<NatureFormData>({
     resolver: zodResolver(natureSchema),
     defaultValues: {
-      type: '',
+      nature: '',
+      description: '',
     },
   });
 
@@ -62,14 +63,15 @@ const CreateNature = ({ getNatures }: CreateNatureProps) => {
         ref={modal}
         trigger="create-nature-modal"
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:32rem]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
             <ModalHeader disabled={loading} title="Nature - Add Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+        </IonHeader> */}
+        <div className="p-6 flex flex-col gap-6">
+           <ModalHeader disabled={loading} title="Nature - Add Record" sub="Manage nature data." dismiss={dismiss} />
           <div>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <NatureForm form={form} loading={loading} />

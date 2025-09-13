@@ -10,7 +10,7 @@ import { isVisible, suAdminOnly } from '../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
 import { AccessToken, Permission } from '../../../types/types';
 import { dashboardResource, diagnosticsResource, generalLedgerResource, manageAccountResource, systemResource, transactionResource } from '../../utils/constants';
-import { DashboardSquare01Icon, UserMultiple02Icon  } from 'hugeicons-react';
+import { DashboardSquare01Icon, ListViewIcon, UserMultiple02Icon  } from 'hugeicons-react';
 
 
 const TopNavigation = () => {
@@ -54,6 +54,19 @@ const TopNavigation = () => {
           </div>
         )}
         {isVisible(token.role, token.permissions, transactionResource) && <TransactionNav />}
+          <div>
+            <IonButton
+              fill="clear"
+              routerLink="/dashboard/nature"
+              className={classNames(
+                'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1  [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+                pathname === '/dashboard/nature' ? 'bg-orange-600 text-white' : 'bg-transparent',
+              )}
+            >
+              <ListViewIcon size={15} stroke='.8' className=' mr-1 mb-1' />
+              Nature
+            </IonButton>
+          </div>
         {isVisible(token.role, token.permissions, generalLedgerResource) && <GeneralLedgerNav />}
         {isVisible(token.role, token.permissions, systemResource) && <SystemNav />}
         {isVisible(token.role, token.permissions, diagnosticsResource) && <Diagnostics />}

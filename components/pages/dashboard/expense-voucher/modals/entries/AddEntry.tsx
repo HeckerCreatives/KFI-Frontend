@@ -22,6 +22,7 @@ type AddEntryProps = {
   setEntries: React.Dispatch<React.SetStateAction<ExpenseVoucherEntry[]>>;
   setData: React.Dispatch<React.SetStateAction<TData>>;
   
+  
 };
 
 const AddEntry = ({ expenseVoucherId, getEntries, entries, setEntries, transaction, setData }: AddEntryProps) => {

@@ -47,26 +47,23 @@ const DeleteNature = ({ nature, getNatures, searchkey, sortKey, currentPage, row
 
   return (
     <>
-      <div className="text-end">
-        <div
-          id={`delete-nature-modal-${nature._id}`}
-          className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
-        >
-          <IonIcon icon={trashBin} className="text-[1rem]" /> Delete
-        </div>
-      </div>
+      
+        <IonButton
+               id={`delete-nature-modal-${nature._id}`}
+               type="button"
+               fill="clear"
+               className="space-x-1 rounded-md w-24 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-red-100 text-red-900 capitalize text-xs"
+             >
+               <IonIcon icon={trashBin} className="text-[1rem] mr-1" /> Delete
+             </IonButton>
       <IonModal
         ref={modal}
         trigger={`delete-nature-modal-${nature._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:32rem]"
       >
-        <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Nature - Delete Record" sub="System" dismiss={dismiss} />
-          </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+         <div className="p-6 flex flex-col gap-6">
+           <ModalHeader disabled={loading} title="Nature - Update Record" sub="Are you sure you want to delete this record?" dismiss={dismiss} />
           <p className="text-lg text-center py-5">Are you sure you want to delete this record?</p>
           <div className="text-end border-t mt-2 pt-1 space-x-2">
             <IonButton onClick={handleDelete} disabled={loading} color="danger" type="submit" className="!text-sm capitalize" strong={true}>

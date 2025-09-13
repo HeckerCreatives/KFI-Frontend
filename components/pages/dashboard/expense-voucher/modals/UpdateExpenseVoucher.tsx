@@ -168,7 +168,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
 
           <form onSubmit={form.handleSubmit(onSubmit)} className=' mt-4'>
             <div>
-              <ExpenseVoucherForm form={form} loading={loading} />
+              {/* <ExpenseVoucherForm form={form} loading={loading} /> */}
             </div>
 
             <div className="text-end space-x-1 px-2 pb-2">

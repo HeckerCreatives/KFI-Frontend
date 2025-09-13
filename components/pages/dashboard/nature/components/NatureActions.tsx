@@ -19,17 +19,12 @@ type NatureActionsProps = {
 
 const NatureActions = ({ nature, setData, currentPage, setCurrentPage, getNatures, searchKey, sortKey, rowLength }: NatureActionsProps) => {
   return (
-    <>
-      <IonButton fill="clear" id={`nature-${nature._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
-        <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
-      </IonButton>
-      <IonPopover showBackdrop={false} trigger={`nature-${nature._id}`} triggerAction="click" className="[--max-width:10rem]">
-        <IonContent>
+    < div className=' flex items-center gap-2'>
+     
           <UpdateNature nature={nature} setData={setData} />
           <DeleteNature nature={nature} getNatures={getNatures} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
-        </IonContent>
-      </IonPopover>
-    </>
+        
+    </ div>
   );
 };
 

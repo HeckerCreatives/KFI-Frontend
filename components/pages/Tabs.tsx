@@ -70,8 +70,11 @@ import {
   Task02Icon,
   Settings02Icon,
   CollectionsBookmarkIcon,
-  ToolsIcon
+  ToolsIcon,
+  ListViewIcon
 } from "hugeicons-react";
+import ListDetail from './ListDetail';
+import Nature from './dashboard/nature/Nature';
 
 type NavLink = {
   path?: string;
@@ -115,9 +118,7 @@ const navLinks: NavLink[] = [
       { path: "/dashboard/damayan-fund", label: "Damayan Fund", resource: "damayan fund" },
     ],
   },
-
- 
-
+  { path: "/dashboard/nature", label: "Nature", resource: "nature", icon: <ListViewIcon size={18} /> },
   {
     label: "General Ledgers",
     resource: ["audit trail", "financial statement", "trial balance"],
@@ -424,6 +425,7 @@ const Tabs = () => {
             <Route path="/dashboard/unbalance-entries" render={() => <UnbalanceEntries />} exact={true} />
             <Route path="/dashboard/login-logs" render={() => <LoginLogs />} exact={true} />
             <Route path="/dashboard/action-logs" render={() => <ActionLogs />} exact={true} />
+            <Route path="/dashboard/nature" render={() => <Nature />} exact={true} />
           </IonRouterOutlet>
         </IonContent>
       </IonPage>

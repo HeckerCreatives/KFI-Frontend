@@ -17,11 +17,19 @@ export const entriesSchema = z.object({
 });
 
 export const loanReleaseSchema = z.object({
+  // cvNo: z
+  //   .string()
+  //   .min(1, 'CV # is required')
+  //   .max(255, 'CV # must only consist of 255 characters')
+  //   .regex(/^CV#[\d-]+$/i, { message: 'Must start with CV# followed by numbers or hyphens' }),
   cvNo: z
     .string()
-    .min(1, 'CV # is required')
-    .max(255, 'CV # must only consist of 255 characters')
-    .regex(/^CV#[\d-]+$/i, { message: 'Must start with CV# followed by numbers or hyphens' }),
+    .min(1, "CV # is required")
+    .max(255, "CV # must only consist of 255 characters")
+    .transform((val) => {
+      return val.startsWith("CV#") ? val : `CV#${val}`;
+    }),
+
   center: z.string().min(1, 'Center Code is required').max(255, 'Center Code must only consist of 255 characters'),
   centerLabel: z.string().min(1, 'Center Code is required').max(255, 'Center Code must only consist of 255 characters'),
   name: z.string().min(1, 'Name is required').max(255, 'Name must only consist of 255 characters'),
@@ -46,7 +54,8 @@ export const loanReleaseSchema = z.object({
     .refine(value => !isNaN(Number(value)), 'Number of weeks must be a number'),
   typeOfLoan: z.string().min(1, 'Type of loan is required').max(255, 'Type of loan must only consist of 255 characters'),
   typeOfLoanLabel: z.string().min(1, 'Type of loan is required').max(255, 'Type of loan must only consist of 255 characters'),
-  checkNo: z.string().min(1, 'Check number is required').max(255, 'Check number must only consist of 255 characters'),
+  // checkNo: z.string().min(1, 'Check number is required').max(255, 'Check number must only consist of 255 characters'),
+  checkNo: z.string().optional(),
   checkDate: z.string().min(1, 'Check date is required').max(255, 'Check date must only consist of 255 characters'),
   bankCode: z.string().min(1, 'Bank code is required').max(255, 'Bank code must only consist of 255 characters'),
   bankCodeLabel: z.string().min(1, 'Bank code is required').max(255, 'Bank code must only consist of 255 characters'),

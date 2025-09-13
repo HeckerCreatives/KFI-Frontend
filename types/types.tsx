@@ -406,8 +406,10 @@ export type WeeklySavings = {
 
 export type Nature = {
   _id: string;
-  type: string;
+  nature: string;
   createdAt: string;
+  description: string
+
 };
 
 export type Status = {

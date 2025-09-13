@@ -38,7 +38,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
       typeOfLoan: '',
       typeOfLoanLabel: '',
       checkNo: '',
-      checkDate: '',
+      checkDate: formatDateInput(new Date().toISOString()),
       bankCode: '',
       bankCodeLabel: '',
       amount: '0',
@@ -64,14 +64,14 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
     let totalDebit = 0;
     let totalCredit = 0;
 
-    data.entries = glEntries.map(entry => {
+    data.entries = glEntries.map((entry, index) => {
       const debit = removeAmountComma(entry.debit as string);
       const credit = removeAmountComma(entry.credit as string);
 
       totalDebit += Number(debit);
       totalCredit += Number(credit);
 
-      return {...entry, debit, credit };
+      return {...entry, debit, credit, line: index + 1};
     });
     data.amount = removeAmountComma(data.amount);
     data.root = '';

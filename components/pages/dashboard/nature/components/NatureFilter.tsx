@@ -34,7 +34,7 @@ const NatureFilter = ({ getNatures }: NatureFilterProps) => {
     <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center justify-between ">
       <div className="w-full flex-1 md:flex-none">
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap justify-end gap-2">
-          <FormIonItem className="w-full max-w-72 min-w-20">
+          {/* <FormIonItem className="w-full max-w-72 min-w-20">
             <InputSelect
               label="Sort By"
               name="sort"
@@ -49,7 +49,7 @@ const NatureFilter = ({ getNatures }: NatureFilterProps) => {
               ]}
               className="!border-orange-500 rounded-md !w-full !py-1.5"
             />
-          </FormIonItem>
+          </FormIonItem> */}
           <div className="flex items-center min-w-20">
             <FormIonItem className="flex-1">
               <InputText

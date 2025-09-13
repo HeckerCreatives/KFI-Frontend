@@ -24,13 +24,14 @@ const UpdateNature = ({ nature, setData }: UpdateNatureProps) => {
   const form = useForm<NatureFormData>({
     resolver: zodResolver(natureSchema),
     defaultValues: {
-      type: nature.type,
+      nature: nature.nature,
+      description: nature.description
     },
   });
 
   useEffect(() => {
     if (nature) {
-      form.reset({ type: nature.type });
+      form.reset({ nature: nature.nature, description: nature.description });
     }
   }, [nature, form]);
 
@@ -66,26 +67,24 @@ const UpdateNature = ({ nature, setData }: UpdateNatureProps) => {
 
   return (
     <>
-      <div className="text-end">
-        <div
-          id={`update-nature-modal-${nature._id}`}
-          className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
-        >
-          <IonIcon icon={createSharp} className="text-[1rem]" /> Edit
-        </div>
-      </div>
+      
+       <IonButton
+         id={`update-nature-modal-${nature._id}`}
+         type="button"
+         fill="clear"
+         className="space-x-1 rounded-md w-24 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-blue-100 text-blue-900 capitalize text-xs"
+       >
+         <IonIcon icon={createSharp} className="text-[1rem] mr-1" /> Edit
+       </IonButton>
       <IonModal
         ref={modal}
         trigger={`update-nature-modal-${nature._id}`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:90%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:32rem]"
       >
-        <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Nature - Edit Record" sub="System" dismiss={dismiss} />
-          </IonToolbar>
-        </IonHeader>
-        <div className="inner-content">
+       
+         <div className="p-6 flex flex-col gap-6">
+           <ModalHeader disabled={loading} title="Nature - Update Record" sub="Manage nature data." dismiss={dismiss} />
           <div>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <NatureForm form={form} loading={loading} />

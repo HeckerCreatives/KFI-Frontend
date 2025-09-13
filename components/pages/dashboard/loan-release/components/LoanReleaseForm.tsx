@@ -39,6 +39,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               control={form.control}
               clearErrors={form.clearErrors}
               label="CV#"
+              type='number'
               placeholder="Type here"
               className="!p-2 rounded-md !text-xs w-full"
               labelClassName="truncate min-w-20 !text-xs !text-slate-600 text-end"

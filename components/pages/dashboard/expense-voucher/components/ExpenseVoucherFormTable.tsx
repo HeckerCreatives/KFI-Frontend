@@ -38,13 +38,14 @@ const ExpenseVoucherFormTable = ({ form, loading = false }: ExpenseVoucherFormTa
         <Table className="border-2">
           <TableHeader>
             <TableHeadRow className="bg-slate-100 [&>th]:border-2 [&>th]:!font-normal [&>th]:!py-1.5 [&>th]:!text-xs">
+              <TableHead className="sticky left-0 min-w-[5rem] z-10">Line</TableHead>
               <TableHead className="sticky left-0 min-w-[22rem] z-10">Name</TableHead>
               <TableHead className="sticky left-[20rem] min-w-[22rem]  z-10">Particular</TableHead>
               <TableHead className="sticky left-[40rem] min-w-[12rem]  z-10">Acct. Code</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Debit</TableHead>
               <TableHead>Credit</TableHead>
-              <TableHead>CV# For Recompute</TableHead>
+              <TableHead>Advance</TableHead>
               <TableHead>Actions</TableHead>
             </TableHeadRow>
           </TableHeader>

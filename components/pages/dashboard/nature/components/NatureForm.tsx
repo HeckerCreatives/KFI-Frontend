@@ -18,10 +18,22 @@ const NatureForm = ({ form, loading }: TForm) => {
           <FormIonItem>
             <InputText
               disabled={loading}
-              name="type"
+              name="nature"
               control={form.control}
               clearErrors={form.clearErrors}
               label="Nature"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
+          </FormIonItem>
+
+          <FormIonItem>
+            <InputText
+              disabled={loading}
+              name="description"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Description"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
             />

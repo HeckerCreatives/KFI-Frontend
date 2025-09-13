@@ -1,7 +1,8 @@
 import z from 'zod';
 
 export const natureSchema = z.object({
-  type: z.string().min(1, 'Business Type is required'),
+  nature: z.string().min(1, 'Name is required'),
+  description: z.string().min(1, 'Description is required'),
 });
 
 export type NatureFormData = z.infer<typeof natureSchema>;

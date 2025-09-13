@@ -22,13 +22,22 @@ export const expenseVoucherEntrySchema = z.object({
 });
 
 export const expenseVoucherSchema = z.object({
-  code: z
-    .string()
-    .min(1, 'CV # is required')
-    .max(255, 'CV # must only consist of 255 characters')
-    .regex(/^CV#[\d-]+$/i, { message: 'Must start with CV# followed by numbers or hyphens' }),
+  // code: z
+  //   .string()
+  //   .min(1, 'CV # is required')
+  //   .max(255, 'CV # must only consist of 255 characters')
+  //   .regex(/^CV#[\d-]+$/i, { message: 'Must start with CV# followed by numbers or hyphens' }),
+
+     code: z
+        .string()
+        .min(1, "CV # is required")
+        .max(255, "CV # must only consist of 255 characters")
+        .transform((val) => {
+          return val.startsWith("CV#") ? val : `CV#${val}`;
+        }),
   supplier: z.string().min(1, 'Supplier is required').max(255, 'Supplier must only consist of 255 characters'),
-  supplierId: z.string().min(1, 'Supplier is required').max(255, 'Supplier must only consist of 255 characters'),
+  // supplierId: z.string().min(1, 'Supplier is required').max(255, 'Supplier must only consist of 255 characters'),
+  supplierId: z.string().optional(),
   refNo: z.string().min(1, 'Reference Number is required').max(255, 'Reference Number must only consist of 255 characters').optional().or(z.literal('')),
   date: z.string().min(1, 'Date is required').max(255, 'Date must only consist of 255 characters'),
   acctMonth: z
@@ -42,7 +51,8 @@ export const expenseVoucherSchema = z.object({
     .min(1, 'Account Year is required')
     .max(255, 'Account Year must only consist of 255 characters')
     .refine(value => !isNaN(Number(value)), 'Account Year must be a number'),
-  checkNo: z.string().min(1, 'Check number is required').max(255, 'Check number must only consist of 255 characters'),
+  // checkNo: z.string().min(1, 'Check number is required').max(255, 'Check number must only consist of 255 characters'),
+  checkNo: z.string().optional(),
   checkDate: z.string().min(1, 'Check date is required').max(255, 'Check date must only consist of 255 characters'),
   bank: z.string().min(1, 'Bank code is required').max(255, 'Bank code must only consist of 255 characters'),
   bankLabel: z.string().min(1, 'Bank code is required').max(255, 'Bank code must only consist of 255 characters'),
