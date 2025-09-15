@@ -24,6 +24,7 @@ const EmergencyLoanFormTableDoc = ({ entry, index, remove, form, sticky }: Emerg
   if(sticky){
     return(
       <TableRow className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2 [&>td]:align-text-top">
+        <TableCell className="text-center hidden md:table-cell">{index + 1}</TableCell>
         <TableCell className="min-w-fit hidden md:table-cell">
           <div className="flex items-start gap-1">
             <FormIonItem>
@@ -52,6 +53,7 @@ const EmergencyLoanFormTableDoc = ({ entry, index, remove, form, sticky }: Emerg
   }
   return (
     <TableRow className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2 [&>td]:align-text-top">
+      <TableCell className="text-center  md:hidden">{index + 1}</TableCell>
       <TableCell className="min-w-fit md:hidden">
         <div className="flex items-start gap-1">
           <FormIonItem>

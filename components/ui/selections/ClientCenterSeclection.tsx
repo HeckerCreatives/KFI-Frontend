@@ -1,4 +1,4 @@
-import { IonButton, IonHeader, IonInput, IonModal, IonToolbar } from '@ionic/react';
+import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonToolbar } from '@ionic/react';
 import React, { useEffect, useRef, useState } from 'react';
 import SelectionHeader from './SelectionHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../table/Table';
@@ -7,43 +7,52 @@ import classNames from 'classnames';
 import kfiAxios from '../../utils/axios';
 import TableLoadingRow from '../forms/TableLoadingRow';
 import TableNoRows from '../forms/TableNoRows';
-import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
+import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
 import { Search01Icon } from 'hugeicons-react';
+import { EmergencyLoanFormData } from '../../../validations/emergency-loan.schema';
+import { arrowBack, arrowForward } from 'ionicons/icons';
 
 type Option = {
   _id: string;
-  code: string;
-  description: string;
+ name: string
+
 };
 
 type CenterSelectionProps<T extends FieldValues> = {
+    centerid?: string, 
   setValue: UseFormSetValue<T>;
   clearErrors: UseFormClearErrors<T>;
   centerLabel: Path<T>;
   centerValue: Path<T>;
+  clientLabel?: Path<T>;
+  clientValue?: Path<T>;
   acctOfficer?: Path<T>;
   centerDescription?: Path<T>;
   className?: string;
 };
 
 export type TData = {
-  datas: Option[];
-  totalPages: number;
-  nextPage: boolean;
-  prevPage: boolean;
-  loading: boolean;
+  clients: Option[];
+   loading: boolean,
+    totalPages: number,
+    nextPage: boolean,
+    prevPage: boolean,
+ 
 };
 
-const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, centerDescription, setValue, clearErrors, className = '' , acctOfficer}: CenterSelectionProps<T>) => {
+const CenterClientSelection = <T extends FieldValues>({ centerid, centerLabel, centerValue, clientLabel, clientValue, centerDescription, setValue, clearErrors, className = '' , acctOfficer}: CenterSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const ionInputRef = useRef<HTMLIonInputElement>(null);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
+    const [page, setPage] = useState(1);
+    const limit = 15;
+    
 
   const [data, setData] = useState<TData>({
-    datas: [],
+    clients: [],
     loading: false,
     totalPages: 0,
     nextPage: false,
@@ -58,60 +67,47 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
     setIsOpen(true);
   };
 
+
   const handleSearch = async (page: number) => {
     const value = ionInputRef.current?.value;
     setLoading(true);
     try {
       const filter: any = { keyword: value, page, limit: 10 };
-      const result = await kfiAxios.get('/center/selection', { params: filter });
-      const { success, centers, totalPages, hasNextPage, hasPrevPage } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          datas: centers,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        return;
-      }
+     const result = await kfiAxios.get(`/customer/by-center/${centerid}`);
+      const { success, clients, totalPages, hasNextPage, hasPrevPage } = result.data;
+
+       if (success) {
+         setData(prev => ({
+           ...prev,
+           clients: clients,
+           totalPages: totalPages,
+           nextPage: hasNextPage,
+           prevPage: hasPrevPage,
+         }));
+         setCurrentPage(page);
+         return;
+       }
     } catch (error) {
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSelectCenter = async (center: Option) => {
-     const result = await kfiAxios.get(`/center/officer/${center._id}`);
-      const { officer } = result.data;
+  const handleSelectClient = async (data: Option) => {
 
-    const codeValue = center.code as PathValue<T, Path<T>>;
-    const idValue = center._id as PathValue<T, Path<T>>;
+    const nameValue = data.name as PathValue<T, Path<T>>;
+    const idValue = data._id as PathValue<T, Path<T>>;
 
-    setValue(centerLabel as Path<T>, codeValue as any);
-    setValue(centerValue as Path<T>, idValue as any);
-    if (acctOfficer) {
-      setValue(acctOfficer as Path<T>, officer as any);
-    }
+    setValue(clientLabel as Path<T>, nameValue  as any);
 
 
-    clearErrors(centerLabel);
-    clearErrors(centerValue);
+    setValue(clientValue as Path<T>, idValue as any);
+    clearErrors(clientValue);
+    clearErrors(clientLabel);
 
-    if (centerDescription) {
-      const description = center.description as PathValue<T, Path<T>>;
-      setValue(centerDescription as Path<T>, description as any);
-      clearErrors(centerDescription);
-    }
 
-    setData({
-      datas: [],
-      loading: false,
-      totalPages: 0,
-      nextPage: false,
-      prevPage: false,
-    });
+
+
     dismiss();
   };
 
@@ -120,6 +116,24 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
   useEffect(() => {
     isOpen && handleSearch(1);
   }, [isOpen]);
+
+  
+    const handleNextPage = () => {
+      if (page !== Math.ceil(data.clients.length / limit)) {
+        setPage(prev => prev + 1);
+      }
+    };
+  
+    const handlePrevPage = () => {
+      if (page > 0) {
+        setPage(prev => prev - 1);
+      }
+    };
+  
+  
+    const currentPageItems = React.useMemo(() => {
+      return data.clients.slice((page - 1) * limit, page * limit);
+    }, [data, page, limit]);
 
   return (
     <>
@@ -139,7 +153,7 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6  border-2 !border-slate-400">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Center Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Client Selection" />
 
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">
@@ -174,28 +188,48 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
             <Table>
               <TableHeader>
                 <TableHeadRow className="border-b-0 bg-slate-100">
-                  <TableHead className="!py-2">Code</TableHead>
-                  <TableHead className="!py-2">Description</TableHead>
+                  <TableHead className="!py-2">Name</TableHead>
                 </TableHeadRow>
               </TableHeader>
               <TableBody>
                 {loading && <TableLoadingRow colspan={2} />}
-                {!loading && data.datas.length < 1 && <TableNoRows colspan={2} label="No center found" />}
+                {!loading && data.clients.length < 1 && <TableNoRows colspan={2} label="No client found" />}
                 {!loading &&
-                  data.datas.map((data: Option) => (
-                    <TableRow onClick={() => handleSelectCenter(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">{data.code}</TableCell>
-                      <TableCell className="">{data.description}</TableCell>
+                  currentPageItems.map((data: Option) => (
+                    <TableRow onClick={() => handleSelectClient(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
+                      <TableCell className="">{data.name}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
             </Table>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+          <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">
+          <div>
+            <IonButton onClick={handlePrevPage} disabled={page === 1} fill="clear" className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md">
+              <IonIcon icon={arrowBack} />
+            </IonButton>
+          </div>
+          <div>
+            <div className="text-sm !font-semibold  px-3 py-1.5 rounded-lg text-slate-700">
+              {page} / {Math.ceil(data.clients.length / limit)}
+            </div>
+          </div>
+          <div>
+            <IonButton
+              onClick={handleNextPage}
+              disabled={page === Math.ceil(data.clients.length / limit)}
+              fill="clear"
+              className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+            >
+              <IonIcon icon={arrowForward} />
+            </IonButton>
+          </div>
+        </div>
+          
         </div>
       </IonModal>
     </>
   );
 };
 
-export default CenterSelection;
+export default CenterClientSelection;

@@ -17,18 +17,18 @@ export const entriesSchema = z.object({
 });
 
 export const loanReleaseSchema = z.object({
+   cvNo: z
+     .string()
+     .min(1, 'CV # is required')
+     .max(255, 'CV # must only consist of 255 characters')
+     .regex(/^CV#[\d-]+$/i, { message: 'Must start with CV# followed by numbers or hyphens' }),
   // cvNo: z
   //   .string()
-  //   .min(1, 'CV # is required')
-  //   .max(255, 'CV # must only consist of 255 characters')
-  //   .regex(/^CV#[\d-]+$/i, { message: 'Must start with CV# followed by numbers or hyphens' }),
-  cvNo: z
-    .string()
-    .min(1, "CV # is required")
-    .max(255, "CV # must only consist of 255 characters")
-    .transform((val) => {
-      return val.startsWith("CV#") ? val : `CV#${val}`;
-    }),
+  //   .min(1, "CV # is required")
+  //   .max(255, "CV # must only consist of 255 characters")
+  //   .transform((val) => {
+  //     return val.startsWith("CV#") ? val : `CV#${val}`;
+  //   }),
 
   center: z.string().min(1, 'Center Code is required').max(255, 'Center Code must only consist of 255 characters'),
   centerLabel: z.string().min(1, 'Center Code is required').max(255, 'Center Code must only consist of 255 characters'),

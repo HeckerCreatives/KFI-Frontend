@@ -34,7 +34,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
       acctMonth: `${new Date().getMonth() + 1}`,
       acctYear: `${new Date().getFullYear()}`,
       checkNo: '',
-      checkDate: '',
+      checkDate: formatDateInput(new Date().toISOString()),
       bankCode: '',
       bankCodeLabel: '',
       amount: '0',
@@ -52,7 +52,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
     setLoading(true);
     try {
       data.amount = removeAmountComma(data.amount);
-      data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) })) : [];
+      data.entries = data.entries ? data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1 })) : [];
       const result = await kfiAxios.post('/damayan-fund', data);
       const { success } = result.data;
       if (success) {

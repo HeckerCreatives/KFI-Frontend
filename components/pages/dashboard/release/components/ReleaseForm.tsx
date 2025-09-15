@@ -50,6 +50,7 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
                 clearErrors={form.clearErrors}
                 setValue={form.setValue}
                 className=" text-xs"
+                acctOfficer='acctOfficer'
               />
             </div>
             <FormIonItem className="[--min-height:0]">
@@ -209,6 +210,19 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
                 isAmount
               />
             </FormIonItem>
+
+            <FormIonItem className="[--min-height:0]">
+              <InputText
+                disabled={loading}
+                name="user"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="User"
+                placeholder="Type here"
+                className="!p-2 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
+              />
+            </FormIonItem>
         </div>
 
          <div className="lg:col-span-3 space-y-2">
@@ -224,6 +238,8 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
                 labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
               />
             </FormIonItem>
+
+            
           </div>
       </div>
     </div>

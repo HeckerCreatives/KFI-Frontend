@@ -36,7 +36,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
       acctYear: `${new Date().getFullYear()}`,
       acctOfficer: '',
       checkNo: '',
-      checkDate: '',
+      checkDate: formatDateInput(new Date().toISOString()),
       type: '',
       bankCode: '',
       bankCodeLabel: '',
@@ -57,7 +57,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
     try {
       data.amount = removeAmountComma(data.amount);
       data.cashCollection = removeAmountComma(data.cashCollection as string);
-      data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) })) : [];
+      data.entries = data.entries ? data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1 })) : [];
       const result = await kfiAxios.post('release', data);
       const { success } = result.data;
       if (success) {

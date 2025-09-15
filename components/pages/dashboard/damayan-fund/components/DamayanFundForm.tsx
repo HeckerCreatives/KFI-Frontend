@@ -5,6 +5,7 @@ import FormIonItem from '../../../../ui/utils/FormIonItem';
 import BankSelection from '../../../../ui/selections/BankSelection';
 import { DamayanFundFormData } from '../../../../../validations/damayan-fund.schema';
 import CenterSelection from '../../../../ui/selections/CenterSelection';
+import NatureSelection from '../../../../ui/selections/NatureSelection';
 
 type TForm = {
   form: UseFormReturn<DamayanFundFormData>;
@@ -31,7 +32,6 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
             <FormIonItem className="flex-1 [--min-height:0]">
               <InputText
                 disabled={loading}
-                readOnly
                 name="centerLabel"
                 control={form.control}
                 clearErrors={form.clearErrors}
@@ -42,6 +42,22 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
               />
             </FormIonItem>
             <CenterSelection centerLabel="centerLabel" centerValue="centerValue" clearErrors={form.clearErrors} setValue={form.setValue} className=" text-xs" />
+          </div>
+
+          <div className="flex items-start gap-2 flex-nowrap">
+            <FormIonItem className="flex-1 [--min-height:0]">
+              <InputText
+                disabled={loading}
+                name="nature"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Nature"
+                placeholder="Click find to search for nature"
+                className="!p-2 rounded-md !text-[0.7rem] "
+                labelClassName="truncate min-w-[7.6rem] !text-[0.7rem] lg:min-w-20 !text-slate-600 text-end"
+              />
+            </FormIonItem>
+            <NatureSelection nature='nature' clearErrors={form.clearErrors} setValue={form.setValue} className=" text-xs" />
           </div>
         </div>
         <div className="space-y-1">
@@ -145,6 +161,21 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
             isAmount
           />
         </FormIonItem>
+
+         <div className="flex items-start gap-2 flex-nowrap">
+          <FormIonItem className="flex-1 [--min-height:0]">
+            <InputText
+              disabled={loading}
+              name="name"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="User"
+              placeholder="Type here"
+              className="!p-2 rounded-md !text-[0.7rem] "
+              labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
+            />
+          </FormIonItem>
+        </div>
       </div>
 
        <div className=" lg:col-span-3">

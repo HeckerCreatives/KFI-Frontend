@@ -5,6 +5,7 @@ import FormIonItem from '../../../../ui/utils/FormIonItem';
 import BankSelection from '../../../../ui/selections/BankSelection';
 import { EmergencyLoanFormData } from '../../../../../validations/emergency-loan.schema';
 import CenterSelection from '../../../../ui/selections/CenterSelection';
+import CenterClientSelection from '../../../../ui/selections/ClientCenterSeclection';
 
 type TForm = {
   form: UseFormReturn<EmergencyLoanFormData>;
@@ -12,6 +13,7 @@ type TForm = {
 };
 
 const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-3 gap-2">
         <div className="space-y-2">
@@ -43,6 +45,28 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
             </FormIonItem>
             <CenterSelection centerLabel="centerLabel" centerValue="centerValue" clearErrors={form.clearErrors} setValue={form.setValue} className="text-xs" />
           </div>
+
+
+          <div className="flex items-start gap-2 flex-nowrap">
+            <FormIonItem className="flex-1 [--min-height:0]">
+              <InputText
+                disabled={loading}
+                readOnly
+                name='clientLabel'
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Name"
+                placeholder="Click find to search for client"
+                className="!p-2 rounded-md !text-[0.7rem] "
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-16 !text-slate-600 text-end"
+              />
+
+            </FormIonItem>
+            <CenterClientSelection clientLabel='clientLabel' clientValue='clientValue' centerLabel="centerLabel" centerValue="centerValue" clearErrors={form.clearErrors} setValue={form.setValue} className="text-xs" centerid={form.watch('centerValue')} />
+          </div>
+
+          
+
         </div>
         <div className="space-y-2">
           <FormIonItem className="[--min-height:0]">
@@ -143,6 +167,19 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
             className="!p-2 rounded-md !text-[0.7rem] "
             labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
             isAmount
+          />
+        </FormIonItem>
+
+        <FormIonItem className="[--min-height:0]">
+          <InputText
+            disabled={loading}
+            name="user"
+            control={form.control}
+            clearErrors={form.clearErrors}
+            label="User"
+            placeholder="Type here"
+            className="!p-2 rounded-md !text-[0.7rem] "
+            labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
           />
         </FormIonItem>
       </div>

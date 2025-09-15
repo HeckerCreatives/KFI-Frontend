@@ -31,6 +31,7 @@ export const releaseSchema = z
       .min(1, 'AR # is required')
       .regex(/^AR#[\d-]+$/i, { message: 'Must start with AR# followed by numbers or hyphens' }),
     center: z.string().min(1, 'Center is required'),
+    user: z.string().min(1, 'User is required'),
     centerLabel: z.string().min(1, 'Center is required'),
     centerName: z.string().optional().or(z.literal('')),
     refNo: z.string().optional().or(z.literal('')),
@@ -48,7 +49,8 @@ export const releaseSchema = z
       .max(255, 'Account Year must only consist of 255 characters')
       .refine(value => !isNaN(Number(value)), 'Account Year must be a number'),
     acctOfficer: z.string().min(1, 'Account Officer is required').max(255, 'Bank code must only consist of 255 characters'),
-    checkNo: z.string().min(1, 'Check number is required').max(255, 'Check number must only consist of 255 characters'),
+    // checkNo: z.string().min(1, 'Check number is required').max(255, 'Check number must only consist of 255 characters'),
+    checkNo: z.string().optional(),
     checkDate: z.string().min(1, 'Check date is required').max(255, 'Check date must only consist of 255 characters'),
     bankCode: z.string().min(1, 'Bank code is required').max(255, 'Bank code must only consist of 255 characters'),
     bankCodeLabel: z.string().min(1, 'Bank code is required').max(255, 'Bank code must only consist of 255 characters'),

@@ -26,8 +26,11 @@ export const emergencyLoanSchema = z
       .string()
       .min(1, 'CV # is required')
       .regex(/^CV#[\d-]+$/i, { message: 'Must start with CV# followed by numbers or hyphens' }),
+    user: z.string().min(1, 'User is required'),
     centerLabel: z.string().min(1, 'Center code is required'),
     centerValue: z.string().min(1, 'Center code is required'),
+    clientLabel: z.string().min(1, 'Client is required'),
+    clientValue: z.string().min(1, 'Client is required'),
     refNo: z.string().optional().or(z.literal('')),
     remarks: z.string().optional().or(z.literal('')),
     date: z.string().min(1, 'Date is required').max(255, 'Date must only consist of 255 characters'),
@@ -42,7 +45,8 @@ export const emergencyLoanSchema = z
       .min(1, 'Account Year is required')
       .max(255, 'Account Year must only consist of 255 characters')
       .refine(value => !isNaN(Number(value)), 'Account Year must be a number'),
-    checkNo: z.string().min(1, 'Check number is required').max(255, 'Check number must only consist of 255 characters'),
+    // checkNo: z.string().min(1, 'Check number is required').max(255, 'Check number must only consist of 255 characters'),
+    checkNo: z.string().optional(),
     checkDate: z.string().min(1, 'Check date is required').max(255, 'Check date must only consist of 255 characters'),
     bankCode: z.string().min(1, 'Bank code is required').max(255, 'Bank code must only consist of 255 characters'),
     bankCodeLabel: z.string().min(1, 'Bank code is required').max(255, 'Bank code must only consist of 255 characters'),

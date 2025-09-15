@@ -26,7 +26,7 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
                 control={form.control}
                 clearErrors={form.clearErrors}
                 label="CV#"
-                type='number'
+                type='text'
                 placeholder="Type here"
                 className="!p-2 rounded-md !text-[0.7rem]"
                 labelClassName="truncate min-w-20 !text-[0.7rem] !text-slate-600 text-end"

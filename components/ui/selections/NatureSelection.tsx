@@ -15,27 +15,26 @@ type Option = {
   _id: string;
   code: string;
   description: string;
+nature: string,
+createdAt: string
 };
 
 type CenterSelectionProps<T extends FieldValues> = {
   setValue: UseFormSetValue<T>;
   clearErrors: UseFormClearErrors<T>;
-  centerLabel: Path<T>;
-  centerValue: Path<T>;
-  acctOfficer?: Path<T>;
-  centerDescription?: Path<T>;
+  nature: Path<T>;
   className?: string;
 };
 
 export type TData = {
-  datas: Option[];
+  natures: Option[];
   totalPages: number;
   nextPage: boolean;
   prevPage: boolean;
   loading: boolean;
 };
 
-const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, centerDescription, setValue, clearErrors, className = '' , acctOfficer}: CenterSelectionProps<T>) => {
+const NatureSelection = <T extends FieldValues>({ nature, setValue, clearErrors, className = '' ,}: CenterSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const ionInputRef = useRef<HTMLIonInputElement>(null);
@@ -43,7 +42,7 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [data, setData] = useState<TData>({
-    datas: [],
+    natures: [],
     loading: false,
     totalPages: 0,
     nextPage: false,
@@ -62,51 +61,37 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
     const value = ionInputRef.current?.value;
     setLoading(true);
     try {
-      const filter: any = { keyword: value, page, limit: 10 };
-      const result = await kfiAxios.get('/center/selection', { params: filter });
-      const { success, centers, totalPages, hasNextPage, hasPrevPage } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          datas: centers,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        return;
-      }
+      const filter: any = { search: value, page, limit: 10 };
+      const result = await kfiAxios.get('/nature', { params: filter });
+      const { success, natures, totalPages, hasNextPage, hasPrevPage } = result.data;
+
+      console.log(result)
+       if (success) {
+         setData(prev => ({
+           ...prev,
+           natures: natures,
+           totalPages: totalPages,
+           nextPage: hasNextPage,
+           prevPage: hasPrevPage,
+         }));
+         setCurrentPage(page);
+         return;
+       }
     } catch (error) {
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSelectCenter = async (center: Option) => {
-     const result = await kfiAxios.get(`/center/officer/${center._id}`);
-      const { officer } = result.data;
+  const handleSelectCenter = async (data: Option) => {
+  
+    setValue(nature as Path<T>, data.nature as any);
+  
+    clearErrors(nature);
 
-    const codeValue = center.code as PathValue<T, Path<T>>;
-    const idValue = center._id as PathValue<T, Path<T>>;
-
-    setValue(centerLabel as Path<T>, codeValue as any);
-    setValue(centerValue as Path<T>, idValue as any);
-    if (acctOfficer) {
-      setValue(acctOfficer as Path<T>, officer as any);
-    }
-
-
-    clearErrors(centerLabel);
-    clearErrors(centerValue);
-
-    if (centerDescription) {
-      const description = center.description as PathValue<T, Path<T>>;
-      setValue(centerDescription as Path<T>, description as any);
-      clearErrors(centerDescription);
-    }
 
     setData({
-      datas: [],
+      natures: [],
       loading: false,
       totalPages: 0,
       nextPage: false,
@@ -139,7 +124,7 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6  border-2 !border-slate-400">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Center Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Nature Selection" />
 
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">
@@ -174,17 +159,17 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
             <Table>
               <TableHeader>
                 <TableHeadRow className="border-b-0 bg-slate-100">
-                  <TableHead className="!py-2">Code</TableHead>
+                  <TableHead className="!py-2">Nature</TableHead>
                   <TableHead className="!py-2">Description</TableHead>
                 </TableHeadRow>
               </TableHeader>
               <TableBody>
                 {loading && <TableLoadingRow colspan={2} />}
-                {!loading && data.datas.length < 1 && <TableNoRows colspan={2} label="No center found" />}
+                {!loading && data.natures.length < 1 && <TableNoRows colspan={2} label="No nature found" />}
                 {!loading &&
-                  data.datas.map((data: Option) => (
+                  data.natures.map((data: Option) => (
                     <TableRow onClick={() => handleSelectCenter(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">{data.code}</TableCell>
+                      <TableCell className="">{data.nature}</TableCell>
                       <TableCell className="">{data.description}</TableCell>
                     </TableRow>
                   ))}
@@ -198,4 +183,4 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
   );
 };
 
-export default CenterSelection;
+export default NatureSelection;

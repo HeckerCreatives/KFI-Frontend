@@ -37,12 +37,22 @@ const PrintLoanRelease = ({ transaction }: { transaction: Transaction }) => {
 
   async function handlePrint(data: LoanReleaseOptionFormData) {
     try {
-      setLoading(true);
-      const result = await kfiAxios.get(`/transaction/print/file/${transaction._id}`, { responseType: 'blob' });
-      const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl, '_blank');
-      setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
+      if(data.option === 'summary'){
+         setLoading(true);
+        const result = await kfiAxios.get(`/transaction/print/file/${transaction._id}`, { responseType: 'blob' });
+        const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, '_blank');
+        setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
+      } else {
+         setLoading(true);
+        const result = await kfiAxios.get(`/transaction/print/file-format/${transaction._id}`, { responseType: 'blob' });
+        const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, '_blank');
+        setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
+      }
+     
     } catch (error: any) {
       present({
         message: 'Failed to print the loan release records. Please try again',
@@ -85,12 +95,19 @@ const PrintLoanRelease = ({ transaction }: { transaction: Transaction }) => {
             <ModalHeader disabled={loading} title="Loan Release - Print" sub="Manage loan release documents." dismiss={dismiss} />
 
           <form onSubmit={form.handleSubmit(handlePrint)}>
-            {/* <PrintExportOptionForm form={form} loading={loading} /> */}
+            <PrintExportOptionForm form={form} loading={loading} />
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <PrinterIcon size={20} stroke='.8' className=' mr-1'/>
                 {loading ? 'Printing Loan Release...' : 'Print Loan Release'}
               </IonButton>
+
+              {/* <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
+                <PrinterIcon size={20} stroke='.8' className=' mr-1'/>
+                {loading ? 'Printing Loan Release...' : 'Print Loan Release'}
+              </IonButton> */}
+
+              
             </div>
           </form>
         </div>

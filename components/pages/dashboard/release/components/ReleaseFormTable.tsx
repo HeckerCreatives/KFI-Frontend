@@ -313,6 +313,7 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
          <Table className=' sticky left-0 hidden md:table z-50'>
           <TableHeader>
             <TableHeadRow className="border-2 bg-slate-100 [&>th]:border-2 [&>th]:!font-normal [&>th]:!py-1.5 [&>th]:!text-xs">
+              <TableHead className="sticky left-0 min-w-[5rem] z-10 hidden md:table-cell">Line</TableHead>
               <TableHead className="min-w-56 max-w-56 whitespace-nowrap hidden md:table-cell">CV#</TableHead>
               <TableHead className="min-w-32 max-w-32 whitespace-nowrap hidden lg:table-cell">Due Date</TableHead>
               <TableHead className="min-w-20 max-w-20 whitespace-nowrap hidden lg:table-cell">Week</TableHead>
@@ -337,6 +338,7 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
         <Table>
           <TableHeader>
             <TableHeadRow className="border-2 bg-slate-100 [&>th]:border-2 [&>th]:!font-normal [&>th]:!py-1.5 [&>th]:!text-xs">
+              <TableHead className="sticky left-0 min-w-[5rem] z-10 table-cell md:hidden">Line</TableHead>
               <TableHead className="min-w-56 max-w-56 whitespace-nowrap table-cell md:hidden">CV#</TableHead>
               <TableHead className="min-w-32 max-w-32 whitespace-nowrap table-cell lg:hidden">Due Date</TableHead>
               <TableHead className="min-w-20 max-w-20 whitespace-nowrap table-cell lg:hidden">Week</TableHead>

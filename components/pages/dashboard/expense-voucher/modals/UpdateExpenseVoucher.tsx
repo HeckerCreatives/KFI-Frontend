@@ -88,6 +88,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
       const formattedEntries = entries.map((entry, index) => {
         const isExisting = prevIds.has(entry._id);
         return {
+          line: index + 1 ,
           _id: isExisting ? entry._id : undefined,
           client: entry.client?._id ?? "",
           clientLabel: entry.client.name ?? "",
@@ -168,7 +169,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
 
           <form onSubmit={form.handleSubmit(onSubmit)} className=' mt-4'>
             <div>
-              {/* <ExpenseVoucherForm form={form} loading={loading} /> */}
+              <ExpenseVoucherForm form={form} loading={loading} />
             </div>
 
             <div className="text-end space-x-1 px-2 pb-2">

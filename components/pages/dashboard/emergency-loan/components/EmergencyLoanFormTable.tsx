@@ -28,6 +28,7 @@ const EmergencyLoanFormTable = ({ form }: EmergencyLoanFormTableProps) => {
         <Table className=' sticky left-0 md:table hidden z-50'>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal [&>th]:!text-xs">
+              <TableHead className=' whitespace-nowrap hidden md:table-cell'>Line</TableHead>
               <TableHead className=' whitespace-nowrap hidden md:table-cell'>Name</TableHead>
               <TableHead className=' whitespace-nowrap hidden lg:table-cell'>Particular</TableHead>
               
@@ -49,6 +50,7 @@ const EmergencyLoanFormTable = ({ form }: EmergencyLoanFormTableProps) => {
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal [&>th]:!text-xs">
+              <TableHead className=' whitespace-nowrap md:hidden'>Line</TableHead>
               <TableHead className=' whitespace-nowrap md:hidden'>Name</TableHead>
               <TableHead className=' whitespace-nowrap lg:hidden'>Particular</TableHead>
               <TableHead className=' whitespace-nowrap '>Acct. Code</TableHead>

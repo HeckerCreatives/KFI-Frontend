@@ -119,6 +119,7 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
             debit: entry.debit?.toString() ?? "",
             credit: entry.credit?.toString() ?? "",
             dueDate: entry.loanReleaseEntryId.transaction.dueDate,
+            line: index + 1
         };
       });
       data.amount = removeAmountComma(data.amount);

@@ -47,6 +47,7 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
       bankCodeLabel: '',
       amount: '0',
       mode: 'update',
+      name: ''
     },
   });
 
@@ -67,6 +68,7 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
         bankCodeLabel: `${damayanFund.bankCode.code}`,
         amount: `${formatAmount(damayanFund.amount)}`,
         mode: 'update',
+        name: ''
       });
     }
   }, [damayanFund, form]);
@@ -77,7 +79,7 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
     setDeletedIds([])
   }
 
-  async function onSubmit(data: EmergencyLoanFormData) {
+  async function onSubmit(data: DamayanFundFormData) {
     setLoading(true);
     try {
        const finalDeletedIds = deletedIds.filter((id) =>

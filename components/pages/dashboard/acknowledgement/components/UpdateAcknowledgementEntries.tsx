@@ -113,6 +113,7 @@ const UpdateAcknowledgementEntries = ({ isOpen, acknowledgement, setEntries, del
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!font-normal [&>th]:!py-1.5 [&>th]:!text-xs">
+              <TableHead>Line</TableHead>
               <TableHead>CV#</TableHead>
               <TableHead>Due Date</TableHead>
               <TableHead>Week</TableHead>
@@ -129,6 +130,7 @@ const UpdateAcknowledgementEntries = ({ isOpen, acknowledgement, setEntries, del
             {
               currentPageItems.map((entry: AcknowledgementEntry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]">
+                  <TableCell className=' text-center'>{index + 1}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? `${entry?.loanReleaseEntryId?.transaction?.code}` : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? formatDateTable(entry?.loanReleaseEntryId?.transaction?.dueDate) : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? entry?.loanReleaseEntryId?.transaction?.noOfWeeks : ''}</TableCell>

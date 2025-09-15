@@ -22,6 +22,7 @@ const AcknowledgementFormTableDoc = ({ entry, remove, form, index, sticky }: Ack
   if(sticky){
     return(
       <TableRow className="border-b-0 [&>td]:border-2 [&>td]:!py-0 [&>td]:!px-2 [&>td]:!bg-white [&>td]:align-text-top">
+        <TableCell className="text-center sticky left-0 z-10 hidden lg:table-cell">{index + 1}</TableCell>
       <TableCell className="min-w-48 max-w-48 sticky left-0 z-10">
         <div className="flex items-start gap-1">
           <FormIonItem>

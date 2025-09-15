@@ -54,6 +54,9 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
     if (emergencyLoan) {
       form.reset({
         code: emergencyLoan.code,
+        user: emergencyLoan.user,
+        clientLabel: '',
+        clientValue: '',
         centerLabel: emergencyLoan?.center?.centerNo,
         centerValue: emergencyLoan?.center?._id,
         refNo: emergencyLoan.refNo,

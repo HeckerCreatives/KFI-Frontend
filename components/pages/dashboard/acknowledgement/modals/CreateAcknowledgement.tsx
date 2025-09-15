@@ -36,7 +36,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
       acctYear: `${new Date().getFullYear()}`,
       acctOfficer: '',
       checkNo: '',
-      checkDate: '',
+      checkDate: formatDateInput(new Date().toISOString()),
       type: '',
       bankCode: '',
       bankCodeLabel: '',
@@ -57,7 +57,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
     try {
       data.amount = removeAmountComma(data.amount);
       data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
-      data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.debit) })) : [];
+      data.entries = data.entries ? data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.debit), line: index + 1 })) : [];
       const result = await kfiAxios.post('acknowledgement', data);
       const { success } = result.data;
       if (success) {

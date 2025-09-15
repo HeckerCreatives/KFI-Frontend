@@ -12,6 +12,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
+import { link } from 'fs';
 
 type CreateEmergencyLoanProps = {
   getEmergencyLoans: (page: number, keyword?: string, sort?: string) => void;
@@ -28,13 +29,15 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
       code: '',
       centerValue: '',
       centerLabel: '',
+      clientValue: '',
+      clientLabel: '',
       refNo: '',
       remarks: '',
       date: formatDateInput(new Date().toISOString()),
       acctMonth: `${new Date().getMonth() + 1}`,
       acctYear: `${new Date().getFullYear()}`,
       checkNo: '',
-      checkDate: '',
+      checkDate: formatDateInput(new Date().toISOString()),
       bankCode: '',
       bankCodeLabel: '',
       amount: '0',
@@ -48,11 +51,13 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
     modal.current?.dismiss();
   }
 
+  console.log(form.formState.errors)
+
   async function onSubmit(data: EmergencyLoanFormData) {
     setLoading(true);
     try {
       data.amount = removeAmountComma(data.amount);
-      data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) })) : [];
+      data.entries = data.entries ? data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1 })) : [];
       const result = await kfiAxios.post('/emergency-loan', data);
       const { success } = result.data;
       if (success) {

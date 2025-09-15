@@ -273,6 +273,7 @@ export type JournalVoucher = {
 export type EmergencyLoan = {
   _id: string;
   code: string;
+  user: string;
   // supplier: { _id: string; code: string; description: string };
   center: { _id: string; centerNo: string; description: string };
   refNo: string;
@@ -291,6 +292,7 @@ export type EmergencyLoan = {
 export type DamayanFund = {
   _id: string;
   code: string;
+  name: string;
   // supplier: { _id: string; code: string; description: string };
   center: { _id: string; centerNo: string; description: string };
   refNo: string;

@@ -24,6 +24,7 @@ const DamayanFundFormTableDoc = ({ entry, index, remove, form, sticky }: Emergen
   if(sticky){
      return(
       <TableRow className="border-b-0 [&>td]:border-4 [&>td]:!py-0 [&>td]:!px-2 [&>td]:align-text-top">
+         <TableCell className="min-w-fit md:table-cell hidden text-center">{index + 1}</TableCell>
       <TableCell className="min-w-fit md:table-cell hidden">
         <div className="flex items-start gap-1">
           <FormIonItem>

@@ -29,6 +29,7 @@ const DamayanFundFormTable = ({ form }: EmergencyLoanFormTableProps) => {
         <Table className=' sticky left-0 md:table hidden z-50'>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5  [&>th]:!font-normal [&>th]:!text-xs">
+              <TableHead className=' whitespace-nowrap md:table-cell hidden'>Line</TableHead>
               <TableHead className=' whitespace-nowrap md:table-cell hidden'>Name</TableHead>
               <TableHead className=' whitespace-nowrap lg:table-cell hidden'>Particular</TableHead>
             </TableHeadRow>
@@ -49,6 +50,7 @@ const DamayanFundFormTable = ({ form }: EmergencyLoanFormTableProps) => {
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5  [&>th]:!font-normal [&>th]:!text-xs">
+              <TableHead className=' whitespace-nowrap table-cell md:hidden'>Line</TableHead>
               <TableHead className=' whitespace-nowrap table-cell md:hidden'>Name</TableHead>
               <TableHead className=' whitespace-nowrap table-cell lg:hidden'>Particular</TableHead>
               <TableHead className=' whitespace-nowrap'>Acct. Code</TableHead>

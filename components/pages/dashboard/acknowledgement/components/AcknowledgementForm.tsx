@@ -46,13 +46,12 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                 />
               </FormIonItem>
               <CenterSelection
-                centerLabel="centerLabel"
-                centerValue="center"
-                centerDescription="centerName"
-                clearErrors={form.clearErrors}
-                setValue={form.setValue}
-                className=" text-xs"
-              />
+              centerLabel="centerLabel"
+              centerValue="center"
+              centerDescription="centerName"
+              clearErrors={form.clearErrors}
+              setValue={form.setValue}
+              className=" text-xs" acctOfficer={'acctOfficer'}              />
             </div>
             <FormIonItem className="[--min-height:0]">
               <InputText
@@ -238,6 +237,19 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
                 className="!p-2 rounded-md  !text-[0.7rem] flex-1"
                 labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] !text-slate-600 text-end"
                 isAmount
+              />
+            </FormIonItem>
+
+             <FormIonItem className="[--min-height:0]">
+              <InputText
+                disabled={loading}
+                name="user"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="User"
+                placeholder="Type here"
+                className="!p-2 rounded-md  !text-[0.7rem] flex-1"
+                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] !text-slate-600 text-end"
               />
             </FormIonItem>
           
