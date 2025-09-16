@@ -27,8 +27,8 @@ export const emergencyLoanSchema = z
       .min(1, 'CV # is required')
       .regex(/^CV#[\d-]+$/i, { message: 'Must start with CV# followed by numbers or hyphens' }),
     user: z.string().min(1, 'User is required'),
-    centerLabel: z.string().min(1, 'Center code is required'),
-    centerValue: z.string().min(1, 'Center code is required'),
+    // centerLabel: z.string().min(1, 'Center code is required'),
+    // centerValue: z.string().min(1, 'Center code is required'),
     clientLabel: z.string().min(1, 'Client is required'),
     clientValue: z.string().min(1, 'Client is required'),
     refNo: z.string().optional().or(z.literal('')),

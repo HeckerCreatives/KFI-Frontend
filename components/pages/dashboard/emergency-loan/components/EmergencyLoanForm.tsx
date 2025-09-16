@@ -29,7 +29,7 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
               labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-16 !text-slate-600 text-end"
             />
           </FormIonItem>
-          <div className="flex items-start gap-2 flex-nowrap">
+          {/* <div className="flex items-start gap-2 flex-nowrap">
             <FormIonItem className="flex-1 [--min-height:0]">
               <InputText
                 disabled={loading}
@@ -44,7 +44,7 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
               />
             </FormIonItem>
             <CenterSelection centerLabel="centerLabel" centerValue="centerValue" clearErrors={form.clearErrors} setValue={form.setValue} className="text-xs" />
-          </div>
+          </div> */}
 
 
           <div className="flex items-start gap-2 flex-nowrap">

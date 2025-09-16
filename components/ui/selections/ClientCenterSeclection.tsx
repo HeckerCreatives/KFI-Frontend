@@ -73,7 +73,7 @@ const CenterClientSelection = <T extends FieldValues>({ centerid, centerLabel, c
     setLoading(true);
     try {
       const filter: any = { keyword: value, page, limit: 10 };
-     const result = await kfiAxios.get(`/customer/by-center/${centerid}`);
+     const result = await kfiAxios.get(`/customer/list`, {params: filter});
       const { success, clients, totalPages, hasNextPage, hasPrevPage } = result.data;
 
        if (success) {
@@ -118,22 +118,7 @@ const CenterClientSelection = <T extends FieldValues>({ centerid, centerLabel, c
   }, [isOpen]);
 
   
-    const handleNextPage = () => {
-      if (page !== Math.ceil(data.clients.length / limit)) {
-        setPage(prev => prev + 1);
-      }
-    };
   
-    const handlePrevPage = () => {
-      if (page > 0) {
-        setPage(prev => prev - 1);
-      }
-    };
-  
-  
-    const currentPageItems = React.useMemo(() => {
-      return data.clients.slice((page - 1) * limit, page * limit);
-    }, [data, page, limit]);
 
   return (
     <>
@@ -195,7 +180,7 @@ const CenterClientSelection = <T extends FieldValues>({ centerid, centerLabel, c
                 {loading && <TableLoadingRow colspan={2} />}
                 {!loading && data.clients.length < 1 && <TableNoRows colspan={2} label="No client found" />}
                 {!loading &&
-                  currentPageItems.map((data: Option) => (
+                  data.clients.map((data: Option) => (
                     <TableRow onClick={() => handleSelectClient(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.name}</TableCell>
                     </TableRow>
@@ -203,28 +188,9 @@ const CenterClientSelection = <T extends FieldValues>({ centerid, centerLabel, c
               </TableBody>
             </Table>
           </div>
-          <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">
-          <div>
-            <IonButton onClick={handlePrevPage} disabled={page === 1} fill="clear" className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md">
-              <IonIcon icon={arrowBack} />
-            </IonButton>
-          </div>
-          <div>
-            <div className="text-sm !font-semibold  px-3 py-1.5 rounded-lg text-slate-700">
-              {page} / {Math.ceil(data.clients.length / limit)}
-            </div>
-          </div>
-          <div>
-            <IonButton
-              onClick={handleNextPage}
-              disabled={page === Math.ceil(data.clients.length / limit)}
-              fill="clear"
-              className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
-            >
-              <IonIcon icon={arrowForward} />
-            </IonButton>
-          </div>
-        </div>
+        
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
           
         </div>
       </IonModal>
