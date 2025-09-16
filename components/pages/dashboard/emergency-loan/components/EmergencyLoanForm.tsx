@@ -62,7 +62,7 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
               />
 
             </FormIonItem>
-            <CenterClientSelection clientLabel='clientLabel' clientValue='clientValue' centerLabel="centerLabel" centerValue="centerValue" clearErrors={form.clearErrors} setValue={form.setValue} className="text-xs" centerid={form.watch('centerValue')} />
+            <CenterClientSelection clientLabel='clientLabel' clientValue='clientValue' clearErrors={form.clearErrors} setValue={form.setValue} className="text-xs" centerLabel={'code'} centerValue={'code'}  />
           </div>
 
           
