@@ -13,6 +13,7 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 import { link } from 'fs';
+import Signatures from '../../../../ui/common/Signatures';
 
 type CreateEmergencyLoanProps = {
   getEmergencyLoans: (page: number, keyword?: string, sort?: string) => void;
@@ -22,13 +23,15 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
   const [present] = useIonToast();
   const modal = useRef<HTMLIonModalElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState(false);
+  
 
   const form = useForm<EmergencyLoanFormData>({
     resolver: zodResolver(emergencyLoanSchema),
     defaultValues: {
       code: '',
-      centerValue: '',
-      centerLabel: '',
+      // centerValue: '',
+      // centerLabel: '',
       clientValue: '',
       clientLabel: '',
       refNo: '',
@@ -48,7 +51,7 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
 
   function dismiss() {
     form.reset();
-    modal.current?.dismiss();
+    setIsOpen(false)
   }
 
   console.log(form.formState.errors)
@@ -87,6 +90,7 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
     <>
       <div className="text-end">
         <IonButton
+        onClick={()=> setIsOpen(true)}
           fill="clear"
           id="create-emergencyLoan-modal"
           className="max-h-10 min-h-6 min-w-32 max-w-32 w-32 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
@@ -96,8 +100,8 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
         </IonButton>
       </div>
       <IonModal
-        ref={modal}
         trigger="create-emergencyLoan-modal"
+            isOpen={isOpen}
         backdropDismiss={false}
         className=" [--border-radius:0.7rem] auto-height [--max-width:84rem] [--width:95%]"
       >
@@ -118,6 +122,8 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
                 <EmergencyLoanFormTable form={form} />
               </div>
             </div>
+            <Signatures open={isOpen} type={'emergency loan'}/>
+            
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
             <div className="text-end space-x-1 px-2">

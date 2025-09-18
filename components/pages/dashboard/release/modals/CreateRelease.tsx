@@ -12,6 +12,7 @@ import ReleaseForm from '../components/ReleaseForm';
 import ReleaseFormTable from '../components/ReleaseFormTable';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type CreateReleaseProps = {
   getReleases: (page: number, keyword?: string, sort?: string) => void;
@@ -113,6 +114,8 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
               <ReleaseForm form={form} loading={loading} />
               <ReleaseFormTable form={form} />
             </div>
+            <Signatures open={isOpen} type={'official receipt'}/>
+            
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
             <div className="text-end space-x-1 px-2">

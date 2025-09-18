@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import InputText from '../../../../ui/forms/InputText';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
@@ -13,6 +13,13 @@ type TForm = {
 };
 
 const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
+   const watchDate = form.watch('date')
+  
+    useEffect(() => {
+      if(watchDate){
+        form.setValue('checkDate', watchDate)
+      }
+    },[watchDate])
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-3 gap-2">
@@ -81,7 +88,7 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
               max="9999-12-31"
               className="!p-2 rounded-md !text-[0.7rem] "
               labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-16 !text-slate-600 text-end"
-              readOnly
+              
             />
           </FormIonItem>
           <FormIonItem className="[--min-height:0]">
@@ -137,6 +144,7 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
             max="9999-12-31"
             className="!p-2 rounded-md !text-[0.7rem] "
             labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-24 !text-slate-600 text-end"
+            readOnly
           />
         </FormIonItem>
         <div className="flex items-start gap-2 flex-nowrap">

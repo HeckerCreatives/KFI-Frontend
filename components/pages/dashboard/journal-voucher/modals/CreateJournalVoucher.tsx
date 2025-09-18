@@ -13,6 +13,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type CreateJournalVoucherProps = {
   getJournalVouchers: (page: number, keyword?: string, sort?: string) => void;
@@ -103,6 +104,8 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
             <div className="flex-1 mt-4">
               <JournalVoucherFormTable form={form} loading={loading} />
             </div>
+              <Signatures open={isOpen} type={'journal voucher'}/>
+            
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
             <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">

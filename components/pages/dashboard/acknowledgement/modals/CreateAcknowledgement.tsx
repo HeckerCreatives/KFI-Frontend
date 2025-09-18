@@ -12,6 +12,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type CreateAcknowledgementProps = {
   getAcknowledgements: (page: number, keyword?: string, sort?: string) => void;
@@ -117,6 +118,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
                 <AcknowledgementFormTable form={form} />
               </div>
             </div>
+            <Signatures open={isOpen} type={'official receipt'}/>
 
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 

@@ -12,6 +12,7 @@ import DamayanFundForm from '../components/DamayanFundForm';
 import DamayanFundFormTable from '../components/DamayanFundFormTable';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type CreateDamayanFundProps = {
   getDamayanFunds: (page: number, keyword?: string, sort?: string) => void;
@@ -21,6 +22,8 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
   const [present] = useIonToast();
   const modal = useRef<HTMLIonModalElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
+      const [isOpen, setIsOpen] = useState(false);
+  
 
   const form = useForm<DamayanFundFormData>({
     resolver: zodResolver(damayanFundSchema),
@@ -45,7 +48,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
 
   function dismiss() {
     form.reset();
-    modal.current?.dismiss();
+   setIsOpen(false)
   }
 
   async function onSubmit(data: DamayanFundFormData) {
@@ -82,6 +85,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
     <>
       <div className="text-end">
         <IonButton
+        onClick={() => setIsOpen(true)}
           fill="clear"
           id="create-damayan-fund-modal"
           className="max-h-10 min-h-6 min-w-32 max-w-32 w-32 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
@@ -91,7 +95,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
         </IonButton>
       </div>
       <IonModal
-        ref={modal}
+        isOpen={isOpen}
         trigger="create-damayan-fund-modal"
         backdropDismiss={false}
         className=" [--border-radius:0.35rem] auto-height [--max-width:84rem] [--width:95%]"
@@ -109,6 +113,8 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
               <DamayanFundForm form={form} loading={loading} />
               <DamayanFundFormTable form={form} />
             </div>
+            <Signatures open={isOpen} type={'damayan fund'}/>
+            
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
             <div className="text-end space-x-1 px-2">

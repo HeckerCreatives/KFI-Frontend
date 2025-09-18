@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import InputText from '../../../../ui/forms/InputText';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import { JournalVoucherFormData } from '../../../../../validations/journal-voucher.schema';
 import BankSelection from '../../../../ui/selections/BankSelection';
+import { watch } from 'fs';
 
 type TForm = {
   form: UseFormReturn<JournalVoucherFormData>;
@@ -11,6 +12,13 @@ type TForm = {
 };
 
 const JournalVoucherForm = ({ form, loading }: TForm) => {
+  const watchDate = form.watch('date')
+
+  useEffect(() => {
+    if(watchDate){
+      form.setValue('checkDate', watchDate)
+    }
+  },[watchDate])
   return (
     <div className="space-y-1 px-2">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -55,7 +63,6 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
                 max="9999-12-31"
                 className="!p-2 rounded-md !text-[0.7rem]"
                 labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
-                readOnly
               />
             </FormIonItem>
             <FormIonItem className="[--min-height:0]">
@@ -111,6 +118,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
               className="!p-2 rounded-md !text-[0.7rem]"
               labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
               max="9999-12-31"
+              readOnly
             />
           </FormIonItem>
           <div className="flex items-end gap-2 flex-nowrap">

@@ -1,0 +1,64 @@
+import React, { useEffect, useState } from 'react'
+import kfiAxios from '../../utils/axios'
+import { formatDateInput } from '../../utils/date-utils'
+
+export type Signatures = {
+  approvedBy: string
+  checkedBy: string
+  recordedBy: string
+  preparedBy: string
+  notedBy: string
+  type: string
+  _id: string
+
+}
+
+type Props = {
+    open: boolean
+    type: string
+}
+
+export default function Signatures({open, type}: Props) {
+    const [signatures, setSignatures] = useState<Signatures[]>([])
+    const finalSignatures = signatures.find((item) => item.type === type)
+    const visibleDate = type === 'official reciept'
+
+     const getSignatures = async () => {
+          try {
+            const result = await kfiAxios.get('/system-params/signature');
+            const { signatureParams } = result.data;
+    
+            setSignatures(signatureParams)
+           
+          } catch (error) {
+          } finally {
+          }
+        };
+
+        useEffect(() => {
+            getSignatures()
+        },[open])
+    
+  return (
+     <div className={`w-full grid ${visibleDate ? 'grid-cols-5': 'grid-cols-4'} bg-zinc-100 p-2 mt-6 text-sm font-semibold`}>
+        <div className=' flex items-center gap-2'>
+          Prepared by: <span className=' text-sm !font-bold'>{finalSignatures?.preparedBy || 'N/A'}</span>
+        </div>
+          <div className=' flex items-center gap-2'>
+          Checked by: <span className=' text-sm !font-bold'>{finalSignatures?.checkedBy || 'N/A'}</span>
+        </div>
+        <div className=' flex items-center gap-2'>
+          Noted/Aproved by: <span className=' text-sm !font-bold'>{finalSignatures?.approvedBy || finalSignatures?.notedBy || "N/A"}</span>
+        </div>
+         <div className=' flex items-center gap-2'>
+          Recorded By / Date: <span className=' text-sm !font-bold'>{finalSignatures?.recordedBy || 'N/A'}</span>
+        </div>
+        {visibleDate && (
+        <div className=' flex items-center gap-2'>
+            Date Posted: <span className=' text-sm !font-bold'>{formatDateInput(new Date().toISOString())}</span>
+        </div>
+        )}
+        
+      </div>
+  )
+}

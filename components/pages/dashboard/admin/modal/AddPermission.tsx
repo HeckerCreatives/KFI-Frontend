@@ -35,7 +35,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
   async function handleAddPermission() {
     setLoading(true);
     try {
-      const result = await kfiAxios.put(`/user/permissions/${user._id}`, { permissions: permissions });
+      const result = await kfiAxios.put(`/user/permissions/${user._id}`, { permissions: permissions,platform:"desktop" });
       const { success } = result.data;
       if (success) {
         setData(prev => {

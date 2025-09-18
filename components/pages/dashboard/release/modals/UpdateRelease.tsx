@@ -14,6 +14,7 @@ import AcknowledgementForm from '../components/ReleaseForm';
 import { ReleaseFormData, releaseSchema } from '../../../../../validations/release.schema';
 import UpdateReleaseEntries from '../components/UpdateReleaseEntries';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type UpdateReleaseProps = {
   release: Release;
@@ -204,6 +205,9 @@ const UpdateRelease = ({ release, setData }: UpdateReleaseProps) => {
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
             <UpdateReleaseEntries isOpen={isOpen} release={release} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} />
           </div>
+
+          <Signatures open={isOpen} type={'official receipt'}/>
+          
         </div>
       </IonModal>
     </>

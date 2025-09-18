@@ -41,6 +41,7 @@ export async function generateStaticParams() {
     { all: ['dashboard', 'weekly-savings'] },
     { all: ['dashboard', 'business-type'] },
     { all: ['dashboard', 'business-supplier'] },
+    { all: ['dashboard', 'systemparameters'] },
 
     // Diagnostics
     { all: ['dashboard', 'unbalance-entries'] },

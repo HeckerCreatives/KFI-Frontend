@@ -14,6 +14,7 @@ import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type UpdateExpenseVoucherProps = {
   expenseVoucher: ExpenseVoucher;
@@ -184,6 +185,8 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
           <div className="border-t border-t-slate-200 mt-2 flex-1 py-2">
             <UpdateExpenseVoucherEntries isOpen={isOpen} expenseVoucher={expenseVoucher} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}/>
           </div>
+          <Signatures open={isOpen} type={'expense voucher'}/>
+          
         </div>
       </IonModal>
     </>

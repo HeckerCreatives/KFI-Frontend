@@ -14,6 +14,7 @@ import { AcknowledgementFormData, acknowledgementSchema } from '../../../../../v
 import AcknowledgementForm from '../components/AcknowledgementForm';
 import UpdateAcknowledgementEntries from '../components/UpdateAcknowledgementEntries';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type UpdateAcknowledgementProps = {
   acknowledgement: Acknowledgement;
@@ -205,6 +206,9 @@ function removeCVTag(cv: string): string {
           <div className="border-t border-t-slate-400 mx-2 pt-5 flex-1">
             <UpdateAcknowledgementEntries isOpen={isOpen} acknowledgement={acknowledgement} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} />
           </div>
+
+          <Signatures open={isOpen} type={'official receipt'}/>
+          
         </div>
       </IonModal>
     </>

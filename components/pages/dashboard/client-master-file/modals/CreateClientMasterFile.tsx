@@ -22,6 +22,7 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
   const form = useForm<ClientMasterFileFormData>({
     resolver: zodResolver(clientMasterFileSchema),
     defaultValues: {
+      
       name: '',
       address: '',
       city: '',
@@ -49,6 +50,7 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
       reason: '',
       beneficiary: [{ name: '' }],
       children: [{ name: '' }],
+      clientImage: undefined
     },
   });
 
@@ -60,7 +62,12 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
   async function onSubmit(data: ClientMasterFileFormData) {
     setLoading(true);
     try {
-      const result = await kfiAxios.post('/customer', data);
+      const result = await kfiAxios.post('/customer', data,{
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
       const { success } = result.data;
       if (success) {
         getClients(1);

@@ -12,6 +12,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type CreateExpenseVoucherProps = {
   getExpenseVouchers: (page: number, keyword?: string, sort?: string) => void;
@@ -105,6 +106,8 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
             <div className="flex-1 mt-2">
               <ExpenseVoucherFormTable form={form} loading={loading} />
             </div>
+              <Signatures open={isOpen} type={'expense voucher'}/>
+            
               {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
             <div className="text-end mt-6 px-3">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import InputText from '../../../../ui/forms/InputText';
@@ -15,6 +15,13 @@ type TForm = {
 };
 
 const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
+  const watchDate = form.watch('date')
+
+  useEffect(() => {
+    if(watchDate){
+      form.setValue('checkDate', watchDate)
+    }
+  },[watchDate])
   return (
     <div className="space-y-1 px-2">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ">
@@ -67,7 +74,6 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
                 className="!p-2 rounded-md !text-[0.7rem]"
                 labelClassName="truncate min-w-24 !text-[0.7rem] !text-slate-600 text-end"
                 max="9999-12-31"
-                readOnly
               />
             </FormIonItem>
             <FormIonItem className="[--min-height:0]">
@@ -123,6 +129,7 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
                 max="9999-12-31"
                 className="!p-2 rounded-md !text-[0.7rem]"
                 labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
+                readOnly
               />
             </FormIonItem>
             <div className="flex gap-2 w-full">

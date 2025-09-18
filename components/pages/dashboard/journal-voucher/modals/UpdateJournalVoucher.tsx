@@ -14,6 +14,7 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import JournalVoucherForm from '../components/JournalVoucherForm';
 import UpdateJVEntries from '../components/UpdateJVEntries';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type UpdateJournalVoucherProps = {
   journalVoucher: JournalVoucher;
@@ -192,6 +193,8 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
              deletedIds={deletedIds}
             />
           </div>
+          <Signatures open={isOpen} type={'journal voucher'}/>
+          
         </div>
       </IonModal>
     </>

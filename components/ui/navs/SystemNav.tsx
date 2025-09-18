@@ -33,6 +33,8 @@ const SystemNav = () => {
         { path: '/dashboard/business-supplier', label: 'Supplier', resource: 'business supplier' },
       ],
     },
+    { path: '/dashboard/systemparameters', label: 'System Parameters', resource: 'system parameters' },
+
   ];
 
   const isActivePath = (currentPath: string, navLinks: NavLink[]): boolean => {

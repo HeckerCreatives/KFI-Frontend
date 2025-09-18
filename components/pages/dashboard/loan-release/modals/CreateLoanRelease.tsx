@@ -12,15 +12,19 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type CreateLoanReleaseProps = {
   getTransactions: (page: number, keyword?: string, sort?: string) => void;
 };
 
+
+
 const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
   const [present] = useIonToast();
-  const modal = useRef<HTMLIonModalElement>(null);
+   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+
 
   const form = useForm<LoanReleaseFormData>({
     resolver: zodResolver(loanReleaseSchema),
@@ -51,7 +55,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
 
   function dismiss() {
     form.reset();
-    modal.current?.dismiss();
+    setIsOpen(false)
   }
 
   async function onSubmit(data: LoanReleaseFormData) {
@@ -117,10 +121,12 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
   const amount = form.watch("amount") || 0;
 
 
+
   return (
     <>
       <div className="text-end">
         <IonButton
+         onClick={() => setIsOpen(true)}
           fill="clear"
           id="create-loanRelease-modal"
           className="max-h-10 min-h-6 min-w-32 max-w-32 w-32 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
@@ -130,8 +136,8 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
         </IonButton>
       </div>
       <IonModal
-        ref={modal}
         trigger="create-loanRelease-modal"
+        isOpen={isOpen}
         backdropDismiss={false}
         className=" [--border-radius:0.7rem] auto-height [--max-width:86rem] [--width:95%]"
       >
@@ -177,6 +183,10 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
                   </div> */}
                 </div>
               </div>
+
+              <Signatures open={isOpen} type={'loan release'}/>
+
+             
             </div>
             <div className="text-end space-x-1 px-2">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>

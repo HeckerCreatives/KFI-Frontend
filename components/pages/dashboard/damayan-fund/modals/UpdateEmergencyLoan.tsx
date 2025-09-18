@@ -15,6 +15,7 @@ import DamayanFundForm from '../components/DamayanFundForm';
 import UpdateDFEntries from '../components/UpdateDFEntries';
 import { DamayanFundFormData, damayanFundSchema } from '../../../../../validations/damayan-fund.schema';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type UpdateDamayanFundProps = {
   damayanFund: DamayanFund;
@@ -181,6 +182,9 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
             <UpdateDFEntries isOpen={isOpen} damayanFund={damayanFund} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}  />
           </div>
+
+          <Signatures open={isOpen} type={'damayan fund'}/>
+          
 
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 

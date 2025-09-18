@@ -20,13 +20,15 @@ type TForm = {
 const LoanReleaseForm = ({ form, loading = false }: TForm) => {
   const centerId = form.watch('center');
   const { center, loading: centerLoads } = useGetCenterDescription({ id: centerId });
+  const watchDate = form.watch('date')
 
   useEffect(() => {
     if (center) {
       form.setValue('name', center);
       form.clearErrors('name');
     }
-  }, [center, form]);
+    form.setValue('checkDate',watchDate )
+  }, [center, form, watchDate]);
 
   return (
     <div className=" space-y-1 mt-4">
@@ -90,7 +92,8 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               max="9999-12-31"
               className="!p-2 rounded-md !text-[0.7rem] "
               labelClassName="truncate min-w-[7.5rem] !text-[0.7rem]  !text-slate-600 text-end"
-              readOnly
+              // readOnly
+              
             />
           </FormIonItem>
           {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -203,6 +206,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               className="!p-2 rounded-md !text-[0.7rem]"
               labelClassName="truncate min-w-24 !text-[0.7rem]  !text-slate-600 text-end"
               max="9999-12-31"
+              readOnly
             />
           </FormIonItem>
 

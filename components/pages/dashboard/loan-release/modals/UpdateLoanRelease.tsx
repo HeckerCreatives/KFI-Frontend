@@ -16,6 +16,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { TData } from '../LoanRelease';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type UpdateLoanReleaseProps = {
   transaction: Transaction;
@@ -270,6 +271,9 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
           </div>
 
           {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
+          <Signatures open={isOpen} type={'loan release'}/>
+          
 
         </div>
       </IonModal>

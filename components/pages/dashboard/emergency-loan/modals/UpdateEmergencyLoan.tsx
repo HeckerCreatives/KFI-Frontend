@@ -15,6 +15,7 @@ import { TData } from '../EmergencyLoan';
 import UpdateELEntries from '../components/UpdateELEntries';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import Signatures from '../../../../ui/common/Signatures';
 
 type UpdateEmergencyLoanProps = {
   emergencyLoan: EmergencyLoan;
@@ -34,8 +35,8 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
     resolver: zodResolver(emergencyLoanSchema),
     defaultValues: {
       code: '',
-      centerLabel: '',
-      centerValue: '',
+      // centerLabel: '',
+      // centerValue: '',
       refNo: '',
       remarks: '',
       date: formatDateInput(new Date().toISOString()),
@@ -57,8 +58,8 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
         user: emergencyLoan.user,
         clientLabel: '',
         clientValue: '',
-        centerLabel: emergencyLoan?.center?.centerNo,
-        centerValue: emergencyLoan?.center?._id,
+        // centerLabel: emergencyLoan?.center?.centerNo,
+        // centerValue: emergencyLoan?.center?._id,
         refNo: emergencyLoan.refNo,
         remarks: emergencyLoan.remarks,
         date: formatDateInput(emergencyLoan.date),
@@ -196,6 +197,9 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
             <UpdateELEntries isOpen={isOpen} emergencyLoan={emergencyLoan} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} />
           </div>
+
+            <Signatures open={isOpen} type={'emergency loan'}/>
+          
 
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 

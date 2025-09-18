@@ -26,10 +26,13 @@ export const acknowledgementEntrySchema = z.object({
 
 export const acknowledgementSchema = z
   .object({
-    code: z
+    // code: z
+    //   .string()
+    //   .min(1, 'OR # is required')
+    //   .regex(/^OR#[\d-]+$/i, { message: 'Must start with OR# followed by numbers or hyphens' }),
+      code: z
       .string()
-      .min(1, 'OR # is required')
-      .regex(/^OR#[\d-]+$/i, { message: 'Must start with OR# followed by numbers or hyphens' }),
+      .min(1, 'OR # is required'),
     center: z.string().min(1, 'Center is required'),
     user: z.string().min(1, 'User is required'),
 

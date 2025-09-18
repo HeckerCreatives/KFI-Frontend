@@ -75,6 +75,7 @@ import {
 } from "hugeicons-react";
 import ListDetail from './ListDetail';
 import Nature from './dashboard/nature/Nature';
+import SystemParameters from './dashboard/systemparameters/SystemParameters';
 
 type NavLink = {
   path?: string;
@@ -155,6 +156,9 @@ const navLinks: NavLink[] = [
           { path: "/dashboard/business-supplier", label: "Supplier", resource: "business supplier" },
         ],
       },
+    { path: '/dashboard/nature', label: 'Nature', resource: 'nature' },
+    { path: '/dashboard/systemparameters', label: 'System Parameters', resource: 'system parameters' },
+
     ],
   },
 
@@ -179,7 +183,6 @@ const Tabs = () => {
   const pathname = usePathname();
   const location = useLocation();
 
-  console.log(location.pathname)
 
   const logout = () => {
     localStorage.removeItem('auth');
@@ -426,6 +429,7 @@ const Tabs = () => {
             <Route path="/dashboard/login-logs" render={() => <LoginLogs />} exact={true} />
             <Route path="/dashboard/action-logs" render={() => <ActionLogs />} exact={true} />
             <Route path="/dashboard/nature" render={() => <Nature />} exact={true} />
+            <Route path="/dashboard/systemparameters" render={() => <SystemParameters />} exact={true} />
           </IonRouterOutlet>
         </IonContent>
       </IonPage>

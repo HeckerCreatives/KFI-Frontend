@@ -38,6 +38,9 @@ const SystemNav = () => {
         { path: '/dashboard/business-supplier', label: 'Supplier', resource: 'business supplier' },
       ],
     },
+    { path: '/dashboard/nature', label: 'Nature', resource: 'nature' },
+    { path: '/dashboard/systemparameters', label: 'System Parameters', resource: 'system parameters' },
+
   ];
 
   return (
