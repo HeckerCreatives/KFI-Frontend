@@ -54,7 +54,6 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
     setIsOpen(false)
   }
 
-  console.log(form.formState.errors)
 
   async function onSubmit(data: EmergencyLoanFormData) {
     setLoading(true);

@@ -9,14 +9,8 @@ import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import TablePagination from '../../../ui/forms/TablePagination';
 import { Signatures } from '../../../ui/common/Signatures';
+import UpdateSystemParameters from './modals/UpdateParams';
 
-export type TNature = {
-  natures: NatureType[];
-  totalPages: number;
-  nextPage: boolean;
-  prevPage: boolean;
-  loading: boolean;
-};
 
 const SystemParameters = () => {
   const [signatures, setSignatures] = useState<Signatures[]>([])
@@ -52,10 +46,9 @@ const SystemParameters = () => {
                 <TableHeader>
                   <TableHeadRow>
                     <TableHead>Type</TableHead>
-                    <TableHead>Prepared By</TableHead>
                     <TableHead>Checked By</TableHead>
                     <TableHead>Approved By</TableHead>
-                    <TableHead>Recorded By</TableHead>
+                    <TableHead>Action</TableHead>
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
@@ -65,10 +58,11 @@ const SystemParameters = () => {
                     signatures.map((item, index) => (
                       <TableRow key={item._id}>
                         <TableCell className=' capitalize'>{item.type}</TableCell>
-                        <TableCell>{item.preparedBy || 'N/A'}</TableCell>
                         <TableCell>{item.checkedBy || 'N/A'}</TableCell>
                         <TableCell>{item.approvedBy || 'N/A'}</TableCell>
-                        <TableCell>{item.recordedBy || 'N/A'}</TableCell>
+                        <TableCell>
+                          <UpdateSystemParameters signatures={item} fetchData={getSignatures}/>
+                        </TableCell>
                       
                       </TableRow>
                     ))}
