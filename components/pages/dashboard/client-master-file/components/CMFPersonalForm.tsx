@@ -60,7 +60,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
   }, [watchedImage])
 
 
-  console.log( preview, watchedImage instanceof File)
+  console.log( preview, form.formState.defaultValues)
 
   return (
     <div className=' mt-6'>
@@ -68,19 +68,21 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
         <IonRow>
           <IonCol size="12" sizeMd="6" className="space-y-2">
               <div className="ml-24 max-w-[8rem] w-full aspect-square bg-zinc-200 rounded-sm flex items-center justify-center overflow-hidden">
-                {preview && (
-                <div className="relative">
-                  <div className="relative inline-block">
+                {preview ? (
                     <img
                       src={preview || "/placeholder.svg"}
                       alt="Preview"
                       className="max-w-full h-48 object-cover rounded-md border"
                     />
-                   
-                  </div>
-                 
-                </div>
+              ) : (
+                <img
+                      src={`https://kfiapi.axcela-ph.com/${watchedImage}`}
+                      alt="Preview"
+                      className="max-w-full h-48 object-cover rounded-md border"
+                    />
               )}
+
+             
               </div>
                 
 

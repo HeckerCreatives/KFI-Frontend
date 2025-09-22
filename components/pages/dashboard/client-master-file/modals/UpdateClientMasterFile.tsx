@@ -57,6 +57,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
       reason: client.reason,
       beneficiary: [{ name: '' }],
       children: [{ name: '' }],
+      clientImage: client.image?.path
     },
   });
 
@@ -90,6 +91,8 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         reason: client.reason,
         beneficiary: client.beneficiaries.length > 0 ? client.beneficiaries : [{ name: '' }],
         children: client.children.length > 0 ? client.children : [{ name: '' }],
+        clientImage: client.image?.path
+
       });
     }
   }, [client, form]);

@@ -44,6 +44,10 @@ const ViewClientMasterFile = ({ member }: { member: ClientMasterFile }) => {
               <h3 className="text-sm !font-semibold text-slate-700 mb-3 flex items-center gap-1">
                 <UserSquareIcon size={28} stroke='.8' className=' bg-green-50 p-1 rounded-md text-green-600'/>
                 Personal Information</h3>
+
+                <div className=' w-fit aspect-square overflow-hidden mb-6'>
+                  <img width={100} height={100} src={`https://kfiapi.axcela-ph.com/${member.image?.path}`} alt="" className=''/>
+                </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 <ViewClientCard label="Name" value={member?.name || ''} />
                 <ViewClientCard label="Address" value={member?.address || ''} />

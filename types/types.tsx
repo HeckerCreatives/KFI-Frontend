@@ -36,6 +36,14 @@ export type Child = {
   _id: string;
 };
 
+export type Image = {
+    path: string,
+    originalname: string,
+    mimetype: string,
+    filename: string,
+    size: number
+}
+
 export interface ClientMasterFile {
   acctNumber: string;
   acctOfficer: string;
@@ -65,6 +73,7 @@ export interface ClientMasterFile {
   _id: string;
   beneficiaries: Beneficiary[];
   children: Child[];
+  image: Image
 }
 
 export type LoanCode = {
