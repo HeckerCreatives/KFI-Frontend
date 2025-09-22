@@ -21,7 +21,7 @@ type Props = {
 export default function Signatures({open, type}: Props) {
     const [signatures, setSignatures] = useState<Signatures[]>([])
     const finalSignatures = signatures.find((item) => item.type === type)
-    const visibleDate = type === 'official reciept'
+    const visibleDate = type === 'official receipt'
 
      const getSignatures = async () => {
           try {
@@ -42,22 +42,33 @@ export default function Signatures({open, type}: Props) {
   return (
      <div className={`w-full grid ${visibleDate ? 'grid-cols-5': 'grid-cols-4'} bg-zinc-100 p-2 mt-6 text-sm font-semibold`}>
         <div className=' flex items-center gap-2'>
-          Prepared by: <span className=' text-sm !font-bold'>{finalSignatures?.preparedBy || 'N/A'}</span>
+          Prepared by: <span className=' text-sm !font-bold'>{finalSignatures?.preparedBy}</span>
         </div>
           <div className=' flex items-center gap-2'>
-          Checked by: <span className=' text-sm !font-bold'>{finalSignatures?.checkedBy || 'N/A'}</span>
+          Checked by: <span className=' text-sm !font-bold'>{finalSignatures?.checkedBy}</span>
         </div>
-        <div className=' flex items-center gap-2'>
-          Noted/Aproved by: <span className=' text-sm !font-bold'>{finalSignatures?.approvedBy || finalSignatures?.notedBy || "N/A"}</span>
-        </div>
-         <div className=' flex items-center gap-2'>
-          Recorded By / Date: <span className=' text-sm !font-bold'>{finalSignatures?.recordedBy || 'N/A'}</span>
-        </div>
+
         {visibleDate && (
         <div className=' flex items-center gap-2'>
             Date Posted: <span className=' text-sm !font-bold'>{formatDateInput(new Date().toISOString())}</span>
         </div>
         )}
+
+        <div className=' flex items-center gap-2'>
+          Noted/Aproved by: <span className=' text-sm !font-bold'>{finalSignatures?.approvedBy || finalSignatures?.notedBy}</span>
+        </div>
+        
+
+         {visibleDate ? (
+        <div className=' flex items-center gap-2'>
+        Received By / Date: <span className=' text-sm !font-bold'>{finalSignatures?.recordedBy || ''}</span>
+        </div>
+        ):(
+          <div className=' flex items-center gap-2'>
+            Recorded By / Date: <span className=' text-sm !font-bold'>{finalSignatures?.recordedBy || ''}</span>
+          </div>
+        )}
+       
         
       </div>
   )

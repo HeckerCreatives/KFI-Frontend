@@ -27,7 +27,7 @@ const ViewClientMasterFile = ({ member }: { member: ClientMasterFile }) => {
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className="[--border-radius:0.5rem] auto-height [--width:95%] [--max-width:64rem]"
+        className="[--border-radius:0.5rem] auto-height [--width:95%] [--max-width:95%]"
       >
         <div className="inner-content !p-6 h-full flex flex-col">
           <ModalHeader
@@ -36,10 +36,8 @@ const ViewClientMasterFile = ({ member }: { member: ClientMasterFile }) => {
             dismiss={dismiss}
           />
 
-          {/* Scrollable Content */}
           <div className="overflow-y-auto pr-2 flex-1 space-y-6 mt-4">
 
-            {/* Section 1: Personal Info */}
             <div>
               <h3 className="text-sm !font-semibold text-slate-700 mb-3 flex items-center gap-1">
                 <UserSquareIcon size={28} stroke='.8' className=' bg-green-50 p-1 rounded-md text-green-600'/>
@@ -64,7 +62,6 @@ const ViewClientMasterFile = ({ member }: { member: ClientMasterFile }) => {
               </div>
             </div>
 
-            {/* Section 2: Membership Info */}
             <div>
                <h3 className="text-sm !font-semibold text-slate-700 mb-3 flex items-center gap-1">
                                 <UserAccountIcon size={28} stroke='.8' className=' bg-blue-50 p-1 rounded-md text-blue-600'/>
@@ -82,7 +79,6 @@ const ViewClientMasterFile = ({ member }: { member: ClientMasterFile }) => {
               </div>
             </div>
 
-            {/* Section 3: Others */}
             <div>
                <h3 className="text-sm !font-semibold text-slate-700 mb-3 flex items-center gap-1">
                 <UserSquareIcon size={28} stroke='.8' className=' bg-teal-50 p-1 rounded-md text-teal-600'/>

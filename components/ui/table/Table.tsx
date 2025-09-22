@@ -9,7 +9,7 @@ type TableProps = {
 const Table = ({ className, children, ...props }: TableProps) => (
   <table
     className={classNames(
-      "w-full text-sm text-left border-collapse bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200",
+      "w-full text-sm text-left border-collapse bg-white overflow-hidden shadow-sm border border-gray-200",
       className,
     )}
     {...props}

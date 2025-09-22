@@ -46,6 +46,7 @@ const SystemParameters = () => {
                 <TableHeader>
                   <TableHeadRow>
                     <TableHead>Type</TableHead>
+                    <TableHead>Prepared By</TableHead>
                     <TableHead>Checked By</TableHead>
                     <TableHead>Approved By</TableHead>
                     <TableHead>Action</TableHead>
@@ -58,8 +59,9 @@ const SystemParameters = () => {
                     signatures.map((item, index) => (
                       <TableRow key={item._id}>
                         <TableCell className=' capitalize'>{item.type}</TableCell>
-                        <TableCell>{item.checkedBy || 'N/A'}</TableCell>
-                        <TableCell>{item.approvedBy || 'N/A'}</TableCell>
+                        <TableCell>{item.preparedBy}</TableCell>
+                        <TableCell>{item.checkedBy}</TableCell>
+                        <TableCell>{item.approvedBy}</TableCell>
                         <TableCell>
                           <UpdateSystemParameters signatures={item} fetchData={getSignatures}/>
                         </TableCell>

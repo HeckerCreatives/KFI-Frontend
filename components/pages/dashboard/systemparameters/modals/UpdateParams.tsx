@@ -31,6 +31,7 @@ const UpdateSystemParameters = ({ signatures, fetchData }: UpdateParamaters) => 
     defaultValues: {
      type: signatures.type,
      approvedBy: signatures.approvedBy,
+     preparedBy: signatures.preparedBy,
      checkedBy: signatures.checkedBy,
      receivedBy: ''
     },

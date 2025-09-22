@@ -283,9 +283,9 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
       </div>
 
       <div className="relative overflow-auto flex">
-        <Table className=' hidden md:table sticky left-0 z-50 '>
+        <Table className=' hidden md:table sticky left-0 z-50 translate-x-1 '>
           <TableHeader>
-            <TableHeadRow className="border-2 bg-slate-100 [&>th]:border-2 [&>th]:!py-1.5 [&>th]:!font-normal [&>th]:!text-xs">
+            <TableHeadRow className="border-2 [&>th]:border-2 [&>th]:!py-1.5 [&>th]:!font-normal [&>th]:!text-xs ">
               <TableHead>Line</TableHead>
               <TableHead>Name</TableHead>
               <TableHead className='hidden lg:table-cell'>Particular</TableHead>

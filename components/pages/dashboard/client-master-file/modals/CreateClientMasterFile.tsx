@@ -95,7 +95,7 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
         ref={modal}
         trigger="create-cmf-modal"
         backdropDismiss={false}
-        className=" ![--border-radius:.7rem] auto-height [--max-width:84rem] [--width:95%]"
+        className=" ![--border-radius:.7rem] auto-height [--width:95%] [--max-width:95%]"
       >
         {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">

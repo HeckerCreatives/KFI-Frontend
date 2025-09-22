@@ -19,6 +19,17 @@ const SystemParamsForm = ({ form, loading }: TForm) => {
           <FormIonItem>
             <InputText
               disabled={loading}
+              name="preparedBy"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Prepared By"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+            />
+          </FormIonItem>
+          <FormIonItem>
+            <InputText
+              disabled={loading}
               name="approvedBy"
               control={form.control}
               clearErrors={form.clearErrors}
