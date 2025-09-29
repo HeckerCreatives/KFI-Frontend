@@ -19,17 +19,31 @@ type Props = {
 }
 
 export default function Signatures({open, type}: Props) {
-    const [signatures, setSignatures] = useState<Signatures[]>([])
-    const finalSignatures = signatures.find((item) => item.type === type)
+    const [signatures, setSignatures] = useState<Signatures>()
+    // const finalSignatures = signatures.find((item) => item.type === type)
     const visibleDate = type === 'official receipt'
     const user = localStorage.getItem('user')
 
-     const getSignatures = async () => {
-          try {
-            const result = await kfiAxios.get('/system-params/signature');
-            const { signatureParams } = result.data;
+    //  const getSignatures = async () => {
+    //       try {
+    //         const result = await kfiAxios.get('/system-params/signature');
+    //         const { signatureParams } = result.data;
     
-            setSignatures(signatureParams)
+    //         setSignatures(signatureParams)
+           
+    //       } catch (error) {
+    //       } finally {
+    //       }
+    //     };
+
+        const getSignaturesByType = async () => {
+          try {
+            const result = await kfiAxios.get(`/system-params/signature/by-type/${type}`);
+            const { signatureParam } = result.data;
+
+            console.log(signatureParam, type)
+    
+            setSignatures(signatureParam)
            
           } catch (error) {
           } finally {
@@ -37,7 +51,7 @@ export default function Signatures({open, type}: Props) {
         };
 
         useEffect(() => {
-            getSignatures()
+            getSignaturesByType()
         },[open])
     
   return (
@@ -46,7 +60,7 @@ export default function Signatures({open, type}: Props) {
           Prepared by: <span className=' text-sm !font-bold capitalize'>{(user === 'EVD' || user === 'MGP') ? user : ''}</span>
         </div>
           <div className=' flex items-center gap-2'>
-          Checked by: <span className=' text-sm !font-bold'>{finalSignatures?.checkedBy}</span>
+          Checked by: <span className=' text-sm !font-bold'>{signatures?.checkedBy}</span>
         </div>
 
         {visibleDate && (
@@ -56,17 +70,17 @@ export default function Signatures({open, type}: Props) {
         )}
 
         <div className=' flex items-center gap-2'>
-          Noted/Aproved by: <span className=' text-sm !font-bold'>{finalSignatures?.approvedBy || finalSignatures?.notedBy}</span>
+          Noted/Approved by: <span className=' text-sm !font-bold'>{signatures?.approvedBy || signatures?.notedBy}</span>
         </div>
         
 
          {visibleDate ? (
         <div className=' flex items-center gap-2'>
-        Received By / Date: <span className=' text-sm !font-bold'>{finalSignatures?.recordedBy || ''}</span>
+        Received By / Date: <span className=' text-sm !font-bold'>{signatures?.recordedBy || ''}</span>
         </div>
         ):(
           <div className=' flex items-center gap-2'>
-            Recorded By / Date: <span className=' text-sm !font-bold'>{finalSignatures?.recordedBy || ''}</span>
+            Recorded By / Date: <span className=' text-sm !font-bold'>{signatures?.recordedBy || ''}</span>
           </div>
         )}
        
