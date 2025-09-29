@@ -105,7 +105,13 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
   async function onSubmit(data: ClientMasterFileFormData) {
     setLoading(true);
     try {
-      const result = await kfiAxios.put(`/customer/${client._id}`, data);
+      const result = await kfiAxios.put(`/customer/${client._id}`, data,{
+         headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+        
+      );
       const { success } = result.data;
       if (success) {
         setData(prev => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import kfiAxios from '../../utils/axios'
-import { formatDateInput } from '../../utils/date-utils'
+import { formatDateInput, formatDateMDY } from '../../utils/date-utils'
 
 export type Signatures = {
   approvedBy: string
@@ -22,6 +22,7 @@ export default function Signatures({open, type}: Props) {
     const [signatures, setSignatures] = useState<Signatures[]>([])
     const finalSignatures = signatures.find((item) => item.type === type)
     const visibleDate = type === 'official receipt'
+    const user = localStorage.getItem('user')
 
      const getSignatures = async () => {
           try {
@@ -42,7 +43,7 @@ export default function Signatures({open, type}: Props) {
   return (
      <div className={`w-full grid ${visibleDate ? 'grid-cols-5': 'grid-cols-4'} bg-zinc-100 p-2 mt-6 text-sm font-semibold`}>
         <div className=' flex items-center gap-2'>
-          Prepared by: <span className=' text-sm !font-bold'>{finalSignatures?.preparedBy}</span>
+          Prepared by: <span className=' text-sm !font-bold capitalize'>{(user === 'EVD' || user === 'MGP') ? user : ''}</span>
         </div>
           <div className=' flex items-center gap-2'>
           Checked by: <span className=' text-sm !font-bold'>{finalSignatures?.checkedBy}</span>
@@ -50,7 +51,7 @@ export default function Signatures({open, type}: Props) {
 
         {visibleDate && (
         <div className=' flex items-center gap-2'>
-            Date Posted: <span className=' text-sm !font-bold'>{formatDateInput(new Date().toISOString())}</span>
+            Date Posted: <span className=' text-sm !font-bold'>{formatDateMDY(new Date().toDateString())}</span>
         </div>
         )}
 

@@ -16,7 +16,7 @@ const SystemParamsForm = ({ form, loading }: TForm) => {
     <IonGrid>
       <IonRow>
         <IonCol size="12" className="space-y-2">
-          <FormIonItem>
+          {/* <FormIonItem>
             <InputText
               disabled={loading}
               name="preparedBy"
@@ -26,7 +26,7 @@ const SystemParamsForm = ({ form, loading }: TForm) => {
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
             />
-          </FormIonItem>
+          </FormIonItem> */}
           <FormIonItem>
             <InputText
               disabled={loading}

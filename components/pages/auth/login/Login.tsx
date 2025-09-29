@@ -57,6 +57,8 @@ const Login = () => {
       if (success) {
         const token = jwtDecode(access) as AccessToken;
         const permissions = token.permissions;
+
+        console.log(token)
         let path = '';
         if (token.role === 'superadmin') {
           path = '/dashboard/home';
@@ -71,6 +73,8 @@ const Login = () => {
           }
         }
         localStorage.setItem('auth', access);
+        localStorage.setItem('user', token.username)
+        localStorage.setItem('role', token.role)
         router.push(path);
         if (isPlatform('capacitor')) {
           (window as any).location.reload(true);

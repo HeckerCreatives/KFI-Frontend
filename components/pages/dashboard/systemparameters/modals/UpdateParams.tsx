@@ -64,7 +64,6 @@ const UpdateSystemParameters = ({ signatures, fetchData }: UpdateParamaters) => 
      }
    }
 
-   console.log(form.formState.errors)
 
   return (
     <>

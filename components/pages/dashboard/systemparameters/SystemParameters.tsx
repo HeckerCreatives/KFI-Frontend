@@ -46,7 +46,7 @@ const SystemParameters = () => {
                 <TableHeader>
                   <TableHeadRow>
                     <TableHead>Type</TableHead>
-                    <TableHead>Prepared By</TableHead>
+                    {/* <TableHead>Prepared By</TableHead> */}
                     <TableHead>Checked By</TableHead>
                     <TableHead>Approved By</TableHead>
                     <TableHead>Action</TableHead>
@@ -59,7 +59,7 @@ const SystemParameters = () => {
                     signatures.map((item, index) => (
                       <TableRow key={item._id}>
                         <TableCell className=' capitalize'>{item.type}</TableCell>
-                        <TableCell>{item.preparedBy}</TableCell>
+                        {/* <TableCell>{item.preparedBy}</TableCell> */}
                         <TableCell>{item.checkedBy}</TableCell>
                         <TableCell>{item.approvedBy}</TableCell>
                         <TableCell>
