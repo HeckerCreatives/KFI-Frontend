@@ -7,6 +7,8 @@ import PrintExportFilterForm from '../../components/PrintExportFilterForm';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FileExportIcon } from 'hugeicons-react';
+import { PrintExportFilterFormData, printExportFilterSchema } from '../../../../../../validations/print-export-schema';
+import { printExportTab } from '../../../../../../store/data';
 
 export const journalVoucherFilterSchema = z.object({
   docNoFrom: z.string().optional().or(z.literal('')),
@@ -21,44 +23,116 @@ export type JournalVoucherFilterFormData = z.infer<typeof journalVoucherFilterSc
 const ExportAllJournalVoucher = () => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
-
-  const modal = useRef<HTMLIonModalElement>(null);
+   const [tabActive, setTabActive] = useState('by-document')
+    
+  
+    const modal = useRef<HTMLIonModalElement>(null);
+  
+  
+    const form = useForm<PrintExportFilterFormData>({
+        resolver: zodResolver(printExportFilterSchema),
+        defaultValues: {
+          docNoFrom: "",
+          docNoTo: "",
+          dateFrom: "",
+          dateTo: "",
+          option: "summary",
+          bankIds: [], 
+          banksSelected: [],
+          chartOfAccountsIds: [],
+          coaSelected: []
+        },
+      });
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
-  const form = useForm<JournalVoucherFilterFormData>({
-    resolver: zodResolver(journalVoucherFilterSchema),
-    defaultValues: {
-      docNoFrom: '',
-      docNoFromLabel: '',
-      docNoTo: '',
-      docNoToLabel: '',
-      option: 'summary',
-    },
-  });
 
-  async function handlePrint(data: JournalVoucherFilterFormData) {
-    setLoading(true);
-    try {
-      const params = { docNoFrom: data.docNoFromLabel, docNoTo: data.docNoToLabel };
-      const result = await kfiAxios.get(`/journal-voucher/export-all/${data.option}`, { params, responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([result.data]));
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'journal-vouchers.xlsx';
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } catch (error: any) {
-      present({
-        message: 'Failed to export the journal voucher records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+    async function handlePrint(data: PrintExportFilterFormData) {
+      setLoading(true);
+
+      try {
+        const params = {
+          docNoFrom: data.docNoFromLabel,
+          docNoTo: data.docNoToLabel,
+          dateFrom: data.dateFrom,
+          dateTo: data.dateTo,
+          bankIds: data.bankIds,
+        };
+
+        const downloadFile = (blobData: BlobPart, fileName: string) => {
+          const blob = new Blob([blobData], {
+            type:
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = fileName;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        };
+
+        let response;
+        let fileName = "";
+
+        switch (tabActive) {
+          case "by-document":
+            response = await kfiAxios.get(
+              `/journal-voucher/export/by-document/${data.option}`,
+              { responseType: "blob", params }
+            );
+            fileName = "journal-voucher-by-document.xlsx";
+            break;
+
+          case "by-date":
+            response = await kfiAxios.get(
+              `/journal-voucher/export/by-date/${data.option}`,
+              { responseType: "blob", params }
+            );
+            fileName = "journal-voucher-by-date.xlsx";
+            break;
+
+          case "by-bank":
+            response = await kfiAxios.post(
+              `/journal-voucher/export/by-bank`,
+              { bankIds: data.bankIds },
+              { responseType: "blob" }
+            );
+            fileName = "journal-voucher-by-banks.xlsx";
+            break;
+
+          case "by-accounts":
+            response = await kfiAxios.post(
+              `/journal-voucher/export/by-accounts/${data.option}`,
+              {
+                chartOfAccountsIds: data.chartOfAccountsIds,
+                dateFrom: data.dateFrom,
+                dateTo: data.dateTo,
+              },
+              { responseType: "blob" }
+            );
+            fileName = "journal-voucher-by-accounts.xlsx";
+            break;
+
+          default:
+            throw new Error("Invalid tab selected");
+        }
+
+        downloadFile(response.data, fileName);
+
+        form.reset();
+      } catch (error) {
+        console.error(error);
+        present({
+          message: "Failed to export the loan release records. Please try again.",
+          duration: 1000,
+        });
+      } finally {
+        setLoading(false);
+      }
     }
-  }
 
   return (
     <>
@@ -84,10 +158,16 @@ const ExportAllJournalVoucher = () => {
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6">
-            <ModalHeader disabled={loading} title="Journal Voucher - Export All" sub="Manage journal voucher documents." dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Journal Voucher - Export" sub="Manage journal voucher documents." dismiss={dismiss} />
+
+             <div className=' flex items-center w-fit mt-2 bg-zinc-50 !rounded-sm'>
+              {printExportTab.map((item,index) => (
+              <button onClick={() => setTabActive(item.value)} key={item.value} className={` ${tabActive === item.value && 'bg-[#FA6C2F] text-white'} p-2 text-sm !rounded-md`}>{item.name}</button>
+              ))}
+            </div>
 
           <form onSubmit={form.handleSubmit(handlePrint)} className='mt-4'>
-            <PrintExportFilterForm form={form} loading={loading} />
+            <PrintExportFilterForm form={form} loading={loading} type={tabActive} />
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <FileExportIcon size={20} stroke='.8' className=' mr-1'/>

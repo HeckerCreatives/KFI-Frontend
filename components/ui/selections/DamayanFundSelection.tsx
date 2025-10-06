@@ -111,14 +111,17 @@ const DamayanFundSelection = <T extends FieldValues>({ damayanFundLabel, damayan
       <IonModal
         isOpen={isOpen}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height md:[--max-width:70%] md:[--width:100%] lg:[--max-width:50%] lg:[--width:50%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-width:40rem] l[--width:95%]"
       >
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-10">
             <SelectionHeader dismiss={dismiss} disabled={loading} title="Damayan Fund Selection" />
           </IonToolbar>
-        </IonHeader>
-        <div className="inner-content !p-2  border-2 !border-slate-400">
+        </IonHeader> */}
+
+        <div className="nner-content !p-6  border-2 !border-slate-200">
+        <SelectionHeader dismiss={dismiss} disabled={loading} title="Damayan Fund Selection" />
+
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">
               <div className="flex items-center min-w-20">

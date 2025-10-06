@@ -5,13 +5,14 @@ import { UseFormReturn } from 'react-hook-form';
 import InputRadio from '../../../../ui/forms/InputRadio';
 import { IonIcon } from '@ionic/react';
 import { close } from 'ionicons/icons';
-import { AcknowledgementFilterFormData } from '../modals/prints/PrintAllAcknowledgement';
 import AcknowledgementSelection from '../../../../ui/selections/AcknowledgementSelection';
 import { DocumentAttachmentIcon } from 'hugeicons-react';
+import { PrintExportFilterFormData } from '../../../../../validations/print-export-schema';
 
 type PrintExportFilterFormProps = {
   loading: boolean;
-  form: UseFormReturn<AcknowledgementFilterFormData>;
+  form: UseFormReturn<PrintExportFilterFormData>;
+  type?: string
 };
 
 const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) => {
@@ -55,7 +56,7 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
                 <IonIcon
                   onClick={() => clearDoc('from')}
                   icon={close}
-                  className="absolute top-3 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
+                  className="absolute top-7 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
                 />
               )}
             </div>
@@ -84,7 +85,7 @@ const PrintExportFilterForm = ({ form, loading }: PrintExportFilterFormProps) =>
                 <IonIcon
                   onClick={() => clearDoc('to')}
                   icon={close}
-                  className="absolute top-3 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
+                  className="absolute top-7 right-2 z-50 h-6 w-6 cursor-pointer hover:text-slate-600 text-slate-500 active:text-slate-400"
                 />
               )}
             </div>

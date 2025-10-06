@@ -1,11 +1,11 @@
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import InputRadio from '../../../../ui/forms/InputRadio';
-import { DamayanFundFilterFormData } from '../modals/prints/PrintAllDamayanFund';
+import { PrintExportFilterFormData } from '../../../../../validations/print-export-schema';
 
 type PrintExportFilterFormProps = {
   loading: boolean;
-  form: UseFormReturn<DamayanFundFilterFormData>;
+  form: UseFormReturn<PrintExportFilterFormData>;
 };
 
 const PrintExportOptionForm = ({ form, loading }: PrintExportFilterFormProps) => {

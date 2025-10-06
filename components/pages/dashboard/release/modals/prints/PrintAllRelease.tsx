@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PrintExportFilterForm from '../../components/PrintExportFilterForm';
 import { PrinterIcon } from 'hugeicons-react';
+import { PrintExportFilterFormData, printExportFilterSchema } from '../../../../../../validations/print-export-schema';
 
 export const releaseFilterSchema = z.object({
   docNoFrom: z.string().optional().or(z.literal('')),
@@ -22,42 +23,82 @@ const PrintAllRelease = () => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
 
+  
+    const [tabActive, setTabActive] = useState('by-document')
+  
+
   const modal = useRef<HTMLIonModalElement>(null);
 
-  const form = useForm<ReleaseFilterFormData>({
-    resolver: zodResolver(releaseFilterSchema),
-    defaultValues: {
-      docNoFrom: '',
-      docNoFromLabel: '',
-      docNoTo: '',
-      docNoToLabel: '',
-      option: 'summary',
-    },
-  });
+
+  const form = useForm<PrintExportFilterFormData>({
+      resolver: zodResolver(printExportFilterSchema),
+      defaultValues: {
+        docNoFrom: "",
+        docNoTo: "",
+        dateFrom: "",
+        dateTo: "",
+        option: "summary",
+        bankIds: [], 
+        banksSelected: [],
+        chartOfAccountsIds: [],
+        coaSelected: []
+      },
+    });
 
   function dismiss() {
     form.reset();
     modal.current?.dismiss();
   }
 
-  async function handlePrint(data: ReleaseFilterFormData) {
-    try {
-      const params = { docNoFrom: data.docNoFromLabel, docNoTo: data.docNoToLabel };
-      setLoading(true);
-      const result = await kfiAxios.get(`/release/print-all/${data.option}`, { params: params, responseType: 'blob' });
-      const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl, '_blank');
-      setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
-    } catch (error: any) {
-      present({
-        message: 'Failed to print the acknowledgement records. Please try again',
-        duration: 1000,
+ async function handlePrint(data: PrintExportFilterFormData) {
+  setLoading(true);
+
+  try {
+    const openAndPrintPDF = (blobData: BlobPart) => {
+      const file = new Blob([blobData], { type: "application/pdf" });
+      const fileURL = URL.createObjectURL(file);
+      const printWindow = window.open(fileURL);
+      printWindow?.addEventListener("load", () => {
+        printWindow.print();
       });
-    } finally {
-      setLoading(false);
+    };
+
+    const params = {
+      docNoFrom: data.docNoFromLabel,
+      docNoTo: data.docNoToLabel,
+      dateFrom: data.dateFrom,
+      dateTo: data.dateTo,
+      bankIds: data.bankIds,
+    };
+
+    let response;
+
+    switch (tabActive) {
+      case "by-document":
+        response = await kfiAxios.get(
+          `/release/print/by-document/${data.option}`,
+          { responseType: "blob", params }
+        );
+        break;
+
+      default:
+        throw new Error("Invalid tab selected");
     }
+
+    openAndPrintPDF(response.data);
+
+    form.reset();
+  } catch (error) {
+    console.error(error);
+    present({
+      message:
+        "Failed to export the loan release records. Please try again.",
+      duration: 1000,
+    });
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
     <>
@@ -77,7 +118,7 @@ const PrintAllRelease = () => {
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6">
-            <ModalHeader disabled={loading} title="Acknowledgement - Print All" sub="Manage acknowledgement documents." dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Acknowledgement - Print" sub="Manage acknowledgement documents." dismiss={dismiss} />
 
           <form onSubmit={form.handleSubmit(handlePrint)} className='mt-4'>
             <PrintExportFilterForm form={form} loading={loading} />

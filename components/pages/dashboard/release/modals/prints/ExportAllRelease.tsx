@@ -7,58 +7,94 @@ import PrintExportFilterForm from '../../components/PrintExportFilterForm';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FileExportIcon } from 'hugeicons-react';
+import { PrintExportFilterFormData, printExportFilterSchema } from '../../../../../../validations/print-export-schema';
 
-export const releaseFilterSchema = z.object({
-  docNoFrom: z.string().optional().or(z.literal('')),
-  docNoFromLabel: z.string().optional().or(z.literal('')),
-  docNoTo: z.string().optional().or(z.literal('')),
-  docNoToLabel: z.string().optional().or(z.literal('')),
-  option: z.string().optional().or(z.literal('')),
-});
 
-export type ReleaseFilterFormData = z.infer<typeof releaseFilterSchema>;
 
 const ExportAllRelease = () => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
 
-  const modal = useRef<HTMLIonModalElement>(null);
+    const [tabActive, setTabActive] = useState('by-document')
+    
+  
+    const modal = useRef<HTMLIonModalElement>(null);
+  
+  
+    const form = useForm<PrintExportFilterFormData>({
+        resolver: zodResolver(printExportFilterSchema),
+        defaultValues: {
+          docNoFrom: "",
+          docNoTo: "",
+          dateFrom: "",
+          dateTo: "",
+          option: "summary",
+          bankIds: [], 
+          banksSelected: [],
+          chartOfAccountsIds: [],
+          coaSelected: []
+        },
+      });
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
-  const form = useForm<ReleaseFilterFormData>({
-    resolver: zodResolver(releaseFilterSchema),
-    defaultValues: {
-      docNoFrom: '',
-      docNoFromLabel: '',
-      docNoTo: '',
-      docNoToLabel: '',
-      option: 'summary',
-    },
-  });
 
-  async function handlePrint(data: ReleaseFilterFormData) {
-    setLoading(true);
-    try {
-      const params = { docNoFrom: data.docNoFromLabel, docNoTo: data.docNoToLabel };
-      const result = await kfiAxios.get(`/release/export-all/${data.option}`, { params, responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([result.data]));
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'acknowledgement.xlsx';
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } catch (error: any) {
-      present({
-        message: 'Failed to export the release records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+    async function handlePrint(data: PrintExportFilterFormData) {
+      setLoading(true);
+
+      try {
+        const params = {
+          docNoFrom: data.docNoFromLabel,
+          docNoTo: data.docNoToLabel,
+          dateFrom: data.dateFrom,
+          dateTo: data.dateTo,
+          bankIds: data.bankIds,
+        };
+
+        const downloadFile = (blobData: BlobPart, fileName: string) => {
+          const blob = new Blob([blobData], {
+            type:
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = fileName;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        };
+
+        let response;
+        let fileName = "";
+
+        switch (tabActive) {
+          case "by-document":
+            response = await kfiAxios.get(
+              `/release/export/by-document/${data.option}`,
+              { responseType: "blob", params }
+            );
+            fileName = "journal-voucher-by-document.xlsx";
+            break;
+
+          default:
+            throw new Error("Invalid tab selected");
+        }
+
+        downloadFile(response.data, fileName);
+
+        form.reset();
+      } catch (error) {
+        console.error(error);
+        present({
+          message: "Failed to export the loan release records. Please try again.",
+          duration: 1000,
+        });
+      } finally {
+        setLoading(false);
+      }
     }
-  }
 
   return (
     <>

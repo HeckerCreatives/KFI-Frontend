@@ -7,57 +7,114 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PrintExportFilterForm from '../../components/PrintExportFilterForm';
 import { PrinterIcon } from 'hugeicons-react';
-
-export const journalVoucherFilterSchema = z.object({
-  docNoFrom: z.string().optional().or(z.literal('')),
-  docNoFromLabel: z.string().optional().or(z.literal('')),
-  docNoTo: z.string().optional().or(z.literal('')),
-  docNoToLabel: z.string().optional().or(z.literal('')),
-  option: z.string().optional().or(z.literal('')),
-});
-
-export type JournalVoucherFilterFormData = z.infer<typeof journalVoucherFilterSchema>;
+import { PrintExportFilterFormData, printExportFilterSchema } from '../../../../../../validations/print-export-schema';
+import { printExportTab } from '../../../../../../store/data';
 
 const PrintAllJournalVoucher = () => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
+  const [tabActive, setTabActive] = useState('by-document')
+  
 
   const modal = useRef<HTMLIonModalElement>(null);
 
-  const form = useForm<JournalVoucherFilterFormData>({
-    resolver: zodResolver(journalVoucherFilterSchema),
-    defaultValues: {
-      docNoFrom: '',
-      docNoFromLabel: '',
-      docNoTo: '',
-      docNoToLabel: '',
-      option: 'summary',
-    },
-  });
+
+  const form = useForm<PrintExportFilterFormData>({
+      resolver: zodResolver(printExportFilterSchema),
+      defaultValues: {
+        docNoFrom: "",
+        docNoTo: "",
+        dateFrom: "",
+        dateTo: "",
+        option: "summary",
+        bankIds: [], 
+        banksSelected: [],
+        chartOfAccountsIds: [],
+        coaSelected: []
+      },
+    });
 
   function dismiss() {
     form.reset();
     modal.current?.dismiss();
   }
 
-  async function handlePrint(data: JournalVoucherFilterFormData) {
-    try {
-      const params = { docNoFrom: data.docNoFromLabel, docNoTo: data.docNoToLabel };
-      setLoading(true);
-      const result = await kfiAxios.get(`/journal-voucher/print-all/${data.option}`, { params: params, responseType: 'blob' });
-      const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl, '_blank');
-      setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
-    } catch (error: any) {
-      present({
-        message: 'Failed to print the journal voucher records. Please try again',
-        duration: 1000,
+ async function handlePrint(data: PrintExportFilterFormData) {
+  setLoading(true);
+
+  try {
+    const openAndPrintPDF = (blobData: BlobPart) => {
+      const file = new Blob([blobData], { type: "application/pdf" });
+      const fileURL = URL.createObjectURL(file);
+      const printWindow = window.open(fileURL);
+      printWindow?.addEventListener("load", () => {
+        printWindow.print();
       });
-    } finally {
-      setLoading(false);
+    };
+
+    const params = {
+      docNoFrom: data.docNoFromLabel,
+      docNoTo: data.docNoToLabel,
+      dateFrom: data.dateFrom,
+      dateTo: data.dateTo,
+      bankIds: data.bankIds,
+    };
+
+    let response;
+
+    switch (tabActive) {
+      case "by-document":
+        response = await kfiAxios.get(
+          `/journal-voucher/print/by-document/${data.option}`,
+          { responseType: "blob", params }
+        );
+        break;
+
+      case "by-date":
+        response = await kfiAxios.get(
+          `/journal-voucher/print/by-date/${data.option}`,
+          { responseType: "blob", params }
+        );
+        break;
+
+      case "by-bank":
+        response = await kfiAxios.post(
+          `/journal-voucher/print/by-bank`,
+          { bankIds: data.bankIds },
+          { responseType: "blob" }
+        );
+        break;
+
+      case "by-accounts":
+        response = await kfiAxios.post(
+          `/journal-voucher/print/by-accounts/${data.option}`,
+          {
+            chartOfAccountsIds: data.chartOfAccountsIds,
+            dateFrom: data.dateFrom,
+            dateTo: data.dateTo,
+          },
+          { responseType: "blob" }
+        );
+        break;
+
+      default:
+        throw new Error("Invalid tab selected");
     }
+
+    openAndPrintPDF(response.data);
+
+    form.reset();
+  } catch (error) {
+    console.error(error);
+    present({
+      message:
+        "Failed to export the loan release records. Please try again.",
+      duration: 1000,
+    });
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
     <>
@@ -77,10 +134,16 @@ const PrintAllJournalVoucher = () => {
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6">
-            <ModalHeader disabled={loading} title="Journal Voucher - Print All" sub="Manage journal voucher documents." dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Journal Voucher - Print" sub="Manage journal voucher documents." dismiss={dismiss} />
+
+            <div className=' flex items-center w-fit mt-2 bg-zinc-50 !rounded-sm'>
+               {printExportTab.map((item,index) => (
+               <button onClick={() => setTabActive(item.value)} key={item.value} className={` ${tabActive === item.value && 'bg-[#FA6C2F] text-white'} p-2 text-sm !rounded-md`}>{item.name}</button>
+               ))}
+             </div>
 
           <form onSubmit={form.handleSubmit(handlePrint)} className=' mt-4'>
-            <PrintExportFilterForm form={form} loading={loading} />
+            <PrintExportFilterForm form={form} loading={loading} type={tabActive} />
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <PrinterIcon size={20} stroke='.8' className=' mr-1'/>

@@ -1,11 +1,11 @@
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import InputRadio from '../../../../ui/forms/InputRadio';
-import { EmergencyLoanFilterFormData } from '../modals/prints/PrintAllEmergencyLoan';
+import { PrintExportFilterFormData } from '../../../../../validations/print-export-schema';
 
 type PrintExportFilterFormProps = {
   loading: boolean;
-  form: UseFormReturn<EmergencyLoanFilterFormData>;
+  form: UseFormReturn<PrintExportFilterFormData>;
 };
 
 const PrintExportOptionForm = ({ form, loading }: PrintExportFilterFormProps) => {

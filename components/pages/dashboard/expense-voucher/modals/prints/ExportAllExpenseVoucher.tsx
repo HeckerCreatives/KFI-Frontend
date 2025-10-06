@@ -7,21 +7,14 @@ import PrintExportFilterForm from '../../components/PrintExportFilterForm';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FileExportIcon } from 'hugeicons-react';
-
-
-export const expenseVoucherFilterSchema = z.object({
-  docNoFrom: z.string().optional().or(z.literal('')),
-  docNoFromLabel: z.string().optional().or(z.literal('')),
-  docNoTo: z.string().optional().or(z.literal('')),
-  docNoToLabel: z.string().optional().or(z.literal('')),
-  option: z.string().optional().or(z.literal('')),
-});
-
-export type ExpenseVoucherFilterFormData = z.infer<typeof expenseVoucherFilterSchema>;
+import { PrintExportFilterFormData, printExportFilterSchema } from '../../../../../../validations/print-export-schema';
+import { printExportTab } from '../../../../../../store/data';
 
 const ExportAllExpenseVoucher = () => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
+  const [tabActive, setTabActive] = useState('by-document')
+  
 
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -29,37 +22,106 @@ const ExportAllExpenseVoucher = () => {
     modal.current?.dismiss();
   }
 
-  const form = useForm<ExpenseVoucherFilterFormData>({
-    resolver: zodResolver(expenseVoucherFilterSchema),
+  const form = useForm<PrintExportFilterFormData>({
+    resolver: zodResolver(printExportFilterSchema),
     defaultValues: {
-      docNoFrom: '',
-      docNoFromLabel: '',
-      docNoTo: '',
-      docNoToLabel: '',
-      option: 'summary',
+      docNoFrom: "",
+      docNoTo: "",
+      dateFrom: "",
+      dateTo: "",
+      option: "summary",
+      bankIds: [], 
+      banksSelected: [],
+      chartOfAccountsIds: [],
+      coaSelected: []
     },
   });
 
-  async function handlePrint(data: ExpenseVoucherFilterFormData) {
-    setLoading(true);
-    try {
-      const params = { docNoFrom: data.docNoFromLabel, docNoTo: data.docNoToLabel };
-      const result = await kfiAxios.get(`/expense-voucher/export-all/${data.option}`, { params, responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([result.data]));
-      const a = document.createElement('a');
+
+  async function handlePrint(data: PrintExportFilterFormData) {
+  setLoading(true);
+
+  try {
+    const params = {
+      docNoFrom: data.docNoFromLabel,
+      docNoTo: data.docNoToLabel,
+      dateFrom: data.dateFrom,
+      dateTo: data.dateTo,
+      bankIds: data.bankIds,
+    };
+
+    const downloadFile = (blobData: BlobPart, fileName: string) => {
+      const blob = new Blob([blobData], {
+        type:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'expense-vouchers.xlsx';
+      a.download = fileName;
       a.click();
       window.URL.revokeObjectURL(url);
-    } catch (error: any) {
-      present({
-        message: 'Failed to export the expense voucher records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+    };
+
+    let response;
+    let fileName = "";
+
+    switch (tabActive) {
+      case "by-document":
+        response = await kfiAxios.get(
+          `/expense-voucher/export/by-document/${data.option}`,
+          { responseType: "blob", params }
+        );
+        fileName = "expense-voucher-by-document.xlsx";
+        break;
+
+      case "by-date":
+        response = await kfiAxios.get(
+          `/expense-voucher/export/by-date/${data.option}`,
+          { responseType: "blob", params }
+        );
+        fileName = "expense-voucher-by-date.xlsx";
+        break;
+
+      case "by-bank":
+        response = await kfiAxios.post(
+          `/expense-voucher/export/by-bank`,
+          { bankIds: data.bankIds },
+          { responseType: "blob" }
+        );
+        fileName = "expense-voucher-by-banks.xlsx";
+        break;
+
+      case "by-accounts":
+        response = await kfiAxios.post(
+          `/expense-voucher/export/by-accounts/${data.option}`,
+          {
+            chartOfAccountsIds: data.chartOfAccountsIds,
+            dateFrom: data.dateFrom,
+            dateTo: data.dateTo,
+          },
+          { responseType: "blob" }
+        );
+        fileName = "expense-voucher-by-accounts.xlsx";
+        break;
+
+      default:
+        throw new Error("Invalid tab selected");
     }
+
+    downloadFile(response.data, fileName);
+
+    form.reset();
+  } catch (error) {
+    console.error(error);
+    present({
+      message: "Failed to export the loan release records. Please try again.",
+      duration: 1000,
+    });
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
     <>
@@ -84,10 +146,16 @@ const ExportAllExpenseVoucher = () => {
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6">
-            <ModalHeader disabled={loading} title="Expense Voucher - Export All" sub="Manage expense voucher documents." dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Expense Voucher - Export" sub="Manage expense voucher documents." dismiss={dismiss} />
+
+             <div className=' flex items-center w-fit mt-2 bg-zinc-50 !rounded-sm'>
+              {printExportTab.map((item,index) => (
+              <button onClick={() => setTabActive(item.value)} key={item.value} className={` ${tabActive === item.value && 'bg-[#FA6C2F] text-white'} p-2 text-sm !rounded-md`}>{item.name}</button>
+              ))}
+            </div>
 
           <form onSubmit={form.handleSubmit(handlePrint)}>
-            <PrintExportFilterForm form={form} loading={loading} />
+            <PrintExportFilterForm form={form} loading={loading} type={tabActive} />
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full bg-[#FA6C2F] text-white rounded-md font-semibold capitalize">
                 <FileExportIcon size={15} stroke='.8' className=' mr-1'/>

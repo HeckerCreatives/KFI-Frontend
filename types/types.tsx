@@ -462,3 +462,16 @@ export type TTableFilter = {
   search?: string;
   sort?: string;
 };
+
+
+export interface Accounts {
+  _id: string;
+  code: string;
+  description: string;
+}
+
+export interface AccountsResponse {
+  success: boolean;
+  chartOfAccounts: ChartOfAccount[];
+}
+
