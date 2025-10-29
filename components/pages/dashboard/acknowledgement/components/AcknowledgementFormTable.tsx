@@ -8,6 +8,7 @@ import AcknowledgementFormTableDoc from './AcknowledgementFormTableDoc';
 import { formatDateTable } from '../../../../utils/date-utils';
 import { arrowBack, arrowForward } from 'ionicons/icons';
 import SelectionHeader from '../../../../ui/selections/SelectionHeader';
+import ORSelection from '../../../../ui/selections/ORSelection';
 
 type AcknowledgementFormTableProps = {
   form: UseFormReturn<AcknowledgementFormData>;
@@ -122,7 +123,7 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
 
     try {
       setLoading(true);
-      const result = await kfiAxios.post(`transaction/entries/load`, { centerLabel: center, clients: selectedIds });
+      const result = await kfiAxios.get(`/transaction/due-dates/${center}`);
       const { success, entries } = result.data;
       if (success) {
         replace(
@@ -164,7 +165,7 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
   return (
     <div className="p-2">
       <div className="text-start my-2">
-        <IonButton
+        {/* <IonButton
           // disabled={!center || didLoad}
           onClick={handleLoadEntries}
           type="button"
@@ -173,7 +174,9 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
           strong
         >
           {loading ? 'Loading Entries...' : 'Load Entries'}
-        </IonButton>
+        </IonButton> */}
+
+        <ORSelection setValue={form.setValue} clearErrors={form.clearErrors} center={center}/>
 
          {/* <IonButton
                   disabled={loading || center === '' || didLoad}
@@ -185,6 +188,8 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
                 >
                   Load
           </IonButton> */}
+
+          
         
             <IonModal
                         isOpen={isOpen}
@@ -193,7 +198,7 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
                       >
                       
                         <div className="inner-content !p-6  border-2 !border-slate-100">
-                            <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Type Selection" />
+                            <SelectionHeader dismiss={dismiss} disabled={loading} title="Official Receipt Selection" />
                 
                           
                           <div className="relative overflow-auto !mt-4">
@@ -371,7 +376,7 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
       {form.formState.errors.entries && <div className="text-red-600 text-xs text-center my-2">{form.formState.errors.entries.message}</div>}
       <div className="text-start my-2">
         <IonButton
-          disabled={!didLoad}
+          // disabled={!didLoad}
           onClick={handleAddEntry}
           type="button"
           fill="clear"

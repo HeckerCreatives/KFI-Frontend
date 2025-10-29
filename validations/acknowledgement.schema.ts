@@ -1,6 +1,12 @@
 import { z } from 'zod';
 
 export const acknowledgementEntrySchema = z.object({
+  clientId: z.string().optional(),
+  clientName: z.string().optional(),
+  loanReleaseId: z.string().optional(),
+  week: z.number().optional(),
+  acctCodeDesc: z.string().optional(),
+        
   loanReleaseEntryId: z.string().optional().or(z.literal('')),
   cvNo: z.string().optional().or(z.literal('')),
   dueDate: z.string().optional().or(z.literal('')),

@@ -8,6 +8,7 @@ import { ReleaseEntryFormData, ReleaseFormData } from '../../../../../validation
 import ReleaseFormTableDoc from './ReleaseFormTableDoc';
 import { arrowBack, arrowForward } from 'ionicons/icons';
 import SelectionHeader from '../../../../ui/selections/SelectionHeader';
+import ARSelection from '../../../../ui/selections/ARSelections';
 
 type ReleaseFormTableProps = {
   form: UseFormReturn<ReleaseFormData>;
@@ -164,7 +165,7 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
   return (
     <div className="p-2">
       <div className="text-start my-2">
-        <IonButton
+        {/* <IonButton
           disabled={!center || didLoad}
           onClick={handleLoadEntries}
           type="button"
@@ -173,7 +174,9 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
           strong
         >
           {loading ? 'Loading Entries...' : 'Load Entries'}
-        </IonButton>
+        </IonButton> */}
+
+        <ARSelection clearErrors={form.clearErrors} setValue={form.setValue} center={center}/>
 
         {/* <IonButton
                           disabled={loading || center === '' || didLoad}
@@ -351,13 +354,13 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
             </TableHeadRow>
           </TableHeader>
           <TableBody>
-            {/* {fields.length < 1 && (
+            {fields.length < 1 && (
               <TableRow>
                 <TableCell colSpan={10} className="text-center">
                   No Entries Yet
                 </TableCell>
               </TableRow>
-            )} */}
+            )}
             {fields.map((entry: ReleaseEntryFormData & { id: string }, i: number) => (
               <ReleaseFormTableDoc key={`entry-${entry.id}`} entry={entry} index={i} remove={remove} form={form} />
             ))}
@@ -370,7 +373,7 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
       {form.formState.errors.entries && <div className="text-red-600 text-xs text-center my-2">{form.formState.errors.entries.message}</div>}
       <div className="text-start my-2">
         <IonButton
-          disabled={!didLoad}
+          // disabled={!didLoad}
           onClick={handleAddEntry}
           type="button"
           fill="clear"

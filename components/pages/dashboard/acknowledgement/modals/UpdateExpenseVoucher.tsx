@@ -123,7 +123,9 @@ function removeCVTag(cv: string): string {
             acctCode: entry.acctCode.code ?? '',
             description: entry.acctCode.description ?? '',
             debit: entry.debit?.toString() ?? "",
-            credit: entry.credit?.toString() ?? ""
+            credit: entry.credit?.toString() ?? "",
+            line: index + 1,
+          
         };
       });
       data.amount = removeAmountComma(data.amount);
