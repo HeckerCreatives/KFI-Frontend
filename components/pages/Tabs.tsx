@@ -76,6 +76,8 @@ import {
 import ListDetail from './ListDetail';
 import Nature from './dashboard/nature/Nature';
 import SystemParameters from './dashboard/systemparameters/SystemParameters';
+import Databases from './dashboard/databases/databases';
+import { useOnlineStore } from '../../store/onlineStore';
 
 type NavLink = {
   path?: string;
@@ -182,6 +184,9 @@ const Tabs = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
   const location = useLocation();
+
+  const online = useOnlineStore((state) => state.online);
+  
 
 
   const logout = () => {
@@ -361,7 +366,11 @@ const Tabs = () => {
                   className="min-h-[3.5rem] border-[#FA6C2F] !m-0 [--color:black]"
                   id="click-trigger"
                 >
-                  <div className="w-10 h-10 bg-[#FFF0E3] rounded-full uppercase grid place-items-center">
+                  <div className="w-10 h-10 bg-[#FFF0E3] rounded-full uppercase grid place-items-center relative">
+
+                    <div className={`${online ? ' bg-green-400' : ' bg-red-600'} h-4 w-4 rounded-full absolute bottom-0 right-0 translate-y-1`}>
+
+                    </div>
                     {token.username.substring(0, 2)}
                   </div>
                 </IonButton>
@@ -430,6 +439,7 @@ const Tabs = () => {
             <Route path="/dashboard/action-logs" render={() => <ActionLogs />} exact={true} />
             <Route path="/dashboard/nature" render={() => <Nature />} exact={true} />
             <Route path="/dashboard/systemparameters" render={() => <SystemParameters />} exact={true} />
+            <Route path="/dashboard/databases" render={() => <Databases />} exact={true} />
           </IonRouterOutlet>
         </IonContent>
       </IonPage>

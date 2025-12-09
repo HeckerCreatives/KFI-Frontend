@@ -10,6 +10,9 @@ import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
 import { Search01Icon } from 'hugeicons-react';
+import { useOnlineStore } from '../../../store/onlineStore';
+import { TABLE_LIMIT } from '../../utils/constants';
+import { db } from '../../../database/db';
 
 type Option = {
   _id: string;
@@ -37,6 +40,8 @@ const BusinessTypeSelection = <T extends FieldValues>({ businessTypeLabel, busin
   const ionInputRef = useRef<HTMLIonInputElement>(null);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TData>({
     datas: [],
@@ -56,26 +61,76 @@ const BusinessTypeSelection = <T extends FieldValues>({ businessTypeLabel, busin
 
   const handleSearch = async (page: number) => {
     const value = ionInputRef.current?.value;
-    setLoading(true);
-    try {
-      const filter: any = { keyword: value, page, limit: 10 };
-      const result = await kfiAxios.get('/business-type/selection', { params: filter });
-      const { success, businessTypes, totalPages, hasNextPage, hasPrevPage } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          datas: businessTypes,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        return;
-      }
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+    if(online){
+         setLoading(true);
+        try {
+          const filter: any = { keyword: value, page, limit: 10 };
+          const result = await kfiAxios.get('/business-type/selection', { params: filter });
+          const { success, businessTypes, totalPages, hasNextPage, hasPrevPage } = result.data;
+          if (success) {
+            setData(prev => ({
+              ...prev,
+              datas: businessTypes,
+              totalPages: totalPages,
+              nextPage: hasNextPage,
+              prevPage: hasPrevPage,
+            }));
+            setCurrentPage(page);
+            return;
+          }
+        } catch (error) {
+        } finally {
+          setLoading(false);
+        }
+    } else {
+       try {
+                  const limit = TABLE_LIMIT;
+            
+                  let allData = await db.businessTypes.toArray();
+
+                  console.log(allData)
+      
+                  let allOptions: Option[] = allData.map(data => ({
+                    _id: data._id,
+                    type: data.type || '',       
+                  }));
+      
+                   if (value) {
+                    allOptions = allOptions.filter(
+                      opt =>
+                        opt.type.includes(String(value))
+                    );
+                  }
+      
+            
+                 const totalItems = allOptions.length;
+                  const totalPages = Math.ceil(totalItems / limit);
+      
+                  const start = (page - 1) * limit;
+                  const end = start + limit;
+      
+                  const types = allOptions.slice(start, end);
+      
+                  const hasPrevPage = page > 1;
+                  const hasNextPage = page < totalPages;
+            
+                  setData(prev => ({
+                     ...prev,
+                    datas: types,
+                    totalPages: totalPages,
+                    nextPage: hasNextPage,
+                    prevPage: hasPrevPage,
+                  }));
+            
+                  setCurrentPage(page);
+                } catch (error) {
+                  console.error("Offline clients fetch error:", error);
+                
+                } finally {
+                  setData(prev => ({ ...prev, loading: false }));
+                }
+          }
+ 
   };
 
   const handleSelectBusinessType = (businessType: Option) => {

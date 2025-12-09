@@ -9,15 +9,20 @@ import kfiAxios from '../../../../utils/axios';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateClientMasterFileProps = {
   getClients: (page: number) => void;
+  getClientsOffline: (page: number, keyword?: string, sort?: string) => void;
 };
 
-const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => {
+const CreateClientMasterFile = ({ getClients, getClientsOffline }: CreateClientMasterFileProps) => {
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<ClientMasterFileFormData>({
     resolver: zodResolver(clientMasterFileSchema),
@@ -60,14 +65,16 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
   }
 
   async function onSubmit(data: ClientMasterFileFormData) {
-    setLoading(true);
+  setLoading(true);
+
+  if (online) {
     try {
-      const result = await kfiAxios.post('/customer', data,{
+      const result = await kfiAxios.post('/customer', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      
+
       const { success } = result.data;
       if (success) {
         getClients(1);
@@ -82,7 +89,28 @@ const CreateClientMasterFile = ({ getClients }: CreateClientMasterFileProps) => 
     } finally {
       setLoading(false);
     }
+  } 
+  
+    else {
+      try {
+        await db.clientMasterFile.add({
+          ...data,                          
+          _id: crypto.randomUUID(),  
+          offline: true,       
+          createdAt: Date.now()
+        });
+
+        getClientsOffline(1);
+        dismiss();
+
+      } catch (err) {
+        console.error("Offline save failed", err);
+      } finally {
+        setLoading(false);
+      }
+    }
   }
+
 
   return (
     <>

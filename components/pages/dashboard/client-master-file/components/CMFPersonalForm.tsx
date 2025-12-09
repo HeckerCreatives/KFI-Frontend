@@ -60,7 +60,6 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
   }, [watchedImage])
 
 
-  console.log( preview, form.formState.defaultValues)
 
   return (
     <div className=' mt-6'>

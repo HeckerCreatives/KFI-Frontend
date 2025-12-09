@@ -14,19 +14,25 @@ import { formatDateInput } from '../../../../utils/date-utils';
 import { createSharp } from 'ionicons/icons';
 import { jwtDecode } from 'jwt-decode';
 import classNames from 'classnames';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type UpdateClientMasterFileProps = {
   client: ClientMasterFile;
   setData: React.Dispatch<React.SetStateAction<TClientMasterFile>>;
+  getClientsOffline: (page: number, keyword?: string, sort?: string) => void;
+
 };
 
-const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps) => {
+const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateClientMasterFileProps) => {
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
 
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<ClientMasterFileFormData>({
     resolver: zodResolver(clientMasterFileSchema),
@@ -89,7 +95,7 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
         acctNumber: client.acctNumber,
         dateResigned: client.dateResigned ? formatDateInput(client.dateResigned) : '',
         reason: client.reason,
-        beneficiary: client.beneficiaries.length > 0 ? client.beneficiaries : [{ name: '' }],
+        beneficiary: client.beneficiaries?.length > 0 ? client.beneficiaries : [{ name: '' }],
         children: client.children.length > 0 ? client.children : [{ name: '' }],
         clientImage: client.image?.path
 
@@ -103,16 +109,17 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
   }
 
   async function onSubmit(data: ClientMasterFileFormData) {
-    setLoading(true);
+  setLoading(true);
+
+  if (online) {
+    // ONLINE UPDATE
     try {
-      const result = await kfiAxios.put(`/customer/${client._id}`, data,{
-         headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-        
-      );
+      const result = await kfiAxios.put(`/customer/${client._id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       const { success } = result.data;
+
       if (success) {
         setData(prev => {
           let clone = [...prev.clients];
@@ -120,9 +127,10 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
           clone[index] = { ...result.data.customer };
           return { ...prev, clients: clone };
         });
+
         dismiss();
         present({
-          message: 'Client successfully updated!.',
+          message: "Client successfully updated!.",
           duration: 1000,
         });
         return;
@@ -135,7 +143,38 @@ const UpdateClientMasterFile = ({ client, setData }: UpdateClientMasterFileProps
     } finally {
       setLoading(false);
     }
+  } else {
+    // OFFLINE UPDATE
+    try {
+      const existing = await db.clientMasterFile.get(client.id);
+
+      if (!existing) {
+        console.warn("Client not found.");
+        setLoading(false);
+        return;
+      }
+
+      await db.clientMasterFile.update(client.id, {
+          ...existing.data,
+          ...data,
+      });
+
+
+      dismiss();
+      present({
+        message: "Client record updated.",
+        duration: 1200,
+      });
+      getClientsOffline(1)
+
+    } catch (err) {
+      console.error("Offline edit failed:", err);
+    } finally {
+      setLoading(false);
+    }
   }
+}
+
 
   return (
     <>

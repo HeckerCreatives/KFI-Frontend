@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
@@ -15,6 +15,10 @@ import { canDoAction, haveActions } from '../../../utils/permissions';
 import { jwtDecode } from 'jwt-decode';
 import PrintAllCenter from './modals/PrintAllCenter';
 import ExportAllCenter from './modals/ExportAllCenter';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
+import { filterAndSortCenter } from '../../../ui/utils/sort';
+import { Upload } from 'lucide-react';
 
 export type TCenter = {
   centers: CenterType[];
@@ -31,6 +35,9 @@ const Center = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('');
+  const [uploading, setUploading] = useState<boolean>(false)
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TCenter>({
     centers: [],
@@ -40,35 +47,81 @@ const Center = () => {
     prevPage: false,
   });
 
+
   const getCenters = async (page: number, keyword: string = '', sort: string = '') => {
-    setData(prev => ({ ...prev, loading: true }));
-    try {
-      const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-      if (keyword) filter.search = keyword;
-      if (sort) filter.sort = sort;
-      const result = await kfiAxios.get('/center', { params: filter });
-      const { success, centers, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          centers: centers,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        setSearchKey(keyword);
-        setSortKey(sort);
-        return;
+    if(online){
+       setData(prev => ({ ...prev, loading: true }));
+      try {
+        const filter: TTableFilter = { limit: TABLE_LIMIT, page };
+        if (keyword) filter.search = keyword;
+        if (sort) filter.sort = sort;
+        const result = await kfiAxios.get('/center', { params: filter });
+        const { success, centers, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            centers: centers,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          setSearchKey(keyword);
+          setSortKey(sort);
+          return;
+        }
+      } catch (error) {
+        present({
+          message: 'Failed to get center records. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
       }
-    } catch (error) {
-      present({
-        message: 'Failed to get center records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setData(prev => ({ ...prev, loading: false }));
+    }else{
+      setData(prev => ({ ...prev, loading: true }));
+      
+          try {
+            const limit = TABLE_LIMIT;
+      
+            let data = await db.centers.toArray();
+            const filteredCenters = data.filter(e => !e.deletedAt);
+            let allData = filterAndSortCenter(filteredCenters, keyword, sort);
+      
+            const totalItems = allData.length;
+            const totalPages = Math.ceil(totalItems / limit);
+      
+            const start = (page - 1) * limit;
+            const end = start + limit;
+      
+            const centers = allData.slice(start, end);
+      
+            const hasPrevPage = page > 1;
+            const hasNextPage = page < totalPages;
+      
+            setData(prev => ({
+              ...prev,
+              centers: centers,
+              totalPages,
+              prevPage: hasPrevPage,
+              nextPage: hasNextPage,
+            }));
+
+            console.log(centers)
+      
+            setCurrentPage(page);
+            setSearchKey(keyword);
+            setSortKey(sort);
+          } catch (error) {
+            present({
+              message: 'Failed to load offline records.',
+              duration: 1000,
+            });
+          } finally {
+            setData(prev => ({ ...prev, loading: false }));
+          }
     }
+   
   };
 
   const handlePagination = (page: number) => getCenters(page, searchKey, sortKey);
@@ -76,6 +129,32 @@ const Center = () => {
   useIonViewWillEnter(() => {
     getCenters(currentPage);
   });
+
+  const uploadCenters = async () => {
+    setUploading(true)
+    try {
+      const centerLists = await db.centers.toArray();
+      const offlineChanges = centerLists.filter(e => e._synced === false);
+      const result = await kfiAxios.put("sync/upload/centers", { centers: offlineChanges });
+      const { success } = result.data;
+      if (success) {
+        // alert("Offline changes saved!");
+        present({
+          message: 'Offline changes saved!',
+          duration: 1000,
+        });
+      setUploading(false)
+        getCenters(1);
+      }
+    } catch (error) {
+      setUploading(false)
+
+      present({
+        message: 'Failed to saved changes',
+        duration: 1000,
+      });
+    }
+  };
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
@@ -87,10 +166,15 @@ const Center = () => {
 
             <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
               <div className="flex lg:flex-row flex-col gap-3">
-                <div className="flex items-center flex-wrap">
+                <div className="flex items-center flex-wrap gap-2">
                   {canDoAction(token.role, token.permissions, 'center', 'create') && <CreateCenter getCenters={getCenters} />}
                   {canDoAction(token.role, token.permissions, 'center', 'print') && <PrintAllCenter />}
                   {canDoAction(token.role, token.permissions, 'center', 'export') && <ExportAllCenter />}
+                  {!online && (
+                    <IonButton disabled={uploading} onClick={uploadCenters} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
+                    </IonButton>
+                  )}
                 </div>
                 <CenterFilter getCenters={getCenters} />
               </div>

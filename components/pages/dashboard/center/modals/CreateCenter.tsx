@@ -9,6 +9,8 @@ import kfiAxios from '../../../../utils/axios';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateCenterProps = {
   getCenters: (page: number, keyword?: string, sort?: string) => {};
@@ -19,6 +21,8 @@ const CreateCenter = ({ getCenters }: CreateCenterProps) => {
   const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<CenterFormData>({
     resolver: zodResolver(centerSchema),
@@ -38,27 +42,43 @@ const CreateCenter = ({ getCenters }: CreateCenterProps) => {
   }
 
   async function onSubmit(data: CenterFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.post('/center', data);
-      const { success } = result.data;
-      if (success) {
-        getCenters(1);
-        dismiss();
-        present({
-          message: 'Center successfully updated!.',
-          duration: 1000,
-        });
-        return;
+    if(online){
+       setLoading(true);
+        try {
+          const result = await kfiAxios.post('/center', data);
+          const { success } = result.data;
+          if (success) {
+            getCenters(1);
+            dismiss();
+            present({
+              message: 'Center successfully updated!.',
+              duration: 1000,
+            });
+            return;
+          }
+        } catch (error: any) {
+          const errs: TErrorData | string = error?.response?.data?.error || error.message;
+          const errors: TFormError[] | string = checkError(errs);
+          const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+          formErrorHandler(errors, form.setError, fields);
+        } finally {
+          setLoading(false);
+        }
+    } else {
+      await db.centers.add({
+        ...data, 
+        _synced: false,
+        action: "create"
+      });
+      getCenters(1);
+      dismiss()
+      present({
+            message: 'Center successfully updated!.',
+            duration: 1000,
+          });
+      return;
       }
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
-    }
+   
   }
 
   return (

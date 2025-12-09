@@ -19,6 +19,10 @@ import ExportAllClient from './modals/ExportAllClient';
 import ManageAccountNav from '../../../ui/navs/ManageAccountNav';
 import { create, eye, trash } from 'ionicons/icons';
 import ClientStatistics from './components/ClientStatistics';
+import { db } from '../../../../database/db';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { get } from 'http';
+import { filterAndSortClients } from '../../../ui/utils/sort';
 
 export type TClientMasterFile = {
   clients: ClientMasterFileType[];
@@ -36,6 +40,13 @@ const ClientMasterFile = () => {
   const [searchKey, setSearchKey] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('');
 
+
+  //online status
+  const online = useOnlineStore((state) => state.online);
+
+
+  
+
   const [data, setData] = useState<TClientMasterFile>({
     clients: [],
     loading: false,
@@ -43,6 +54,53 @@ const ClientMasterFile = () => {
     nextPage: false,
     prevPage: false,
   });
+
+  const getClientsOffline = async (
+    page: number,
+    keyword: string = '',
+    sort: string = ''
+  ) => {
+    setData(prev => ({ ...prev, loading: true }));
+
+    try {
+      const limit = TABLE_LIMIT;
+
+      let data = await db.clientMasterFile.toArray();
+      let allData = filterAndSortClients(data, keyword, sort);
+
+      const totalItems = allData.length;
+      const totalPages = Math.ceil(totalItems / limit);
+
+      const start = (page - 1) * limit;
+      const end = start + limit;
+
+      const customers = allData.slice(start, end);
+
+      const hasPrevPage = page > 1;
+      const hasNextPage = page < totalPages;
+
+      setData(prev => ({
+        ...prev,
+        clients: customers,
+        totalPages,
+        prevPage: hasPrevPage,
+        nextPage: hasNextPage,
+      }));
+
+      setCurrentPage(page);
+      setSearchKey(keyword);
+      setSortKey(sort);
+    } catch (error) {
+      console.error("Offline clients fetch error:", error);
+      present({
+        message: 'Failed to load offline client records.',
+        duration: 1000,
+      });
+    } finally {
+      setData(prev => ({ ...prev, loading: false }));
+    }
+  };
+
 
   const [statistics, setStatistics] = useState({
     loading: false,
@@ -54,6 +112,43 @@ const ClientMasterFile = () => {
     activePastDue: 0,
     activeReturnee: 0,
   });
+
+  const getOfflineStatistics = async() =>{
+    const clients = await db.clientMasterFile.toArray();
+
+    let totalClient = clients.length;
+    let resigned = 0;
+    let activeOnLeave = 0;
+    let activeExisting = 0;
+    let activeNew = 0;
+    let activePastDue = 0;
+    let activeReturnee = 0;
+
+    for (const c of clients) {
+      const status = c.memberStatus?.toLowerCase() ?? "";
+
+
+      if (status === "resigned") resigned++;
+      if (status === "active on-leave") activeOnLeave++;
+      if (status === "active-existing") activeExisting++;
+      if (status === "active-new") activeNew++;
+      if (status === "active past-due") activePastDue++;
+      if (status === "active-returnee") activeReturnee++;
+    }
+
+    setStatistics(prev => ({ ...prev, totalClient, resigned, activeOnLeave, activeExisting, activeNew, activePastDue, activeReturnee }));
+
+
+  return {
+    totalClient,
+    resigned,
+    activeOnLeave,
+    activeExisting,
+    activeNew,
+    activePastDue,
+    activeReturnee,
+  };
+  }
 
   const getStatistics = async () => {
     try {
@@ -70,6 +165,16 @@ const ClientMasterFile = () => {
       setStatistics(prev => ({ ...prev, loading: false }));
     }
   };
+
+  const getStatisticsData = async () => {
+    if (online) {
+      getStatistics();  
+    } else {
+      getOfflineStatistics();
+    }
+  };
+
+
 
   const getClients = async (page: number, keyword: string = '', sort: string = '') => {
     setData(prev => ({ ...prev, loading: true }));
@@ -104,11 +209,22 @@ const ClientMasterFile = () => {
     }
   };
 
-  const handlePagination = (page: number) => getClients(page, searchKey, sortKey);
+  const getCLientsData = async (page: number, keyword = '', sort = '') => {
+    if (online){
+      getClients(page, keyword, sort);  
+    } else {
+      getClientsOffline(page, keyword, sort);
+    }
+  };
+
+  const handlePagination = (page: number) => getCLientsData(page, searchKey, sortKey);
 
   useIonViewWillEnter(() => {
-    getClients(currentPage);
+    getCLientsData(currentPage)
+    getStatisticsData()
   });
+
+  console.log('Offline List', data)
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
@@ -126,11 +242,11 @@ const ClientMasterFile = () => {
             <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
                <div className="flex items-start lg:items-center lg:flex-row flex-col flex-wrap gap-2 my-2">
                 <div className="flex flex-wrap">
-                  {canDoAction(token.role, token.permissions, 'clients', 'create') && <CreateClientMasterFile getClients={getClients} />}
+                  {canDoAction(token.role, token.permissions, 'clients', 'create') && <CreateClientMasterFile getClientsOffline={getClientsOffline} getClients={getClients} />}
                   {canDoAction(token.role, token.permissions, 'clients', 'print') && <PrintAllClient />}
                   {canDoAction(token.role, token.permissions, 'clients', 'export') && <ExportAllClient />}
                 </div>
-                <ClientMasterFileFilter getClients={getClients} />
+                <ClientMasterFileFilter getClientsOffline={getClientsOffline} getClients={getClients} />
               </div>
               <div className="relative flex overflow-auto rounded-xl">
                 <Table className=' sticky z-50 top-0 left-0 md:table hidden'>
@@ -192,6 +308,7 @@ const ClientMasterFile = () => {
                           {haveActions(token.role, 'clients', token.permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <ClientMasterFileActions
+                              getClientsOffline={getClientsOffline}
                                 client={client}
                                 getClients={getClients}
                                 setData={setData}

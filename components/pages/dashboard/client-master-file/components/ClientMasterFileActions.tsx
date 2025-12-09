@@ -13,6 +13,8 @@ type ClientMasterFileActionsProps = {
   client: ClientMasterFile;
   setData: React.Dispatch<React.SetStateAction<TClientMasterFile>>;
   getClients: (page: number, keyword?: string, sort?: string) => {};
+  getClientsOffline: (page: number, keyword?: string, sort?: string) => void;
+
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   searchKey: string;
@@ -20,14 +22,14 @@ type ClientMasterFileActionsProps = {
   rowLength: number;
 };
 
-const ClientMasterFileActions = ({ client, getClients, setData, currentPage, setCurrentPage, searchKey, sortKey, rowLength }: ClientMasterFileActionsProps) => {
+const ClientMasterFileActions = ({ client, getClients, setData, currentPage, setCurrentPage, searchKey, sortKey, rowLength, getClientsOffline }: ClientMasterFileActionsProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   return (
     <div className="flex items-center gap-1">
       {canDoAction(token.role, token.permissions, 'clients', 'visible') && <ViewClientMasterFile member={client} />}
-      {canDoAction(token.role, token.permissions, 'clients', 'update') && <UpdateClientMasterFile client={client} setData={setData} />}
+      {canDoAction(token.role, token.permissions, 'clients', 'update') && <UpdateClientMasterFile getClientsOffline={getClientsOffline} client={client} setData={setData} />}
       {canDoAction(token.role, token.permissions, 'clients', 'delete') && (
-        <DeleteClientMasterFile client={client} getClients={getClients} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+        <DeleteClientMasterFile getClientsOffline={getClientsOffline} client={client} getClients={getClients} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
       )}
       {canDoAction(token.role, token.permissions, 'clients', 'print') && <PrintClient client={client} />}
       {canDoAction(token.role, token.permissions, 'clients', 'export') && <ExportClient client={client} />}

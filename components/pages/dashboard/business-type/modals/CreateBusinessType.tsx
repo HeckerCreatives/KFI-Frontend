@@ -9,6 +9,8 @@ import kfiAxios from '../../../../utils/axios';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateBusinessTypeProps = {
   getBusinessTypes: (page: number) => void;
@@ -19,6 +21,8 @@ const CreateBusinessType = ({ getBusinessTypes }: CreateBusinessTypeProps) => {
   const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<BusinessTypeFormData>({
     resolver: zodResolver(businessTypeSchema),
@@ -33,27 +37,42 @@ const CreateBusinessType = ({ getBusinessTypes }: CreateBusinessTypeProps) => {
   }
 
   async function onSubmit(data: BusinessTypeFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.post('/business-type', data);
-      const { success } = result.data;
-      if (success) {
-        getBusinessTypes(1);
-        dismiss();
-        present({
-          message: 'Business type successfully created',
-          duration: 1000,
-        });
-        return;
+   if(online){
+     setLoading(true);
+      try {
+        const result = await kfiAxios.post('/business-type', data);
+        const { success } = result.data;
+        if (success) {
+          getBusinessTypes(1);
+          dismiss();
+          present({
+            message: 'Business type successfully created',
+            duration: 1000,
+          });
+          return;
+        }
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
-    }
+   } else {
+     await db.businessTypes.add({
+            ...data, 
+            _synced: false,
+            action: "create"
+          });
+          getBusinessTypes(1);
+          dismiss()
+          present({
+            message: 'Business types successfully updated!.',
+            duration: 1000,
+          });
+          return;
+   }
   }
 
   return (

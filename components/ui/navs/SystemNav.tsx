@@ -34,6 +34,7 @@ const SystemNav = () => {
       ],
     },
     { path: '/dashboard/systemparameters', label: 'System Parameters', resource: 'system parameters' },
+    { path: '/dashboard/databases', label: 'Databases', resource: 'databases' },
 
   ];
 

@@ -11,12 +11,25 @@ import { TCenter } from '../Center';
 import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
+
+type UpdateCenterProps = {
+  center: Center;
+  getCenters: (page: number, keyword?: string, sort?: string) => void;
+  searchkey: string;
+  sortKey: string;
+  currentPage: number;
+  rowLength: number;
+};
 
 const UpdateCenter = ({ center, setData }: { center: Center; setData: React.Dispatch<React.SetStateAction<TCenter>> }) => {
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<CenterFormData>({
     resolver: zodResolver(centerSchema),
@@ -49,7 +62,8 @@ const UpdateCenter = ({ center, setData }: { center: Center; setData: React.Disp
   }
 
   async function onSubmit(data: CenterFormData) {
-    setLoading(true);
+    if(online){
+      setLoading(true);
     try {
       const result = await kfiAxios.put(`/center/${center._id}`, data);
       const { success } = result.data;
@@ -74,6 +88,45 @@ const UpdateCenter = ({ center, setData }: { center: Center; setData: React.Disp
       formErrorHandler(errors, form.setError, fields);
     } finally {
       setLoading(false);
+    }
+    } else {
+      try {
+        const existing = await db.centers.get(center.id);
+
+        if (!existing) {
+          console.warn("Center not found");
+          return;
+        }
+
+        const updated = {
+          ...existing,
+          ...data, 
+          _synced: false,
+          action: "update",
+        };
+
+        await db.centers.update(center.id, updated);
+
+        setData(prev => {
+          const clone = [...prev.centers];
+          const index = clone.findIndex(c => c.id === center.id);
+
+          if (index !== -1) {
+            clone[index] = updated;
+          }
+
+          return { ...prev, centers: clone };
+        });
+
+        dismiss();
+        present({
+          message: "Center successfully updated!",
+          duration: 1000,
+        });
+
+      } catch (error) {
+        console.error("Offline update failed:", error);
+      }
     }
   }
 

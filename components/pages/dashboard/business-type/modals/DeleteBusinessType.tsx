@@ -4,6 +4,8 @@ import React, { useRef, useState } from 'react';
 import { BusinessType } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteLoanProps = {
   businessType: BusinessType;
@@ -19,34 +21,56 @@ const DeleteBusinessType = ({ businessType, getBusinessTypes, searchkey, sortKey
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
   async function handleDelete() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/business-type/${businessType._id}`);
-      const { success } = result.data;
-      if (success) {
-        const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getBusinessTypes(page, searchkey, sortKey);
-        dismiss();
+   if(online){
+     setLoading(true);
+      try {
+        const result = await kfiAxios.delete(`/business-type/${businessType._id}`);
+        const { success } = result.data;
+        if (success) {
+          const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
+          getBusinessTypes(page, searchkey, sortKey);
+          dismiss();
+          present({
+            message: 'Business type successfully deleted!.',
+            duration: 1000,
+          });
+          return;
+        }
+      } catch (error: any) {
         present({
-          message: 'Business type successfully deleted!.',
+          message: 'Failed to delete the business-type record. Please try again',
           duration: 1000,
         });
-        return;
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      present({
-        message: 'Failed to delete the business-type record. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
-    }
+   }else{
+     
+          if (businessType._id) {
+            await db.businessTypes.update(businessType.id, {
+              deletedAt: new Date().toISOString(),
+              _synced: false,
+              action: "delete",
+            });
+          } else {
+            await db.businessTypes.delete(businessType.id);
+          }
+       
+        getBusinessTypes(currentPage);
+        dismiss()
+         present({
+              message: 'Business type successfully deleted!.',
+              duration: 1000,
+            });
+   }
   }
 
   return (

@@ -11,11 +11,15 @@ import { TBusinessType } from '../BusinessType';
 import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 const UpdateBusinessType = ({ businessType, setData }: { businessType: BusinessType; setData: React.Dispatch<React.SetStateAction<TBusinessType>> }) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
   const [present] = useIonToast();
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<BusinessTypeFormData>({
     resolver: zodResolver(businessTypeSchema),
@@ -36,7 +40,8 @@ const UpdateBusinessType = ({ businessType, setData }: { businessType: BusinessT
   }
 
   async function onSubmit(data: BusinessTypeFormData) {
-    setLoading(true);
+   if(online){
+     setLoading(true);
     try {
       const result = await kfiAxios.put(`/business-type/${businessType._id}`, data);
       const { success } = result.data;
@@ -62,6 +67,45 @@ const UpdateBusinessType = ({ businessType, setData }: { businessType: BusinessT
     } finally {
       setLoading(false);
     }
+   } else {
+       try {
+            const existing = await db.businessTypes.get(businessType.id);
+    
+            if (!existing) {
+              console.warn("Business type not found");
+              return;
+            }
+    
+            const updated = {
+              ...existing,
+              ...data, 
+              _synced: false,
+              action: "update",
+            };
+    
+            await db.businessTypes.update(businessType.id, updated);
+    
+            setData(prev => {
+              const clone = [...prev.businessTypes];
+              const index = clone.findIndex(c => c.id === businessType.id);
+    
+              if (index !== -1) {
+                clone[index] = updated;
+              }
+    
+              return { ...prev, businessTypes: clone };
+            });
+    
+            dismiss();
+            present({
+              message: "Business type successfully updated!",
+              duration: 1000,
+            });
+    
+          } catch (error) {
+            console.error("Offline update failed:", error);
+          }
+   }
   }
 
   return (

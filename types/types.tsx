@@ -71,6 +71,7 @@ export interface ClientMasterFile {
   telNo: string;
   zipCode: string;
   _id: string;
+  id: string
   beneficiaries: Beneficiary[];
   children: Child[];
   image: Image
@@ -403,6 +404,7 @@ export type GroupAccount = {
 
 export type BusinessType = {
   _id: string;
+  id: string;
   type: string;
   createdAt: string;
 };
@@ -432,6 +434,7 @@ export type Status = {
 
 export type Center = {
   _id: string;
+  id: string;
   centerNo: string;
   description: string;
   location: string;

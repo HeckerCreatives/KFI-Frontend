@@ -4,6 +4,7 @@ import InputText from '../../../../ui/forms/InputText';
 import { IonButton } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 type TSearch = {
   code: string;
@@ -12,9 +13,10 @@ type TSearch = {
 
 type ClientMasterFileFilterProps = {
   getClients: (page: number, keyword?: string, sort?: string) => void;
+  getClientsOffline: (page: number, keyword?: string, sort?: string) => void;
 };
 
-const ClientMasterFileFilter = ({ getClients }: ClientMasterFileFilterProps) => {
+const ClientMasterFileFilter = ({ getClients, getClientsOffline }: ClientMasterFileFilterProps) => {
   const form = useForm<TSearch>({
     defaultValues: {
       code: '',
@@ -22,11 +24,26 @@ const ClientMasterFileFilter = ({ getClients }: ClientMasterFileFilterProps) => 
     },
   });
 
+  //online checker
+  const online = useOnlineStore((state) => state.online);
+  
+
   const onSubmit = (data: TSearch) => {
+    
     if (data.code !== '' || data.sort !== '') {
+      if(online){
       getClients(1, data.code, data.sort);
+        
+      }else{
+        getClientsOffline(1, data.code, data.sort)
+      }
     } else {
+      if(online){
       getClients(1);
+
+      }else{
+        getClientsOffline(1)
+      }
     }
   };
 

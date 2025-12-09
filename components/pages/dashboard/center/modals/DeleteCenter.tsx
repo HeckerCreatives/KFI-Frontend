@@ -4,6 +4,8 @@ import React, { useRef, useState } from 'react';
 import { Center } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteCenterProps = {
   center: Center;
@@ -19,13 +21,16 @@ const DeleteCenter = ({ center, getCenters, searchkey, sortKey, currentPage, row
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
   async function handleDelete() {
-    setLoading(true);
+  if(online){
+      setLoading(true);
     try {
       const result = await kfiAxios.delete(`/center/${center._id}`);
       const { success } = result.data;
@@ -47,6 +52,26 @@ const DeleteCenter = ({ center, getCenters, searchkey, sortKey, currentPage, row
     } finally {
       setLoading(false);
     }
+  } else {
+   
+      // await db.centers.delete(center.id);
+      if (center._id) {
+        await db.centers.update(center.id, {
+          deletedAt: new Date().toISOString(),
+          _synced: false,
+          action: "delete",
+        });
+      } else {
+        await db.centers.delete(center.id);
+      }
+   
+    getCenters(currentPage);
+    dismiss()
+     present({
+          message: 'Center successfully deleted!.',
+          duration: 1000,
+        });
+  }
   }
 
   return (
