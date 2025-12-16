@@ -17,6 +17,7 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
     setIsOpen(false);
   }
 
+
   return (
     <>
       {/* <div
@@ -63,12 +64,12 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
                 <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="" />
               </div> */}
               <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} labelClassName="" />
-              <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} labelClassName="" />
+              <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan?.code}`} labelClassName="" />
             </div>
             <div className="space-y-1">
               <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} labelClassName="" />
               <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} labelClassName="" />
-              <LoanReleaseViewCard label="Bank Code" value={transaction.bank.code} labelClassName="" />
+              <LoanReleaseViewCard label="Bank Code" value={transaction.bank?.code} labelClassName="" />
               <LoanReleaseViewCard label="Amount" value={`${formatNumber(transaction.amount)}`} labelClassName="" />
             </div>
 
@@ -88,7 +89,7 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
             </div>
           </div>
           <div className=' pt-1'>
-            <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} labelClassName="" containerClassName="" />
+            <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy?.username} labelClassName="" containerClassName="" />
           </div>
 
           <div className="flex-1">

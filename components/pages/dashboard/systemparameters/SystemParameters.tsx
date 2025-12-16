@@ -10,13 +10,18 @@ import TableNoRows from '../../../ui/forms/TableNoRows';
 import TablePagination from '../../../ui/forms/TablePagination';
 import { Signatures } from '../../../ui/common/Signatures';
 import UpdateSystemParameters from './modals/UpdateParams';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
 
 
 const SystemParameters = () => {
   const [signatures, setSignatures] = useState<Signatures[]>([])
+  const online = useOnlineStore((state) => state.online);
+  const [uploading, setUploading] = useState<boolean>(false)
  
 
-     const getSignatures = async () => {
+    const getSignatures = async () => {
+        if (online){
           try {
             const result = await kfiAxios.get('/system-params/signature');
             const { signatureParams } = result.data;
@@ -26,7 +31,19 @@ const SystemParameters = () => {
           } catch (error) {
           } finally {
           }
-        };
+        } else {
+                try {
+                  let data = await db.systemParameters.toArray();
+                  const allData = data.filter(e => !e.deletedAt);
+                  setSignatures(allData)
+                 
+                
+                } catch (error) {
+                  console.log(error)
+                 
+                } 
+        }
+    };
 
    
 

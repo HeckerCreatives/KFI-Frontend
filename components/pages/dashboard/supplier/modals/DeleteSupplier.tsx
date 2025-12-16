@@ -4,6 +4,8 @@ import React, { useRef, useState } from 'react';
 import { Supplier } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteSupplierLoans = {
   supplier: Supplier;
@@ -19,13 +21,16 @@ const DeleteSupplier = ({ supplier, getSuppliers, searchkey, sortKey, currentPag
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
   async function handleDelete() {
-    setLoading(true);
+   if(online){
+     setLoading(true);
     try {
       const result = await kfiAxios.delete(`/supplier/${supplier._id}`);
       const { success } = result.data;
@@ -47,6 +52,30 @@ const DeleteSupplier = ({ supplier, getSuppliers, searchkey, sortKey, currentPag
     } finally {
       setLoading(false);
     }
+   } else {
+    try {
+    if (supplier._id) {
+        await db.suppliers.update(supplier.id, {
+          deletedAt: new Date().toISOString(),
+          _synced: false,
+          action: "delete",
+        });
+      } else {
+        await db.suppliers.delete(supplier.id);
+      }
+    getSuppliers(currentPage);
+    dismiss()
+     present({
+          message: 'Supplier successfully deleted!.',
+          duration: 1000,
+        });
+      } catch (error: any) {
+        present({
+          message: `${error.response.data.error.message}`,
+          duration: 1000,
+        });
+      }
+   }
   }
 
   return (

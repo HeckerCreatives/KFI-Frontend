@@ -10,6 +10,7 @@ export type Signatures = {
   notedBy: string
   type: string
   _id: string
+  id: string
 
 }
 
@@ -41,7 +42,7 @@ export default function Signatures({open, type}: Props) {
             const result = await kfiAxios.get(`/system-params/signature/by-type/${type}`);
             const { signatureParam } = result.data;
 
-            console.log(signatureParam, type)
+            // console.log(signatureParam, type)
     
             setSignatures(signatureParam)
            

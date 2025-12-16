@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SelectionHeader from './SelectionHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../table/Table';
 import FormIonItem from '../utils/FormIonItem';
@@ -99,6 +99,10 @@ const SupplierSelection = <T extends FieldValues>({ supplierLabel, supplierValue
   };
 
   const handlePagination = (page: number) => handleSearch(page);
+
+  useEffect(() => {
+      isOpen && handleSearch(1);
+    }, [isOpen]);
 
   return (
     <>

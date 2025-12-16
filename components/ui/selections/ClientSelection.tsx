@@ -10,6 +10,9 @@ import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
 import { Search01Icon } from 'hugeicons-react';
+import { useOnlineStore } from '../../../store/onlineStore';
+import { TABLE_LIMIT } from '../../utils/constants';
+import { db } from '../../../database/db';
 
 type Option = {
   _id: string;
@@ -42,6 +45,8 @@ const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setV
   const ionInputRef = useRef<HTMLIonInputElement>(null);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TClient>({
     clients: [],
@@ -60,28 +65,63 @@ const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setV
   };
 
   const handleSearch = async (page: number) => {
-    const value = ionInputRef.current?.value || '';
-    setLoading(true);
+   if(online){
+     const value = ionInputRef.current?.value || '';
+      setLoading(true);
+      try {
+        const filter: any = { keyword: value, page, limit: 10 };
+        if (center) filter.center = center;
+        const result = await kfiAxios.get('customer/selection', { params: filter });
+        const { success, clients, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            clients: clients,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          return;
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+   } else {
     try {
-      const filter: any = { keyword: value, page, limit: 10 };
-      if (center) filter.center = center;
-      const result = await kfiAxios.get('customer/selection', { params: filter });
-      const { success, clients, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
+        const limit = TABLE_LIMIT;
+        let allData = await db.clientMasterFile.toArray();
+        let allOptions: Option[] = allData.map(item => ({
+           _id: item._id,
+            name: item.name,
+            acctNumber: item.acctNumber,
+            center: { centerNo: item.center.centerNo },
+        }));
+
+        console.log(allData)
+        
+       const totalItems = allOptions.length;
+        const totalPages = Math.ceil(totalItems / limit);
+        const start = (page - 1) * limit;
+        const end = start + limit;
+        const finalData = allOptions.slice(start, end);
+        const hasPrevPage = page > 1;
+        const hasNextPage = page < totalPages;
         setData(prev => ({
-          ...prev,
-          clients: clients,
+           ...prev,
+          clients: finalData,
           totalPages: totalPages,
           nextPage: hasNextPage,
           prevPage: hasPrevPage,
         }));
         setCurrentPage(page);
-        return;
+      } catch (error) {
+        console.error("Erro while fetching data.", error);
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
       }
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+   }
   };
 
   const handleSelectClient = (client: Option) => {

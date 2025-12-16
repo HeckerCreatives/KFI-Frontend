@@ -30,7 +30,7 @@ const ReleaseActions = ({ release, setData, getReleases, currentPage, setCurrent
   return (
     <div>
       {canDoAction(token.role, token.permissions, 'release', 'visible') && <ViewRelease release={release} />}
-      {canDoAction(token.role, token.permissions, 'release', 'update') && <UpdateRelease release={release} setData={setData} />}
+      {canDoAction(token.role, token.permissions, 'release', 'update') && <UpdateRelease release={release} setData={setData} getReleases={getReleases} currentPage={currentPage} />}
       {canDoAction(token.role, token.permissions, 'release', 'delete') && (
         <DeleteRelease release={release} getRelease={getReleases} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
       )}

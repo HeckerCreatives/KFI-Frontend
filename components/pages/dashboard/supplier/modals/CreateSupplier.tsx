@@ -9,6 +9,8 @@ import kfiAxios from '../../../../utils/axios';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateSupplierProps = {
   getSuppliers: (page: number) => void;
@@ -19,6 +21,8 @@ const CreateSupplier = ({ getSuppliers }: CreateSupplierProps) => {
   const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<SupplierFormData>({
     resolver: zodResolver(supplierSchema),
@@ -34,26 +38,47 @@ const CreateSupplier = ({ getSuppliers }: CreateSupplierProps) => {
   }
 
   async function onSubmit(data: SupplierFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.post('/supplier', data);
-      const { success } = result.data;
-      if (success) {
+    if(online){
+       setLoading(true);
+        try {
+          const result = await kfiAxios.post('/supplier', data);
+          const { success } = result.data;
+          if (success) {
+            getSuppliers(1);
+            dismiss();
+            present({
+              message: 'Supplier successfully created!.',
+              duration: 1000,
+            });
+            return;
+          }
+        } catch (error: any) {
+          const errs: TErrorData | string = error?.response?.data?.error || error.message;
+          const errors: TFormError[] | string = checkError(errs);
+          const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+          formErrorHandler(errors, form.setError, fields);
+        } finally {
+          setLoading(false);
+        }
+    }else {
+       try {
+        await db.suppliers.add({
+          ...data,
+          _synced: false,  
+          action: "create",
+        });
         getSuppliers(1);
         dismiss();
         present({
-          message: 'Supplier successfully created!.',
+          message: "Supplier successfully created!",
           duration: 1000,
         });
-        return;
+      } catch (error) {
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
       }
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
     }
   }
 

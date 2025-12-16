@@ -10,6 +10,9 @@ import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
 import { Search01Icon } from 'hugeicons-react';
+import { useOnlineStore } from '../../../store/onlineStore';
+import { TABLE_LIMIT } from '../../utils/constants';
+import { db } from '../../../database/db';
 
 type Option = {
   _id: string;
@@ -40,6 +43,8 @@ const NatureSelection = <T extends FieldValues>({ nature, setValue, clearErrors,
   const ionInputRef = useRef<HTMLIonInputElement>(null);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TData>({
     natures: [],
@@ -59,27 +64,63 @@ const NatureSelection = <T extends FieldValues>({ nature, setValue, clearErrors,
 
   const handleSearch = async (page: number) => {
     const value = ionInputRef.current?.value;
-    setLoading(true);
-    try {
-      const filter: any = { search: value, page, limit: 10 };
-      const result = await kfiAxios.get('/nature', { params: filter });
-      const { success, natures, totalPages, hasNextPage, hasPrevPage } = result.data;
+    if(online){
+      setLoading(true);
+      try {
+        const filter: any = { search: value, page, limit: 10 };
+        const result = await kfiAxios.get('/nature', { params: filter });
+        const { success, natures, totalPages, hasNextPage, hasPrevPage } = result.data;
 
-      console.log(result)
-       if (success) {
-         setData(prev => ({
-           ...prev,
-           natures: natures,
-           totalPages: totalPages,
-           nextPage: hasNextPage,
-           prevPage: hasPrevPage,
-         }));
-         setCurrentPage(page);
-         return;
-       }
-    } catch (error) {
-    } finally {
-      setLoading(false);
+        console.log(result)
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            natures: natures,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          return;
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try{
+            const limit = TABLE_LIMIT;
+                    let allData = await db.natures.toArray();
+                    let allOptions: Option[] = allData.map(item => ({
+                       _id: item._id,
+                      code: item.code,
+                      description: item.description,
+                    nature: item.nature,
+                    createdAt: item.createdAt
+                    }));
+            
+                    console.log(allData)
+                    
+                   const totalItems = allOptions.length;
+                    const totalPages = Math.ceil(totalItems / limit);
+                    const start = (page - 1) * limit;
+                    const end = start + limit;
+                    const finalData = allOptions.slice(start, end);
+                    const hasPrevPage = page > 1;
+                    const hasNextPage = page < totalPages;
+                    setData(prev => ({
+                       ...prev,
+                      natures: finalData,
+                      totalPages: totalPages,
+                      nextPage: hasNextPage,
+                      prevPage: hasPrevPage,
+                    }));
+                    setCurrentPage(page);
+                  } catch (error) {
+                    console.error("Erro while fetching data.", error);
+                  } finally {
+                    setData(prev => ({ ...prev, loading: false }));
+                  }
     }
   };
 

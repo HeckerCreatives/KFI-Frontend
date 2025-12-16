@@ -14,6 +14,9 @@ import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 import { link } from 'fs';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
+import { formatEVEntries } from '../../../../ui/utils/fomatData';
 
 type CreateEmergencyLoanProps = {
   getEmergencyLoans: (page: number, keyword?: string, sort?: string) => void;
@@ -23,7 +26,9 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
   const [present] = useIonToast();
   const modal = useRef<HTMLIonModalElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+    
   
 
   const form = useForm<EmergencyLoanFormData>({
@@ -56,32 +61,57 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
 
 
   async function onSubmit(data: EmergencyLoanFormData) {
-    setLoading(true);
-    try {
-      data.amount = removeAmountComma(data.amount);
-      data.entries = data.entries ? data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1 })) : [];
-      const result = await kfiAxios.post('/emergency-loan', data);
-      const { success } = result.data;
-      if (success) {
-        getEmergencyLoans(1);
+    if(online){
+      setLoading(true);
+      try {
+        data.amount = removeAmountComma(data.amount);
+        data.entries = data.entries ? data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1 })) : [];
+        const result = await kfiAxios.post('/emergency-loan', data);
+        const { success } = result.data;
+        if (success) {
+          getEmergencyLoans(1);
+          present({
+            message: 'Emergency loan successfully added.',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
         present({
-          message: 'Emergency loan successfully added.',
+          message: 'Failed to add a new emergency loan. Please try again.',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to add a new emergency loan. Please try again.',
-        duration: 1000,
-      });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+       try {
+        const entries = formatEVEntries(data.entries || [])
+        // const entries = data.entries
+        await db.emergencyLoans.add({
+          ...data,
+          entries: entries,
+          encodedBy: '',
+          _synced: false,  
+          action: "create",
+        });
+        getEmergencyLoans(1);
+        dismiss();
+        present({
+          message: "Emergency loan successfully created!",
+          duration: 1000,
+        });
+      } catch (error) {
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+      }
     }
   }
 

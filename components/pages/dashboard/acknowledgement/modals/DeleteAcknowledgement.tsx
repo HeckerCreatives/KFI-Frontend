@@ -4,6 +4,8 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import { trashBin } from 'ionicons/icons';
 import { Acknowledgement, ExpenseVoucher } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteAcknowledgementProps = {
   acknowledgement: Acknowledgement;
@@ -18,34 +20,62 @@ const DeleteAcknowledgement = ({ acknowledgement, getAcknowledgements, searchkey
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     setIsOpen(false);
   }
 
   async function handleDelete() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/acknowledgement/${acknowledgement._id}`);
-      const { success } = result.data;
-      if (success) {
-        const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getAcknowledgements(page, searchkey, sortKey);
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.delete(`/acknowledgement/${acknowledgement._id}`);
+        const { success } = result.data;
+        if (success) {
+          const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
+          getAcknowledgements(page, searchkey, sortKey);
+          present({
+            message: 'Official Receipt successfully deleted',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
+      } catch (error: any) {
+        const message = error.response.data.error.message || error?.response?.data?.msg;
         present({
-          message: 'Official Receipt successfully deleted',
+          message: message || 'Failed to delete the official receipt record. Please try again',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const message = error.response.data.error.message || error?.response?.data?.msg;
-      present({
-        message: message || 'Failed to delete the official receipt record. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+    } else {
+      try{
+      if (acknowledgement._id) {
+          await db.officialReceipts.update(acknowledgement.id, {
+            deletedAt: new Date().toISOString(),
+            _synced: false,
+            action: "delete",
+          });
+        } else {
+          await db.officialReceipts.delete(acknowledgement.id);
+        }
+      getAcknowledgements(currentPage);
+      dismiss()
+       present({
+            message: 'Data successfully deleted!.',
+            duration: 1000,
+          });
+        } catch (error: any) {
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+        }
+        
     }
   }
 

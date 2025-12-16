@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import ChartOfAccountFilter from './components/ChartOfAccountFilter';
@@ -14,6 +14,11 @@ import PrintAllChartOfAccount from './modals/PrintAllChartOfAccount';
 import ExportAllChartOfAccount from './modals/ExportAllChartOfAccount';
 import ChartOfAccountActions from './components/ChartOfAccountActions';
 import { canDoAction, haveActions } from '../../../utils/permissions';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { on } from 'events';
+import { db } from '../../../../database/db';
+import { filterAndSortCOA } from '../../../ui/utils/sort';
+import { Upload } from 'lucide-react';
 
 export type TChartOfAccount = {
   chartOfAccounts: ChartOfAccountType[];
@@ -31,6 +36,8 @@ const ChartOfAccount = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('');
+  const online = useOnlineStore((state) => state.online);
+  const [uploading, setUploading] = useState<boolean>(false)
 
   const [data, setData] = useState<TChartOfAccount>({
     chartOfAccounts: [],
@@ -41,7 +48,8 @@ const ChartOfAccount = () => {
   });
 
   const getChartOfAccounts = async (page: number, keyword: string = '', sort: string = '') => {
-    setData(prev => ({ ...prev, loading: true }));
+   if(online){
+     setData(prev => ({ ...prev, loading: true }));
     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
       if (keyword) filter.search = keyword;
@@ -69,6 +77,77 @@ const ChartOfAccount = () => {
     } finally {
       setData(prev => ({ ...prev, loading: false }));
     }
+   } else {
+     setData(prev => ({ ...prev, loading: true }));
+    
+                
+                    try {
+                      const limit = TABLE_LIMIT;
+                
+                      let data = await db.chartOfAccounts.toArray();
+    
+                      const filteredData = data.filter(e => !e.deletedAt);
+                      let allData = filterAndSortCOA(filteredData, keyword, sort);
+                
+                      const totalItems = allData.length;
+                      const totalPages = Math.ceil(totalItems / limit);
+                
+                      const start = (page - 1) * limit;
+                      const end = start + limit;
+                
+                      const coa = allData.slice(start, end);
+                
+                      const hasPrevPage = page > 1;
+                      const hasNextPage = page < totalPages;
+                
+                      setData(prev => ({
+                        ...prev,
+                        chartOfAccounts: coa,
+                        totalPages,
+                        prevPage: hasPrevPage,
+                        nextPage: hasNextPage,
+                      }));
+          
+                
+                      setCurrentPage(page);
+                      setSearchKey(keyword);
+                      setSortKey(sort);
+                    } catch (error) {
+                      present({
+                        message: 'Failed to load records.',
+                        duration: 1000,
+                      });
+                    } finally {
+                      setData(prev => ({ ...prev, loading: false }));
+                    }
+   }
+  };
+
+  const uploadChanges = async () => {
+      setUploading(true)
+      try {
+        const list = await db.chartOfAccounts.toArray();
+        const offlineChanges = list.filter(e => e._synced === false);
+        const result = await kfiAxios.put("sync/upload/chart-of-accounts", { groupAccounts: offlineChanges });
+        const { success } = result.data;
+        if (success) {
+          setUploading(false)
+           present({
+              message: 'Offline changes saved!',
+              duration: 1000,
+            });
+          getChartOfAccounts(1);
+          setUploading(false)
+
+        }
+      } catch (error: any) {
+          setUploading(false)
+
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+      }
   };
 
   const handlePagination = (page: number) => getChartOfAccounts(page, searchKey, sortKey);
@@ -88,10 +167,15 @@ const ChartOfAccount = () => {
           
 
             <div className="p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
-                <div className="flex lg:flex-row flex-col  ">
+                <div className="flex lg:flex-row flex-col flex-wrap gap-2  ">
                   <div>
                     {canDoAction(token.role, token.permissions, 'chart of account', 'print') && <PrintAllChartOfAccount />}
                     {canDoAction(token.role, token.permissions, 'chart of account', 'export') && <ExportAllChartOfAccount />}
+                    {/* {!online && (
+                      <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                        <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
+                      </IonButton>
+                    )} */}
                   </div>
                   <ChartOfAccountFilter getChartOfAccounts={getChartOfAccounts} />
                 </div>

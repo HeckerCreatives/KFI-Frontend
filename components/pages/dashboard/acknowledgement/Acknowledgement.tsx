@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import AcknowledgementFilter from './components/AcknowledgementFilter';
@@ -17,6 +17,11 @@ import PrintAllAcknowledgement from './modals/prints/PrintAllAcknowledgement';
 import ExportAllAcknowledgement from './modals/prints/ExportAllAcknowledgement';
 import AcknowledgementActions from './components/AcknowledgementActions';
 import TablePagination from '../../../ui/forms/TablePagination';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
+import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
+import { formatELList } from '../../../ui/utils/fomatData';
+import { Upload } from 'lucide-react';
 
 export type TData = {
   acknowledgements: AcknowledgementType[];
@@ -36,6 +41,8 @@ const Acknowledgement = () => {
   const [sortKey, setSortKey] = useState<string>('');
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
+  const online = useOnlineStore((state) => state.online);
+  const [uploading, setUploading] = useState<boolean>(false)
 
   const [data, setData] = useState<TData>({
     acknowledgements: [],
@@ -46,39 +53,77 @@ const Acknowledgement = () => {
   });
 
   const getAcknowledgements = async (page: number, keyword: string = '', sort: string = '', to: string = '', from: string = '') => {
-    setData(prev => ({ ...prev, loading: true }));
-    try {
-      const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
-      if (keyword) filter.search = keyword;
-      if (sort) filter.sort = sort;
-      if (to) filter.to = to;
-      if (from) filter.from = from;
+   if(online){
+     setData(prev => ({ ...prev, loading: true }));
+      try {
+        const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
+        if (keyword) filter.search = keyword;
+        if (sort) filter.sort = sort;
+        if (to) filter.to = to;
+        if (from) filter.from = from;
 
-      const result = await kfiAxios.get('/acknowledgement', { params: filter });
-      const { success, acknowledgements, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
+        const result = await kfiAxios.get('/acknowledgement', { params: filter });
+        const { success, acknowledgements, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            acknowledgements,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          setSearchKey(keyword);
+          setSortKey(sort);
+          setFrom(from);
+          setTo(to);
+          return;
+        }
+      } catch (error) {
+        present({
+          message: 'Failed to get official receipt records. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
+      }
+   } else {
+    setData(prev => ({ ...prev, loading: true }));
+     try {
+       const limit = TABLE_LIMIT;
+       let data = await db.officialReceipts.toArray();
+       const filteredData = data.filter(e => !e.deletedAt);
+      let allData = filterAndSortLoanRelease(formatELList(filteredData), keyword, sort, from, to);
+       console.log(data)
+       const totalItems = allData.length;
+       const totalPages = Math.ceil(totalItems / limit);
+       const start = (page - 1) * limit;
+       const end = start + limit;
+       const finalData = allData.slice(start, end);
+       const hasPrevPage = page > 1;
+       const hasNextPage = page < totalPages;
         setData(prev => ({
           ...prev,
-          acknowledgements,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
+          acknowledgements: finalData,
+          totalPages,
           prevPage: hasPrevPage,
+          nextPage: hasNextPage,
         }));
-        setCurrentPage(page);
-        setSearchKey(keyword);
-        setSortKey(sort);
-        setFrom(from);
-        setTo(to);
-        return;
-      }
-    } catch (error) {
-      present({
-        message: 'Failed to get official receipt records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setData(prev => ({ ...prev, loading: false }));
-    }
+       setCurrentPage(page);
+       setSearchKey(keyword);
+       setSortKey(sort);
+       setFrom(from);
+       setTo(to);
+     } catch (error) {
+       console.log(error)
+       present({
+         message: 'Failed to load records.',
+         duration: 1000,
+       });
+     } finally {
+       setData(prev => ({ ...prev, loading: false }));
+     }
+   }
   };
 
   const handlePagination = (page: number) => getAcknowledgements(page, searchKey, sortKey);
@@ -86,6 +131,34 @@ const Acknowledgement = () => {
   useIonViewWillEnter(() => {
     getAcknowledgements(currentPage);
   });
+
+  const uploadChanges = async () => {
+          setUploading(true)
+          try {
+            const list = await db.officialReceipts.toArray();
+            const offlineChanges = list.filter(e => e._synced === false);
+            console.log(offlineChanges)
+            const result = await kfiAxios.put("sync/upload/official-receipts", { officialReceipts: offlineChanges });
+            const { success } = result.data;
+            if (success) {
+              setUploading(false)
+               present({
+                  message: 'Offline changes saved!',
+                  duration: 1000,
+                });
+              getAcknowledgements(currentPage);
+              setUploading(false)
+    
+            }
+          } catch (error: any) {
+              setUploading(false)
+    
+              present({
+                message: `${error.response.data.error.message}`,
+                duration: 1000,
+              });
+          }
+        };
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
@@ -96,12 +169,16 @@ const Acknowledgement = () => {
            
             <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
 
-               <div className="  flex flex-col gap-4 flex-wrap">
-             
+              <div className="  flex flex-col gap-4 flex-wrap">
                 <div className="flex items-start flex-wrap">
                   <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'create') && <CreateAcknowledgement getAcknowledgements={getAcknowledgements} />}</div>
                   <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'print') && <PrintAllAcknowledgement />}</div>
                   <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'export') && <ExportAllAcknowledgement />}</div>
+                  {online && (
+                    <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
+                    </IonButton>
+                  )}
                 </div>
 
                  <div className="w-full flex-1 flex">

@@ -13,6 +13,9 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
+import { formatLREntries } from '../../../../ui/utils/fomatData';
 
 type CreateLoanReleaseProps = {
   getTransactions: (page: number, keyword?: string, sort?: string) => void;
@@ -22,8 +25,12 @@ type CreateLoanReleaseProps = {
 
 const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
   const [present] = useIonToast();
-   const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const online = useOnlineStore((state) => state.online);
+  const user = localStorage.getItem('user')
+
+  
 
 
   const form = useForm<LoanReleaseFormData>({
@@ -90,30 +97,54 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
   //    return;
   //  }
 
-    setLoading(true);
-    try {
-      const result = await kfiAxios.post('transaction/loan-release', data);
-      const { success } = result.data;
-      if (success) {
-        getTransactions(1);
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.post('transaction/loan-release', data);
+        const { success } = result.data;
+        if (success) {
+          getTransactions(1);
+          present({
+            message: 'Loan release successfully added.',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
         present({
-          message: 'Loan release successfully added.',
+          message: 'Failed to add a new loan release. Please try again.',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to add a new loan release. Please try again.',
-        duration: 1000,
-      });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+       try {
+        const entries = formatLREntries(data.entries)
+        await db.loanReleases.add({
+          ...data,
+          entries: entries,
+          encodedBy: user ?? '',
+          _synced: false,  
+          action: "create",
+        });
+        getTransactions(1);
+        dismiss();
+        present({
+          message: "Transaction successfully created!",
+          duration: 1000,
+        });
+      } catch (error) {
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+      }
     }
   }
 

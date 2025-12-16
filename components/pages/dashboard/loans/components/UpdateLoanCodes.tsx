@@ -29,7 +29,7 @@ const UpdateLoanCodes = ({ loan, setData }: UpdateLoanCodesProps) => {
             </TableHeader>
             <TableBody>
               {loan.loanCodes.map((loanCode: LoanCode) => (
-                <UpdateLoanCodeForm key={loanCode?._id} loanCode={loanCode} productId={loan._id} setData={setData} />
+                <UpdateLoanCodeForm key={loanCode?._id} loanCode={loanCode} productId={loan._id || loan.id} setData={setData} />
               ))}
             </TableBody>
           </Table>

@@ -78,6 +78,10 @@ const AddEntry = ({ damayanFundId, getEntries, setEntries, setData }: AddEntryPr
                  const credit = Number(removeAmountComma(data.credit));
            
                  setEntries((prev: DamayanFundEntry[]) => {
+
+                  const nextLine = prev.length > 0 
+                    ? Math.max(...prev.map(e => e.line)) + 1 
+                    : 1;
                  const newEntry: DamayanFundEntry = {
                    _id: generateObjectId(),
                    damayanFund: '',
@@ -97,7 +101,11 @@ const AddEntry = ({ damayanFundId, getEntries, setEntries, setData }: AddEntryPr
                    },
                    debit: debit,
                    credit: credit,
-                   createdAt: new Date().toISOString()
+                   createdAt: new Date().toISOString(),
+
+                  _synced: false,
+                   action: "create",
+                   line: nextLine,
                  }
                   
            
@@ -106,6 +114,10 @@ const AddEntry = ({ damayanFundId, getEntries, setEntries, setData }: AddEntryPr
            
                
                setData((prev: TDFData) => {
+
+                  const nextLine = prev.entries.length > 0 
+                ? Math.max(...prev.entries.map(e => e.line)) + 1 
+                : 1;
             
               const newEntry: DamayanFundEntry = {
                    _id: generateObjectId(),
@@ -126,7 +138,10 @@ const AddEntry = ({ damayanFundId, getEntries, setEntries, setData }: AddEntryPr
                    },
                    debit: debit,
                    credit: credit,
-                   createdAt: new Date().toISOString()
+                   createdAt: new Date().toISOString(),
+                    _synced: false,
+                   action: "create",
+                   line: nextLine,
                  }
            
                  return {

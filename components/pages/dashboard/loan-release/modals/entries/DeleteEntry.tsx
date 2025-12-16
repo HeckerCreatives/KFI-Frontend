@@ -5,6 +5,7 @@ import { trash } from 'ionicons/icons';
 import { Entry } from '../../../../../../types/types';
 import kfiAxios from '../../../../../utils/axios';
 import { TData } from '../../components/UpdateEntries';
+import { useOnlineStore } from '../../../../../../store/onlineStore';
 
 type DeleteEntryProps = {
   entry: Entry;
@@ -23,40 +24,49 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage, setData, setEn
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     setIsOpen(false);
   }
 
   const handleDelete = async () => {
-  setLoading(true);
-  try {
-   setData((prev: TData) => {
-    const updatedEntries = prev.entries.filter((e) => e._id !== entry._id);
-    setEntries(updatedEntries);
+      setLoading(true);
+      try {
+      setData((prev: TData) => {
+        const updatedEntries = prev.entries.map((e) =>
+          e._id === entry._id
+            ? {
+                ...e,
+                _synced: false,
+                action: e._id ? "update" : "create",
+              }
+            : e
+        );
 
-    return {
-      ...prev,
-      entries: updatedEntries,
-    };
-  });
-    setDeletedIds((prev: string[]) => [...prev, entry._id])
+        return {
+          ...prev,
+          entries: updatedEntries,
+        };
+      });
+        setDeletedIds((prev: string[]) => [...prev, entry._id])
 
 
-    present({
-      message: 'Entry successfully deleted',
-      duration: 1000,
-    });
-    dismiss();
-  } catch (error: any) {
-    present({
-      message: 'Failed to delete the entry record. Please try again',
-      duration: 1000,
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+        present({
+          message: 'Entry successfully deleted',
+          duration: 1000,
+        });
+        dismiss();
+      } catch (error: any) {
+        present({
+          message: 'Failed to delete the entry record. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setLoading(false);
+      }
+  };
 
 
   return (

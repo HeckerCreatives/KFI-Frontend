@@ -4,6 +4,8 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import { trashBin } from 'ionicons/icons';
 import { DamayanFund, EmergencyLoan } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteDamayanFundProps = {
   damayanFund: DamayanFund;
@@ -18,35 +20,62 @@ const DeleteDamayanFund = ({ damayanFund, getDamayanFunds, searchkey, sortKey, r
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     setIsOpen(false);
   }
 
   async function handleDelete() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/damayan-fund/${damayanFund._id}`);
-      const { success } = result.data;
-      if (success) {
-        const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getDamayanFunds(page, searchkey, sortKey);
+   if(online){
+     setLoading(true);
+      try {
+        const result = await kfiAxios.delete(`/damayan-fund/${damayanFund._id}`);
+        const { success } = result.data;
+        if (success) {
+          const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
+          getDamayanFunds(page, searchkey, sortKey);
+          present({
+            message: 'Damayan fund successfully deleted',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
+      } catch (error: any) {
+        const message = error.response.data.error.message || error?.response?.data?.msg;
         present({
-          message: 'Damayan fund successfully deleted',
+          message: message || 'Failed to delete the damayan fund record. Please try again',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const message = error.response.data.error.message || error?.response?.data?.msg;
-      present({
-        message: message || 'Failed to delete the damayan fund record. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
-    }
+   } else {
+    try {
+    if (damayanFund._id) {
+        await db.damayanFunds.update(damayanFund.id, {
+          deletedAt: new Date().toISOString(),
+          _synced: false,
+          action: "delete",
+        });
+      } else {
+        await db.damayanFunds.delete(damayanFund.id);
+      }
+    getDamayanFunds(currentPage);
+    dismiss()
+     present({
+          message: 'Emergency loan successfully deleted!.',
+          duration: 1000,
+        });
+      } catch (error: any) {
+        present({
+          message: `${error.response.data.error.message}`,
+          duration: 1000,
+        });
+      }
+   }
   }
 
   return (

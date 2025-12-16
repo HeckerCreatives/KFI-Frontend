@@ -73,7 +73,7 @@ const CreateCenter = ({ getCenters }: CreateCenterProps) => {
       getCenters(1);
       dismiss()
       present({
-            message: 'Center successfully updated!.',
+            message: 'Center successfully created!.',
             duration: 1000,
           });
       return;

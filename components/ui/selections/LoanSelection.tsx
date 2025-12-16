@@ -10,6 +10,9 @@ import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
 import { Search01Icon } from 'hugeicons-react';
+import { useOnlineStore } from '../../../store/onlineStore';
+import { TABLE_LIMIT } from '../../utils/constants';
+import { db } from '../../../database/db';
 
 type Option = {
   _id: string;
@@ -39,6 +42,8 @@ const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, 
   const ionInputRef = useRef<HTMLIonInputElement>(null);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TData>({
     datas: [],
@@ -57,26 +62,64 @@ const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, 
   };
 
   const handleSearch = async (page: number) => {
-    const value = ionInputRef.current?.value;
-    setLoading(true);
-    try {
-      const filter: any = { keyword: value, page, limit: 10 };
-      const result = await kfiAxios.get('/loan/selection', { params: filter });
-      const { success, loans, totalPages, hasNextPage, hasPrevPage } = result.data;
-      if (success) {
+    const value: any = ionInputRef.current?.value;
+    if(online){
+      setLoading(true);
+      try {
+        const filter: any = { keyword: value, page, limit: 10 };
+        const result = await kfiAxios.get('/loan/selection', { params: filter });
+        const { success, loans, totalPages, hasNextPage, hasPrevPage } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            datas: loans,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          return;
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    } else {
+       try {
+        const limit = TABLE_LIMIT;
+        let allData = await db.loanProducts.toArray();
+        let allOptions: Option[] = allData.map(item => ({
+          _id: item._id,
+          code: item.code || '',       
+          description: item.description || '',
+        }));
+         if (value) {
+          allOptions = allOptions.filter(
+            opt =>
+              opt.code.toLowerCase().includes(value) ||
+              opt.description.includes(value)
+          );
+        }
+       const totalItems = allOptions.length;
+        const totalPages = Math.ceil(totalItems / limit);
+        const start = (page - 1) * limit;
+        const end = start + limit;
+        const finalData = allOptions.slice(start, end);
+        const hasPrevPage = page > 1;
+        const hasNextPage = page < totalPages;
         setData(prev => ({
-          ...prev,
-          datas: loans,
+           ...prev,
+          datas: finalData,
           totalPages: totalPages,
           nextPage: hasNextPage,
           prevPage: hasPrevPage,
         }));
         setCurrentPage(page);
-        return;
+      } catch (error) {
+        console.error("Error while fetching data.", error);
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
       }
-    } catch (error) {
-    } finally {
-      setLoading(false);
     }
   };
 

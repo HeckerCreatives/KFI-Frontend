@@ -37,6 +37,9 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage, setEntries, se
              return {
                ...prev,
                entries: prev.entries.filter((e: DamayanFundEntry) => e._id !== entry._id),
+               _synced: false,
+              action: "delete",
+              deletedAt: new Date().toISOString()
              };
            });
        

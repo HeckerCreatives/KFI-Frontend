@@ -105,6 +105,9 @@ const AddEntry = ({ acknowledgementId, getEntries, setEntries, setData, transact
            const credit = Number(removeAmountComma(data.credit));
      
            setEntries((prev: AcknowledgementEntry[]) => {
+               const nextLine = prev.length > 0 
+                ? Math.max(...prev.map(e => e.line)) + 1 
+                : 1;
            const newEntry: AcknowledgementEntry = {
              _id: generateObjectId(),
              acknowledgement: '',
@@ -141,7 +144,10 @@ const AddEntry = ({ acknowledgementId, getEntries, setEntries, setData, transact
              credit: credit,
              particular: data.particular ?? '',
              createdAt: new Date().toISOString(),
-             cvNo: data.cvNo ?? ''
+             cvNo: data.cvNo ?? '',
+            _synced: false,
+             action: "create",
+            line: nextLine,
            }
             
      
@@ -150,7 +156,9 @@ const AddEntry = ({ acknowledgementId, getEntries, setEntries, setData, transact
      
          
          setData((prev: any) => {
-      
+             const nextLine = prev.entries.length > 0 
+                ? Math.max(...prev.entries.map((e: { line: any; }) => e.line)) + 1 
+                : 1;
          const newEntry: AcknowledgementEntry = {
              _id: generateObjectId(),
             acknowledgement: '',
@@ -185,7 +193,10 @@ const AddEntry = ({ acknowledgementId, getEntries, setEntries, setData, transact
             credit: credit,
             particular: data.particular ?? '',
             createdAt: new Date().toISOString(),
-             cvNo: data.cvNo ?? ''
+             cvNo: data.cvNo ?? '',
+             _synced: false,
+             action: "create",
+            line: nextLine,
 
         }
      

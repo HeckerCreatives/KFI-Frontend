@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncBanks, syncBusinessTypes, syncCenters, syncClientMasterFile, syncCoa, syncLoanCodes, syncLoanProducts, syncNatures, syncPaymentSchedules, syncSuppliers, syncSystemParams } from "../../../../database/sync"
+import { syncBanks, syncBusinessTypes, syncCenters, syncClientMasterFile, syncCoa, syncGoa, syncLoanCodes, syncLoanProducts, syncNatures, syncPaymentSchedules, syncSuppliers, syncSystemParams, syncWeeklySavings } from "../../../../database/sync"
 import { db } from "../../../../database/db"
 
 interface SyncStep {
@@ -25,6 +25,8 @@ const SYNC_STEPS: SyncStep[] = [
   { id: "centers", label: "Syncing Centers", status: "pending" },
   { id: "coa", label: "Syncing Chart of Accounts", status: "pending" },
   { id: "businessTypes", label: "Syncing Business Types", status: "pending" },
+  { id: "goa", label: "Syncing Group of Accounts", status: "pending" },
+  { id: "weeklySavings", label: "Syncing Weekly Savings", status: "pending" },
 ]
 
 interface BackupModalContentProps {
@@ -97,6 +99,16 @@ export function BackupModalContent({
       const businessTypes = await kfiAxios.get("/sync/business-types")
       updateStepStatus("businessTypes", "complete")
 
+       updateStepStatus("goa", "loading")
+      const groupOfAccounts = await kfiAxios.get("/sync/group-of-accounts")
+      updateStepStatus("goa", "complete")
+
+      updateStepStatus("weeklySavings", "loading")
+      const weeklySavings = await kfiAxios.get("/sync/weekly-savings")
+      updateStepStatus("weeklySavings", "complete")
+
+
+
       // Sync to local database
       await syncBanks(banks.data?.banks || [])
       await syncSystemParams(systemParams.data?.signatureParams || [])
@@ -109,6 +121,8 @@ export function BackupModalContent({
       await syncCenters(centers.data?.centers || [])
       await syncCoa(coa.data?.chartOfAccounts || [])
      await syncBusinessTypes(businessTypes.data.businessTypes || [])
+     await syncGoa(groupOfAccounts.data.groupAccounts || [])
+     await syncWeeklySavings(weeklySavings.data.weeklySavings || [])
 
       setIsComplete(true)
     } catch (err) {

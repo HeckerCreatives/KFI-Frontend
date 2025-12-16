@@ -15,21 +15,25 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type UpdateExpenseVoucherProps = {
   expenseVoucher: ExpenseVoucher;
   setData: React.Dispatch<React.SetStateAction<TData>>;
+  currentPage: number,
+  getExpenseVouchers: (page: number, keyword?: string, sort?: string) => void;
 };
 
-const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherProps) => {
+const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, currentPage }: UpdateExpenseVoucherProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [entries, setEntries] = useState<ExpenseVoucherEntry[]>(expenseVoucher.entries || []);
   const [preventries, setPrevEntries] = useState<ExpenseVoucherEntry[]>(expenseVoucher.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  const online = useOnlineStore((state) => state.online);
   
-
   const form = useForm<UpdateExpenseVoucherFormData>({
     resolver: zodResolver(updateExpenseVoucherSchema),
     defaultValues: {
@@ -53,8 +57,8 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
     if (expenseVoucher) {
       form.reset({
         code: expenseVoucher.code,
-        supplier: `${expenseVoucher.supplier.description}`,
-        supplierId: expenseVoucher.supplier._id,
+        supplier: `${expenseVoucher.supplier}`,
+        supplierId: expenseVoucher.supplier,
         refNo: expenseVoucher.refNo,
         remarks: expenseVoucher.remarks,
         date: formatDateInput(expenseVoucher.date),
@@ -77,63 +81,116 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData }: UpdateExpenseVoucherP
   }
 
   async function onSubmit(data: UpdateExpenseVoucherFormData) {
-    setLoading(true);
-    try {
+        data.amount = removeAmountComma(data.amount);
 
       const finalDeletedIds = deletedIds.filter((id) =>
-      preventries.some((e) => e._id === id)
-      );
+          preventries.some((e) => e._id === id)
+          );
 
-      const prevIds = new Set(preventries.map((e) => e._id));
+        const prevIds = new Set(preventries.map((e) => e._id));
 
-      const formattedEntries = entries.map((entry, index) => {
-        const isExisting = prevIds.has(entry._id);
-        return {
-          line: index + 1 ,
-          _id: isExisting ? entry._id : undefined,
-          client: entry.client?._id ?? "",
-          clientLabel: entry.client.name ?? "",
-          particular: entry.particular,
-          acctCodeId: entry.acctCode?._id ?? "",
-          acctCode: entry.acctCode?.code ?? "",
-          description: entry.acctCode?.description ?? "",
-          debit: entry.debit?.toString() ?? "",
-          credit: entry.credit?.toString() ?? "",
-          cvForRecompute: entry.cvForRecompute
-        };
-      });
-
-
-
-      data.amount = removeAmountComma(data.amount);
-      const result = await kfiAxios.put(`/expense-voucher/${expenseVoucher._id}`, {...data, entries: formattedEntries,deletedIds: finalDeletedIds});
-      const { success, expenseVoucher: updatedExpenseVoucher } = result.data;
-      if (success) {
-        setData(prev => {
-          const index = prev.expenseVouchers.findIndex(expenseVoucher => expenseVoucher._id === updatedExpenseVoucher._id);
-          if (index < 0) return prev;
-          prev.expenseVouchers[index] = { ...updatedExpenseVoucher };
-          return { ...prev };
+        const formattedEntries = entries.map((entry, index) => {
+          const isExisting = prevIds.has(entry._id);
+          return {
+            line: index + 1 ,
+            _id: isExisting ? entry._id : undefined,
+            client: entry.client?._id ?? "",
+            clientLabel: entry.client.name ?? "",
+            particular: entry.particular,
+            acctCodeId: entry.acctCode?._id ?? "",
+            acctCode: entry.acctCode?.code ?? "",
+            description: entry.acctCode?.description ?? "",
+            debit: entry.debit?.toString() ?? "",
+            credit: entry.credit?.toString() ?? "",
+            cvForRecompute: entry.cvForRecompute
+          };
         });
+
+
+   if(online){
+     setLoading(true);
+      try {
+
+      
+        const result = await kfiAxios.put(`/expense-voucher/${expenseVoucher._id}`, {...data, entries: formattedEntries,deletedIds: finalDeletedIds});
+        const { success, expenseVoucher: updatedExpenseVoucher } = result.data;
+        if (success) {
+          setData(prev => {
+            const index = prev.expenseVouchers.findIndex(expenseVoucher => expenseVoucher._id === updatedExpenseVoucher._id);
+            if (index < 0) return prev;
+            prev.expenseVouchers[index] = { ...updatedExpenseVoucher };
+            return { ...prev };
+          });
+          present({
+            message: 'Expense voucher successfully updated.',
+            duration: 1000,
+          });
+          dismiss()
+          return;
+        }
         present({
-          message: 'Expense voucher successfully updated.',
+          message: 'Failed to update the expense voucher',
           duration: 1000,
         });
-        dismiss()
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to update the expense voucher',
-        duration: 1000,
-      });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
-    }
+   } else {
+    try {
+
+       const existing = await db.expenseVouchers.get(expenseVoucher.id);
+        if (!existing) {
+          console.log("Data not found");
+          return;
+        }
+        const updated = {
+          ...data,
+          entries: entries, 
+          deletedIds: finalDeletedIds,
+          _synced: false,
+          action: "update",
+        };
+
+        console.log('Form Data',updated)
+        await db.expenseVouchers.update(expenseVoucher.id, updated);
+        getExpenseVouchers(currentPage)
+        // setData(prev => {
+        //   const clone = [...prev.expenseVouchers];
+        //   const index = clone.findIndex(c => c.id === expenseVoucher.id);
+        //   if (index !== -1) {
+        //     clone[index] = {
+        //       ...clone[index],  
+        //       ...data,
+        //       entries: entries,
+              
+        //     };
+        //   }
+        //   return { ...prev, expenseVouchers: clone };
+        // });
+
+        dismiss();
+        present({
+          message: "Data successfully updated!",
+          duration: 1000,
+        });
+      } catch (error: any) {
+        console.log(error)
+         const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+
+      }
+   }
   }
 
   return (

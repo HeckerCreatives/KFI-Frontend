@@ -15,6 +15,9 @@ import JournalVoucherForm from '../components/JournalVoucherForm';
 import UpdateJVEntries from '../components/UpdateJVEntries';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
+import { formatJVEntriesSubmit } from '../../../../ui/utils/fomatData';
 
 type UpdateJournalVoucherProps = {
   journalVoucher: JournalVoucher;
@@ -28,6 +31,8 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
   const [entries, setEntries] = useState<JournalVoucherEntry[]>(journalVoucher.entries || []);
   const [preventries, setPrevEntries] = useState<JournalVoucherEntry[]>(journalVoucher.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  const online = useOnlineStore((state) => state.online);
+  
   
 
 
@@ -68,7 +73,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
         bankLabel: `${journalVoucher.bankCode.code}`,
         amount: `${formatAmount(journalVoucher.amount)}`,
         mode: 'update',
-         entries: journalVoucher.entries,
+        entries: formatJVEntriesSubmit(journalVoucher.entries),
       });
     }
   }, [journalVoucher, form]);
@@ -80,64 +85,118 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
   }
 
   async function onSubmit(data: JournalVoucherFormData) {
-    setLoading(true);
-    
+
 
     data.amount = removeAmountComma(data.amount);
-    try {
+    const finalDeletedIds = deletedIds.filter((id) =>
+        preventries.some((e) => e._id === id)
+        );
 
-      const finalDeletedIds = deletedIds.filter((id) =>
-      preventries.some((e) => e._id === id)
-      );
+    const prevIds = new Set(preventries.map((e) => e._id));
+    const formattedEntries = entries.map((entry, index) => {
+      const isExisting = prevIds.has(entry._id);
+      return {
+        _id: isExisting ? entry._id : undefined,
+        client: entry.client?._id ?? "",
+        clientLabel: entry.client.name ?? "",
+        particular: entry.particular,
+        acctCodeId: entry.acctCode?._id ?? "",
+        acctCode: entry.acctCode?.code ?? "",
+        description: entry.acctCode?.description ?? "",
+        debit: entry.debit?.toString() ?? "",
+        credit: entry.credit?.toString() ?? "",
+        cvForRecompute: entry.cvForRecompute,
+        line: entry.line,
+        _synced: entry._synced,
+        action: entry.action,
+        deletedAt: entry.deletedAt
+      };
+    });
 
-      const prevIds = new Set(preventries.map((e) => e._id));
-      const formattedEntries = entries.map((entry, index) => {
-        const isExisting = prevIds.has(entry._id);
-        return {
-          _id: isExisting ? entry._id : undefined,
-          client: entry.client?._id ?? "",
-          clientLabel: entry.client.name ?? "",
-          particular: entry.particular,
-          acctCodeId: entry.acctCode?._id ?? "",
-          acctCode: entry.acctCode?.code ?? "",
-          description: entry.acctCode?.description ?? "",
-          debit: entry.debit?.toString() ?? "",
-          credit: entry.credit?.toString() ?? "",
-          cvForRecompute: entry.cvForRecompute
-        };
-      });
 
-      const result = await kfiAxios.put(`/journal-voucher/${journalVoucher._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
-      const { success, journalVoucher: updatedJournalVoucher } = result.data;
-      if (success) {
-        setData(prev => {
-          const index = prev.journalVouchers.findIndex(journalVoucher => journalVoucher._id === updatedJournalVoucher._id);
-          if (index < 0) return prev;
-          prev.journalVouchers[index] = { ...updatedJournalVoucher };
-          return { ...prev };
-        });
+
+
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.put(`/journal-voucher/${journalVoucher._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
+        const { success, journalVoucher: updatedJournalVoucher } = result.data;
+        if (success) {
+          setData(prev => {
+            const index = prev.journalVouchers.findIndex(journalVoucher => journalVoucher._id === updatedJournalVoucher._id);
+            if (index < 0) return prev;
+            prev.journalVouchers[index] = { ...updatedJournalVoucher };
+            return { ...prev };
+          });
+          present({
+            message: 'Journal voucher successfully updated.',
+            duration: 1000,
+          });
+          dismiss()
+          return;
+        }
         present({
-          message: 'Journal voucher successfully updated.',
+          message: 'Failed to update the journal voucher',
           duration: 1000,
         });
-        dismiss()
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to update the journal voucher',
-        duration: 1000,
-      });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+
+      try {
+
+       const existing = await db.journalVouchers.get(journalVoucher.id);
+        if (!existing) {
+          console.log("Data not found");
+          return;
+        }
+        
+        const updated = {
+          ...existing,
+          entries: entries, 
+          deletedIds: finalDeletedIds,
+          _synced: false,
+          action: "update",
+        };
+        await db.journalVouchers.update(journalVoucher.id, updated);
+        setData(prev => {
+          const clone = [...prev.journalVouchers];
+          const index = clone.findIndex(c => c.id === journalVoucher.id);
+          if (index !== -1) {
+            clone[index] = {
+              ...clone[index],     
+              entries: entries,
+              
+            };
+          }
+          return { ...prev, journalVouchers: clone };
+        });
+
+        dismiss();
+        present({
+          message: "Data successfully updated!",
+          duration: 1000,
+        });
+      } catch (error: any) {
+        console.log(error)
+         const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+
+      }
     }
   }
-
-  console.log(entries)
 
   return (
     <>

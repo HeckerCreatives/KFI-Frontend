@@ -4,6 +4,8 @@ import React, { useRef, useState } from 'react';
 import { Loan } from '../../../../../types/types';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import kfiAxios from '../../../../utils/axios';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteLoanProps = {
   loan: Loan;
@@ -19,33 +21,60 @@ const DeleteLoan = ({ loan, getLoans, searchkey, sortKey, currentPage, rowLength
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
   async function handleDelete() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/loan/${loan._id}`);
-      const { success } = result.data;
-      if (success) {
-        const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getLoans(page, searchkey, sortKey);
-        dismiss();
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.delete(`/loan/${loan._id}`);
+        const { success } = result.data;
+        if (success) {
+          const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
+          getLoans(page, searchkey, sortKey);
+          dismiss();
+          present({
+            message: 'Product successfully deleted!.',
+            duration: 1000,
+          });
+          return;
+        }
+      } catch (error: any) {
         present({
-          message: 'Product successfully deleted!.',
+          message: 'Failed to delete the product. Please try again',
           duration: 1000,
         });
-        return;
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      present({
-        message: 'Failed to delete the product. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+    } else {
+      try {
+      if (loan._id) {
+          await db.loanProducts.update(loan.id, {
+            deletedAt: new Date().toISOString(),
+            _synced: false,
+            action: "delete",
+          });
+        } else {
+          await db.loanProducts.delete(loan.id);
+        }
+      getLoans(currentPage);
+      dismiss()
+       present({
+            message: 'Loan product successfully deleted!.',
+            duration: 1000,
+          });
+        } catch (error: any) {
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+        }
     }
   }
 

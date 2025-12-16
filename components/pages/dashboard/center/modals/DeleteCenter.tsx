@@ -54,7 +54,7 @@ const DeleteCenter = ({ center, getCenters, searchkey, sortKey, currentPage, row
     }
   } else {
    
-      // await db.centers.delete(center.id);
+      
       if (center._id) {
         await db.centers.update(center.id, {
           deletedAt: new Date().toISOString(),

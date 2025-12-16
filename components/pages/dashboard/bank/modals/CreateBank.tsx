@@ -9,6 +9,8 @@ import kfiAxios from '../../../../utils/axios';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateBankProps = {
   getBanks: (page: number, keyword?: string, sort?: string) => void;
@@ -19,6 +21,8 @@ const CreateBank = ({ getBanks }: CreateBankProps) => {
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<BankFormData>({
     resolver: zodResolver(bankSchema),
@@ -34,7 +38,8 @@ const CreateBank = ({ getBanks }: CreateBankProps) => {
   }
 
   async function onSubmit(data: BankFormData) {
-    setLoading(true);
+    if(online){
+      setLoading(true);
     try {
       const result = await kfiAxios.post('/bank', data);
       const { success, loan } = result.data;
@@ -55,6 +60,32 @@ const CreateBank = ({ getBanks }: CreateBankProps) => {
       formErrorHandler(errors, form.setError, fields);
     } finally {
       setLoading(false);
+    }
+    } else {
+       try {
+        await db.banks.add({
+          ...data,
+          _synced: false,  
+          action: "create",
+        });
+
+        getBanks(1);
+
+        dismiss();
+        present({
+          message: "Group of account successfully created!",
+          duration: 1000,
+        });
+
+      } catch (error) {
+        console.error("Offline create failed:", error);
+
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+
+      }
     }
   }
 

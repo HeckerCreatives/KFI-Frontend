@@ -14,6 +14,8 @@ import NatureForm from '../../nature/components/NatureForm';
 import { Signatures } from '../../../../ui/common/Signatures';
 import { SystemParamsFormData, systemparamsSchema } from '../../../../../validations/systemparameters';
 import SystemParamsForm from '../components/NatureForm';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type UpdateParamaters = {
   signatures: Signatures;
@@ -24,6 +26,8 @@ const UpdateSystemParameters = ({ signatures, fetchData }: UpdateParamaters) => 
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
   const [present] = useIonToast();
+  const online = useOnlineStore((state) => state.online);
+  
   
 
   const form = useForm<SystemParamsFormData>({
@@ -43,24 +47,56 @@ const UpdateSystemParameters = ({ signatures, fetchData }: UpdateParamaters) => 
   }
 
    async function onSubmit(data: SystemParamsFormData) {
-     setLoading(true);
-     try {
-       const result = await kfiAxios.put(`system-params/signature/${signatures._id}`, data);
-       const { success } = result.data;
-     
-         dismiss();
-         fetchData(1)
-        present({
-        message: 'System parameters successfully updated. ',
-        duration: 1000,
-      });
-     } catch (error: any) {
-       const errs: TErrorData | string = error?.response?.data?.error || error.message;
-       const errors: TFormError[] | string = checkError(errs);
-       const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-       formErrorHandler(errors, form.setError, fields);
-     } finally {
-       setLoading(false);
+     if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.put(`system-params/signature/${signatures._id}`, data);
+        const { success } = result.data;
+      
+          dismiss();
+          fetchData(1)
+          present({
+          message: 'System parameters successfully updated. ',
+          duration: 1000,
+        });
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
+      }
+     } else {
+      try {
+             const existing = await db.systemParameters.get(signatures.id);
+      
+              if (!existing) {
+                console.warn("Data not found");
+                return;
+              }
+              const updated = {
+                ...existing,
+                ...data, 
+                _synced: false,
+                action: "update",
+              };
+              await db.systemParameters.update(signatures.id, updated);
+              dismiss();
+              present({
+                message: "Data successfully updated!",
+                duration: 1000,
+              });
+             fetchData(1)
+
+            } catch (error) {
+              console.log(error)
+              present({
+                message: "Failed to save record. Please try again.",
+                duration: 1200,
+              });
+      
+            }
      }
    }
 

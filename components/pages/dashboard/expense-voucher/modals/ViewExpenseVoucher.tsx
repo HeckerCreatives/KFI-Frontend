@@ -55,7 +55,7 @@ const ViewExpenseVoucher = ({ expenseVoucher }: ViewExpenseVoucherType) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div className="space-y-1">
                 <ExpenseVoucherViewCard label="CV#" value={`${expenseVoucher.code}`} labelClassName=" text-xs" />
-                <ExpenseVoucherViewCard label="Supplier" value={expenseVoucher.supplier.description} labelClassName=" text-xs" />
+                <ExpenseVoucherViewCard label="Supplier" value={expenseVoucher.supplier} labelClassName=" text-xs" />
                  <ExpenseVoucherViewCard label="Date" value={formatDateTable(expenseVoucher.date)} labelClassName=" text-xs" />
                 <ExpenseVoucherViewCard label="Account Month" value={`${expenseVoucher.acctMonth}`} labelClassName=" text-xs" />
                 <ExpenseVoucherViewCard label="Account Year" value={`${expenseVoucher.acctYear}`} labelClassName=" text-xs" />

@@ -4,6 +4,8 @@ import React, { useRef, useState } from 'react';
 import { GroupAccount } from '../../../../../types/types';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import kfiAxios from '../../../../utils/axios';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteGoupAccountProps = {
   groupAccount: GroupAccount;
@@ -19,34 +21,64 @@ const DeleteGroupAccount = ({ getGroupAccounts, groupAccount, searchkey, sortKey
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
   async function handleDelete() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/group-account/${groupAccount._id}`);
-      const { success } = result.data;
-      if (success) {
-        const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getGroupAccounts(page, searchkey, sortKey);
-        dismiss();
+   if(online){
+     setLoading(true);
+      try {
+        const result = await kfiAxios.delete(`/group-account/${groupAccount._id}`);
+        const { success } = result.data;
+        if (success) {
+          const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
+          getGroupAccounts(page, searchkey, sortKey);
+          dismiss();
+          present({
+            message: 'Group account successfully deleted!.',
+            duration: 1000,
+          });
+          return;
+        }
+      } catch (error: any) {
         present({
-          message: 'Group account successfully deleted!.',
+          message: 'Failed to delete the loan record. Please try again',
           duration: 1000,
         });
-        return;
+      } finally {
+        setLoading(false);
       }
+   } else {
+    try {
+        if (groupAccount._id) {
+            await db.groupOfAccounts.update(groupAccount.id, {
+              deletedAt: new Date().toISOString(),
+              _synced: false,
+              action: "delete",
+            });
+          } else {
+            await db.groupOfAccounts.delete(groupAccount.id);
+          }
+       
+        getGroupAccounts(currentPage);
+        dismiss()
+         present({
+              message: 'Group of account successfully deleted!.',
+              duration: 1000,
+            });
+   
     } catch (error: any) {
       present({
-        message: 'Failed to delete the loan record. Please try again',
+        message: `${error.response.data.error.message}`,
         duration: 1000,
       });
-    } finally {
-      setLoading(false);
     }
+  }
+  
   }
   return (
     <>

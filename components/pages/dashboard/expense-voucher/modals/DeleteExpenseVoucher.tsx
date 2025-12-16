@@ -4,6 +4,8 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import { trashBin } from 'ionicons/icons';
 import { ExpenseVoucher } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteExpenseVoucherProps = {
   expenseVoucher: ExpenseVoucher;
@@ -18,34 +20,61 @@ const DeleteExpenseVoucher = ({ expenseVoucher, getExpenseVouchers, searchkey, s
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     setIsOpen(false);
   }
 
   async function handleDelete() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/expense-voucher/${expenseVoucher._id}`);
-      const { success } = result.data;
-      if (success) {
-        const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getExpenseVouchers(page, searchkey, sortKey);
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.delete(`/expense-voucher/${expenseVoucher._id}`);
+        const { success } = result.data;
+        if (success) {
+          const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
+          getExpenseVouchers(page, searchkey, sortKey);
+          present({
+            message: 'Expense voucher successfully deleted',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
+      } catch (error: any) {
+        const message = error.response.data.error.message || error?.response?.data?.msg;
         present({
-          message: 'Expense voucher successfully deleted',
+          message: message || 'Failed to delete the expense voucher record. Please try again',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const message = error.response.data.error.message || error?.response?.data?.msg;
-      present({
-        message: message || 'Failed to delete the expense voucher record. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+    } else {
+      try {
+      if (expenseVoucher._id) {
+          await db.expenseVouchers.update(expenseVoucher.id, {
+            deletedAt: new Date().toISOString(),
+            _synced: false,
+            action: "delete",
+          });
+        } else {
+          await db.expenseVouchers.delete(expenseVoucher.id);
+        }
+      getExpenseVouchers(currentPage);
+      dismiss()
+       present({
+            message: 'Expense Voucher successfully deleted!.',
+            duration: 1000,
+          });
+        } catch (error: any) {
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+        }
     }
   }
 

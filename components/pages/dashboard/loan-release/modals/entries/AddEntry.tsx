@@ -76,8 +76,6 @@ const AddEntry = ({ transactionId, centerNo, centerId, getEntries, currentAmount
       data.debit = removeAmountComma(data.debit as string);
       data.credit = removeAmountComma(data.credit as string);
 
-      console.log(data)
-
       const debit = Number(removeAmountComma(data.debit));
       const credit = Number(removeAmountComma(data.credit));
 
@@ -115,6 +113,8 @@ const AddEntry = ({ transactionId, centerNo, centerId, getEntries, currentAmount
         transaction: "",
         createdAt: new Date().toISOString(),
         line: nextLine,
+        _synced: false,
+         action:"create" 
       };
 
       return [...prev, newEntry];

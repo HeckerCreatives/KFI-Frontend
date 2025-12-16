@@ -68,7 +68,7 @@ const ViewEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan }) 
 
                  <div className=" space-y-1 lg:col-span-3">
                   <JournalVoucherViewCard label="Particular" value={emergencyLoan.remarks} labelClassName="min-w-14 text-end" />
-                  <JournalVoucherViewCard label="User" value={emergencyLoan.encodedBy.username} labelClassName="min-w-14 text-end" containerClassName="" />
+                  <JournalVoucherViewCard label="User" value={emergencyLoan.encodedBy?.username} labelClassName="min-w-14 text-end" containerClassName="" />
                 </div>
               </div>
              

@@ -17,6 +17,11 @@ import { formatMoney } from '../../../utils/number';
 import TablePagination from '../../../ui/forms/TablePagination';
 import PrintAllLoanRelease from './modals/PrintAllLoanRelease';
 import ExportAllLoanRelease from './modals/ExportAllLoanRelease';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
+import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
+import { formatLoanReleaseForUpload, formatLoanReleaseList } from '../../../ui/utils/fomatData';
+import { Upload } from 'lucide-react';
 
 export type TData = {
   transactions: Transaction[];
@@ -36,6 +41,8 @@ const LoanRelease = () => {
   const [sortKey, setSortKey] = useState<string>('');
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
+  const online = useOnlineStore((state) => state.online);
+  const [uploading, setUploading] = useState<boolean>(false)
 
   const [data, setData] = useState<TData>({
     transactions: [],
@@ -46,39 +53,106 @@ const LoanRelease = () => {
   });
 
   const getTransactions = async (page: number, keyword: string = '', sort: string = '', to: string = '', from: string = '') => {
-    setData(prev => ({ ...prev, loading: true }));
-    try {
-      const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
-      if (keyword) filter.search = keyword;
-      if (sort) filter.sort = sort;
-      if (to) filter.to = to;
-      if (from) filter.from = from;
+    if(online){
+      setData(prev => ({ ...prev, loading: true }));
+      try {
+        const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
+        if (keyword) filter.search = keyword;
+        if (sort) filter.sort = sort;
+        if (to) filter.to = to;
+        if (from) filter.from = from;
 
-      const result = await kfiAxios.get('/transaction/loan-release', { params: filter });
-      const { success, transactions, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          transactions: transactions,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        setSearchKey(keyword);
-        setSortKey(sort);
-        setFrom(from);
-        setTo(to);
-        return;
+        const result = await kfiAxios.get('/transaction/loan-release', { params: filter });
+        const { success, transactions, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            transactions: transactions,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          setSearchKey(keyword);
+          setSortKey(sort);
+          setFrom(from);
+          setTo(to);
+          return;
+        }
+      } catch (error) {
+        present({
+          message: 'Failed to get loan release records. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
       }
-    } catch (error) {
-      present({
-        message: 'Failed to get loan release records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setData(prev => ({ ...prev, loading: false }));
+    } else {
+       setData(prev => ({ ...prev, loading: true }));
+       try {
+         const limit = TABLE_LIMIT;
+         let data = await db.loanReleases.toArray();
+         const filteredData = data.filter(e => !e.deletedAt);
+         let allData = filterAndSortLoanRelease(formatLoanReleaseList(filteredData), keyword, sort, from, to);
+         const totalItems = allData.length;
+         const totalPages = Math.ceil(totalItems / limit);
+         const start = (page - 1) * limit;
+         const end = start + limit;
+         const finalData = allData.slice(start, end);
+         const hasPrevPage = page > 1;
+         const hasNextPage = page < totalPages;
+         setData(prev => ({
+           ...prev,
+           transactions: finalData,
+           totalPages,
+           prevPage: hasPrevPage,
+           nextPage: hasNextPage,
+         }));
+         setCurrentPage(page);
+         setSearchKey(keyword);
+         setSortKey(sort);
+         setFrom(from);
+         setTo(to);
+       } catch (error) {
+         console.log(error)
+         present({
+           message: 'Failed to load records.',
+           duration: 1000,
+         });
+       } finally {
+         setData(prev => ({ ...prev, loading: false }));
+       }
     }
+  };
+
+   const uploadChanges = async () => {
+      setUploading(true)
+      try {
+        const list = await db.loanReleases.toArray();
+        const offlineChanges = list.filter(e => e._synced === false);
+         const formatted = offlineChanges.map(formatLoanReleaseForUpload);
+
+        const result = await kfiAxios.put("sync/upload/loan-releases", { loanReleases: formatted });
+        const { success } = result.data;
+        if (success) {
+          setUploading(false)
+           present({
+              message: 'Offline changes saved!',
+              duration: 1000,
+            });
+          getTransactions(currentPage);
+          setUploading(false)
+
+        }
+      } catch (error: any) {
+          setUploading(false)
+          console.log(error)
+
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+      }
   };
 
   const handlePagination = (page: number) => getTransactions(page, searchKey, sortKey);
@@ -102,6 +176,11 @@ const LoanRelease = () => {
                     <div>{canDoAction(token.role, token.permissions, 'loan release', 'create') && <CreateLoanRelease getTransactions={getTransactions} />}</div>
                     <div>{canDoAction(token.role, token.permissions, 'loan release', 'print') && <PrintAllLoanRelease />}</div>
                     <div>{canDoAction(token.role, token.permissions, 'loan release', 'export') && <ExportAllLoanRelease />}</div>
+                    {online && (
+                      <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                        <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
+                      </IonButton>
+                    )}
                   </div>
 
                    <div className="w-full flex-1 flex">
@@ -130,10 +209,10 @@ const LoanRelease = () => {
                         <TableRow key={transaction._id}>
                           <TableCell className="min-w-44 max-w-44 sticky left-0 bg-white">{transaction.code}</TableCell>
                           <TableCell>{formatDateTable(transaction.date)}</TableCell>
-                          <TableCell className="max-w-52 truncate">{transaction.bank.description}</TableCell>
+                          <TableCell className="max-w-52 truncate">{transaction.bank?.description}</TableCell>
                           <TableCell>{transaction.checkNo}</TableCell>
                           <TableCell>{formatMoney(transaction.amount)}</TableCell>
-                          <TableCell>{transaction.encodedBy.username}</TableCell>
+                          <TableCell>{transaction.encodedBy?.username}</TableCell>
                           {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <LoanReleaseActions

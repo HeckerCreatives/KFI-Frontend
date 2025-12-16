@@ -30,7 +30,7 @@ const DamayanFundActions = ({ damayanFund, setData, getDamayanFunds, currentPage
   return (
     <div>
       {canDoAction(token.role, token.permissions, 'damayan fund', 'visible') && <ViewDamayanFund damayanFund={damayanFund} />}
-      {canDoAction(token.role, token.permissions, 'damayan fund', 'update') && <UpdateDamayanFund damayanFund={damayanFund} setData={setData} />}
+      {canDoAction(token.role, token.permissions, 'damayan fund', 'update') && <UpdateDamayanFund damayanFund={damayanFund} setData={setData} getDamayanFunds={getDamayanFunds} currentPage={currentPage} />}
       {canDoAction(token.role, token.permissions, 'damayan fund', 'delete') && (
         <DeleteDamayanFund damayanFund={damayanFund} getDamayanFunds={getDamayanFunds} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
       )}

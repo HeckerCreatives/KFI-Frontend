@@ -11,6 +11,8 @@ import { GroupAccount, TErrorData, TFormError } from '../../../../../types/types
 import kfiAxios from '../../../../utils/axios';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import checkError from '../../../../utils/check-error';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type UpdateGroupAccountProps = {
   groupAccount: GroupAccount;
@@ -21,6 +23,8 @@ const UpdateGroupAccount = ({ groupAccount, setData }: UpdateGroupAccountProps) 
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
   const [present] = useIonToast();
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<GroupAccountFormData>({
     resolver: zodResolver(groupAccountSchema),
@@ -43,31 +47,72 @@ const UpdateGroupAccount = ({ groupAccount, setData }: UpdateGroupAccountProps) 
   }
 
   async function onSubmit(data: GroupAccountFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.put(`/group-account/${groupAccount._id}`, data);
-      const { success } = result.data;
-      if (success) {
-        setData(prev => {
-          let clone = [...prev.groupAccounts];
-          let index = clone.findIndex(e => e._id === result.data.groupAccount._id);
-          clone[index] = { ...result.data.groupAccount };
-          return { ...prev, groupAccounts: clone };
-        });
-        dismiss();
-        present({
-          message: 'Group account successfully updated!.',
-          duration: 1000,
-        });
-        return;
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.put(`/group-account/${groupAccount._id}`, data);
+        const { success } = result.data;
+        if (success) {
+          setData(prev => {
+            let clone = [...prev.groupAccounts];
+            let index = clone.findIndex(e => e._id === result.data.groupAccount._id);
+            clone[index] = { ...result.data.groupAccount };
+            return { ...prev, groupAccounts: clone };
+          });
+          dismiss();
+          present({
+            message: 'Group account successfully updated!.',
+            duration: 1000,
+          });
+          return;
+        }
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+       try {
+               const existing = await db.groupOfAccounts.get(groupAccount.id);
+       
+               if (!existing) {
+                 console.warn("Data not found");
+                 return;
+               }
+       
+               const updated = {
+                 ...existing,
+                 ...data, 
+                 _synced: false,
+                 action: "update",
+               };
+       
+               await db.groupOfAccounts.update(groupAccount.id, updated);
+       
+               setData(prev => {
+                 const clone = [...prev.groupAccounts];
+                 const index = clone.findIndex(c => c.id === groupAccount.id);
+       
+                 if (index !== -1) {
+                   clone[index] = updated;
+                 }
+       
+                 return { ...prev, groupAccounts: clone };
+               });
+       
+               dismiss();
+               present({
+                 message: "Data successfully updated!",
+                 duration: 1000,
+               });
+       
+             } catch (error) {
+               console.error("Offline update failed:", error);
+             }
+        
     }
   }
 

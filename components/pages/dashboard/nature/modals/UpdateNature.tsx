@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon, useIonToast } from '@ionic/react';
 import { createSharp } from 'ionicons/icons';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +11,8 @@ import { TNature } from '../Nature';
 import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type UpdateNatureProps = {
   nature: Nature;
@@ -20,7 +22,9 @@ type UpdateNatureProps = {
 const UpdateNature = ({ nature, setData }: UpdateNatureProps) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
-
+  const online = useOnlineStore((state) => state.online);
+  const [present] = useIonToast();
+  
   const form = useForm<NatureFormData>({
     resolver: zodResolver(natureSchema),
     defaultValues: {
@@ -41,27 +45,64 @@ const UpdateNature = ({ nature, setData }: UpdateNatureProps) => {
   }
 
   async function onSubmit(data: NatureFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.put(`/nature/${nature._id}`, data);
-      const { success } = result.data;
-      if (success) {
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.put(`/nature/${nature._id}`, data);
+        const { success } = result.data;
+        if (success) {
+          setData(prev => {
+            let clone = [...prev.natures];
+            let index = clone.findIndex(e => e._id === result.data.nature._id);
+            clone[index] = { ...result.data.nature };
+            return { ...prev, natures: clone };
+          });
+          dismiss();
+          return;
+        }
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+       try {
+       const existing = await db.natures.get(nature.id);
+        if (!existing) {
+          console.warn("Data not found");
+          return;
+        }
+        const updated = {
+          ...existing,
+          ...data, 
+          _synced: false,
+          action: "update",
+        };
+        await db.natures.update(nature.id, updated);
         setData(prev => {
-          let clone = [...prev.natures];
-          let index = clone.findIndex(e => e._id === result.data.nature._id);
-          clone[index] = { ...result.data.nature };
+          const clone = [...prev.natures];
+          const index = clone.findIndex(c => c.id === nature.id);
+          if (index !== -1) {
+            clone[index] = updated;
+          }
           return { ...prev, natures: clone };
         });
         dismiss();
-        return;
+        present({
+          message: "Data successfully updated!",
+          duration: 1000,
+        });
+      } catch (error) {
+        console.log(error)
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+
       }
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
     }
   }
 

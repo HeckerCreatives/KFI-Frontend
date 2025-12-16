@@ -13,6 +13,9 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
+import { formatEVEntries, formatJVEntries } from '../../../../ui/utils/fomatData';
 
 type CreateExpenseVoucherProps = {
   getExpenseVouchers: (page: number, keyword?: string, sort?: string) => void;
@@ -23,6 +26,8 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
 
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<ExpenseVoucherFormData>({
     resolver: zodResolver(expenseVoucherSchema),
@@ -49,37 +54,62 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
     setIsOpen(false);
   }
 
-  console.log(form.formState.errors)
 
   async function onSubmit(data: ExpenseVoucherFormData) {
-    setLoading(true);
-    try {
-      data.amount = removeAmountComma(data.amount);
-      data.entries = data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1}));
-      const result = await kfiAxios.post('expense-voucher', data);
-      const { success } = result.data;
-      if (success) {
-        getExpenseVouchers(1);
+   if(online){
+     setLoading(true);
+      try {
+        data.amount = removeAmountComma(data.amount);
+        data.entries = data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1}));
+        const result = await kfiAxios.post('expense-voucher', data);
+        const { success } = result.data;
+        if (success) {
+          getExpenseVouchers(1);
+          present({
+            message: 'Expense voucher successfully added.',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
         present({
-          message: 'Expense voucher successfully added.',
+          message: 'Failed to add a new expense voucher. Please try again.',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
+   } else {
+    try {
+      const entries = formatEVEntries(data.entries || [])
+      await db.expenseVouchers.add({
+        ...data,
+        entries: entries,
+        encodedBy: '',
+        _synced: false,  
+        action: "create",
+      });
+      getExpenseVouchers(1);
+      dismiss();
       present({
-        message: 'Failed to add a new expense voucher. Please try again.',
+        message: "Expense voucher successfully created!",
         duration: 1000,
       });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      present({
+        message: "Failed to save record. Please try again.",
+        duration: 1200,
+      });
     }
+   }
   }
+
+  console.log(form.getValues())
 
   return (
     <>

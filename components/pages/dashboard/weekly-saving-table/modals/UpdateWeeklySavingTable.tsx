@@ -11,6 +11,8 @@ import { TErrorData, TFormError, WeeklySavings } from '../../../../../types/type
 import { TWeeklySavingsTable } from '../WeeklySavingTable';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type UpdateWeeklySavingTableProps = {
   saving: WeeklySavings;
@@ -21,6 +23,8 @@ const UpdateWeeklySavingTable = ({ saving, setData }: UpdateWeeklySavingTablePro
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<WeeklySavingTableFormData>({
     resolver: zodResolver(weeklySavingTableSchema),
@@ -47,7 +51,8 @@ const UpdateWeeklySavingTable = ({ saving, setData }: UpdateWeeklySavingTablePro
   }
 
   async function onSubmit(data: WeeklySavingTableFormData) {
-    setLoading(true);
+   if(online){
+      setLoading(true);
     try {
       const result = await kfiAxios.put(`/weekly-saving/${saving._id}`, data);
       const { success } = result.data;
@@ -73,6 +78,43 @@ const UpdateWeeklySavingTable = ({ saving, setData }: UpdateWeeklySavingTablePro
     } finally {
       setLoading(false);
     }
+   } else {
+     try {
+       const existing = await db.weeklySavings.get(saving.id);
+        if (!existing) {
+          console.warn("Data not found");
+          return;
+        }
+        const updated = {
+          ...existing,
+          ...data, 
+          _synced: false,
+          action: "update",
+        };
+        await db.weeklySavings.update(saving.id, updated);
+        setData(prev => {
+          const clone = [...prev.savings];
+          const index = clone.findIndex(c => c.id === saving.id);
+          if (index !== -1) {
+            clone[index] = updated;
+          }
+          return { ...prev, savings: clone };
+        });
+        dismiss();
+        present({
+          message: "Data successfully updated!",
+          duration: 1000,
+        });
+
+      } catch (error) {
+
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+
+      }
+   }
   }
 
   return (

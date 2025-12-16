@@ -37,6 +37,9 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage, entries, setEn
             return {
               ...prev,
               entries: prev.entries.filter((e: ReleaseEntry) => e._id !== entry._id),
+              _synced: false,
+              action: "delete",
+              deletedAt: new Date().toISOString()
             };
           });
       

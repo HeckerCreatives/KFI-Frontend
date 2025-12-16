@@ -395,7 +395,7 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
               checkNo: '',
             })
           }
-          disabled={!didLoad}
+          // disabled={!didLoad}
           type="button"
           fill="clear"
           className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"

@@ -13,6 +13,9 @@ import DamayanFundFormTable from '../components/DamayanFundFormTable';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { formatEVEntries } from '../../../../ui/utils/fomatData';
+import { db } from '../../../../../database/db';
 
 type CreateDamayanFundProps = {
   getDamayanFunds: (page: number, keyword?: string, sort?: string) => void;
@@ -22,7 +25,9 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
   const [present] = useIonToast();
   const modal = useRef<HTMLIonModalElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
-      const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
   
 
   const form = useForm<DamayanFundFormData>({
@@ -52,32 +57,57 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
   }
 
   async function onSubmit(data: DamayanFundFormData) {
-    setLoading(true);
-    try {
-      data.amount = removeAmountComma(data.amount);
-      data.entries = data.entries ? data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1 })) : [];
-      const result = await kfiAxios.post('/damayan-fund', data);
-      const { success } = result.data;
-      if (success) {
-        getDamayanFunds(1);
+    if(online){
+      setLoading(true);
+      try {
+        data.amount = removeAmountComma(data.amount);
+        data.entries = data.entries ? data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1 })) : [];
+        const result = await kfiAxios.post('/damayan-fund', data);
+        const { success } = result.data;
+        if (success) {
+          getDamayanFunds(1);
+          present({
+            message: 'Damayan fund successfully added.',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
         present({
-          message: 'Damayan fund successfully added.',
+          message: 'Failed to add a new damayan fund. Please try again.',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to add a new damayan fund. Please try again.',
-        duration: 1000,
-      });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else{
+      try {
+         const entries = formatEVEntries(data.entries || [])
+         // const entries = data.entries
+         await db.damayanFunds.add({
+           ...data,
+           entries: entries,
+           encodedBy: '',
+           _synced: false,  
+           action: "create",
+         });
+         getDamayanFunds(1);
+         dismiss();
+         present({
+           message: "Data successfully created!",
+           duration: 1000,
+         });
+       } catch (error) {
+         present({
+           message: "Failed to save record. Please try again.",
+           duration: 1200,
+         });
+       }
     }
   }
 

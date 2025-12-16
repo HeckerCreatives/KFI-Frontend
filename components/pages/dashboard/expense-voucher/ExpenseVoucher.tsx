@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import CreateExpenseVoucher from './modals/CreateExpenseVoucher';
@@ -17,6 +17,11 @@ import TableNoRows from '../../../ui/forms/TableNoRows';
 import TablePagination from '../../../ui/forms/TablePagination';
 import PrintAllExpenseVoucher from './modals/prints/PrintAllExpenseVoucher';
 import ExportAllExpenseVoucher from './modals/prints/ExportAllExpenseVoucher';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
+import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
+import { formatEVList, formatJV, formatJVForUpload } from '../../../ui/utils/fomatData';
+import { Upload } from 'lucide-react';
 
 export type TData = {
   expenseVouchers: ExpenseVoucherType[];
@@ -36,6 +41,8 @@ const ExpenseVoucher = () => {
   const [sortKey, setSortKey] = useState<string>('');
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
+  const online = useOnlineStore((state) => state.online);
+  const [uploading, setUploading] = useState<boolean>(false)
 
   const [data, setData] = useState<TData>({
     expenseVouchers: [],
@@ -46,46 +53,118 @@ const ExpenseVoucher = () => {
   });
 
   const getExpenseVouchers = async (page: number, keyword: string = '', sort: string = '', to: string = '', from: string = '') => {
-    setData(prev => ({ ...prev, loading: true }));
-    try {
-      const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
-      if (keyword) filter.search = keyword;
-      if (sort) filter.sort = sort;
-      if (to) filter.to = to;
-      if (from) filter.from = from;
+    if(online){
+      setData(prev => ({ ...prev, loading: true }));
+      try {
+        const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
+        if (keyword) filter.search = keyword;
+        if (sort) filter.sort = sort;
+        if (to) filter.to = to;
+        if (from) filter.from = from;
 
-      const result = await kfiAxios.get('/expense-voucher', { params: filter });
-      const { success, expenseVouchers, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          expenseVouchers: expenseVouchers,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        setSearchKey(keyword);
-        setSortKey(sort);
-        setFrom(from);
-        setTo(to);
-        return;
+        const result = await kfiAxios.get('/expense-voucher', { params: filter });
+        const { success, expenseVouchers, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            expenseVouchers: expenseVouchers,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          setSearchKey(keyword);
+          setSortKey(sort);
+          setFrom(from);
+          setTo(to);
+          return;
+        }
+      } catch (error) {
+        present({
+          message: 'Failed to get expense voucher records. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
       }
-    } catch (error) {
-      present({
-        message: 'Failed to get expense voucher records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setData(prev => ({ ...prev, loading: false }));
+    } else {
+       setData(prev => ({ ...prev, loading: true }));
+       try {
+         const limit = TABLE_LIMIT;
+         let data = await db.expenseVouchers.toArray();
+
+         console.log(data)
+         const filteredData = data.filter(e => !e.deletedAt);
+        let allData = filterAndSortLoanRelease(formatEVList(filteredData), keyword, sort, from, to);
+         const totalItems = allData.length;
+         const totalPages = Math.ceil(totalItems / limit);
+         const start = (page - 1) * limit;
+         const end = start + limit;
+         const finalData = allData.slice(start, end);
+         const hasPrevPage = page > 1;
+         const hasNextPage = page < totalPages;
+          setData(prev => ({
+            ...prev,
+            expenseVouchers: finalData,
+            totalPages,
+            prevPage: hasPrevPage,
+            nextPage: hasNextPage,
+          }));
+         setCurrentPage(page);
+         setSearchKey(keyword);
+         setSortKey(sort);
+         setFrom(from);
+         setTo(to);
+       } catch (error) {
+         console.log(error)
+         present({
+           message: 'Failed to load records.',
+           duration: 1000,
+         });
+       } finally {
+         setData(prev => ({ ...prev, loading: false }));
+       }
     }
   };
+
+   const uploadChanges = async () => {
+          setUploading(true)
+          try {
+            const list = await db.expenseVouchers.toArray();
+            const offlineChanges = list.filter(e => e._synced === false);
+            console.log(offlineChanges)
+          
+    
+            const result = await kfiAxios.put("sync/upload/expense-vouchers", { expenseVouchers: offlineChanges });
+            const { success } = result.data;
+            if (success) {
+              setUploading(false)
+               present({
+                  message: 'Offline changes saved!',
+                  duration: 1000,
+                });
+              getExpenseVouchers(currentPage);
+              setUploading(false)
+    
+            }
+          } catch (error: any) {
+              setUploading(false)
+              console.log(error)
+    
+              present({
+                message: `${error.response.data.error.message}`,
+                duration: 1000,
+              });
+          }
+      };
 
   const handlePagination = (page: number) => getExpenseVouchers(page, searchKey, sortKey);
 
   useIonViewWillEnter(() => {
     getExpenseVouchers(currentPage);
   });
+
+  console.log(data)
   return (
     <IonPage className="w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
@@ -101,6 +180,11 @@ const ExpenseVoucher = () => {
                   <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'create') && <CreateExpenseVoucher getExpenseVouchers={getExpenseVouchers} />}</div>
                   <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'print') && <PrintAllExpenseVoucher />}</div>
                   <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'export') && <ExportAllExpenseVoucher />}</div>
+                  {online && (
+                    <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
+                    </IonButton>
+                  )}
                 </div>
 
                   <div className="w-full flex-1 flex">

@@ -14,6 +14,9 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
+import { formatJVEntries, formatLREntries } from '../../../../ui/utils/fomatData';
 
 type CreateJournalVoucherProps = {
   getJournalVouchers: (page: number, keyword?: string, sort?: string) => void;
@@ -23,6 +26,8 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<JournalVoucherFormData>({
     resolver: zodResolver(journalVoucherSchema),
@@ -50,32 +55,57 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
   }
 
   async function onSubmit(data: JournalVoucherFormData) {
-    setLoading(true);
-    try {
-      data.amount = removeAmountComma(data.amount);
-      data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) })) : [];
-      const result = await kfiAxios.post('journal-voucher', data);
-      const { success } = result.data;
-      if (success) {
-        getJournalVouchers(1);
+    if(online){
+      setLoading(true);
+      try {
+        data.amount = removeAmountComma(data.amount);
+        data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) })) : [];
+        const result = await kfiAxios.post('journal-voucher', data);
+        const { success } = result.data;
+        if (success) {
+          getJournalVouchers(1);
+          present({
+            message: 'Journal voucher successfully added.',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
         present({
-          message: 'Journal voucher successfully added.',
+          message: 'Failed to add a new journal voucher. Please try again.',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to add a new journal voucher. Please try again.',
-        duration: 1000,
-      });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+       try {
+        const entries = formatJVEntries(data.entries || [])
+        console.log('Form Data',data)
+        await db.journalVouchers.add({
+          ...data,
+          entries: entries,
+          encodedBy: '',
+          _synced: false,  
+          action: "create",
+        });
+        getJournalVouchers(1);
+        dismiss();
+        present({
+          message: "Transaction successfully created!",
+          duration: 1000,
+        });
+      } catch (error) {
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+      }
     }
   }
 

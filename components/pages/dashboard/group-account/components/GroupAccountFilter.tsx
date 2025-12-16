@@ -47,8 +47,8 @@ const GroupAccountFilter = ({ getGroupAccounts }: GroupAccountFilterProps) => {
                 { label: 'Sort By', value: '' },
                 { label: 'Code A - Z', value: 'code-asc' },
                 { label: 'Code Z - A', value: 'code-desc' },
-                { label: 'Description A - Z', value: 'description-asc' },
-                { label: 'Description Z - A', value: 'description-desc' },
+                // { label: 'Description A - Z', value: 'description-asc' },
+                // { label: 'Description Z - A', value: 'description-desc' },
               ]}
               className="!border-orange-500 rounded-md !w-[12rem] !py-1"
             />

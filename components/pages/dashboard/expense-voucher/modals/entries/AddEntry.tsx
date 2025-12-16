@@ -71,14 +71,14 @@ const AddEntry = ({ expenseVoucherId, getEntries, entries, setEntries, transacti
         data.debit = removeAmountComma(data.debit as string);
         data.credit = removeAmountComma(data.credit as string);
   
-        console.log(data)
   
         const debit = Number(removeAmountComma(data.debit));
         const credit = Number(removeAmountComma(data.credit));
   
         setEntries((prev: ExpenseVoucherEntry[]) => {
-      
-  
+          const nextLine = prev.length > 0 
+              ? Math.max(...prev.map(e => e.line)) + 1 
+              : 1;
         const newEntry: ExpenseVoucherEntry = {
           _id: generateObjectId(),
           expenseVoucher: transaction._id,
@@ -101,7 +101,11 @@ const AddEntry = ({ expenseVoucherId, getEntries, entries, setEntries, transacti
               _id: '',
               centerNo: ''
             }
-          }
+          },
+           _synced: false,
+          action: "create",
+          line: nextLine,
+          
         };
   
         return [...prev, newEntry];
@@ -109,8 +113,6 @@ const AddEntry = ({ expenseVoucherId, getEntries, entries, setEntries, transacti
   
       
       setData((prev: any) => {
-     
-  
        const newEntry: ExpenseVoucherEntry = {
           _id: generateObjectId(),
           expenseVoucher: transaction._id,

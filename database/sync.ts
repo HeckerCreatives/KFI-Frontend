@@ -1,3 +1,5 @@
+import { ApiError } from "next/dist/server/api-utils";
+import { formatLoanReleaseSync } from "../components/ui/utils/fomatData";
 import { ClientMasterFile } from "../types/types";
 import { db } from "./db";
 
@@ -65,19 +67,14 @@ export async function syncSystemParams(apiData: any) {
 }
 
 export async function syncSuppliers(apiData: any) {
-    console.log('Data', apiData)
+    console.log('Data suppliers', apiData)
   if (!apiData) return;
 
-    await db.suppliers.clear();
+  await db.suppliers.clear();
 
-  const data: any[] = apiData.map((c: any) => ({
-    ...c,
-    _id: c._id,
-  }));
+  await db.table("suppliers").bulkAdd(apiData);
 
-  await db.table("suppliers").bulkPut(data);
-
-  console.log('Sync sucess', data)
+  console.log('Sync sucess suppliers', apiData)
 
   return true;
 }
@@ -137,19 +134,14 @@ export async function syncLoanCodes(apiData: any) {
 }
 
 export async function syncLoanProducts(apiData: any) {
-  console.log('Data', apiData)
+  console.log('Data products', apiData)
   if (!apiData) return;
 
-    await db.loanProducts.clear();
+  await db.loanProducts.clear();
 
-  const data: any[] = apiData.map((c: any) => ({
-    ...c,
-    _id: c._id,
-  }));
+  await db.table("loanProducts").bulkAdd(apiData);
 
-  await db.table("loanProducts").bulkPut(data);
-
-  console.log('Sync sucess', data)
+  console.log('Sync sucess', apiData)
 
   return true;
 }
@@ -208,38 +200,67 @@ export async function syncCoa(apiData: any) {
   return true;
 }
 
+export async function syncGoa(apiData: any) {
+  console.log('Data Goa', apiData)
+  if (!apiData) return;
+  await db.groupOfAccounts.clear();
+
+  await db.table("groupOfAccounts").bulkAdd(apiData);
+
+  console.log('Sync sucess Goa', apiData)
+
+  return true;
+}
+
+export async function syncWeeklySavings(apiData: any) {
+  console.log('Data Weekly Savings', apiData)
+  if (!apiData) return;
+  await db.weeklySavings.clear();
+
+  await db.table("weeklySavings").bulkAdd(apiData);
+
+  console.log('Sync sucess Weekly savings', apiData)
+
+  return true;
+}
+
+
+
+//transactions
 export async function syncLoanRelease(apiData: any) {
-  console.log('Data', apiData)
+  console.log('Data LR', apiData)
+
   if (!apiData) return;
 
-    await db.loanReleases.clear();
-
-  const data: any[] = apiData.map((c: any) => ({
-    ...c,
-    _id: c._id,
-  }));
-
+  const data = formatLoanReleaseSync(apiData)
+  await db.loanReleases.clear();
   await db.table("loanReleases").bulkPut(data);
 
-  console.log('Sync sucess', data)
+  console.log('Sync sucess LR', data)
+
+  return true;
+}
+
+export async function syncLoanReleaseDueDates(apiData: any) {
+  console.log('Data LR dates', apiData)
+  if (!apiData) return;
+
+  await db.dueDates.clear();
+  await db.table("dueDates").bulkAdd(apiData);
+
+  console.log('Sync sucess LR dates', apiData)
 
   return true;
 }
 
 export async function syncExpenseVoucher(apiData: any) {
-  console.log('Data', apiData)
+  console.log('Data EV', apiData)
   if (!apiData) return;
 
-    await db.expenseVoucherEntries.clear();
+  await db.expenseVouchers.clear();
+  await db.table("expenseVouchers").bulkAdd(apiData);
 
-  const data: any[] = apiData.map((c: any) => ({
-    ...c,
-    _id: c._id,
-  }));
-
-  await db.table("expenseVoucherEntries").bulkPut(data);
-
-  console.log('Sync sucess', data)
+  console.log('Sync sucess EV', apiData)
 
   return true;
 }
@@ -248,70 +269,44 @@ export async function syncOR(apiData: any) {
   console.log('Data', apiData)
   if (!apiData) return;
 
-    await db.officialReceiptEntries.clear();
-
-  const data: any[] = apiData.map((c: any) => ({
-    ...c,
-    _id: c._id,
-  }));
-
-  await db.table("officialReceiptEntries").bulkPut(data);
-
-  console.log('Sync sucess', data)
+  await db.officialReceipts.clear();
+  await db.table("officialReceipts").bulkAdd(apiData);
+  console.log('Sync sucess', apiData)
 
   return true;
 }
 
 export async function syncAR(apiData: any) {
-  console.log('Data', apiData)
+  console.log('Data ar', apiData)
   if (!apiData) return;
 
-    await db.acknowledgementReceiptEntries.clear();
-
-  const data: any[] = apiData.map((c: any) => ({
-    ...c,
-    _id: c._id,
-  }));
-
-  await db.table("acknowledgementReceiptEntries").bulkPut(data);
-
-  console.log('Sync sucess', data)
+  await db.acknowledgementReceipts.clear();
+  await db.table("acknowledgementReceipts").bulkAdd(apiData);
+  console.log('Sync sucess ar', apiData)
 
   return true;
 }
 
 export async function syncEmergencyLoan(apiData: any) {
-  console.log('Data', apiData)
+  console.log('Data el', apiData)
   if (!apiData) return;
 
-    await db.emergencyLoanEntries.clear();
+  await db.emergencyLoans.clear();
+  await db.table("emergencyLoans").bulkAdd(apiData);
 
-  const data: any[] = apiData.map((c: any) => ({
-    ...c,
-    _id: c._id,
-  }));
-
-  await db.table("emergencyLoanEntries").bulkPut(data);
-
-  console.log('Sync sucess', data)
+  console.log('Sync sucess el', apiData)
 
   return true;
 }
 
 export async function syncDmayanFund(apiData: any) {
-  console.log('Data', apiData)
+  console.log('Data df', apiData)
   if (!apiData) return;
 
-    await db.damayanFundEntries.clear();
+  await db.damayanFunds.clear();
+  await db.damayanFunds.bulkAdd(apiData);
 
-  const data: any[] = apiData.map((c: any) => ({
-    ...c,
-    _id: c._id,
-  }));
-
-  await db.table("damayanFundEntries").bulkPut(data);
-
-  console.log('Sync sucess', data)
+  console.log('Sync sucess df', apiData)
 
   return true;
 }

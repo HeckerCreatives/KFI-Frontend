@@ -43,6 +43,7 @@ clientImage: z.union([
   dateResigned: z.string().min(1, 'Date resigned is required').optional().or(z.literal('')),
   reason: z.string().min(1, 'Reason is required').optional().or(z.literal('')),
   beneficiary: z.array(beneficiarySchema).optional(),
+  bankAccountNo: z.string().min(1, 'Bank account no is required'),
   children: z.array(childrenSchema).optional(),
 });
 

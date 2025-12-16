@@ -5,13 +5,14 @@ import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
 import { IonButton, IonIcon, useIonToast } from '@ionic/react';
 import TablePagination from '../../../../ui/forms/TablePagination';
-import { formatNumber } from '../../../../ui/utils/formatNumber';
+import { formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import AddEntry from '../modals/entries/AddEntry';
 import UpdateEntry from '../modals/entries/UpdateEntry';
 import DeleteEntry from '../modals/entries/DeleteEntry';
 import { arrowBack, arrowForward } from 'ionicons/icons';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 export type TDFData = {
   entries: DamayanFundEntry[];
@@ -35,6 +36,8 @@ type UpdateELEntriesProps = {
 const UpdateDFEntries = ({ isOpen, damayanFund, setEntries, entries, deletedIds, setDeletedIds, setPrevEntries }: UpdateELEntriesProps) => {
   const [present] = useIonToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TDFData>({
     entries: [],
@@ -65,31 +68,60 @@ const UpdateDFEntries = ({ isOpen, damayanFund, setEntries, entries, deletedIds,
         }, [data.entries, page, limit]);
 
   const getEntries = async (page: number) => {
-    setData(prev => ({ ...prev, loading: true }));
-    try {
-      const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-      const result = await kfiAxios.get(`/damayan-fund/entries/${damayanFund._id}`, { params: filter });
-      const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
+    if(online){
+      setData(prev => ({ ...prev, loading: true }));
+      try {
+        const filter: TTableFilter = { limit: TABLE_LIMIT, page };
+        const result = await kfiAxios.get(`/damayan-fund/entries/${damayanFund._id}`, { params: filter });
+        const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            entries: entries,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setEntries(entries)
+          setPrevEntries(entries)
+          setCurrentPage(page);
+          return;
+        }
+      } catch (error) {
+        present({
+          message: 'Failed to get entry records. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
+      }
+    } else {
+      setData(prev => ({ ...prev, loading: true }));
+      try {
+        const allData = entries
+          .filter((e) => !e.deletedAt)
+          .map((e) => ({
+            ...e,
+            debit: Number(removeAmountComma(e.debit || 0)),
+            credit: Number(removeAmountComma(e.credit || 0)),
+          }))
         setData(prev => ({
           ...prev,
-          entries: entries,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
+          entries: allData,
+          totalPages: 1,
+          prevPage: false,
+          nextPage: false,
         }));
-        setEntries(entries)
-        setPrevEntries(entries)
         setCurrentPage(page);
-        return;
+      } catch (error) {
+        console.log(error)
+        present({
+          message: 'Failed to load records.',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
       }
-    } catch (error) {
-      present({
-        message: 'Failed to get entry records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setData(prev => ({ ...prev, loading: false }));
     }
   };
 

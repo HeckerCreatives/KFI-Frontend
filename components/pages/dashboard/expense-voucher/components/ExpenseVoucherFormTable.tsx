@@ -45,7 +45,7 @@ const ExpenseVoucherFormTable = ({ form, loading = false }: ExpenseVoucherFormTa
               <TableHead>Description</TableHead>
               <TableHead>Debit</TableHead>
               <TableHead>Credit</TableHead>
-              <TableHead>Advance</TableHead>
+              <TableHead>CV# for Recompute</TableHead>
               <TableHead>Actions</TableHead>
             </TableHeadRow>
           </TableHeader>

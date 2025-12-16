@@ -89,6 +89,7 @@ export type LoanCode = {
 
 export type Loan = {
   _id: string;
+  id: string;
   code: string;
   description: string;
   loanCodes: LoanCode[];
@@ -97,6 +98,7 @@ export type Loan = {
 
 export type Supplier = {
   _id: string;
+  id: string;
   code: string;
   description: string;
   createdAt: string;
@@ -116,7 +118,11 @@ export type Entry = {
   product: { _id: string; code: string };
   transaction: string;
   createdAt: string;
-  line: number
+  line: number,
+
+  _synced?: boolean,
+  action?: string,
+  deletedAt?: string
 };
 
 export type EmergencyLoanEntry = {
@@ -128,6 +134,11 @@ export type EmergencyLoanEntry = {
   credit: number;
   debit: number;
   createdAt: string;
+  line: number,
+  _synced?: boolean,
+  action?: string,
+  deletedAt?: string
+  
 };
 
 export type DamayanFundEntry = {
@@ -139,6 +150,11 @@ export type DamayanFundEntry = {
   credit: number;
   debit: number;
   createdAt: string;
+
+   line: number,
+  _synced?: boolean,
+  action?: string,
+  deletedAt?: string
 };
 
 export type AcknowledgementEntry = {
@@ -154,7 +170,11 @@ export type AcknowledgementEntry = {
   credit: number | null;
   debit: number | null;
   createdAt: string;
-  cvNo: string
+  cvNo: string,
+   line: number,
+  _synced?: boolean,
+  action?: string,
+  deletedAt?: string
 
   
 };
@@ -172,12 +192,17 @@ export type ReleaseEntry = {
   credit: number | null;
   debit: number | null;
   createdAt: string;
-  cvNo: string
+  cvNo: string,
+  _synced?: boolean,
+  action?: string,
+  deletedAt?: string,
+  line: number
 
 };
 
 export type ExpenseVoucherEntry = {
   _id: string;
+  id?: string;
   expenseVoucher: string;
   client: { _id: string; name: string; center: { _id: string; centerNo: string } };
   particular: string;
@@ -186,6 +211,10 @@ export type ExpenseVoucherEntry = {
   debit: number | null;
   cvForRecompute: string;
   createdAt: string;
+  line?: any
+  deletedAt?: string
+  action?: string,
+  _synced?: boolean
 };
 
 export type JournalVoucherEntry = {
@@ -198,15 +227,21 @@ export type JournalVoucherEntry = {
   debit: number | null;
   cvForRecompute: string;
   createdAt: string;
+  line?: any
+  deletedAt?: string
+  action?: string,
+  _synced?: boolean
 };
 
 export type ExpenseVoucher = {
   _id: string;
+  id: string;
   acctMonth: number;
   acctYear: number;
   amount: number;
   bankCode: { _id: string; code: string; description: string };
-  supplier: { _id: string; code: string; description: string };
+  // supplier: { _id: string; code: string; description: string };
+  supplier: string ;
   checkDate: string;
   checkNo: string;
   code: string;
@@ -221,6 +256,7 @@ export type ExpenseVoucher = {
 
 export type Release = {
   _id: string;
+  id: string;
   center: { _id: string; centerNo: string; description: string };
   acctMonth: number;
   acctYear: number;
@@ -238,10 +274,14 @@ export type Release = {
   refNo: string;
   remarks: string;
   createdAt: string;
+  deletedAt?: string
+  action?: string,
+  _synced?: boolean
 };
 
 export type Acknowledgement = {
   _id: string;
+  id: string;
   center: { _id: string; centerNo: string; description: string };
   acctMonth: number;
   acctYear: number;
@@ -259,10 +299,14 @@ export type Acknowledgement = {
   refNo: string;
   remarks: string;
   createdAt: string;
+   deletedAt?: string
+  action?: string,
+  _synced?: boolean
 };
 
 export type JournalVoucher = {
   _id: string;
+  id: string;
   acctMonth: number;
   acctYear: number;
   amount: number;
@@ -278,10 +322,14 @@ export type JournalVoucher = {
   refNo: string;
   remarks: string;
   createdAt: string;
+  deletedAt?: string
+  action?: string,
+  _synced?: boolean
 };
 
 export type EmergencyLoan = {
   _id: string;
+  id: string;
   code: string;
   user: string;
   // supplier: { _id: string; code: string; description: string };
@@ -297,10 +345,14 @@ export type EmergencyLoan = {
   amount: number;
   encodedBy: { username: string };
   entries: any[];
+   deletedAt?: string
+  action?: string,
+  _synced?: boolean
 };
 
 export type DamayanFund = {
   _id: string;
+  id: string;
   code: string;
   name: string;
   // supplier: { _id: string; code: string; description: string };
@@ -320,7 +372,8 @@ export type DamayanFund = {
 };
 
 export type Transaction = {
-  _id: string;
+  _id?: string;
+  id?: string;
   acctMonth: number;
   acctYear: number;
   amount: number;
@@ -341,10 +394,13 @@ export type Transaction = {
   createdAt: string;
   type: string;
   isEduc: boolean;
+
+  //offline
 };
 
 export type Bank = {
   _id: string;
+  id: string;
   code: string;
   description: string;
   createdAt: string;
@@ -398,6 +454,7 @@ export type User = {
 
 export type GroupAccount = {
   _id: string;
+  id: string;
   code: string;
   createdAt: string;
 };
@@ -411,6 +468,7 @@ export type BusinessType = {
 
 export type WeeklySavings = {
   _id: string;
+  id: string;
   rangeAmountFrom: string;
   rangeAmountTo: string;
   weeklySavingsFund: string;
@@ -419,6 +477,7 @@ export type WeeklySavings = {
 
 export type Nature = {
   _id: string;
+  id: string;
   nature: string;
   createdAt: string;
   description: string

@@ -4,6 +4,8 @@ import React, { useRef, useState } from 'react';
 import { Nature } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteNatureProps = {
   nature: Nature;
@@ -19,37 +21,64 @@ const DeleteNature = ({ nature, getNatures, searchkey, sortKey, currentPage, row
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
   async function handleDelete() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/nature/${nature._id}`);
-      const { success } = result.data;
-      if (success) {
-        const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getNatures(page, searchkey, sortKey);
-        dismiss();
-        return;
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.delete(`/nature/${nature._id}`);
+        const { success } = result.data;
+        if (success) {
+          const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
+          getNatures(page, searchkey, sortKey);
+          dismiss();
+          return;
+        }
+      } catch (error: any) {
+        present({
+          message: 'Failed to delete the nature record. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      present({
-        message: 'Failed to delete the nature record. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+    } else {
+      try {
+      if (nature._id) {
+          await db.natures.update(nature.id, {
+            deletedAt: new Date().toISOString(),
+            _synced: false,
+            action: "delete",
+          });
+        } else {
+          await db.natures.delete(nature.id);
+        }
+      getNatures(currentPage);
+      dismiss()
+       present({
+            message: 'Nature successfully deleted!.',
+            duration: 1000,
+          });
+        } catch (error: any) {
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+        }
     }
   }
+
 
   return (
     <>
       
         <IonButton
-               id={`delete-nature-modal-${nature._id}`}
+               id={`delete-nature-modal-${nature._id || nature.id}`}
                type="button"
                fill="clear"
                className="space-x-1 rounded-md w-24 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-red-100 text-red-900 capitalize text-xs"
@@ -58,7 +87,7 @@ const DeleteNature = ({ nature, getNatures, searchkey, sortKey, currentPage, row
              </IonButton>
       <IonModal
         ref={modal}
-        trigger={`delete-nature-modal-${nature._id}`}
+        trigger={`delete-nature-modal-${nature._id || nature.id}`}
         backdropDismiss={false}
         className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:32rem]"
       >

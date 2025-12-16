@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
@@ -11,6 +11,10 @@ import kfiAxios from '../../../utils/axios';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import TablePagination from '../../../ui/forms/TablePagination';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
+import { filterAndSortNatures } from '../../../ui/utils/sort';
+import { Upload } from 'lucide-react';
 
 export type TNature = {
   natures: NatureType[];
@@ -28,6 +32,8 @@ const Nature = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('');
+  const online = useOnlineStore((state) => state.online);
+  const [uploading, setUploading] = useState<boolean>(false)
 
   const [data, setData] = useState<TNature>({
     natures: [],
@@ -38,7 +44,8 @@ const Nature = () => {
   });
 
   const getNatures = async (page: number, keyword: string = '', sort: string = '') => {
-    setData(prev => ({ ...prev, loading: true }));
+   if(online){
+     setData(prev => ({ ...prev, loading: true }));
     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
       if (keyword) filter.search = keyword;
@@ -66,6 +73,69 @@ const Nature = () => {
     } finally {
       setData(prev => ({ ...prev, loading: false }));
     }
+   } else {
+     setData(prev => ({ ...prev, loading: true }));
+      try {
+        const limit = TABLE_LIMIT;
+        let data = await db.natures.toArray();
+        const filteredData = data.filter(e => !e.deletedAt);
+        let allData = filterAndSortNatures(filteredData, keyword, sort);
+        const totalItems = allData.length;
+        const totalPages = Math.ceil(totalItems / limit);
+        const start = (page - 1) * limit;
+        const end = start + limit;
+        const finalData = allData.slice(start, end);
+        const hasPrevPage = page > 1;
+        const hasNextPage = page < totalPages;
+        console.log(finalData)
+        setData(prev => ({
+          ...prev,
+          natures: finalData,
+          totalPages,
+          prevPage: hasPrevPage,
+          nextPage: hasNextPage,
+        }));
+        setCurrentPage(page);
+        setSearchKey(keyword);
+        setSortKey(sort);
+      } catch (error) {
+        console.log(error)
+        present({
+          message: 'Failed to load records.',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
+      }
+   }
+  };
+
+  const uploadChanges = async () => {
+      setUploading(true)
+      try {
+        const list = await db.natures.toArray();
+        const offlineChanges = list.filter(e => e._synced === false);
+        console.log(offlineChanges)
+        const result = await kfiAxios.put("sync/upload/natures", { natures: offlineChanges });
+        const { success } = result.data;
+        if (success) {
+          setUploading(false)
+           present({
+              message: 'Offline changes saved!',
+              duration: 1000,
+            });
+          getNatures(currentPage);
+          setUploading(false)
+
+        }
+      } catch (error: any) {
+          setUploading(false)
+
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+      }
   };
 
   const handlePagination = (page: number) => getNatures(page, searchKey, sortKey);
@@ -84,6 +154,11 @@ const Nature = () => {
             <div className="relative overflow-auto px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
                <div className="flex items-center justify-center gap-2 flex-wrap">
               <CreateNature getNatures={getNatures} />
+              {!online && (
+                 <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                   <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
+                 </IonButton>
+               )}
               <NatureFilter getNatures={getNatures} />
             </div>
               <Table>

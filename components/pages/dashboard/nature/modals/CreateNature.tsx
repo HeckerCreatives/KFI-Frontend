@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
@@ -9,6 +9,8 @@ import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import NatureForm from '../components/NatureForm';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateNatureProps = {
   getNatures: (page: number) => void;
@@ -18,7 +20,10 @@ const CreateNature = ({ getNatures }: CreateNatureProps) => {
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
-
+  const online = useOnlineStore((state) => state.online);
+  const [present] = useIonToast();
+  
+  
   const form = useForm<NatureFormData>({
     resolver: zodResolver(natureSchema),
     defaultValues: {
@@ -33,22 +38,43 @@ const CreateNature = ({ getNatures }: CreateNatureProps) => {
   }
 
   async function onSubmit(data: NatureFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.post('/nature', data);
-      const { success } = result.data;
-      if (success) {
-        getNatures(1);
-        dismiss();
-        return;
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.post('/nature', data);
+        const { success } = result.data;
+        if (success) {
+          getNatures(1);
+          dismiss();
+          return;
+        }
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+      try {
+       await db.natures.add({
+         ...data,
+         _synced: false,  
+         action: "create",
+       });
+       getNatures(1);
+       dismiss();
+       present({
+         message: "Nature successfully created!",
+         duration: 1000,
+       });
+     } catch (error) {
+       present({
+         message: "Failed to save record. Please try again.",
+         duration: 1200,
+       });
+     }
     }
   }
 

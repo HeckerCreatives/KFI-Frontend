@@ -42,7 +42,7 @@ const ExpenseVoucherActions = ({
   return (
     <div>
       {canDoAction(token.role, token.permissions, 'expense voucher', 'visible') && <ViewExpenseVoucher expenseVoucher={expenseVoucher} />}
-      {canDoAction(token.role, token.permissions, 'expense voucher', 'update') && <UpdateExpenseVoucher expenseVoucher={expenseVoucher} setData={setData} />}
+      {canDoAction(token.role, token.permissions, 'expense voucher', 'update') && <UpdateExpenseVoucher expenseVoucher={expenseVoucher} setData={setData} getExpenseVouchers={getExpenseVouchers} currentPage={currentPage} />}
       {canDoAction(token.role, token.permissions, 'expense voucher', 'delete') && (
         <DeleteExpenseVoucher
           expenseVoucher={expenseVoucher}

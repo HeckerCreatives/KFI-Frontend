@@ -4,6 +4,8 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import { trashBin } from 'ionicons/icons';
 import { EmergencyLoan } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteEmergencyLoanProps = {
   emergencyLoan: EmergencyLoan;
@@ -18,34 +20,61 @@ const DeleteEmergencyLoan = ({ emergencyLoan, getEmergencyLoans, searchkey, sort
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     setIsOpen(false);
   }
 
   async function handleDelete() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/emergency-loan/${emergencyLoan._id}`);
-      const { success } = result.data;
-      if (success) {
-        const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getEmergencyLoans(page, searchkey, sortKey);
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.delete(`/emergency-loan/${emergencyLoan._id}`);
+        const { success } = result.data;
+        if (success) {
+          const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
+          getEmergencyLoans(page, searchkey, sortKey);
+          present({
+            message: 'Emergency loan successfully deleted',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
+      } catch (error: any) {
+        const message = error.response.data.error.message || error?.response?.data?.msg;
         present({
-          message: 'Emergency loan successfully deleted',
+          message: message || 'Failed to delete the emergency loan record. Please try again',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const message = error.response.data.error.message || error?.response?.data?.msg;
-      present({
-        message: message || 'Failed to delete the emergency loan record. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+    } else {
+      try {
+      if (emergencyLoan._id) {
+          await db.emergencyLoans.update(emergencyLoan.id, {
+            deletedAt: new Date().toISOString(),
+            _synced: false,
+            action: "delete",
+          });
+        } else {
+          await db.emergencyLoans.delete(emergencyLoan.id);
+        }
+      getEmergencyLoans(currentPage);
+      dismiss()
+       present({
+            message: 'Emergency loan successfully deleted!.',
+            duration: 1000,
+          });
+        } catch (error: any) {
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+        }
     }
   }
 

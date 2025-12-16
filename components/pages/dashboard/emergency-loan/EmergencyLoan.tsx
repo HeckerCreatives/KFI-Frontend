@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
@@ -17,6 +17,11 @@ import kfiAxios from '../../../utils/axios';
 import EmergencyLoanActions from './components/EmergencyLoanActions';
 import PrintAllEmergencyLoan from './modals/prints/PrintAllEmergencyLoan';
 import ExportAllEmergencyLoan from './modals/prints/ExportAllEmergencyLoan';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
+import { formatELList, formatEVList } from '../../../ui/utils/fomatData';
+import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
+import { Upload } from 'lucide-react';
 
 export type TData = {
   emergencyLoans: EmergencyLoanType[];
@@ -36,6 +41,8 @@ const EmergencyLoan = () => {
   const [sortKey, setSortKey] = useState<string>('');
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
+  const online = useOnlineStore((state) => state.online);
+  const [uploading, setUploading] = useState<boolean>(false)
 
   const [data, setData] = useState<TData>({
     emergencyLoans: [],
@@ -46,40 +53,109 @@ const EmergencyLoan = () => {
   });
 
   const getEmergencyLoans = async (page: number, keyword: string = '', sort: string = '', to: string = '', from: string = '') => {
-    setData(prev => ({ ...prev, loading: true }));
-    try {
-      const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
-      if (keyword) filter.search = keyword;
-      if (sort) filter.sort = sort;
-      if (to) filter.to = to;
-      if (from) filter.from = from;
+    if(online){
+      setData(prev => ({ ...prev, loading: true }));
+      try {
+        const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
+        if (keyword) filter.search = keyword;
+        if (sort) filter.sort = sort;
+        if (to) filter.to = to;
+        if (from) filter.from = from;
 
-      const result = await kfiAxios.get('/emergency-loan', { params: filter });
-      const { success, emergencyLoans, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          emergencyLoans,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        setSearchKey(keyword);
-        setSortKey(sort);
-        setFrom(from);
-        setTo(to);
-        return;
+        const result = await kfiAxios.get('/emergency-loan', { params: filter });
+        const { success, emergencyLoans, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            emergencyLoans,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          setSearchKey(keyword);
+          setSortKey(sort);
+          setFrom(from);
+          setTo(to);
+          return;
+        }
+      } catch (error) {
+        present({
+          message: 'Failed to get journal voucher records. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
       }
-    } catch (error) {
-      present({
-        message: 'Failed to get journal voucher records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setData(prev => ({ ...prev, loading: false }));
+    } else {
+      setData(prev => ({ ...prev, loading: true }));
+       try {
+         const limit = TABLE_LIMIT;
+         let data = await db.emergencyLoans.toArray();
+         const filteredData = data.filter(e => !e.deletedAt);
+        let allData = filterAndSortLoanRelease(formatELList(filteredData), keyword, sort, from, to);
+         console.log(allData)
+
+         const totalItems = allData.length;
+         const totalPages = Math.ceil(totalItems / limit);
+         const start = (page - 1) * limit;
+         const end = start + limit;
+         const finalData = allData.slice(start, end);
+         const hasPrevPage = page > 1;
+         const hasNextPage = page < totalPages;
+          setData(prev => ({
+            ...prev,
+            emergencyLoans: finalData,
+            totalPages,
+            prevPage: hasPrevPage,
+            nextPage: hasNextPage,
+          }));
+         setCurrentPage(page);
+         setSearchKey(keyword);
+         setSortKey(sort);
+         setFrom(from);
+         setTo(to);
+       } catch (error) {
+         console.log(error)
+         present({
+           message: 'Failed to load records.',
+           duration: 1000,
+         });
+       } finally {
+         setData(prev => ({ ...prev, loading: false }));
+       }
     }
   };
+
+  const uploadChanges = async () => {
+          setUploading(true)
+          try {
+            const list = await db.emergencyLoans.toArray();
+            const offlineChanges = list.filter(e => e._synced === false);
+          
+    
+            const result = await kfiAxios.put("sync/upload/emergency-loans", { emergencyLoans: offlineChanges });
+            const { success } = result.data;
+            if (success) {
+              setUploading(false)
+               present({
+                  message: 'Offline changes saved!',
+                  duration: 1000,
+                });
+              getEmergencyLoans(currentPage);
+              setUploading(false)
+    
+            }
+          } catch (error: any) {
+              setUploading(false)
+              console.log(error)
+    
+              present({
+                message: `${error.response.data.error.message}`,
+                duration: 1000,
+              });
+          }
+      };
 
   const handlePagination = (page: number) => getEmergencyLoans(page, searchKey, sortKey);
 
@@ -101,6 +177,11 @@ const EmergencyLoan = () => {
                   <div>{canDoAction(token.role, token.permissions, 'emergency loan', 'create') && <CreateEmergencyLoan getEmergencyLoans={getEmergencyLoans} />}</div>
                   <div>{canDoAction(token.role, token.permissions, 'emergency loan', 'print') && <PrintAllEmergencyLoan />}</div>
                   <div>{canDoAction(token.role, token.permissions, 'emergency loan', 'export') && <ExportAllEmergencyLoan />}</div>
+                  {online && (
+                    <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
+                    </IonButton>
+                  )}
                 </div>
 
                  <div className="w-full flex-1 flex">
@@ -132,7 +213,7 @@ const EmergencyLoan = () => {
                           <TableCell>{emergencyLoan.bankCode.description}</TableCell>
                           <TableCell>{emergencyLoan.checkNo}</TableCell>
                           <TableCell>{formatMoney(emergencyLoan.amount)}</TableCell>
-                          <TableCell>{emergencyLoan.encodedBy.username}</TableCell>
+                          <TableCell>{emergencyLoan.encodedBy?.username}</TableCell>
                           {haveActions(token.role, 'emergency loan', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <EmergencyLoanActions

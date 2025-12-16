@@ -14,6 +14,8 @@ import { TLoan } from '../Loans';
 import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type UpdateLoanCodeFormProps = {
   loanCode: LoanCode;
@@ -21,9 +23,11 @@ type UpdateLoanCodeFormProps = {
   productId: string;
 };
 
-const UpdateLoanCodeForm = ({ loanCode, setData }: UpdateLoanCodeFormProps) => {
+const UpdateLoanCodeForm = ({ loanCode, setData, productId }: UpdateLoanCodeFormProps) => {
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm({
     resolver: zodResolver(loanCodeSchema),
@@ -78,31 +82,74 @@ const UpdateLoanCodeForm = ({ loanCode, setData }: UpdateLoanCodeFormProps) => {
   };
 
   const handleDelete = async () => {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/loan/code/${loanCode._id}`);
-      const { success } = result.data;
-      if (success) {
-        setData(prev => {
-          let clone = [...prev.loans];
-          let index = clone.findIndex(e => e._id === result.data.loan._id);
-          clone[index] = { ...result.data.loan };
-          return { ...prev, loans: clone };
-        });
-        form.reset();
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.delete(`/loan/code/${loanCode._id}`);
+        const { success } = result.data;
+        if (success) {
+          setData(prev => {
+            let clone = [...prev.loans];
+            let index = clone.findIndex(e => e._id === result.data.loan._id);
+            clone[index] = { ...result.data.loan };
+            return { ...prev, loans: clone };
+          });
+          form.reset();
+          present({
+            message: 'Loan code successfully deleted!.',
+            duration: 1000,
+          });
+          return;
+        }
+      } catch (error: any) {
         present({
-          message: 'Loan code successfully deleted!.',
+          message: 'Failed to delete the loan code. Please try again',
           duration: 1000,
         });
-        return;
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      present({
-        message: 'Failed to delete the loan code. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+    } else {
+       try {
+        const product = await db.loanProducts.get(productId);
+
+        if (!product) {
+          present({
+            message: "Product not found.",
+            duration: 1000,
+          });
+          return;
+        }
+
+        const updatedLoanCodes = product.loanCodes.filter(
+          (item: any) => item.acctCode !== loanCode.acctCode
+        );
+
+        await db.loanProducts.update(product.id, {
+          ...product,
+          loanCodes: updatedLoanCodes,
+          _synced: false,
+          action: "update",
+        });
+
+        setData(prev => {
+          const clone = [...prev.loans];
+          const idx = clone.findIndex(l => l.id === product.id);
+          if (idx !== -1) clone[idx] = { ...product, loanCodes: updatedLoanCodes };
+          return { ...prev, loans: clone };
+        });
+
+        present({
+          message: "Data successfully deleted!",
+          duration: 1000,
+        });
+      } catch (error) {
+        console.log(error)
+        present({
+          message: "Failed to delete record. Please try again.",
+          duration: 1200,
+        });
+      }
     }
   };
 

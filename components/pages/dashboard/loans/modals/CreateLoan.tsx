@@ -9,6 +9,8 @@ import kfiAxios from '../../../../utils/axios';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateLoanProps = {
   getLoans: (page: number) => void;
@@ -17,6 +19,8 @@ type CreateLoanProps = {
 const CreateLoan = ({ getLoans }: CreateLoanProps) => {
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
+  const online = useOnlineStore((state) => state.online);
+  
 
   const modal = useRef<HTMLIonModalElement>(null);
 
@@ -41,26 +45,47 @@ const CreateLoan = ({ getLoans }: CreateLoanProps) => {
   }
 
   async function onSubmit(data: ProductLoanFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.post('/loan', data);
-      const { success } = result.data;
-      if (success) {
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.post('/loan', data);
+        const { success } = result.data;
+        if (success) {
+          getLoans(1);
+          dismiss();
+          present({
+            message: 'Product successfully created!.',
+            duration: 1000,
+          });
+          return;
+        }
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+       try {
+        await db.loanProducts.add({
+          ...data,
+          _synced: false,  
+          action: "create",
+        });
         getLoans(1);
         dismiss();
         present({
-          message: 'Product successfully created!.',
+          message: "Loan Products successfully created!",
           duration: 1000,
         });
-        return;
+      } catch (error) {
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
       }
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
     }
   }
 

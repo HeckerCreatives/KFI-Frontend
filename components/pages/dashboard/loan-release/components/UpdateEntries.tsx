@@ -12,13 +12,15 @@ import AddEntry from '../modals/entries/AddEntry';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import { arrowBack, arrowForward } from 'ionicons/icons';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 export type TData = {
   entries: Entry[];
-  // totalPages: number;
-  // nextPage: boolean;
-  // prevPage: boolean;
-  // loading: boolean;
+   totalPages: number;
+   nextPage: boolean;
+   prevPage: boolean;
+   loading: boolean;
 };
 
 type UpdateEntriesProps = {
@@ -36,13 +38,15 @@ type UpdateEntriesProps = {
 const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries, deletedIds, setDeletedIds, setPrevEntries }: UpdateEntriesProps) => {
   const [present] = useIonToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TData>({
     entries: [],
-    // loading: false,
-    // totalPages: 0,
-    // nextPage: false,
-    // prevPage: false,
+     loading: false,
+     totalPages: 0,
+     nextPage: false,
+     prevPage: false,
   });
 
   const [page, setPage] = useState(1);
@@ -66,32 +70,60 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries
     }, [data.entries, page, limit]);
 
   const getEntries = async (page: number) => {
-    setData(prev => ({ ...prev, loading: true }));
-    try {
-      const filter: TTableFilter = { limit: TABLE_LIMIT, page };
+    if(online){
+      setData(prev => ({ ...prev, loading: true }));
+      try {
+        const filter: TTableFilter = { limit: TABLE_LIMIT, page };
 
-      const result = await kfiAxios.get(`/transaction/loan-release/entries/${transaction._id}`, { params: filter });
-      const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          entries: entries,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setPrevEntries(entries)
-        setEntries(entries)
-        setCurrentPage(page);
-        return;
+        const result = await kfiAxios.get(`/transaction/loan-release/entries/${transaction._id}`, { params: filter });
+        const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            entries: entries,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setPrevEntries(entries)
+          setEntries(entries)
+          setCurrentPage(page);
+          return;
+        }
+      } catch (error) {
+        present({
+          message: 'Failed to get entry records. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
       }
-    } catch (error) {
-      present({
-        message: 'Failed to get entry records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setData(prev => ({ ...prev, loading: false }));
+    } else {
+      setData(prev => ({ ...prev, loading: true }));
+       try {
+         let data = await db.loanReleases.get(transaction.id);
+        const entries = data.entries
+        
+         console.log('Offline entries',data.entries)
+         const allData = entries.filter((e: { deletedAt: any; }) => !e.deletedAt);
+         
+         setData(prev => ({
+           ...prev,
+           entries: allData,
+           totalPages: 1,
+           prevPage: false,
+           nextPage: false,
+         }));
+         setCurrentPage(page);
+       } catch (error) {
+         console.log(error)
+         present({
+           message: 'Failed to load records.',
+           duration: 1000,
+         });
+       } finally {
+         setData(prev => ({ ...prev, loading: false }));
+       }
     }
   };
 
@@ -103,7 +135,6 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries
     }
   }, [isOpen]);
 
-  console.log(data.entries)
 
 
 
@@ -111,17 +142,20 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries
   return (
     <div className="pb-2 flex flex-col h-full">
       <div>
-        <AddEntry
-          transactionId={transaction._id}
-          centerId={transaction.center._id}
-          centerNo={transaction.center.centerNo}
-          getEntries={getEntries}
-          currentAmount={currentAmount}
-          entries={data.entries}
-          setData={setData}
-          transaction={transaction}
-          setEntries={setEntries}
-        />
+        {transaction._id || transaction.id && (
+           <AddEntry
+            transactionId={transaction._id || transaction.id}
+            centerId={transaction.center._id}
+            centerNo={transaction.center.centerNo}
+            getEntries={getEntries}
+            currentAmount={currentAmount}
+            entries={data.entries}
+            setData={setData}
+            transaction={transaction}
+            setEntries={setEntries}
+          />
+        )}
+       
       </div>
       <div className="relative overflow-auto flex-1">
         <Table>

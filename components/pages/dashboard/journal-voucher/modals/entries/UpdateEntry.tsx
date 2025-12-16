@@ -100,6 +100,8 @@ const UpdateEntry = ({ entry, setData, setEntries }: UpdateEntryProps) => {
              centerNo: '',
            },
          },
+         _synced: false,
+        action: "update",
        };
  
        setData((prev: TData) => {

@@ -111,6 +111,8 @@ const CreateClientMasterFile = ({ getClients, getClientsOffline }: CreateClientM
     }
   }
 
+  console.log(form.watch('bankAccountNo'))
+
 
   return (
     <>

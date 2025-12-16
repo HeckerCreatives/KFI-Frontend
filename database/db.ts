@@ -39,17 +39,16 @@ export class KfiDatabase extends Dexie {
       banks: "++id,_id, code",
       businessTypes: "++id, action",
       centers: "++id, centerNo, description",
-      chartOfAccounts: "++_id, code, description",
+      chartOfAccounts: "++id, code, description",
       clients: "++id, name, center",
-      loanCodes: "++_id, loan",
-      loanProducts: "++_id, code",
+      loanCodes: "++id, loan",
+      loanProducts: "++id, code",
       natures: "++id, nature",
       paymentSchedules: "++id",
-      suppliers: "++_id, code, description",
-      systemParameters: "++_id",
+      suppliers: "++id, code, description",
+      systemParameters: "++id",
       weeklySavings: "++id",
       groupOfAccounts: "++id, code",
-      loanReleases: "++_id, code, center",
       dueDates: "++id, loanRelease",
       journalVouchers: "++id, code, center",
       journalVoucherEntries: "++id, journalVoucher",
@@ -64,8 +63,10 @@ export class KfiDatabase extends Dexie {
       damayanFunds: "++id, code, center",
       damayanFundEntries: "++id, damayanFund",
 
-      /** 👇 your new offline table */
-     clientMasterFile: "++id, _id, acctNumber, centerNo, name"
+     clientMasterFile: "++id, _id, acctNumber, centerNo, name",
+
+     //transactions
+     loanReleases: "++id, code, center",
 
     });
   }

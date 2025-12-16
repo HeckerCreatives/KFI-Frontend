@@ -12,6 +12,8 @@ import { TData } from '../../components/UpdateEntries';
 import formErrorHandler from '../../../../../utils/form-error-handler';
 import checkError from '../../../../../utils/check-error';
 import { formatAmount, removeAmountComma } from '../../../../../ui/utils/formatNumber';
+import { useOnlineStore } from '../../../../../../store/onlineStore';
+import { db } from '../../../../../../database/db';
 
 type UpdateEntryProps = {
   entry: Entry;
@@ -22,10 +24,12 @@ type UpdateEntryProps = {
   
 };
 
-const UpdateEntry = ({ entry, setData, setEntries }: UpdateEntryProps) => {
+const UpdateEntry = ({ entry, setData, setEntries, transaction }: UpdateEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<EntryFormData>({
     resolver: zodResolver(entriesSchema),
@@ -68,76 +72,77 @@ const UpdateEntry = ({ entry, setData, setEntries }: UpdateEntryProps) => {
   }
 
   const onSubmit = async (data: EntryFormData) => {
-  if (
-    data.debit === '' &&
-    data.credit === '' &&
-    data.checkNo === '' &&
-    data.cycle === ''
-  ) {
-    form.setError('root', {
-      message: 'No data to save. Please fill necessary fields.',
-    });
-    return;
-  }
-
-  setLoading(true);
-  try {
-    data.debit = removeAmountComma(data.debit as string);
-    data.credit = removeAmountComma(data.credit as string);
-
-    const updatedEntry: Entry = {
-      ...entry,
-      ...data,
-      transaction: entry.transaction,
-      center: entry.center,
-      client: {
-        ...entry.client,
-        _id: data.clientId || entry.client._id,
-        name: data.client || entry.client.name,
-      },
-      acctCode: {
-        ...entry.acctCode,
-        _id: data.acctCodeId || entry.acctCode?._id,
-        code: data.acctCode || entry.acctCode?.code,
-        description: data.description || entry.acctCode?.description,
-      },
-      debit: data.debit ? Number(data.debit) : 0,
-      credit: data.credit ? Number(data.credit) : 0,
-      interest: data.interest ? Number(data.interest) : 0,
-      cycle: data.cycle ? Number(data.cycle) : 0,
-      checkNo: data.checkNo || '',
-    };
-
-      setData((prev: TData) => {
-        const index = prev.entries.findIndex((e: Entry) => e._id === entry._id);
-        if (index < 0) return prev;
-        const updatedEntries = [...prev.entries];
-        updatedEntries[index] = updatedEntry;
-
-        setEntries(updatedEntries);
-
-        return { ...prev, entries: updatedEntries };
+    if (
+      data.debit === '' &&
+      data.credit === '' &&
+      data.checkNo === '' &&
+      data.cycle === ''
+    ) {
+      form.setError('root', {
+        message: 'No data to save. Please fill necessary fields.',
       });
+      return;
+    }
+
+      setLoading(true);
+      try {
+        data.debit = removeAmountComma(data.debit as string);
+        data.credit = removeAmountComma(data.credit as string);
+
+        const updatedEntry: Entry = {
+          ...entry,
+          ...data,
+          transaction: entry.transaction,
+          center: entry.center,
+          client: {
+            ...entry.client,
+            _id: data.clientId || entry.client._id,
+            name: data.client || entry.client.name,
+          },
+          acctCode: {
+            ...entry.acctCode,
+            _id: data.acctCodeId || entry.acctCode?._id,
+            code: data.acctCode || entry.acctCode?.code,
+            description: data.description || entry.acctCode?.description,
+          },
+          debit: data.debit ? Number(data.debit) : 0,
+          credit: data.credit ? Number(data.credit) : 0,
+          interest: data.interest ? Number(data.interest) : 0,
+          cycle: data.cycle ? Number(data.cycle) : 0,
+          checkNo: data.checkNo || '',
+          _synced: false,
+          action:"update" 
+        };
+
+          setData((prev: TData) => {
+            const index = prev.entries.findIndex((e: Entry) => e._id === entry._id);
+            if (index < 0) return prev;
+            const updatedEntries = [...prev.entries];
+            updatedEntries[index] = updatedEntry;
+
+            setEntries(updatedEntries);
+
+            return { ...prev, entries: updatedEntries };
+          });
 
 
-    // setEntries((prev: Entry[]) => {
-    //   const index = prev.findIndex((e) => e._id === entry._id);
-    //   if (index < 0) return prev;
-    //   const updatedEntries = [...prev];
-    //   updatedEntries[index] = updatedEntry;
-    //   return updatedEntries;
-    // });
+        // setEntries((prev: Entry[]) => {
+        //   const index = prev.findIndex((e) => e._id === entry._id);
+        //   if (index < 0) return prev;
+        //   const updatedEntries = [...prev];
+        //   updatedEntries[index] = updatedEntry;
+        //   return updatedEntries;
+        // });
 
 
-    present({ message: 'Entry successfully updated', duration: 1000 });
-    dismiss();
-  } catch (error: any) {
-    present({ message: 'Failed to update entry locally', duration: 1000 });
-  } finally {
-    setLoading(false);
-  }
-};
-
+        present({ message: 'Entry successfully updated', duration: 1000 });
+        dismiss();
+      } catch (error: any) {
+        present({ message: 'Failed to update entry locally', duration: 1000 });
+      } finally {
+        setLoading(false);
+      }
+    } 
 
   return (
     <>
@@ -158,7 +163,7 @@ const UpdateEntry = ({ entry, setData, setEntries }: UpdateEntryProps) => {
             <ModalHeader disabled={loading} title="Loan Release - Edit Entry" sub="Transaction" dismiss={dismiss} />
 
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <EntryForm form={form} center={entry.center._id} centerNo={entry.center.centerNo} loading={loading} />
+            <EntryForm form={form} center={entry.center?._id} centerNo={entry.center?.centerNo} loading={loading} />
             <div className="text-end space-x-1 px-2">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
                 {loading ? 'Saving...' : 'Save'}

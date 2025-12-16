@@ -10,6 +10,9 @@ import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
 import { Search01Icon } from 'hugeicons-react';
+import { useOnlineStore } from '../../../store/onlineStore';
+import { TABLE_LIMIT } from '../../utils/constants';
+import { db } from '../../../database/db';
 
 type Option = {
   _id: string;
@@ -51,6 +54,8 @@ const ChartOfAccountSelection = <T extends FieldValues>({
   const ionInputRef = useRef<HTMLIonInputElement>(null);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TClient>({
     chartOfAccounts: [],
@@ -70,25 +75,62 @@ const ChartOfAccountSelection = <T extends FieldValues>({
 
   const handleSearch = async (page: number) => {
     const value = ionInputRef.current?.value || '';
-    setLoading(true);
-    try {
-      const filter: any = { keyword: value, page, limit: 10 };
-      const result = await kfiAxios.get('chart-of-account/selection', { params: filter });
-      const { success, chartOfAccounts, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          chartOfAccounts,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        return;
+    if(online){
+      setLoading(true);
+      try {
+        const filter: any = { keyword: value, page, limit: 10 };
+        const result = await kfiAxios.get('chart-of-account/selection', { params: filter });
+        const { success, chartOfAccounts, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            chartOfAccounts,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          return;
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-    } finally {
-      setLoading(false);
+    } else {
+      try{
+      const limit = TABLE_LIMIT;
+              let allData = await db.chartOfAccounts.toArray();
+              let allOptions: Option[] = allData.map(item => ({
+                 _id: item._id,
+                code: item.code,
+                description: item.description,
+                nature: item.nature,
+                classification: item.classification,
+                deptStatus: item.deptStatus,
+              }));
+      
+              console.log(allData)
+              
+             const totalItems = allOptions.length;
+              const totalPages = Math.ceil(totalItems / limit);
+              const start = (page - 1) * limit;
+              const end = start + limit;
+              const finalData = allOptions.slice(start, end);
+              const hasPrevPage = page > 1;
+              const hasNextPage = page < totalPages;
+              setData(prev => ({
+                 ...prev,
+                chartOfAccounts: finalData,
+                totalPages: totalPages,
+                nextPage: hasNextPage,
+                prevPage: hasPrevPage,
+              }));
+              setCurrentPage(page);
+            } catch (error) {
+              console.error("Erro while fetching data.", error);
+            } finally {
+              setData(prev => ({ ...prev, loading: false }));
+            }
     }
   };
 

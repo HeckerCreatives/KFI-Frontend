@@ -51,7 +51,7 @@ const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher
           <div className="space-y-1 !mt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               <div className="space-y-1">
-                <JournalVoucherViewCard label="JV#" value={`${journalVoucher.code}`} labelClassName="min-w-28 text-end" />
+                <JournalVoucherViewCard label="JV#" value={`${journalVoucher?.code}`} labelClassName="min-w-28 text-end" />
                 <JournalVoucherViewCard label="Nature" value={journalVoucher.nature} labelClassName="min-w-28 text-end " />
               </div>
               <div className="space-y-1">
@@ -62,7 +62,7 @@ const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher
               <div className="space-y-1">
                 <JournalVoucherViewCard label="Check Number" value={journalVoucher.checkNo} labelClassName="min-w-28 text-end" />
                 <JournalVoucherViewCard label="Check Date" value={formatDateTable(journalVoucher.checkDate)} labelClassName="min-w-28 text-end " />
-                <JournalVoucherViewCard label="Bank Code" value={journalVoucher.bankCode.code} labelClassName="min-w-28 text-end " />
+                <JournalVoucherViewCard label="Bank Code" value={journalVoucher.bankCode?.code} labelClassName="min-w-28 text-end " />
                 <JournalVoucherViewCard label="Amount" value={`${formatNumber(journalVoucher.amount)}`} labelClassName="min-w-28 text-end " />
               </div>
             </div>

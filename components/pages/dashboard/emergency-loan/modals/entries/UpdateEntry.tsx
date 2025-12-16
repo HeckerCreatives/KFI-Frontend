@@ -98,7 +98,9 @@ const UpdateEntry = ({ entry, setData, setEntries }: UpdateEntryProps) => {
           },
           debit: debit,
           credit: credit,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          _synced: false,
+          action: "update",
           
         
         };

@@ -4,6 +4,8 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import { trash, trashBin } from 'ionicons/icons';
 import { Entry, Transaction } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteLoanReleaseProps = {
   transaction: Transaction;
@@ -18,34 +20,61 @@ const DeleteLoanRelease = ({ transaction, getTransactions, searchkey, sortKey, r
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     setIsOpen(false);
   }
 
   async function handleDelete() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.delete(`/transaction/loan-release/${transaction._id}`);
-      const { success } = result.data;
-      if (success) {
-        const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
-        getTransactions(page, searchkey, sortKey);
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.delete(`/transaction/loan-release/${transaction._id}`);
+        const { success } = result.data;
+        if (success) {
+          const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
+          getTransactions(page, searchkey, sortKey);
+          present({
+            message: 'Loan release successfully deleted',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
+      } catch (error: any) {
+        const message = error.response.data.error.message || error?.response?.data?.msg;
         present({
-          message: 'Loan release successfully deleted',
+          message: message || 'Failed to delete the loan release record. Please try again',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const message = error.response.data.error.message || error?.response?.data?.msg;
-      present({
-        message: message || 'Failed to delete the loan release record. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+    } else {
+      try {
+      if (transaction._id) {
+          await db.loanReleases.update(transaction.id, {
+            deletedAt: new Date().toISOString(),
+            _synced: false,
+            action: "delete",
+          });
+        } else {
+          await db.loanReleases.delete(transaction.id);
+        }
+      getTransactions(currentPage);
+      dismiss()
+       present({
+            message: 'Transaction successfully deleted!.',
+            duration: 1000,
+          });
+        } catch (error: any) {
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+        }
     }
   }
 

@@ -18,6 +18,10 @@ import CreateRelease from './modals/CreateRelease';
 import PrintAllRelease from './modals/prints/PrintAllRelease';
 import ExportAllRelease from './modals/prints/ExportAllRelease';
 import ReleaseActions from './components/ReleaseActions';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
+import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
+import { formatELList } from '../../../ui/utils/fomatData';
 
 export type TData = {
   releases: ReleaseType[];
@@ -37,6 +41,8 @@ const Release = () => {
   const [sortKey, setSortKey] = useState<string>('');
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
+  const online = useOnlineStore((state) => state.online);
+  const [uploading, setUploading] = useState<boolean>(false)
 
   const [data, setData] = useState<TData>({
     releases: [],
@@ -47,38 +53,76 @@ const Release = () => {
   });
 
   const getReleases = async (page: number, keyword: string = '', sort: string = '', to: string = '', from: string = '') => {
-    setData(prev => ({ ...prev, loading: true }));
-    try {
-      const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
-      if (keyword) filter.search = keyword;
-      if (sort) filter.sort = sort;
-      if (to) filter.to = to;
-      if (from) filter.from = from;
+    if(online){
+      setData(prev => ({ ...prev, loading: true }));
+      try {
+        const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
+        if (keyword) filter.search = keyword;
+        if (sort) filter.sort = sort;
+        if (to) filter.to = to;
+        if (from) filter.from = from;
 
-      const result = await kfiAxios.get('/release', { params: filter });
-      const { success, releases, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          releases,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        setSearchKey(keyword);
-        setSortKey(sort);
-        setFrom(from);
-        setTo(to);
-        return;
+        const result = await kfiAxios.get('/release', { params: filter });
+        const { success, releases, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            releases,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          setSearchKey(keyword);
+          setSortKey(sort);
+          setFrom(from);
+          setTo(to);
+          return;
+        }
+      } catch (error) {
+        present({
+          message: 'Failed to get release records. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
       }
-    } catch (error) {
-      present({
-        message: 'Failed to get release records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setData(prev => ({ ...prev, loading: false }));
+    } else {
+      setData(prev => ({ ...prev, loading: true }));
+           try {
+             const limit = TABLE_LIMIT;
+            let data = await db.acknowledgementReceipts.toArray();
+            const filteredData = data.filter(e => !e.deletedAt);
+            let allData = filterAndSortLoanRelease(formatELList(filteredData), keyword, sort, from, to);
+             console.log(data)
+             const totalItems = allData.length;
+             const totalPages = Math.ceil(totalItems / limit);
+             const start = (page - 1) * limit;
+             const end = start + limit;
+             const finalData = allData.slice(start, end);
+             const hasPrevPage = page > 1;
+             const hasNextPage = page < totalPages;
+              setData(prev => ({
+                ...prev,
+                releases: finalData,
+                totalPages,
+                prevPage: hasPrevPage,
+                nextPage: hasNextPage,
+              }));
+             setCurrentPage(page);
+             setSearchKey(keyword);
+             setSortKey(sort);
+             setFrom(from);
+             setTo(to);
+           } catch (error) {
+             console.log(error)
+             present({
+               message: 'Failed to load records.',
+               duration: 1000,
+             });
+           } finally {
+             setData(prev => ({ ...prev, loading: false }));
+           }
     }
   };
 

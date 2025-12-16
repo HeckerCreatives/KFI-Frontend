@@ -131,7 +131,10 @@ const UpdateEntry = ({ entry, setData, entries, setEntries, transaction }: Updat
             _id: '',
             centerNo: '',
           },
+           
         },
+        _synced: false,
+        action: "update",
       };
 
       setData((prev: TData) => {

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncJournalVoucher, syncLoanRelease, syncOR } from "../../../../database/sync"
+import { syncAR, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncJournalVoucher, syncLoanRelease, syncLoanReleaseDueDates, syncOR } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -58,6 +58,7 @@ export function BackupEntriesModalContent({
       updateStepStatus("loanReleases", "loading")
       const loanRelease = await kfiAxios.get(`/sync/loan-releases?dateFrom=${dateFrom}&dateTo=${dateTo}`)
       await syncLoanRelease(loanRelease.data?.loanReleases || [])
+      await syncLoanReleaseDueDates(loanRelease.data?.dueDates || [])
       updateStepStatus("loanReleases", "complete")
 
       updateStepStatus("expenseVouchers", "loading")
@@ -86,7 +87,7 @@ export function BackupEntriesModalContent({
       updateStepStatus("damayanFunds", "complete")
 
       updateStepStatus("journalVouchers", "loading")
-    const journalVoucher = await kfiAxios.get(`/sync/journal-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}`);
+      const journalVoucher = await kfiAxios.get(`/sync/journal-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}`);
       await syncJournalVoucher(journalVoucher.data?.journalVouchers || [])
 
       updateStepStatus("journalVouchers", "complete")

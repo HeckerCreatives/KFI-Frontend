@@ -4,6 +4,8 @@ import React, { useRef, useState } from 'react';
 import { WeeklySavings } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteWeeklySavingTableProps = {
   saving: WeeklySavings;
@@ -19,13 +21,16 @@ const DeleteWeeklySavingTable = ({ saving, getWeeklySavings, searchkey, sortKey,
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
   async function handleDelete() {
-    setLoading(true);
+   if(online){
+      setLoading(true);
     try {
       const result = await kfiAxios.delete(`/weekly-saving/${saving._id}`);
       const { success } = result.data;
@@ -47,6 +52,30 @@ const DeleteWeeklySavingTable = ({ saving, getWeeklySavings, searchkey, sortKey,
     } finally {
       setLoading(false);
     }
+   } else {
+     try {
+        if (saving._id) {
+            await db.weeklySavings.update(saving.id, {
+              deletedAt: new Date().toISOString(),
+              _synced: false,
+              action: "delete",
+            });
+          } else {
+            await db.weeklySavings.delete(saving.id);
+          }
+        getWeeklySavings(currentPage);
+        dismiss()
+         present({
+              message: 'Data successfully deleted!.',
+              duration: 1000,
+            });
+    } catch (error: any) {
+      present({
+        message: `${error.response.data.error.message}`,
+        duration: 1000,
+      });
+    }
+   }
   }
 
   return (

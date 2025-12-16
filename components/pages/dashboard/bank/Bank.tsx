@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
@@ -13,6 +13,10 @@ import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction, haveActions } from '../../../utils/permissions';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
+import { filterAndSortBanks } from '../../../ui/utils/sort';
+import { Upload } from 'lucide-react';
 
 export type TBank = {
   banks: BankType[];
@@ -29,6 +33,8 @@ const Bank = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('');
+  const online = useOnlineStore((state) => state.online);
+  const [uploading, setUploading] = useState<boolean>(false)
 
   const [data, setData] = useState<TBank>({
     banks: [],
@@ -39,7 +45,8 @@ const Bank = () => {
   });
 
   const getBanks = async (page: number, keyword: string = '', sort: string = '') => {
-    setData(prev => ({ ...prev, loading: true }));
+   if(online){
+     setData(prev => ({ ...prev, loading: true }));
     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
       if (keyword) filter.search = keyword;
@@ -67,6 +74,77 @@ const Bank = () => {
     } finally {
       setData(prev => ({ ...prev, loading: false }));
     }
+   } else {
+    setData(prev => ({ ...prev, loading: true }));
+        
+                    
+                        try {
+                          const limit = TABLE_LIMIT;
+                    
+                          let data = await db.banks.toArray();
+        
+                          const filteredData = data.filter(e => !e.deletedAt);
+                          let allData = filterAndSortBanks(filteredData, keyword, sort);
+                    
+                          const totalItems = allData.length;
+                          const totalPages = Math.ceil(totalItems / limit);
+                    
+                          const start = (page - 1) * limit;
+                          const end = start + limit;
+                    
+                          const coa = allData.slice(start, end);
+                    
+                          const hasPrevPage = page > 1;
+                          const hasNextPage = page < totalPages;
+                    
+                          setData(prev => ({
+                            ...prev,
+                            banks: coa,
+                            totalPages,
+                            prevPage: hasPrevPage,
+                            nextPage: hasNextPage,
+                          }));
+              
+                    
+                          setCurrentPage(page);
+                          setSearchKey(keyword);
+                          setSortKey(sort);
+                        } catch (error) {
+                          present({
+                            message: 'Failed to load records.',
+                            duration: 1000,
+                          });
+                        } finally {
+                          setData(prev => ({ ...prev, loading: false }));
+                        }
+   }
+  };
+
+  const uploadChanges = async () => {
+      setUploading(true)
+      try {
+        const list = await db.banks.toArray();
+        const offlineChanges = list.filter(e => e._synced === false);
+        const result = await kfiAxios.put("sync/upload/banks", { banks: offlineChanges });
+        const { success } = result.data;
+        if (success) {
+          setUploading(false)
+           present({
+              message: 'Offline changes saved!',
+              duration: 1000,
+            });
+          getBanks(1);
+          setUploading(false)
+
+        }
+      } catch (error: any) {
+          setUploading(false)
+
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+      }
   };
 
   const handlePagination = (page: number) => getBanks(page, searchKey, sortKey);
@@ -74,6 +152,8 @@ const Bank = () => {
   useIonViewWillEnter(() => {
     getBanks(currentPage);
   });
+
+  
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
@@ -84,7 +164,14 @@ const Bank = () => {
             
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
               <div className="flex flex-col lg:flex-row items-start justify-start gap-3">
-                <div>{canDoAction(token.role, token.permissions, 'bank', 'create') && <CreateBank getBanks={getBanks} />}</div>
+                <div className=' flex flex-wrap gap-2'>{canDoAction(token.role, token.permissions, 'bank', 'create') && <CreateBank getBanks={getBanks} />}
+                {online && (
+                      <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                        <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
+                      </IonButton>
+                    )}
+                      
+                </div>
                 <BankFilter getBanks={getBanks} />
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">

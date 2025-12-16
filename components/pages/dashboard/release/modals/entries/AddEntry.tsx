@@ -103,6 +103,9 @@ const AddEntry = ({ releaseId, getEntries, setData, setEntries }: AddEntryProps)
              const credit = Number(removeAmountComma(data.credit));
        
              setEntries((prev: ReleaseEntry[]) => {
+              const nextLine = prev.length > 0 
+                ? Math.max(...prev.map(e => e.line)) + 1 
+                : 1;
              const newEntry: ReleaseEntry = {
                _id: generateObjectId(),
                //  acknowledgement: '',
@@ -130,7 +133,10 @@ const AddEntry = ({ releaseId, getEntries, setData, setEntries }: AddEntryProps)
                particular: data.particular ?? '',
                createdAt: new Date().toISOString(),
                cvNo: data.cvNo ?? '',
-               release: ''
+               release: '',
+               _synced: false,
+              action: "create",
+              line: nextLine,
              }
               
        
@@ -139,7 +145,9 @@ const AddEntry = ({ releaseId, getEntries, setData, setEntries }: AddEntryProps)
        
            
            setData((prev: any) => {
-        
+             const nextLine = prev.entries.length > 0 
+                ? Math.max(...prev.entries.map((e: { line: any; }) => e.line)) + 1 
+                : 1;
            const newEntry: ReleaseEntry = {
              _id: generateObjectId(),
              // acknowledgement: '',
@@ -166,7 +174,10 @@ const AddEntry = ({ releaseId, getEntries, setData, setEntries }: AddEntryProps)
              particular: data.particular ?? '',
              createdAt: new Date().toISOString(),
              cvNo: data.cvNo ?? '',
-             release: ''
+             release: '',
+             _synced: false,
+              action: "create",
+              line: nextLine,
            }
        
              return {

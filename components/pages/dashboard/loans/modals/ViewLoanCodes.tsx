@@ -62,7 +62,7 @@ const ViewLoanCodes = ({ loan }: { loan: Loan }) => {
                       <TableCell className="border-4 border-slate-100 align-top max-w-40 min-w-40">{loanCode.module}</TableCell>
                       <TableCell className="border-4 border-slate-100 align-top max-w-40 min-w-40">{loanCode.loanType}</TableCell>
                       <TableCell className="border-4 border-slate-100 align-top">
-                        {loanCode.acctCode.code} - {loanCode.acctCode.description}
+                        {loanCode.acctCode?.code} - {loanCode.acctCode?.description}
                       </TableCell>
                       <TableCell className="border-4 border-slate-100 align-top max-w-24 min-w-24">{loanCode.sortOrder}</TableCell>
                     </TableRow>

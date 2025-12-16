@@ -16,13 +16,17 @@ import UpdateELEntries from '../components/UpdateELEntries';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type UpdateEmergencyLoanProps = {
   emergencyLoan: EmergencyLoan;
   setData: React.Dispatch<React.SetStateAction<TData>>;
+  currentPage: number,
+  getEmergencyLoans: (page: number, keyword?: string, sort?: string) => void;
 };
 
-const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProps) => {
+const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergencyLoans }: UpdateEmergencyLoanProps) => {
   const [present] = useIonToast();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -30,6 +34,8 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
   const [entries, setEntries] = useState<EmergencyLoanEntry[]>(emergencyLoan.entries || []);
   const [preventries, setPrevEntries] = useState<EmergencyLoanEntry[]>(emergencyLoan.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<EmergencyLoanFormData>({
     resolver: zodResolver(emergencyLoanSchema),
@@ -95,57 +101,97 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData }: UpdateEmergencyLoanProp
   
 
   async function onSubmit(data: EmergencyLoanFormData) {
-    setLoading(true);
-    try {
+    const finalDeletedIds = deletedIds.filter((id) =>
+        preventries.some((e) => e._id === id)
+        );
 
-       const finalDeletedIds = deletedIds.filter((id) =>
-      preventries.some((e) => e._id === id)
-      );
+        const prevIds = new Set(preventries.map((e) => e._id));
 
-      const prevIds = new Set(preventries.map((e) => e._id));
-
-      const formattedEntries = entries.map((entry, index) => {
-        const isExisting = prevIds.has(entry._id);
-        return {
-            _id: isExisting ? entry._id : undefined,
-            client: entry.client._id,
-            clientLabel: entry.client.name,
-            particular: entry.particular,
-            acctCodeId: entry.acctCode._id,
-            acctCode: entry.acctCode.code,
-            description: entry.acctCode.description,
-            debit: entry.debit,
-            credit: entry.debit
-        };
-      });
-      data.amount = removeAmountComma(data.amount);
-      const result = await kfiAxios.put(`emergency-loan/${emergencyLoan._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
-      const { success, emergencyLoan: updatedEmergencyLoan } = result.data;
-      if (success) {
-        setData(prev => {
-          const index = prev.emergencyLoans.findIndex(emergencyLoan => emergencyLoan._id === updatedEmergencyLoan._id);
-          if (index < 0) return prev;
-          prev.emergencyLoans[index] = { ...updatedEmergencyLoan };
-          return { ...prev };
+        const formattedEntries = entries.map((entry, index) => {
+          const isExisting = prevIds.has(entry._id);
+          return {
+              _id: isExisting ? entry._id : undefined,
+              client: entry.client._id,
+              clientLabel: entry.client.name,
+              particular: entry.particular,
+              acctCodeId: entry.acctCode._id,
+              acctCode: entry.acctCode.code,
+              description: entry.acctCode.description,
+              debit: entry.debit,
+              credit: entry.debit
+          };
         });
+        data.amount = removeAmountComma(data.amount);
+    if(online){
+      setLoading(true);
+      try {
+
+        
+        const result = await kfiAxios.put(`emergency-loan/${emergencyLoan._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
+        const { success, emergencyLoan: updatedEmergencyLoan } = result.data;
+        if (success) {
+          setData(prev => {
+            const index = prev.emergencyLoans.findIndex(emergencyLoan => emergencyLoan._id === updatedEmergencyLoan._id);
+            if (index < 0) return prev;
+            prev.emergencyLoans[index] = { ...updatedEmergencyLoan };
+            return { ...prev };
+          });
+          present({
+            message: 'Emergency loan successfully updated.',
+            duration: 1000,
+          });
+          dismiss()
+          return;
+        }
         present({
-          message: 'Emergency loan successfully updated.',
+          message: 'Failed to update the emergency loan',
           duration: 1000,
         });
-        dismiss()
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to update the emergency loan',
-        duration: 1000,
-      });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+       try {
+       const existing = await db.emergencyLoans.get(emergencyLoan.id);
+        if (!existing) {
+          console.log("Data not found");
+          return;
+        }
+        const updated = {
+          ...data,
+          entries: entries, 
+          deletedIds: finalDeletedIds,
+          _synced: false,
+          action: "update",
+        };
+
+        console.log('Form Data',updated)
+        await db.emergencyLoans.update(emergencyLoan.id, updated);
+        getEmergencyLoans(currentPage)
+       
+
+        dismiss();
+        present({
+          message: "Data successfully updated!",
+          duration: 1000,
+        });
+      } catch (error: any) {
+        console.log(error)
+         const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+
+      }
     }
   }
 

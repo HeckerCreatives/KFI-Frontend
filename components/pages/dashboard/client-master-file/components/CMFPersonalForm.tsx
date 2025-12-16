@@ -399,6 +399,20 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                 />
               </FormIonItem>
             </div>
+             <FormIonItem>
+              <InputText
+                disabled={loading}
+                name="bankAccountNo"
+                type="text"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Bank Account No"
+                placeholder="Type here"
+                className="!px-2 !py-2 rounded-md"
+                max="9999-12-31"
+                labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
+              />
+            </FormIonItem>
             <FormIonItem>
               <InputText
                 disabled={loading}

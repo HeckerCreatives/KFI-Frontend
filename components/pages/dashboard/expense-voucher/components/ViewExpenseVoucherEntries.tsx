@@ -8,6 +8,7 @@ import TablePagination from '../../../../ui/forms/TablePagination';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 export type TData = {
   entries: ExpenseVoucherEntry[];
@@ -25,6 +26,8 @@ type ViewEntriesProps = {
 const ViewExpenseVoucherEntries = ({ isOpen, expenseVoucher }: ViewEntriesProps) => {
   const [present] = useIonToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TData>({
     entries: [],
@@ -35,31 +38,40 @@ const ViewExpenseVoucherEntries = ({ isOpen, expenseVoucher }: ViewEntriesProps)
   });
 
   const getEntries = async (page: number) => {
-    setData(prev => ({ ...prev, loading: true }));
-    try {
-      const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-
-      const result = await kfiAxios.get(`/expense-voucher/entries/${expenseVoucher._id}`, { params: filter });
-      const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          entries: entries,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        return;
+   if(online){
+     setData(prev => ({ ...prev, loading: true }));
+      try {
+        const filter: TTableFilter = { limit: TABLE_LIMIT, page };
+        const result = await kfiAxios.get(`/expense-voucher/entries/${expenseVoucher._id}`, { params: filter });
+        const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            entries: entries,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+          return;
+        }
+      } catch (error) {
+        present({
+          message: 'Failed to get entry records. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
       }
-    } catch (error) {
-      present({
-        message: 'Failed to get entry records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setData(prev => ({ ...prev, loading: false }));
-    }
+   } else {
+      setData(prev => ({
+            ...prev,
+        entries: expenseVoucher.entries,
+        totalPages: 1,
+        nextPage: false,
+        prevPage: false,
+      }));
+   }
   };
 
   const handlePagination = (page: number) => getEntries(page);

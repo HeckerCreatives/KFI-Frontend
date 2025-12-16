@@ -30,7 +30,7 @@ const EmergencyLoanActions = ({ emergencyLoan, setData, getEmergencyLoans, curre
   return (
     <div>
       {canDoAction(token.role, token.permissions, 'emergency loan', 'visible') && <ViewEmergencyLoan emergencyLoan={emergencyLoan} />}
-      {canDoAction(token.role, token.permissions, 'emergency loan', 'update') && <UpdateEmergencyLoan emergencyLoan={emergencyLoan} setData={setData} />}
+      {canDoAction(token.role, token.permissions, 'emergency loan', 'update') && <UpdateEmergencyLoan emergencyLoan={emergencyLoan} setData={setData} currentPage={currentPage} getEmergencyLoans={getEmergencyLoans} />}
       {canDoAction(token.role, token.permissions, 'emergency loan', 'delete') && (
         <DeleteEmergencyLoan
           emergencyLoan={emergencyLoan}

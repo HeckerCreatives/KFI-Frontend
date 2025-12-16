@@ -17,6 +17,9 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { TData } from '../LoanRelease';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
+import { formatLREntries } from '../../../../ui/utils/fomatData';
 
 type UpdateLoanReleaseProps = {
   transaction: Transaction;
@@ -30,6 +33,8 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
   const [entries, setEntries] = useState<Entry[]>(transaction.entries || []);
   const [prevEntries, setPrevEntries] = useState<Entry[]>(transaction.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  const online = useOnlineStore((state) => state.online);
+  
   
 
   const form = useForm<UpdateLoanReleaseFormData>({
@@ -58,74 +63,121 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
   }
 
   async function onSubmit(data: UpdateLoanReleaseFormData) {
-    setLoading(true);
-  
-    try {
-      const prevIds = new Set(prevEntries.map((e) => e._id));
 
-      const formattedEntries = entries.map((entry, index) => {
-        const isExisting = prevIds.has(entry._id);
-        return {
-          _id: isExisting ? entry._id : undefined,
-          line: index + 1,
-          clientId: entry.client?._id ?? "",
-          client: entry.client?.name ?? "",
-          particular: `${entry.center?.centerNo ?? ""} - ${entry.client?.name ?? ""}`,
-          acctCodeId: entry.acctCode?._id ?? "",
-          acctCode: entry.acctCode?.code ?? "",
-          description: entry.acctCode?.description ?? "",
-          debit: entry.debit?.toString() ?? "",
-          credit: entry.credit?.toString() ?? "",
-          interest: entry.interest?.toString() ?? "",
-          cycle: entry.cycle?.toString() ?? "",
-          checkNo: entry.checkNo ?? "",
-        };
-      });
+    const prevIds = new Set(prevEntries.map((e) => e._id));
+    const formattedEntries = entries.map((entry, index) => {
+      const isExisting = prevIds.has(entry._id);
+      return {
+        _id: isExisting ? entry._id : undefined,
+        line: index + 1,
+        clientId: entry.client?._id ?? "",
+        client: entry.client?.name ?? "",
+        particular: `${entry.center?.centerNo ?? ""} - ${entry.client?.name ?? ""}`,
+        acctCodeId: entry.acctCode?._id ?? "",
+        acctCode: entry.acctCode?.code ?? "",
+        description: entry.acctCode?.description ?? "",
+        debit: entry.debit?.toString() ?? "",
+        credit: entry.credit?.toString() ?? "",
+        interest: entry.interest?.toString() ?? "",
+        cycle: entry.cycle?.toString() ?? "",
+        checkNo: entry.checkNo ?? "",
+      };
+    });
 
-     const finalDeletedIds = deletedIds.filter((id) =>
+    const finalDeletedIds = deletedIds.filter((id) =>
       prevEntries.some((e) => e._id === id)
     );
 
 
+    if(online){
+      setLoading(true);
+  
+      try {
+       
+        data.amount = removeAmountComma(data.amount);
+        const result = await kfiAxios.put(`/transaction/loan-release/${transaction._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
+        const { success, transaction: updatedTransaction } = result.data;
+        if (success) {
+          setData(prev => {
+            const index = prev.transactions.findIndex(transaction => transaction._id === updatedTransaction._id);
+            if (index < 0) return prev;
+            prev.transactions[index] = { ...updatedTransaction };
+            return { ...prev };
+          });
+          present({
+            message: 'Loan release successfully updated.',
+            duration: 1000,
+          });
 
-      data.amount = removeAmountComma(data.amount);
-      const result = await kfiAxios.put(`/transaction/loan-release/${transaction._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
-      const { success, transaction: updatedTransaction } = result.data;
-      if (success) {
-        setData(prev => {
-          const index = prev.transactions.findIndex(transaction => transaction._id === updatedTransaction._id);
-          if (index < 0) return prev;
-          prev.transactions[index] = { ...updatedTransaction };
-          return { ...prev };
-        });
+          dismiss()
+          return;
+        }
         present({
-          message: 'Loan release successfully updated.',
+          message: 'Failed to update the loan release',
           duration: 1000,
         });
 
-        dismiss()
-        return;
+        
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to update the loan release',
-        duration: 1000,
-      });
+    } else {
+      try {
+       const existing = await db.loanReleases.get(transaction.id);
+        if (!existing) {
+          console.warn("Data not found");
+          return;
+        }
+        const partialUpdate = {
+          amount: Number(removeAmountComma(data.amount)),
+          cycle: Number(data.cycle),
+          interestRate: Number(data.interestRate),
+        };
+        const updated = {
+          ...existing,
+          ...partialUpdate, 
+          entries: entries, 
+          deletedIds: finalDeletedIds,
+          _synced: false,
+          action: "update",
+        };
+        await db.loanReleases.update(transaction.id, updated);
+        setData(prev => {
+          const clone = [...prev.transactions];
+          const index = clone.findIndex(c => c.id === transaction.id);
+          if (index !== -1) {
+            clone[index] = {
+              ...clone[index],     
+              ...partialUpdate, 
+              entries: entries,
+              
+            };
+          }
+          return { ...prev, transactions: clone };
+        });
+        dismiss();
+        present({
+          message: "Data successfully updated!",
+          duration: 1000,
+        });
+      } catch (error) {
+        console.log(error)
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
 
-      
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+      }
     }
+    
   }
 
-  console.log('New Prev', entries, prevEntries)
-
-
-
+  console.log('Entries',entries)
   return (
     <>
       {/* <div
@@ -172,12 +224,12 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                   <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="" />
                 </div> */}
                 <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} labelClassName="" />
-                <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan.code}`} labelClassName="" />
+                <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan?.code}`} labelClassName="" />
               </div>
               <div className="space-y-1">
                 <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} labelClassName="" />
                 <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} labelClassName="" />
-                <LoanReleaseViewCard label="Bank Code" value={transaction.bank.code} labelClassName="" />
+                <LoanReleaseViewCard label="Bank Code" value={transaction.bank?.code} labelClassName="" />
                 <FormIonItem className=" [--min-height:0]">
                   <InputText
                     disabled={loading}
@@ -257,7 +309,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
             </div>
 
             <div>
-              <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy.username} labelClassName="" containerClassName="" />
+              <LoanReleaseViewCard label="Encoded By" value={transaction.encodedBy?.username} labelClassName="" containerClassName="" />
             </div>
 
             <div className="text-end space-x-1 px-0 pb-2">

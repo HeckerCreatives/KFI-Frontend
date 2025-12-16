@@ -68,7 +68,7 @@ const CreateBusinessType = ({ getBusinessTypes }: CreateBusinessTypeProps) => {
           getBusinessTypes(1);
           dismiss()
           present({
-            message: 'Business types successfully updated!.',
+            message: 'Business types successfully created!.',
             duration: 1000,
           });
           return;

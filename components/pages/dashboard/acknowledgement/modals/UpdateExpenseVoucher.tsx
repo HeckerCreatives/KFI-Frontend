@@ -15,19 +15,25 @@ import AcknowledgementForm from '../components/AcknowledgementForm';
 import UpdateAcknowledgementEntries from '../components/UpdateAcknowledgementEntries';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type UpdateAcknowledgementProps = {
   acknowledgement: Acknowledgement;
   setData: React.Dispatch<React.SetStateAction<TData>>;
+   currentPage: number,
+  getAcknowledgement: (page: number, keyword?: string, sort?: string) => void;
 };
 
-const UpdateAcknowledgement = ({ acknowledgement, setData }: UpdateAcknowledgementProps) => {
+const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAcknowledgement }: UpdateAcknowledgementProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [entries, setEntries] = useState<AcknowledgementEntry[]>(acknowledgement.entries || []);
   const [preventries, setPrevEntries] = useState<AcknowledgementEntry[]>(acknowledgement.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  const online = useOnlineStore((state) => state.online);
+  
   
 
   const form = useForm<AcknowledgementFormData>({
@@ -100,65 +106,107 @@ function removeCVTag(cv: string): string {
 
 
   async function onSubmit(data: AcknowledgementFormData) {
-    setLoading(true);
-    try {
+     const finalDeletedIds = deletedIds.filter((id) =>
+        preventries.some((e) => e._id === id)
+        );
 
-       const finalDeletedIds = deletedIds.filter((id) =>
-      preventries.some((e) => e._id === id)
-      );
+        const prevIds = new Set(preventries.map((e) => e._id));
 
-      const prevIds = new Set(preventries.map((e) => e._id));
-
-      const formattedEntries = entries.map((entry, index) => {
-        const isExisting = prevIds.has(entry._id);
-        return {
-             _id: isExisting ? entry._id : undefined,
-            loanReleaseEntryId: entry.loanReleaseEntryId._id,
-            cvNo: normalizeCVNumber(entry.cvNo),
-            dueDate: acknowledgement.date,
-            noOfWeeks: entry.loanReleaseEntryId.transaction.noOfWeeks,
-            name: entry.loanReleaseEntryId.client.name,
-            particular: entry.particular,
-            acctCodeId: entry.acctCode._id,
-            acctCode: entry.acctCode.code ?? '',
-            description: entry.acctCode.description ?? '',
-            debit: entry.debit?.toString() ?? "",
-            credit: entry.credit?.toString() ?? "",
-            line: index + 1,
-          
-        };
-      });
-      data.amount = removeAmountComma(data.amount);
-      data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
-      const result = await kfiAxios.put(`/acknowledgement/${acknowledgement._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
-      const { success, acknowledgement: updatedAcknowledgement } = result.data;
-      if (success) {
-        setData(prev => {
-          const index = prev.acknowledgements.findIndex(acknowledgement => acknowledgement._id === updatedAcknowledgement._id);
-          if (index < 0) return prev;
-          prev.acknowledgements[index] = { ...updatedAcknowledgement };
-          return { ...prev };
+        const formattedEntries = entries.map((entry, index) => {
+          const isExisting = prevIds.has(entry._id);
+          return {
+              _id: isExisting ? entry._id : undefined,
+              loanReleaseEntryId: entry.loanReleaseEntryId._id,
+              cvNo: normalizeCVNumber(entry.cvNo),
+              dueDate: acknowledgement.date,
+              noOfWeeks: entry.loanReleaseEntryId.transaction.noOfWeeks,
+              name: entry.loanReleaseEntryId.client.name,
+              particular: entry.particular,
+              acctCodeId: entry.acctCode._id,
+              acctCode: entry.acctCode.code ?? '',
+              description: entry.acctCode.description ?? '',
+              debit: entry.debit?.toString() ?? "",
+              credit: entry.credit?.toString() ?? "",
+              line: index + 1,
+            
+          };
         });
+        data.amount = removeAmountComma(data.amount);
+        data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
+    if(online){
+      setLoading(true);
+      try {
+
+       
+        const result = await kfiAxios.put(`/acknowledgement/${acknowledgement._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
+        const { success, acknowledgement: updatedAcknowledgement } = result.data;
+        if (success) {
+          setData(prev => {
+            const index = prev.acknowledgements.findIndex(acknowledgement => acknowledgement._id === updatedAcknowledgement._id);
+            if (index < 0) return prev;
+            prev.acknowledgements[index] = { ...updatedAcknowledgement };
+            return { ...prev };
+          });
+          present({
+            message: 'Official Receipt successfully updated.',
+            duration: 1000,
+          });
+          dismiss()
+          return;
+        }
         present({
-          message: 'Official Receipt successfully updated.',
+          message: 'Failed to update the official receipt',
           duration: 1000,
         });
-        dismiss()
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to update the official receipt',
-        duration: 1000,
-      });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+      try {
+       const existing = await db.officialReceipts.get(acknowledgement.id);
+        if (!existing) {
+          console.log("Data not found");
+          return;
+        }
+        const updated = {
+          ...data,
+          entries: entries, 
+          deletedIds: finalDeletedIds,
+          _synced: false,
+          action: "update",
+        };
+
+        console.log('Form Data',updated)
+        await db.officialReceipts.update(acknowledgement.id, updated);
+        getAcknowledgement(currentPage)
+       
+
+        dismiss();
+        present({
+          message: "Data successfully updated!",
+          duration: 1000,
+        });
+      } catch (error: any) {
+        console.log(error)
+         const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+
+      }
     }
   }
+
+  console.log(form.formState.errors)
 
   return (
     <>

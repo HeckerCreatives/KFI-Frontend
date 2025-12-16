@@ -41,7 +41,7 @@ const AcknowledgementActions = ({
   return (
     <div>
       {canDoAction(token.role, token.permissions, 'acknowledgement', 'visible') && <ViewAcknowledgement acknowledgement={acknowledgement} />}
-      {canDoAction(token.role, token.permissions, 'acknowledgement', 'update') && <UpdateAcknowledgement acknowledgement={acknowledgement} setData={setData} />}
+      {canDoAction(token.role, token.permissions, 'acknowledgement', 'update') && <UpdateAcknowledgement acknowledgement={acknowledgement} setData={setData} getAcknowledgement={getAcknowledgements} currentPage={currentPage} />}
       {canDoAction(token.role, token.permissions, 'acknowledgement', 'delete') && (
         <DeleteAcknowledgement
           acknowledgement={acknowledgement}

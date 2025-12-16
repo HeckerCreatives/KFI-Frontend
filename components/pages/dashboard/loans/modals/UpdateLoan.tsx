@@ -13,10 +13,14 @@ import { TLoan } from '../Loans';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import InputText from '../../../../ui/forms/InputText';
 import UpdateLoanCodes from '../components/UpdateLoanCodes';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<React.SetStateAction<TLoan>> }) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [present] = useIonToast();
 
@@ -43,33 +47,72 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
   }
 
   async function onSubmit(data: UpdateProductLoanFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.put(`/loan/${loan._id}`, data);
-      const { success } = result.data;
-      if (success) {
-        setData(prev => {
-          let clone = [...prev.loans];
-          let index = clone.findIndex(e => e._id === result.data.loan._id);
-          clone[index] = { ...result.data.loan };
-          return { ...prev, loans: clone };
-        });
-        dismiss();
-        present({
-          message: 'Product successfully updated!.',
-          duration: 1000,
-        });
-        return;
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.put(`/loan/${loan._id}`, data);
+        const { success } = result.data;
+        if (success) {
+          setData(prev => {
+            let clone = [...prev.loans];
+            let index = clone.findIndex(e => e._id === result.data.loan._id);
+            clone[index] = { ...result.data.loan };
+            return { ...prev, loans: clone };
+          });
+          dismiss();
+          present({
+            message: 'Product successfully updated!.',
+            duration: 1000,
+          });
+          return;
+        }
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+      try {
+         const existing = await db.loanProducts.get(loan.id);
+  
+          if (!existing) {
+            console.warn("Data not found");
+            return;
+          }
+          const updated = {
+            ...existing,
+            ...data, 
+            _synced: false,
+            action: "update",
+          };
+          await db.loanProducts.update(loan.id, updated);
+          setData(prev => {
+            const clone = [...prev.loans];
+            const index = clone.findIndex(c => c.id === loan.id);
+            if (index !== -1) {
+              clone[index] = updated;
+            }
+            return { ...prev, loans: clone };
+          });
+          dismiss();
+          present({
+            message: "Data successfully updated!",
+            duration: 1000,
+          });
+        } catch (error) {
+          console.log(error)
+          present({
+            message: "Failed to save record. Please try again.",
+            duration: 1200,
+          });
+  
+        }
     }
   }
+
 
   return (
     <>

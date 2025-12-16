@@ -72,12 +72,14 @@ const AddEntry = ({ emergencyLoanId, getEntries, entries, setEntries, setData, t
                data.debit = removeAmountComma(data.debit as string);
                data.credit = removeAmountComma(data.credit as string);
          
-               console.log(data)
          
                const debit = Number(removeAmountComma(data.debit));
                const credit = Number(removeAmountComma(data.credit));
          
                setEntries((prev: EmergencyLoanEntry[]) => {
+                const nextLine = prev.length > 0 
+                ? Math.max(...prev.map(e => e.line)) + 1 
+                : 1;
                const newEntry: EmergencyLoanEntry = {
                  _id: generateObjectId(),
                  emergencyLoan: '',
@@ -97,7 +99,10 @@ const AddEntry = ({ emergencyLoanId, getEntries, entries, setEntries, setData, t
                  },
                  debit: debit,
                  credit: credit,
-                 createdAt: new Date().toISOString()
+                 createdAt: new Date().toISOString(),
+                   _synced: false,
+                  action: "create",
+                  line: nextLine,
                }
                 
          
@@ -106,8 +111,8 @@ const AddEntry = ({ emergencyLoanId, getEntries, entries, setEntries, setData, t
          
              
              setData((prev: TELData) => {
-          
-            const newEntry: EmergencyLoanEntry = {
+            
+            const newEntry: any = {
                  _id: generateObjectId(),
                  emergencyLoan: '',
                  client: {
@@ -126,7 +131,9 @@ const AddEntry = ({ emergencyLoanId, getEntries, entries, setEntries, setData, t
                  },
                  debit: debit,
                  credit: credit,
-                 createdAt: new Date().toISOString()
+                 createdAt: new Date().toISOString(),
+                 _synced: false,
+                action: "create",
                }
          
                return {

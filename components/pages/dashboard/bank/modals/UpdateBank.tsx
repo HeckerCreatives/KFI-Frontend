@@ -11,11 +11,15 @@ import { Bank, TErrorData, TFormError } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 const UpdateBank = ({ bank, setData }: { bank: Bank; setData: React.Dispatch<React.SetStateAction<TBank>> }) => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<BankFormData>({
     resolver: zodResolver(bankSchema),
@@ -40,7 +44,8 @@ const UpdateBank = ({ bank, setData }: { bank: Bank; setData: React.Dispatch<Rea
   }
 
   async function onSubmit(data: BankFormData) {
-    setLoading(true);
+   if(online){
+     setLoading(true);
     try {
       const result = await kfiAxios.put(`/bank/${bank._id}`, data);
       const { success } = result.data;
@@ -66,6 +71,45 @@ const UpdateBank = ({ bank, setData }: { bank: Bank; setData: React.Dispatch<Rea
     } finally {
       setLoading(false);
     }
+   } else {
+      try {
+           const existing = await db.banks.get(bank.id);
+                  
+            if (!existing) {
+              console.warn("Data not found");
+              return;
+            }
+            const updated = {
+              ...existing,
+              ...data, 
+              _synced: false,
+              action: "update",
+            };
+            await db.banks.update(bank.id, updated);
+            setData(prev => {
+              const clone = [...prev.banks];
+              const index = clone.findIndex(c => c.id === bank.id);
+              if (index !== -1) {
+                clone[index] = updated;
+              }
+              return { ...prev, banks: clone };
+            });
+            dismiss();
+            present({
+              message: "Data successfully updated!",
+              duration: 1000,
+            });
+    
+          } catch (error) {
+    
+            present({
+              message: "Failed to save record. Please try again.",
+              duration: 1200,
+            });
+    
+          }
+   }
+    
   }
 
   return (

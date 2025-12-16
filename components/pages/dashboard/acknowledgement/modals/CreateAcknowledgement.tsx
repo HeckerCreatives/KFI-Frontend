@@ -13,6 +13,8 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateAcknowledgementProps = {
   getAcknowledgements: (page: number, keyword?: string, sort?: string) => void;
@@ -22,6 +24,8 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<AcknowledgementFormData>({
     resolver: zodResolver(acknowledgementSchema),
@@ -54,33 +58,58 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
   }
 
   async function onSubmit(data: any) {
-    setLoading(true);
-    try {
-      data.amount = removeAmountComma(data.amount);
-      data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
-      data.entries = data.entries ? data.entries.map((entry: any, index: any) => ({ ...entry,clientId:entry.loanReleaseEntryId, clientName: entry.name,loanReleaseId: entry.loanReleaseEntryId,week: entry.noOfWeeks,acctCodeDesc:entry.description, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.debit), line: index + 1 })) : [];
-      const result = await kfiAxios.post('acknowledgement', data);
-      const { success } = result.data;
-      if (success) {
-        getAcknowledgements(1);
+    if(online){
+      setLoading(true);
+      try {
+        data.amount = removeAmountComma(data.amount);
+        data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
+        data.entries = data.entries ? data.entries.map((entry: any, index: any) => ({ ...entry,clientId:entry.loanReleaseEntryId, clientName: entry.name,loanReleaseId: entry.loanReleaseEntryId,week: entry.noOfWeeks,acctCodeDesc:entry.description, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.debit), line: index + 1 })) : [];
+        const result = await kfiAxios.post('acknowledgement', data);
+        const { success } = result.data;
+        if (success) {
+          getAcknowledgements(1);
+          present({
+            message: 'Official Receipt successfully added.',
+            duration: 1000,
+          });
+          dismiss();
+          return;
+        }
         present({
-          message: 'Official Receipt successfully added.',
+          message: 'Failed to add a new official receipt. Please try again.',
           duration: 1000,
         });
-        dismiss();
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to add a new official receipt. Please try again.',
-        duration: 1000,
-      });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+       try {
+         const entries = data.entries
+         // const entries = data.entries
+         await db.officialReceipts.add({
+           ...data,
+           entries: entries,
+           encodedBy: '',
+           _synced: false,  
+           action: "create",
+         });
+         getAcknowledgements(1);
+         dismiss();
+         present({
+           message: "Data successfully created!",
+           duration: 1000,
+         });
+       } catch (error) {
+         present({
+           message: "Failed to save record. Please try again.",
+           duration: 1200,
+         });
+       }
     }
   }
 

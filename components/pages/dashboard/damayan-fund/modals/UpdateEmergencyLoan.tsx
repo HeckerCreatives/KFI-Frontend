@@ -16,20 +16,26 @@ import UpdateDFEntries from '../components/UpdateDFEntries';
 import { DamayanFundFormData, damayanFundSchema } from '../../../../../validations/damayan-fund.schema';
 import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type UpdateDamayanFundProps = {
   damayanFund: DamayanFund;
   setData: React.Dispatch<React.SetStateAction<TData>>;
+  currentPage: number,
+  getDamayanFunds: (page: number, keyword?: string, sort?: string) => void;
 };
 
-const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => {
+const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage }: UpdateDamayanFundProps) => {
   const [present] = useIonToast();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-   const [entries, setEntries] = useState<DamayanFundEntry[]>(damayanFund.entries || []);
-    const [preventries, setPrevEntries] = useState<DamayanFundEntry[]>(damayanFund.entries || []);
-    const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  const [entries, setEntries] = useState<DamayanFundEntry[]>(damayanFund.entries || []);
+  const [preventries, setPrevEntries] = useState<DamayanFundEntry[]>(damayanFund.entries || []);
+  const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  const online = useOnlineStore((state) => state.online);
+    
 
   const form = useForm<DamayanFundFormData>({
     resolver: zodResolver(damayanFundSchema),
@@ -81,59 +87,101 @@ const UpdateDamayanFund = ({ damayanFund, setData }: UpdateDamayanFundProps) => 
   }
 
   async function onSubmit(data: DamayanFundFormData) {
-    setLoading(true);
-    try {
-       const finalDeletedIds = deletedIds.filter((id) =>
-      preventries.some((e) => e._id === id)
-      );
+     const finalDeletedIds = deletedIds.filter((id) =>
+        preventries.some((e) => e._id === id)
+        );
 
-      const prevIds = new Set(preventries.map((e) => e._id));
+        const prevIds = new Set(preventries.map((e) => e._id));
 
-      const formattedEntries = entries.map((entry, index) => {
-        const isExisting = prevIds.has(entry._id);
-        return {
-            _id: isExisting ? entry._id : undefined,
-            client: entry.client._id,
-            clientLabel: entry.client.name,
-            particular: entry.particular,
-            acctCodeId: entry.acctCode._id,
-            acctCode: entry.acctCode.code,
-            description: entry.acctCode.description,
-            debit: entry.debit,
-            credit: entry.debit,
-          
-        };
-      });
-      data.amount = removeAmountComma(data.amount);
-      const result = await kfiAxios.put(`damayan-fund/${damayanFund._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
-      const { success, damayanFund: updatedDamayanFund } = result.data;
-      if (success) {
-        setData(prev => {
-          const index = prev.damayanFunds.findIndex(damayanFund => damayanFund._id === updatedDamayanFund._id);
-          if (index < 0) return prev;
-          prev.damayanFunds[index] = { ...updatedDamayanFund };
-          return { ...prev };
+        const formattedEntries = entries.map((entry, index) => {
+          const isExisting = prevIds.has(entry._id);
+          return {
+              _id: isExisting ? entry._id : undefined,
+              client: entry.client._id,
+              clientLabel: entry.client.name,
+              particular: entry.particular,
+              acctCodeId: entry.acctCode._id,
+              acctCode: entry.acctCode.code,
+              description: entry.acctCode.description,
+              debit: entry.debit,
+              credit: entry.debit,
+            
+          };
         });
+        data.amount = removeAmountComma(data.amount);
+    if(online){
+      setLoading(true);
+      try {
+       
+        const result = await kfiAxios.put(`damayan-fund/${damayanFund._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
+        const { success, damayanFund: updatedDamayanFund } = result.data;
+        if (success) {
+          setData(prev => {
+            const index = prev.damayanFunds.findIndex(damayanFund => damayanFund._id === updatedDamayanFund._id);
+            if (index < 0) return prev;
+            prev.damayanFunds[index] = { ...updatedDamayanFund };
+            return { ...prev };
+          });
+          present({
+            message: 'Damayan fund successfully updated.',
+            duration: 1000,
+          });
+          dismiss()
+          return;
+        }
         present({
-          message: 'Damayan fund successfully updated.',
+          message: 'Failed to update the damayan fund',
           duration: 1000,
         });
-        dismiss()
-        return;
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-      present({
-        message: 'Failed to update the damayan fund',
-        duration: 1000,
-      });
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+      try {
+       const existing = await db.damayanFunds.get(damayanFund.id);
+        if (!existing) {
+          console.log("Data not found");
+          return;
+        }
+        const updated = {
+          ...data,
+          entries: entries, 
+          deletedIds: finalDeletedIds,
+          _synced: false,
+          action: "update",
+        };
+
+        console.log('Form Data',updated)
+        await db.damayanFunds.update(damayanFund.id, updated);
+        getDamayanFunds(currentPage)
+       
+
+        dismiss();
+        present({
+          message: "Data successfully updated!",
+          duration: 1000,
+        });
+      } catch (error: any) {
+        console.log(error)
+         const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+
+      }
     }
   }
+
+  console.log(form.formState.errors, damayanFund)
 
   return (
     <>

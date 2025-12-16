@@ -142,6 +142,9 @@ const UpdateEntry = ({ entry, setData, transaction, entries, setEntries }: Updat
         credit,
         particular: data.particular ?? "",
         createdAt: new Date().toISOString(),
+        _synced: false,
+        action: "update",
+        
       };
 
       setData((prev: TData) => {

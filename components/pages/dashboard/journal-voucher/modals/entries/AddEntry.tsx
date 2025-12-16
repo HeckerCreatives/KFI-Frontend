@@ -63,16 +63,19 @@ const AddEntry = ({ journalVoucherId, getEntries, setData, setEntries }: AddEntr
         try {
           data.debit = removeAmountComma(data.debit as string);
           data.credit = removeAmountComma(data.credit as string);
-    
-          console.log(data)
+        
     
           const debit = Number(removeAmountComma(data.debit));
           const credit = Number(removeAmountComma(data.credit));
 
           setEntries((prev: JournalVoucherEntry[]) => {
+             const nextLine = prev.length > 0 
+              ? Math.max(...prev.map(e => e.line)) + 1 
+              : 1;
                 
             
                   const newEntry: JournalVoucherEntry = {
+                    line: nextLine,
                     _id: generateObjectId(),
                     journalVoucher: '',
                     acctCode: {
@@ -94,7 +97,9 @@ const AddEntry = ({ journalVoucherId, getEntries, setData, setEntries }: AddEntr
                         _id: '',
                         centerNo: ''
                       }
-                    }
+                    },
+                    _synced: false,
+                    action: "create",
                   };
             
                   return [...prev, newEntry];

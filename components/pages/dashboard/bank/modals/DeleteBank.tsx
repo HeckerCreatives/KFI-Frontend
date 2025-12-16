@@ -4,6 +4,8 @@ import React, { useRef, useState } from 'react';
 import { Bank } from '../../../../../types/types';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import kfiAxios from '../../../../utils/axios';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type DeleteLoanProps = {
   bank: Bank;
@@ -19,13 +21,16 @@ const DeleteBank = ({ bank, getBanks, searchkey, sortKey, currentPage, rowLength
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
   async function handleDelete() {
-    setLoading(true);
+   if(online){
+      setLoading(true);
     try {
       const result = await kfiAxios.delete(`/bank/${bank._id}`);
       const { success } = result.data;
@@ -48,6 +53,32 @@ const DeleteBank = ({ bank, getBanks, searchkey, sortKey, currentPage, rowLength
     } finally {
       setLoading(false);
     }
+   } else {
+     try {
+            if (bank._id) {
+                await db.banks.update(bank.id, {
+                  deletedAt: new Date().toISOString(),
+                  _synced: false,
+                  action: "delete",
+                });
+              } else {
+                await db.banks.delete(bank.id);
+              }
+           
+            getBanks(currentPage);
+            dismiss()
+             present({
+                  message: 'Bank successfully deleted!.',
+                  duration: 1000,
+                });
+       
+        } catch (error: any) {
+          present({
+            message: `${error.response.data.error.message}`,
+            duration: 1000,
+          });
+        }
+   }
   }
 
   return (

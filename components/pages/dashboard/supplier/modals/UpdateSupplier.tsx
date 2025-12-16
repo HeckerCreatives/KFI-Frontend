@@ -11,11 +11,15 @@ import { TSupplier } from '../Supplier';
 import kfiAxios from '../../../../utils/axios';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import checkError from '../../../../utils/check-error';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 const UpdateSupplier = ({ supplier, setData }: { supplier: Supplier; setData: React.Dispatch<React.SetStateAction<TSupplier>> }) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
   const [present] = useIonToast();
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<SupplierFormData>({
     resolver: zodResolver(supplierSchema),
@@ -40,7 +44,8 @@ const UpdateSupplier = ({ supplier, setData }: { supplier: Supplier; setData: Re
   }
 
   async function onSubmit(data: SupplierFormData) {
-    setLoading(true);
+   if(online){
+     setLoading(true);
     try {
       const result = await kfiAxios.put(`/supplier/${supplier._id}`, data);
       const { success } = result.data;
@@ -66,6 +71,44 @@ const UpdateSupplier = ({ supplier, setData }: { supplier: Supplier; setData: Re
     } finally {
       setLoading(false);
     }
+   } else {
+    try {
+      console.log(supplier.id, supplier)
+       const existing = await db.suppliers.get(supplier.id);
+
+        if (!existing) {
+          console.warn("Data not found");
+          return;
+        }
+        const updated = {
+          ...existing,
+          ...data, 
+          _synced: false,
+          action: "update",
+        };
+        await db.suppliers.update(supplier.id, updated);
+        setData(prev => {
+          const clone = [...prev.suppliers];
+          const index = clone.findIndex(c => c.id === supplier.id);
+          if (index !== -1) {
+            clone[index] = updated;
+          }
+          return { ...prev, suppliers: clone };
+        });
+        dismiss();
+        present({
+          message: "Data successfully updated!",
+          duration: 1000,
+        });
+      } catch (error) {
+        console.log(error)
+        present({
+          message: "Failed to save record. Please try again.",
+          duration: 1200,
+        });
+
+      }
+   }
   }
 
   return (

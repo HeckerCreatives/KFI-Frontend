@@ -9,6 +9,8 @@ import kfiAxios from '../../../../utils/axios';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateGroupAccount = {
   getGroupAccounts: (page: number) => void;
@@ -17,6 +19,8 @@ type CreateGroupAccount = {
 const CreateGroupAccount = ({ getGroupAccounts }: CreateGroupAccount) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [present] = useIonToast();
 
@@ -33,28 +37,48 @@ const CreateGroupAccount = ({ getGroupAccounts }: CreateGroupAccount) => {
   }
 
   async function onSubmit(data: GroupAccountFormData) {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.post('/group-account', data);
-      const { success } = result.data;
-      if (success) {
-        getGroupAccounts(1);
-        dismiss();
-        present({
-          message: 'Group account successfully created!.',
-          duration: 1000,
-        });
-        return;
+    if(online){
+      setLoading(true);
+      try {
+        const result = await kfiAxios.post('/group-account', data);
+        const { success } = result.data;
+        if (success) {
+          getGroupAccounts(1);
+          dismiss();
+          present({
+            message: 'Group account successfully created!.',
+            duration: 1000,
+          });
+          return;
+        }
+      } catch (error: any) {
+        const errs: TErrorData | string = error?.response?.data?.error || error.message;
+        const errors: TFormError[] | string = checkError(errs);
+        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+        formErrorHandler(errors, form.setError, fields);
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-    } finally {
-      setLoading(false);
+    } else {
+      await db.groupOfAccounts.add(
+        {
+        ...data, 
+        _synced: false,
+        action: "create"
+      }
+      );
+      getGroupAccounts(1);
+      dismiss()
+      present({
+            message: 'Group of account successfully created!.',
+            duration: 1000,
+          });
+      return;
     }
   }
+
+
+
 
   return (
     <>
