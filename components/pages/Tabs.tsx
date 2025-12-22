@@ -78,6 +78,7 @@ import Nature from './dashboard/nature/Nature';
 import SystemParameters from './dashboard/systemparameters/SystemParameters';
 import Databases from './dashboard/databases/databases';
 import { useOnlineStore } from '../../store/onlineStore';
+import Activity from './dashboard/activity/AuditTrail';
 
 type NavLink = {
   path?: string;
@@ -124,10 +125,11 @@ const navLinks: NavLink[] = [
   { path: "/dashboard/nature", label: "Nature", resource: "nature", icon: <ListViewIcon size={18} /> },
   {
     label: "General Ledgers",
-    resource: ["audit trail", "financial statement", "trial balance"],
+    resource: ["audit trail","activity", "financial statement", "trial balance"],
     icon: < CollectionsBookmarkIcon size={18} />,
     children: [
       { path: "/dashboard/audit-trail", label: "Audit Trail", resource: "audit trail" },
+      { path: "/dashboard/activity", label: "Activity", resource: "activity" },
       { path: "/dashboard/financial-statement", label: "Financial Statement", resource: "financial statement" },
       { path: "/dashboard/trial-balance", label: "Trial Balance", resource: "trial balance" },
     ],
@@ -424,6 +426,7 @@ const Tabs = () => {
             <Route path="/dashboard/emergency-loan" render={() => <EmergencyLoan />} exact={true} />
             <Route path="/dashboard/damayan-fund" render={() => <DamayanFund />} exact={true} />
             <Route path="/dashboard/audit-trail" render={() => <AuditTrail />} exact={true} />
+            <Route path="/dashboard/activity" render={() => <Activity />} exact={true} />
             <Route path="/dashboard/financial-statement" render={() => <FinancialStatement />} exact={true} />
             <Route path="/dashboard/trial-balance" render={() => <TrialBalance />} exact={true} />
             <Route path="/dashboard/group-of-account" render={() => <GroupAccount />} exact={true} />

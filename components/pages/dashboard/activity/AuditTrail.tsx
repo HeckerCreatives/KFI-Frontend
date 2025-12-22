@@ -14,7 +14,7 @@ import InputRadio from '../../../ui/forms/InputRadio';
 import ChartOfAccountSelection from '../../../ui/selections/ChartOfAccountSelection';
 import InputCheckbox from '../../../ui/forms/InputCheckbox';
 
-const AuditTrail = () => {
+const Activity = () => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
    const form = useForm<GLFormData>({
@@ -43,7 +43,7 @@ const AuditTrail = () => {
       }
        try {
         if(data.type === 'print'){
-           const result = await kfiAxios.get('/report/print/gl/audit-trail',
+           const result = await kfiAxios.get('/report/print/gl/activity',
             {params: queryData, responseType: 'blob'}
            );
 
@@ -54,14 +54,14 @@ const AuditTrail = () => {
 
             setLoading(false)
         } else if(data.type === 'export'){
-           const result = await kfiAxios.get('/report/export/gl/audit-trail',
+           const result = await kfiAxios.get('/report/export/gl/activity',
             {params: queryData, responseType: 'blob'}
            );
 
              const url = window.URL.createObjectURL(new Blob([result.data]));
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'audit-trail.xlsx';
+            a.download = 'activity.xlsx';
             a.click();
             window.URL.revokeObjectURL(url);
 
@@ -90,7 +90,7 @@ const AuditTrail = () => {
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <PageTitle pages={['General Ledger', 'Audit Trail']} />
+          <PageTitle pages={['General Ledger', 'Activity']} />
           <div className="px-3 pb-3 flex-1">
             <div className="relative overflow-auto">
 
@@ -232,4 +232,4 @@ const AuditTrail = () => {
   );
 };
 
-export default AuditTrail;
+export default Activity;

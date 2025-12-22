@@ -18,7 +18,7 @@ const InputCheckbox = <T extends FieldValues>({ name, control, label, required =
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <div className="w-full">
+        <div className="w-fit">
           <IonCheckbox
             aria-label={label || 'no label'}
             disabled={disabled}
@@ -28,7 +28,7 @@ const InputCheckbox = <T extends FieldValues>({ name, control, label, required =
               field.onChange(e.detail.checked);
             }}
             onIonBlur={field.onBlur}
-            className={classNames('text-sm w-full h-fit font-semibold', error ? 'ion-invalid' : '', className)}
+            className={classNames('text-sm h-fit !w-4 font-semibold', error ? 'ion-invalid' : '', className)}
             justify="start"
             labelPlacement="end"
           >
