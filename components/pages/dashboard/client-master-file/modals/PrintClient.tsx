@@ -16,10 +16,11 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
     modal.current?.dismiss();
   }
 
-  async function handlePrintClientProfile() {
+  async function handlePrintClientProfile(data: string) {
     setLoading(true);
-    try {
-      const result = await kfiAxios.get(`/customer/print/${client._id}`, { responseType: 'blob' });
+    if(data === 'print'){
+       try {
+      const result = await kfiAxios.get(`/customer/print/client/summary?id=${client._id}`, { responseType: 'blob' });
       const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       window.open(pdfUrl, '_blank');
@@ -32,6 +33,26 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
     } finally {
       setLoading(false);
     }
+    }else if(data === 'export'){
+       try {
+      const result = await kfiAxios.get(`/customer/export/client/summary?id=${client._id}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([result.data]));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'clients-summary.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error: any) {
+      present({
+        message: 'Failed to print the client profile records. Please try again',
+        duration: 1000,
+      });
+    } finally {
+      setLoading(false);
+    }
+    }
+    
+   
   }
 
   return (
@@ -48,10 +69,10 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
         type="button"
         fill="clear"
         id={`print_client_${client._id}`}
-        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-purple-100 text-purple-900 capitalize min-h-4 text-xs"
+        className="space-x-1 rounded-md w-20 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-purple-100 text-purple-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={print} className="text-xs" />
-        <span>Print</span>
+        <span>Profiles</span>
       </IonButton>
       <IonModal
         ref={modal}
@@ -65,25 +86,28 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6">
-            <ModalHeader disabled={loading} title="Client - Print" sub="Manage client documents." dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Client Summary" sub="Manage client documents." dismiss={dismiss} />
 
           <div></div>
           <div className="text-end mt-4 flex flex-col gap-2">
             <div className="text-center">
-              <IonButton disabled={loading} onClick={handlePrintClientProfile} fill="clear" className="w-full bg-zinc-50 rounded-lg ">
+              <IonButton disabled={loading} onClick={()=>handlePrintClientProfile('print')} fill="clear" className="w-full bg-zinc-50 rounded-lg ">
                 {/* {loading ? 'Printing Client Profile...' : 'Client Profile'} */}
                 <div className=' flex items-center justify-center gap-2 bg-zinc-50 !border-zinc-300 !border-1 p-3 w-full rounded-md'>
                   <div className=' p-2 bg-green-100 rounded-md flex items-center text-green-800'>
                     <PrinterIcon size={20} stroke='.8' className=' '/>
                   </div>
                   <div className=' flex flex-col !text-sm !text-black !font-medium capitalize text-start'>
-                    {loading ? 'Printing Client Profiles...' : 'Client Profiles'}
+                    {loading ? 'Printing...' : 'Client Summary'}
                     <p className=' text-xs text-zinc-500 capitalize'>Portable Document Format</p>
 
                   </div>
                 </div>
               </IonButton>
-              <IonButton fill="clear" className="w-full bg-zinc-50 rounded-lg ">
+              <IonButton 
+              disabled={loading}
+              onClick={()=>handlePrintClientProfile('export')}
+              fill="clear" className="w-full bg-zinc-50 rounded-lg ">
                 {/* {loading ? 'Printing Statement of Account...' : 'Statement of Account'} */}
                 {/* Statement Of Account */}
                  <div className=' flex items-center justify-center gap-2 bg-zinc-50 !border-zinc-300 !border-1 p-3 w-full rounded-md'>
@@ -91,8 +115,8 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
                     <PrinterIcon size={20} stroke='.8' className=' '/>
                   </div>
                   <div className=' flex flex-col !text-sm !text-black !font-medium capitalize text-start'>
-                    {loading ? 'Printing...' : 'Statement of Account'}
-                    <p className=' text-xs text-zinc-500 capitalize'>Portable Document Format</p>
+                    {loading ? 'Exporting...' : 'Client Summary'}
+                    <p className=' text-xs text-zinc-500 capitalize'>Spreadsheet Format</p>
 
                   </div>
                 </div>
