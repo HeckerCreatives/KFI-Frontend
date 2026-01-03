@@ -537,3 +537,21 @@ export interface AccountsResponse {
   chartOfAccounts: ChartOfAccount[];
 }
 
+
+export type FinancialStatements = {
+  primary: {
+     year: number,
+     month: number},
+  secondary: {
+     year: number,
+     month: number},
+  _id: string,
+  reportCode: string,
+  reportName: string,
+  type: string,
+  title: string,
+  subTitle: string,
+  createdAt: string,
+  updatedAt: string,
+};
+

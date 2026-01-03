@@ -25,7 +25,6 @@ export type TNature = {
 };
 
 const Nature = () => {
-  const arrDummy: string[] = Array.from(Array(10)).fill('');
 
   const [present] = useIonToast();
 
