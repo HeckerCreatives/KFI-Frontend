@@ -3,32 +3,28 @@ import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
-import UpdateSystemParameters from '../systemparameters/modals/UpdateParams';
 import kfiAxios from '../../../utils/axios';
-import CreateFS from './modals/create';
 import TablePagination from '../../../ui/forms/TablePagination';
-import { FinancialStatements } from '../../../../types/types';
-import UpdateFS from './modals/update';
-import DeleteFS from './modals/delete';
-import UpdateFSEntries from './modals/entries';
-import CreateTB from './modals/create';
-import UpdateTB from './modals/update';
-import DeleteTB from './modals/delete';
+import { BegBalance, FinancialStatements } from '../../../../types/types';
+import Create from './modals/create';
+import Delete from './modals/delete';
+import Update from './modals/update';
+import PrintExport from './modals/print&export';
 
 export type TBS = {
-  trialBalances: FinancialStatements[];
+  beginningBalances: BegBalance[];
   totalPages: number;
   nextPage: boolean;
   prevPage: boolean;
   loading: boolean;
 };
 
-const TrialBalance = () => {
+const BeginningBalance = () => {
   const [list, setList] = useState<any[]>([])
    const [currentPage, setCurrentPage] = useState<number>(1);
   
     const [data, setData] = useState<TBS>({
-      trialBalances: [],
+      beginningBalances: [],
       loading: false,
       totalPages: 0,
       nextPage: false,
@@ -37,14 +33,14 @@ const TrialBalance = () => {
 
    const getList = async (page: number) => {
           try {
-            const result = await kfiAxios.get('/trial-balance');
+            const result = await kfiAxios.get(`/beginning-balance?limit=10&page=${currentPage}`);
 
-            const { trialBalances, success,hasPrevPage, hasNextPage, totalPages } = result.data
+            const { beginningBalances, success,hasPrevPage, hasNextPage, totalPages } = result.data
 
             if(success){
                setData(prev => ({
               ...prev,
-              trialBalances: trialBalances,
+              beginningBalances: beginningBalances,
               totalPages: totalPages,
               nextPage: hasNextPage,
               prevPage: hasPrevPage,
@@ -66,11 +62,12 @@ const TrialBalance = () => {
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <PageTitle pages={['General Ledger', 'Trial Balance']} />
+          <PageTitle pages={['General Ledger', 'Beginning Balance']} />
            <div className="px-3 pb-3 flex-1">
 
             <div className="flex items-center gap-2 flex-wrap">
-              <CreateTB getList={getList} />
+              <Create getList={getList} />
+              <PrintExport/>
               
             </div>
            
@@ -78,26 +75,31 @@ const TrialBalance = () => {
               <Table>
                 <TableHeader>
                   <TableHeadRow>
-                    <TableHead>Report Code</TableHead>
+                    <TableHead>Entry</TableHead>
+                    <TableHead>Memo</TableHead>
+                    <TableHead>Year</TableHead>
                     {/* <TableHead>Prepared By</TableHead> */}
-                    <TableHead>Report Name</TableHead>
+                    <TableHead>Debit</TableHead>
+                    <TableHead>Credit</TableHead>
                
                     <TableHead>Action</TableHead>
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
-                  {data.trialBalances.length < 1 && <TableNoRows label="No Record Found" colspan={4} />}
+                  {data.beginningBalances.length < 1 && <TableNoRows label="No Record Found" colspan={6} />}
                   {
-                    data.trialBalances.length > 0 &&
-                    data.trialBalances.map((item, index) => (
+                    data.beginningBalances.length > 0 &&
+                    data.beginningBalances.map((item, index) => (
                       <TableRow key={item._id}>
-                        <TableCell className=' capitalize'>{item.reportCode}</TableCell>
-                        <TableCell>{item.reportName}</TableCell>
+                        <TableCell className=' capitalize'>{item.entryCount}</TableCell>
+                        <TableCell className=' capitalize'>{item.memo}</TableCell>
+                        <TableCell className=' capitalize'>{item.year}</TableCell>
+                        <TableCell>{item.debit.toLocaleString()}</TableCell>
+                        <TableCell>{item.credit.toLocaleString()}</TableCell>
                       
                         <TableCell className=' flex '>
-                          <UpdateTB item={item} getList={getList} currentPage={currentPage}/>
-                          <DeleteTB item={item} getList={getList} currentPage={currentPage}/>
-                          <UpdateFSEntries item={item} getList={getList} currentPage={currentPage}/>
+                          <Update item={item} getList={getList} currentPage={currentPage}/>
+                          <Delete item={item} getList={getList} currentPage={currentPage}/>
 
                         </TableCell>
                       
@@ -118,4 +120,4 @@ const TrialBalance = () => {
   );
 };
 
-export default TrialBalance;
+export default BeginningBalance;

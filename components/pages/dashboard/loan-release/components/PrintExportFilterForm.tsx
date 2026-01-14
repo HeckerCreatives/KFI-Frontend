@@ -19,8 +19,6 @@ type PrintExportFilterFormProps = {
 };
 
 const PrintExportFilterForm = ({ form, loading, type }: PrintExportFilterFormProps) => {
-
-
   const clearDoc = (type: 'from' | 'to') => {
     if (type === 'from') {
       form.setValue('docNoFrom', '');
@@ -36,9 +34,8 @@ const PrintExportFilterForm = ({ form, loading, type }: PrintExportFilterFormPro
 
   const seletedbanks = form.watch('banksSelected')
   const seletedAccounts = form.watch('coaSelected')
+  const renderOptions = ['by-document','by-date','by-accounts']
 
-  console.log(form.watch('coaSelected')) 
-  console.log(form.watch('chartOfAccountsIds')) 
 
   return (
     <div className="space-y-1 mt-4">
@@ -284,7 +281,67 @@ const PrintExportFilterForm = ({ form, loading, type }: PrintExportFilterFormPro
         
       )}
 
-      {type !== 'by-bank' && (
+       {(type === 'past-dues' || type === 'aging-of-loans' || type === 'weekly-collections') && (
+        <>
+      
+         <div className="border p-3 rounded-md border-slate-300">
+        <h6 className="m-0 mb-1 text-sm !font-semibold flex items-center gap-2">
+          <Calendar01Icon size={25} stroke='.8' className=' p-1 rounded-md bg-green-100 text-green-700'/>
+          Loan Release Date</h6>
+        <div className="flex flex-col gap-1 flex-wrap">
+          <div className="flex items-end flex-wrap gap-2">
+            <div className="flex-1 relative">
+              <p className=' text-xs'>From</p>
+
+              <FormIonItem className="flex-1">
+                <InputText
+                  disabled={loading}
+                  name="loanReleaseDateFrom"
+                  type="date"
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  placeholder="Type here"
+                  max="9999-12-31"
+                  className="!p-2 rounded-md !text-[0.7rem] "
+                  labelClassName="truncate min-w-[7.5rem] !text-[0.7rem]  !text-slate-600 text-end"
+                  // readOnly
+                  
+                />
+              </FormIonItem>
+             
+            </div>
+          
+          </div>
+          <div className="flex items-end flex-wrap gap-2">
+            <div className="flex-1 relative">
+              <p className=' text-xs'>To</p>
+
+              <FormIonItem className="flex-1 ">
+                                <InputText
+                  disabled={loading}
+                  name="loanReleaseDateTo"
+                  type="date"
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  placeholder="Type here"
+                  max="9999-12-31"
+                  className="!p-2 rounded-md !text-[0.7rem] "
+                  labelClassName="truncate min-w-[7.5rem] !text-[0.7rem]  !text-slate-600 text-end"
+                  // readOnly
+                  
+                />
+              </FormIonItem>
+             
+            </div>
+           
+          </div>
+        </div>
+        </div>
+        </>
+        
+      )}
+
+      {renderOptions.some((item) => item.includes(type || '')) && (
          <div className="border p-3 rounded-md border-slate-300">
         <h6 className="m-0 mb-2 text-sm !font-semibold">Options</h6>
         <InputRadio
@@ -298,6 +355,8 @@ const PrintExportFilterForm = ({ form, loading, type }: PrintExportFilterFormPro
         />
       </div>
       )}
+
+     
       
      
     </div>

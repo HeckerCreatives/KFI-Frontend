@@ -15,6 +15,7 @@ const GeneralLedgerNav = () => {
     { path: '/dashboard/activity', label: 'Activity', resource: 'activity' },
     { path: '/dashboard/financial-statement', label: 'Financial Statement', resource: 'financial statement' },
     { path: '/dashboard/trial-balance', label: 'Trial Balance', resource: 'trial balance' },
+    { path: '/dashboard/beginning-balance', label: 'Beginning Balance', resource: 'beginning balance' },
   ];
 
   return (

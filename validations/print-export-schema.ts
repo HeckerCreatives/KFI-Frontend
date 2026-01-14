@@ -12,6 +12,15 @@ export const printExportFilterSchema = z.object({
   chartOfAccountsIds: z.array(z.string()).default([]).optional(),
   banksSelected: z.array(z.object({id: z.string(), name: z.string()})).default([]).optional(),
   coaSelected: z.array(z.object({id: z.string(), name: z.string()})).default([]).optional(),
+  reportType: z.string().optional(),
+
+  //past due
+  clients: z.array(z.string()).optional(),
+  centers: z.array(z.string()).optional(),
+  loanReleaseDateFrom: z.string().optional(),
+  loanReleaseDateTo: z.string().optional(),
+  paymentDateFrom: z.string().optional(),
+  paymentDateTo: z.string().optional(),
 });
 
 

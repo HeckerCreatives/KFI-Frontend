@@ -555,3 +555,14 @@ export type FinancialStatements = {
   updatedAt: string,
 };
 
+export type BegBalance = {
+  year: number,
+  memo: string,
+  encodedBy: string,
+  debit: number,
+  credit: number,
+  entryCount: number,
+  _id: string,
+  createdAt: string
+}
+

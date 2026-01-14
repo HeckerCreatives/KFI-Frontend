@@ -32,6 +32,7 @@ export async function generateStaticParams() {
     { all: ['dashboard', 'activity'] },
     { all: ['dashboard', 'financial-statement'] },
     { all: ['dashboard', 'trial-balance'] },
+    { all: ['dashboard', 'beginning-balance'] },
 
     // System
     { all: ['dashboard', 'group-of-account'] },
