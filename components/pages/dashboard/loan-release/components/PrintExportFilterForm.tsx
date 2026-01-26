@@ -337,6 +337,19 @@ const PrintExportFilterForm = ({ form, loading, type }: PrintExportFilterFormPro
           </div>
         </div>
         </div>
+
+         <div className="border p-3 rounded-md border-slate-300">
+            <h6 className="m-0 mb-2 text-sm !font-semibold">Options</h6>
+            <InputRadio
+              control={form.control}
+              name="reportFormat"
+              clearErrors={form.clearErrors}
+              options={[
+                { label: 'Print', value: 'print' },
+                { label: 'Export', value: 'export' },
+              ]}
+            />
+          </div>
         </>
         
       )}

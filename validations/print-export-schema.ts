@@ -21,6 +21,7 @@ export const printExportFilterSchema = z.object({
   loanReleaseDateTo: z.string().optional(),
   paymentDateFrom: z.string().optional(),
   paymentDateTo: z.string().optional(),
+  reportFormat: z.string().optional().or(z.literal(""))
 });
 
 

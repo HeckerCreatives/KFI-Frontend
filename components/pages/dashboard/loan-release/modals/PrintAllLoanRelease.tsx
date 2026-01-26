@@ -149,14 +149,13 @@ const PrintAllLoanRelease = () => {
   }
 }
 
-console.log(form.watch('reportType'))
 
 
 
   return (
     <>
       <IonButton fill="clear" id="print_all_loan_release" className="max-h-10 w-fit min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-       <PrinterIcon stroke='.8' size={15} className=' mr-1'/> Reports - Print
+       <PrinterIcon stroke='.8' size={15} className=' mr-1'/>Print
       </IonButton>
       <IonModal
         ref={modal}

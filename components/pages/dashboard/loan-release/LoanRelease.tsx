@@ -22,6 +22,7 @@ import { db } from '../../../../database/db';
 import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
 import { formatLoanReleaseForUpload, formatLoanReleaseList } from '../../../ui/utils/fomatData';
 import { Upload } from 'lucide-react';
+import Reports from './modals/Reports';
 
 export type TData = {
   transactions: Transaction[];
@@ -176,6 +177,7 @@ const LoanRelease = () => {
                     <div>{canDoAction(token.role, token.permissions, 'loan release', 'create') && <CreateLoanRelease getTransactions={getTransactions} />}</div>
                     <div>{canDoAction(token.role, token.permissions, 'loan release', 'print') && <PrintAllLoanRelease />}</div>
                     <div>{canDoAction(token.role, token.permissions, 'loan release', 'export') && <ExportAllLoanRelease />}</div>
+                    <div><Reports /></div>
                     {online && (
                       <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                         <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
