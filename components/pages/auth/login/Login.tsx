@@ -28,7 +28,7 @@ const Login = () => {
     defaultValues: {
       username: '',
       password: '',
-      ipAddress: '127.0.0.1'
+      ipAddress: '127.0.0.1',
       deviceName: 'My PC',
       deviceType: 'dekstop',
 
