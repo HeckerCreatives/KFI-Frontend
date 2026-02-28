@@ -27,6 +27,7 @@ type Option = {
   debit?: string | number;
   credit?: string | number;
   loanReleaseEntryId?: string;
+  clientId?: string,
 };
 
 export type TAcknowledgement = {
@@ -122,6 +123,7 @@ const ORLoadEntries = ({center, form}: Props) => {
       description: entry.description ?? '',
       debit: `${entry.debit ?? '0'}`,
       credit: `${entry.credit ?? entry.debit ?? '0'}`,
+      clientId: entry.clientId ?? ''
     };
   };
 
@@ -129,6 +131,7 @@ const ORLoadEntries = ({center, form}: Props) => {
     const selectedEntries = data.acknowledgements
       .filter((entry) => selectedIds.includes(entry._id))
       .map(mapEntryForForm);
+
 
     form.setValue('entries', selectedEntries, { shouldDirty: true, shouldValidate: true });
     form.clearErrors('entries');

@@ -28,6 +28,7 @@ type Option = {
   debit?: string | number;
   credit?: string | number;
   loanReleaseEntryId?: string;
+  clientId?: string
 };
 
 export type TAcknowledgement = {
@@ -123,6 +124,7 @@ const ARLoadEntries = ({center, form}: Props) => {
       description: entry.description ?? '',
       debit: `${entry.debit ?? '0'}`,
       credit: `${entry.credit ?? entry.debit ?? '0'}`,
+       clientId: entry.clientId ?? ''
     };
   };
 
