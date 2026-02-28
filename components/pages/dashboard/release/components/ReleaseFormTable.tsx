@@ -9,6 +9,7 @@ import ReleaseFormTableDoc from './ReleaseFormTableDoc';
 import { arrowBack, arrowForward } from 'ionicons/icons';
 import SelectionHeader from '../../../../ui/selections/SelectionHeader';
 import ARSelection from '../../../../ui/selections/ARSelections';
+import ARLoadEntries from './ArLoadEntries';
 
 type ReleaseFormTableProps = {
   form: UseFormReturn<ReleaseFormData>;
@@ -46,9 +47,7 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
     const [client, setClient] = useState<SelectClient[]>([])
       const [selectedIds, setSelectedIds] = useState<string[]>([])
       const [clientpage, setClientPage] = useState(1)
-    
       const totalPages = Math.ceil(client.length / limit)
-    
     
       const handleClientNextPage = () => {
         if (clientpage < totalPages) {
@@ -165,18 +164,11 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
   return (
     <div className="p-2">
       <div className="text-start my-2">
-        {/* <IonButton
-          disabled={!center || didLoad}
-          onClick={handleLoadEntries}
-          type="button"
-          fill="clear"
-          className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
-          strong
-        >
-          {loading ? 'Loading Entries...' : 'Load Entries'}
-        </IonButton> */}
+      
 
-        <ARSelection clearErrors={form.clearErrors} setValue={form.setValue} center={center}/>
+        <ARLoadEntries center={center} form={form}/>
+
+        {/* <ARSelection clearErrors={form.clearErrors} setValue={form.setValue} center={center}/> */}
 
         {/* <IonButton
                           disabled={loading || center === '' || didLoad}

@@ -9,6 +9,7 @@ import { formatDateTable } from '../../../../utils/date-utils';
 import { arrowBack, arrowForward } from 'ionicons/icons';
 import SelectionHeader from '../../../../ui/selections/SelectionHeader';
 import ORSelection from '../../../../ui/selections/ORSelection';
+import ORLoadEntries from '../modals/entries/OrLoadEntries';
 
 type AcknowledgementFormTableProps = {
   form: UseFormReturn<AcknowledgementFormData>;
@@ -176,7 +177,9 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
           {loading ? 'Loading Entries...' : 'Load Entries'}
         </IonButton> */}
 
-        <ORSelection setValue={form.setValue} clearErrors={form.clearErrors} center={center}/>
+        <ORLoadEntries center={center} form={form}/>
+
+        {/* <ORSelection setValue={form.setValue} clearErrors={form.clearErrors} center={center}/> */}
 
          {/* <IonButton
                   disabled={loading || center === '' || didLoad}

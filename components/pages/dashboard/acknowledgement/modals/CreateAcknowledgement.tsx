@@ -63,7 +63,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
       try {
         data.amount = removeAmountComma(data.amount);
         data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
-        data.entries = data.entries ? data.entries.map((entry: any, index: any) => ({ ...entry,clientId:entry.loanReleaseEntryId, clientName: entry.name,loanReleaseId: entry.loanReleaseEntryId,week: entry.noOfWeeks,acctCodeDesc:entry.description, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.debit), line: index + 1 })) : [];
+        data.entries = data.entries ? data.entries.map((entry: any, index: any) => ({ ...entry,clientId:entry.loanReleaseEntryId, clientName: entry.name,loanReleaseId: entry.loanReleaseEntryId,week: entry.noOfWeeks,acctCodeDesc:entry.description, amount: Number(removeAmountComma(entry.amount)) , debit: Number(removeAmountComma(entry.debit)), credit: removeAmountComma(entry.debit), line: index + 1 })) : [];
         const result = await kfiAxios.post('acknowledgement', data);
         const { success } = result.data;
         if (success) {
