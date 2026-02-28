@@ -27,6 +27,8 @@ type Option = {
   debit?: string | number;
   credit?: string | number;
   loanReleaseEntryId?: string;
+  loanReleaseId?: string;
+  loanRelease?: string;
   clientId?: string,
 };
 
@@ -113,6 +115,7 @@ const ORLoadEntries = ({center, form}: Props) => {
     const particular = entry.particular ?? `${entry.centerNo ? `${entry.centerNo} - ` : ''}${entry.name ?? ''}`.trim();
     return {
       loanReleaseEntryId: entry.loanReleaseEntryId ?? entry._id ?? '',
+      loanReleaseId: entry.loanReleaseId ?? entry.loanRelease ?? '',
       cvNo: `${entry.cvNo ?? entry.code ?? ''}`,
       dueDate: entry.dueDate ? formatDateTable(entry.dueDate) : '',
       noOfWeeks: `${entry.week ?? ''}`,
@@ -175,7 +178,7 @@ const ORLoadEntries = ({center, form}: Props) => {
       >
         
         <div className="inner-content !p-6  border-2 !border-slate-200">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Official Receipt Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Official Receipt Selection ORLE TSX" />
 
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">

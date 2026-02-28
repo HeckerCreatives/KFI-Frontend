@@ -26,6 +26,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
     form.setValue('name', '');
     form.setValue('particular', '');
     form.setValue('loanReleaseEntryId', '');
+    form.setValue('loanReleaseId', '');
   };
 
   return (
@@ -53,6 +54,7 @@ const AcknowledgementEntryForm = ({ form, loading = false }: TForm) => {
             <div className="mb-1.5">
               <LoanReleaseEntrySelection
                 loanReleaseEntryId={`loanReleaseEntryId`}
+                loanReleaseId={`loanReleaseId`}
                 cvNo={`cvNo`}
                 dueDate={`dueDate`}
                 noOfWeeks={`noOfWeeks`}

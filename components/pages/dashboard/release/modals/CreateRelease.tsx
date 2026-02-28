@@ -63,9 +63,21 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
       try {
         data.amount = removeAmountComma(data.amount);
         data.cashCollection = removeAmountComma(data.cashCollection as string);
-      data.entries = data.entries ? data.entries.map((entry: any, index: any) => ({ ...entry,clientId:entry.clientId, clientName: entry.name,loanReleaseId: entry.loanReleaseEntryId,
-        dueDate: formatDateInput(entry.dueDate ?? ''),
-        week: entry.noOfWeeks,acctCodeDesc:entry.description, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.debit), line: index + 1 })) : [];
+      data.entries = data.entries
+        ? data.entries.map((entry: any, index: number) => ({
+            ...entry,
+            clientId: entry.clientId,
+            clientName: entry.name,
+            loanReleaseEntryId: entry.loanReleaseEntryId || entry.loanReleaseId || '',
+            loanReleaseId: entry.loanReleaseId || '',
+            dueDate: formatDateInput(entry.dueDate ?? ''),
+            week: entry.noOfWeeks,
+            acctCodeDesc: entry.description,
+            debit: Number(removeAmountComma(entry.debit)),
+            credit: Number(removeAmountComma(entry.credit)),
+            line: index + 1,
+          }))
+        : [];
         const result = await kfiAxios.post('release', data);
         const { success } = result.data;
         if (success) {

@@ -217,7 +217,7 @@ const JournalVoucher = () => {
                         <TableRow key={journalVoucher._id}>
                           <TableCell>{journalVoucher.code}</TableCell>
                           <TableCell>{formatDateTable(journalVoucher.date)}</TableCell>
-                          <TableCell>{journalVoucher.bankCode?.description}</TableCell>
+                          <TableCell>{journalVoucher.bank?.description}</TableCell>
                           <TableCell>{journalVoucher.checkNo}</TableCell>
                           <TableCell>{formatNumber(journalVoucher.amount)}</TableCell>
                           <TableCell>{journalVoucher.encodedBy.username}</TableCell>

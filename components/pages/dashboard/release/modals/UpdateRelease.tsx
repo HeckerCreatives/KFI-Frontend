@@ -110,20 +110,22 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
 
         const formattedEntries = entries.map((entry, index) => {
           const isExisting = prevIds.has(entry._id);
+          const entryId = (entry as any).loanReleaseEntryId?._id ?? entry.loanReleaseEntryId;
+          const releaseId = (entry as any).loanReleaseId || (entry as any).loanReleaseEntryId?.loanRelease || '';
           return {
               _id: isExisting ? entry._id : undefined,
-              loanReleaseEntryId: entry.loanReleaseEntryId._id,
+              loanReleaseEntryId: entryId,
+              loanReleaseId: releaseId,
               cvNo: normalizeCVNumber(entry.cvNo),
-              // dueDate: acknowledgement.date,
-              noOfWeeks: entry.loanReleaseEntryId.transaction.noOfWeeks,
-              name: entry.loanReleaseEntryId.client.name,
+              noOfWeeks: (entry as any).loanReleaseEntryId?.transaction?.noOfWeeks ?? "",
+              name: (entry as any).loanReleaseEntryId?.client?.name ?? "",
               particular: entry.particular,
               acctCodeId: entry.acctCode._id,
               acctCode: entry.acctCode.code ?? '',
               description: entry.acctCode.description ?? '',
-              debit: entry.debit?.toString() ?? "",
-              credit: entry.credit?.toString() ?? "",
-              dueDate: entry.loanReleaseEntryId.transaction.dueDate,
+              debit: Number(removeAmountComma(entry.debit ?? 0)),
+              credit: Number(removeAmountComma(entry.credit ?? 0)),
+              dueDate: (entry as any).loanReleaseEntryId?.transaction?.dueDate ?? "",
               line: index + 1
           };
         });

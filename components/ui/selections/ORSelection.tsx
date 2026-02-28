@@ -149,7 +149,7 @@ const ORSelection = <T extends FieldValues>({
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6  border-2 !border-slate-200">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Official Receipt Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Official Receipt Selection ORS TSX" />
 
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">

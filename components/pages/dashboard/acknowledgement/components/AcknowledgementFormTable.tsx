@@ -130,6 +130,7 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
         replace(
           entries.map((entry: EntryOption) => ({
             loanReleaseEntryId: entry._id,
+            loanReleaseId: (entry as any).loanRelease || '',
             cvNo: `${entry.cvNo}`,
             dueDate: formatDateTable(entry.dueDate),
             noOfWeeks: `${entry.noOfWeeks}`,
@@ -201,7 +202,7 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
                       >
                       
                         <div className="inner-content !p-6  border-2 !border-slate-100">
-                            <SelectionHeader dismiss={dismiss} disabled={loading} title="Official Receipt Selection" />
+                            <SelectionHeader dismiss={dismiss} disabled={loading} title="Official Receipt Selection ACKFT TSX" />
                 
                           
                           <div className="relative overflow-auto !mt-4">

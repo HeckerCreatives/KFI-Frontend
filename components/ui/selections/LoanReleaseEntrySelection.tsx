@@ -19,6 +19,8 @@ type Option = {
   noOfWeeks: number;
   name: string;
   centerNo: string;
+  loanRelease: string;
+  loanReleaseId?: string;
 };
 
 export type TLoanReleaseEntries = {
@@ -38,11 +40,13 @@ type LoanReleaseEntrySelectionProps<T extends FieldValues> = {
   noOfWeeks: Path<T>;
   name: Path<T>;
   particular: Path<T>;
+  loanReleaseId: Path<T>;
   className?: string;
 };
 
 const LoanReleaseEntrySelection = <T extends FieldValues>({
   loanReleaseEntryId,
+  loanReleaseId,
   cvNo,
   dueDate,
   noOfWeeks,
@@ -99,12 +103,17 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
   };
 
   const handleSelectExpenseVoucher = (loanEntry: Option) => {
+    console.log(loanEntry)
     setValue(loanReleaseEntryId as Path<T>, loanEntry._id as PathValue<T, Path<T>> as any);
-    setValue(cvNo as Path<T>, `CV#${loanEntry.cvNo}` as PathValue<T, Path<T>> as any);
+    setValue(cvNo as Path<T>, `${loanEntry.cvNo}` as PathValue<T, Path<T>> as any);
     setValue(dueDate as Path<T>, formatDateTable(loanEntry.dueDate) as PathValue<T, Path<T>> as any);
     setValue(noOfWeeks as Path<T>, `${loanEntry.noOfWeeks}` as PathValue<T, Path<T>> as any);
     setValue(name as Path<T>, loanEntry.name as PathValue<T, Path<T>> as any);
     setValue(particular as Path<T>, `${loanEntry.centerNo} - ${loanEntry.name}` as PathValue<T, Path<T>> as any);
+    setValue(
+      loanReleaseId as Path<T>,
+      (loanEntry.loanReleaseId || loanEntry.loanRelease || '') as PathValue<T, Path<T>> as any,
+    );
 
     clearErrors(loanReleaseEntryId);
     clearErrors(cvNo);
@@ -148,7 +157,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6  border-2 !border-slate-200">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Release Entry Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Release Entry Selection LRES TSX" />
 
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">

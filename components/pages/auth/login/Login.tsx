@@ -59,7 +59,6 @@ const Login = () => {
         const token = jwtDecode(access) as AccessToken;
         const permissions = token.permissions;
 
-        console.log(token)
         let path = '';
         if (token.role === 'superadmin') {
           path = '/dashboard/home';

@@ -62,7 +62,7 @@ const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher
               <div className="space-y-1">
                 <JournalVoucherViewCard label="Check Number" value={journalVoucher.checkNo} labelClassName="min-w-28 text-end" />
                 <JournalVoucherViewCard label="Check Date" value={formatDateTable(journalVoucher.checkDate)} labelClassName="min-w-28 text-end " />
-                <JournalVoucherViewCard label="Bank Code" value={journalVoucher.bankCode?.code} labelClassName="min-w-28 text-end " />
+                <JournalVoucherViewCard label="Bank Code" value={journalVoucher.bank?.code} labelClassName="min-w-28 text-end " />
                 <JournalVoucherViewCard label="Amount" value={`${formatNumber(journalVoucher.amount)}`} labelClassName="min-w-28 text-end " />
               </div>
             </div>

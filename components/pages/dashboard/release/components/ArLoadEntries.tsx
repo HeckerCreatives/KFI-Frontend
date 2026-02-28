@@ -28,6 +28,8 @@ type Option = {
   debit?: string | number;
   credit?: string | number;
   loanReleaseEntryId?: string;
+  loanReleaseId?: string;
+  loanRelease?: string;
   clientId?: string
 };
 
@@ -114,6 +116,7 @@ const ARLoadEntries = ({center, form}: Props) => {
     const particular = entry.particular ?? `${entry.centerNo ? `${entry.centerNo} - ` : ''}${entry.name ?? ''}`.trim();
     return {
       loanReleaseEntryId: entry.loanReleaseEntryId ?? entry._id ?? '',
+      loanReleaseId: entry.loanReleaseId ?? entry.loanRelease ?? '',
       cvNo: `${entry.cvNo ?? entry.code ?? ''}`,
       dueDate: entry.dueDate ? formatDateTable(entry.dueDate) : '',
       noOfWeeks: `${entry.week ?? ''}`,

@@ -31,6 +31,7 @@ const AcknowledgementFormTableDoc = ({ entry, remove, form, index, sticky }: Ack
           <div className={classNames('mt-2.5', form?.formState.errors?.entries && form.formState.errors.entries[index]?.cvNo && '!mt-0.5')}>
             <LoanReleaseEntrySelection
               loanReleaseEntryId={`entries.${index}.loanReleaseEntryId`}
+              loanReleaseId={`entries.${index}.loanReleaseId`}
               cvNo={`entries.${index}.cvNo`}
               dueDate={`entries.${index}.dueDate`}
               noOfWeeks={`entries.${index}.noOfWeeks`}
@@ -89,6 +90,7 @@ const AcknowledgementFormTableDoc = ({ entry, remove, form, index, sticky }: Ack
           <div className={classNames('mt-2.5', form?.formState.errors?.entries && form.formState.errors.entries[index]?.cvNo && '!mt-0.5')}>
             <LoanReleaseEntrySelection
               loanReleaseEntryId={`entries.${index}.loanReleaseEntryId`}
+              loanReleaseId={`entries.${index}.loanReleaseId`}
               cvNo={`entries.${index}.cvNo`}
               dueDate={`entries.${index}.dueDate`}
               noOfWeeks={`entries.${index}.noOfWeeks`}

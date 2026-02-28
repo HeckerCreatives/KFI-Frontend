@@ -127,8 +127,9 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
       const { success, entries } = result.data;
       if (success) {
         replace(
-          entries.map((entry: EntryOption) => ({
+          entries.map((entry: EntryOption | any) => ({
             loanReleaseEntryId: entry._id,
+            loanReleaseId: entry.loanRelease || entry.loanReleaseId || '',
             cvNo: `CV#${entry.cvNo}`,
             dueDate: formatDateTable(entry.dueDate),
             noOfWeeks: `${entry.noOfWeeks}`,
@@ -151,7 +152,7 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
   };
 
   const handleAddEntry = () =>
-    append({ loanReleaseEntryId: '', dueDate: '', noOfWeeks: '', name: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0' });
+    append({ loanReleaseEntryId: '', loanReleaseId: '', dueDate: '', noOfWeeks: '', name: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0' });
 
   function dismiss() {
     setIsOpen(false);
