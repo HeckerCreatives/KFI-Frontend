@@ -215,7 +215,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
                 </div>
               </div>
 
-              <Signatures open={isOpen} type={'loan release'} preparedBy={user || ''}/>
+              <Signatures open={isOpen} type={'loan release'} preparedBy={user || ''} recieveByorDate={form.watch('date')}/>
 
              
             </div>

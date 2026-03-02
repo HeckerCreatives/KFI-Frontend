@@ -136,7 +136,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
             <div className="flex-1 mt-4">
               <JournalVoucherFormTable form={form} loading={loading} />
             </div>
-              <Signatures open={isOpen} type={'journal voucher'} preparedBy={user || ''}/>
+              <Signatures open={isOpen} type={'journal voucher'} preparedBy={user || ''} recieveByorDate={form.watch('date')}/>
             
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 

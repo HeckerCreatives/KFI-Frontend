@@ -158,7 +158,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
                </div>
              </div>
            </div>
-            <Signatures open={isOpen} type={'damayan fund'} preparedBy={user || ''}/>
+            <Signatures open={isOpen} type={'damayan fund'} preparedBy={user || ''} recieveByorDate={form.watch('date')}/>
             
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
