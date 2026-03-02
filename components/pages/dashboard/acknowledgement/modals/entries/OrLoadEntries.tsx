@@ -100,10 +100,8 @@ const ORLoadEntries = ({center, form}: Props) => {
         setLoading(true);
         const result = await kfiAxios.get(`/transaction/due-dates/${center}`);
         const { success, dueDates } = result.data;
-    
 
-        setDuedates(dueDates ?? [])
-     
+        setDuedates(dueDates);
       } catch (error) {
       } finally {
         setLoading(false);
@@ -164,6 +162,8 @@ const ORLoadEntries = ({center, form}: Props) => {
     if (isOpen) handlePagination(1), handleDueDates();
   }, [isOpen]);
 
+  console.log(duedates)
+
   return (
     <>
       <div className="">
@@ -178,7 +178,7 @@ const ORLoadEntries = ({center, form}: Props) => {
       >
         
         <div className="inner-content !p-6  border-2 !border-slate-200">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Official Receipt Selection ORLE TSX" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Official Receipt Selection" />
 
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">
@@ -192,15 +192,16 @@ const ORLoadEntries = ({center, form}: Props) => {
                   labelPlacement="stacked"
                    interface="popover"
                   value={dueDateId}
+                  
                   onIonChange={e => {
                       setDueDateId(e.target.value);
                     }}
                    className={classNames(
-                      '!border border-zinc-300 [--highlight-color-focused:none] !px-2 !py-1 text-xs !overflow-y-auto !min-w-[12rem] !max-h-[5rem] !min-h-[0.5rem] ',
+                      '!border border-zinc-300 [--highlight-color-focused:none] !px-2 !py-1 text-xs !overflow-y-auto !min-w-[12rem] !max-h-[18rem] !min-h-[0.5rem] ',
                     )}
                     >
                       {duedates.map((item, index) => (
-                        <IonSelectOption key={index}  value={item._id} className="text-xs [--min-height:0.5rem]">
+                        <IonSelectOption key={index}  value={item._id} className="text-xs">
                           {item.transaction?.code}
                         </IonSelectOption>
                       ))}
