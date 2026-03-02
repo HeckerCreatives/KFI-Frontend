@@ -101,9 +101,11 @@ const ARLoadEntries = ({center, form}: Props) => {
         setLoading(true);
         const result = await kfiAxios.get(`/transaction/due-dates/${center}`);
         const { success, dueDates } = result.data;
+
+        const list = dueDates.filter((item: any) => item.transaction !== null)
     
 
-        setDuedates(dueDates ?? [])
+        setDuedates(list ?? [])
      
       } catch (error) {
       } finally {

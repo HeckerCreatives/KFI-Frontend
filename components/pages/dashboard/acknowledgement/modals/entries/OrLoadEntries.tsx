@@ -101,7 +101,9 @@ const ORLoadEntries = ({center, form}: Props) => {
         const result = await kfiAxios.get(`/transaction/due-dates/${center}`);
         const { success, dueDates } = result.data;
 
-        setDuedates(dueDates);
+        const list = dueDates.filter((item: any) => item.transaction !== null)
+
+        setDuedates(list);
       } catch (error) {
       } finally {
         setLoading(false);
