@@ -27,6 +27,8 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const online = useOnlineStore((state) => state.online);
+  const user = localStorage.getItem('user')
+
   
 
   const form = useForm<JournalVoucherFormData>({
@@ -134,7 +136,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
             <div className="flex-1 mt-4">
               <JournalVoucherFormTable form={form} loading={loading} />
             </div>
-              <Signatures open={isOpen} type={'journal voucher'}/>
+              <Signatures open={isOpen} type={'journal voucher'} preparedBy={user || ''}/>
             
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 

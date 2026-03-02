@@ -58,7 +58,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
       form.reset({
         code: expenseVoucher.code,
         supplier: `${expenseVoucher.supplier}`,
-        supplierId: expenseVoucher.supplier,
+        supplierId: expenseVoucher.supplier._id,
         refNo: expenseVoucher.refNo,
         remarks: expenseVoucher.remarks,
         date: formatDateInput(expenseVoucher.date),
@@ -255,7 +255,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
                 </div>
               </div>
             </div>
-          <Signatures open={isOpen} type={'expense voucher'}/>
+          <Signatures open={isOpen} type={'expense voucher'} preparedBy={expenseVoucher.encodedBy.username} recieveByorDate={expenseVoucher.createdAt.split('T')[0]}/>
           
         </div>
       </IonModal>

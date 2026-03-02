@@ -244,7 +244,7 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
              </div>
            </div>
 
-          <Signatures open={isOpen} type={'damayan fund'}/>
+          <Signatures open={isOpen} type={'damayan fund'} preparedBy={damayanFund.encodedBy.username} recieveByorDate={damayanFund.createdAt.split('T')[0]}/>
           
 
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}

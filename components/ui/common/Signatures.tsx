@@ -17,13 +17,22 @@ export type Signatures = {
 type Props = {
     open: boolean
     type: string
+    approvedBy?: string
+    checkedBy?: string
+    recordedBy?: string
+    preparedBy?: string
+    recieveByorDate?: string
+    notedBy?: string
+    _id?: string
+    id?: string
 }
 
-export default function Signatures({open, type}: Props) {
+export default function Signatures({open, type, approvedBy, checkedBy, recordedBy, preparedBy, notedBy, recieveByorDate}: Props) {
     const [signatures, setSignatures] = useState<Signatures>()
     // const finalSignatures = signatures.find((item) => item.type === type)
     const visibleDate = type === 'official receipt'
     const user = localStorage.getItem('user')
+    const currentDate = new Date
 
     //  const getSignatures = async () => {
     //       try {
@@ -54,38 +63,51 @@ export default function Signatures({open, type}: Props) {
         useEffect(() => {
             getSignaturesByType()
         },[open])
-    
-  return (
-     <div className={`w-full grid ${visibleDate ? 'grid-cols-5': 'grid-cols-4'} bg-zinc-100 p-2 mt-6 text-sm font-semibold`}>
-        <div className=' flex items-center gap-2'>
-          Prepared by: <span className=' text-sm !font-bold capitalize'>{(user === 'EVD' || user === 'MGP') ? user : ''}</span>
-        </div>
-          <div className=' flex items-center gap-2'>
-          Checked by: <span className=' text-sm !font-bold'>{signatures?.checkedBy}</span>
-        </div>
 
-        {visibleDate && (
-        <div className=' flex items-center gap-2'>
-            Date Posted: <span className=' text-sm !font-bold'>{formatDateMDY(new Date().toDateString())}</span>
-        </div>
-        )}
+        if(type === 'loan release' || type === 'expense voucher' || type === 'journal voucher' || type === 'emergency loan' || type === 'damayan fund'){
+           return (
+            <div className={`w-full grid grid-cols-4 bg-zinc-100 p-2 mt-6 text-sm font-semibold`}>
+                <div className=' flex items-center gap-2'>
+                  Prepared by: <span className=' text-sm !font-bold capitalize'>{preparedBy}</span>
+                </div>
+                  <div className=' flex items-center gap-2'>
+                  Checked by: <span className=' text-sm !font-bold'>MGP</span>
+                </div>
+                <div className=' flex items-center gap-2'>
+                  Noted/Approved by: <span className=' text-sm !font-bold'>ABE</span>
+                </div>
 
-        <div className=' flex items-center gap-2'>
-          Noted/Approved by: <span className=' text-sm !font-bold'>{signatures?.approvedBy || signatures?.notedBy}</span>
-        </div>
-        
+                 <div className=' flex items-center gap-2'>
+                 Received by/Date: <span className=' text-sm !font-bold'>{recieveByorDate ? recieveByorDate : currentDate.toISOString().split('T')[0]}</span>
+                </div>
+                
+              </div>
+          )
+        }
 
-         {visibleDate ? (
-        <div className=' flex items-center gap-2'>
-        Received By / Date: <span className=' text-sm !font-bold'>{signatures?.recordedBy || ''}</span>
-        </div>
-        ):(
-          <div className=' flex items-center gap-2'>
-            Recorded By / Date: <span className=' text-sm !font-bold'>{signatures?.recordedBy || ''}</span>
-          </div>
-        )}
-       
-        
-      </div>
-  )
+        if(type === 'official receipt' || type === 'acknowledgement receipt'){
+           return (
+            <div className={`w-full grid grid-cols-5 bg-zinc-100 p-2 mt-6 text-sm font-semibold`}>
+                <div className=' flex items-center gap-2'>
+                  Prepared by: <span className=' text-sm !font-bold capitalize'>{preparedBy}</span>
+                </div>
+                  <div className=' flex items-center gap-2'>
+                  Checked by: <span className=' text-sm !font-bold'>MGP</span>
+                </div>
+                <div className=' flex items-center gap-2'>
+                  Noted/Approved by: <span className=' text-sm !font-bold'>ABE</span>
+                </div>
+
+                 <div className=' flex items-center gap-2'>
+                 Received by/Date: <span className=' text-sm !font-bold'>{recieveByorDate ? recieveByorDate : currentDate.toISOString().split('T')[0]}</span>
+                </div>
+
+                 <div className=' flex items-center gap-2'>
+                Date Posted: <span className=' text-sm !font-bold'>{currentDate.toISOString().split('T')[0]}</span>
+                </div>
+                
+              </div>
+          )
+        }
+
 }

@@ -240,8 +240,8 @@ export type ExpenseVoucher = {
   acctYear: number;
   amount: number;
   bank: { _id: string; code: string; description: string };
-  // supplier: { _id: string; code: string; description: string };
-  supplier: string ;
+  supplier: { _id: string; code: string; description: string };
+  // supplier: string ;
   checkDate: string;
   checkNo: string;
   code: string;
@@ -348,6 +348,7 @@ export type EmergencyLoan = {
    deletedAt?: string
   action?: string,
   _synced?: boolean
+  createdAt: string
 };
 
 export type DamayanFund = {
@@ -368,6 +369,7 @@ export type DamayanFund = {
   amount: number;
   encodedBy: { username: string };
   entries: any[];
+  createdAt: string
 
 };
 
@@ -384,7 +386,6 @@ export type Transaction = {
   code: string;
   cycle: number;
   date: string;
-  encodedBy: { username: string };
   entries: any[];
   interest: number;
   loan: { _id: string; code: string };
@@ -394,6 +395,15 @@ export type Transaction = {
   createdAt: string;
   type: string;
   isEduc: boolean;
+
+  preparedBy: string,
+  checkedBy: string,
+  approvedBy: string,
+  receivedBy: string,
+  encodedBy: {
+      _id: string,
+      username: string
+  },
 
   //offline
 };

@@ -28,6 +28,8 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
   const online = useOnlineStore((state) => state.online);
+  const user = localStorage.getItem('user')
+
     
   
 
@@ -166,7 +168,7 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
            </div>
 
             
-            <Signatures open={isOpen} type={'emergency loan'}/>
+            <Signatures open={isOpen} type={'emergency loan'} preparedBy={user || ''}/>
             
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 

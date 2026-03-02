@@ -323,7 +323,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
 
           {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
-          <Signatures open={isOpen} type={'loan release'}/>
+          <Signatures open={isOpen} type={'loan release'} preparedBy={transaction.encodedBy.username} recieveByorDate={transaction.createdAt.split('T')[0]}/>
           
 
         </div>

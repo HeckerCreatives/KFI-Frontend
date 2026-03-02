@@ -25,6 +25,8 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const online = useOnlineStore((state) => state.online);
+  const user = localStorage.getItem('user')
+
   
 
   const form = useForm<ReleaseFormData>({
@@ -172,7 +174,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
                </div>
              </div>
            </div>
-            <Signatures open={isOpen} type={'official receipt'}/>
+            <Signatures open={isOpen} type={'official receipt'} preparedBy={user || ''}/>
             
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 

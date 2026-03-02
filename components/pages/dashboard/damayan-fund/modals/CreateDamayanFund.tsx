@@ -27,6 +27,8 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
   const online = useOnlineStore((state) => state.online);
+  const user = localStorage.getItem('user')
+
   
   
 
@@ -156,7 +158,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
                </div>
              </div>
            </div>
-            <Signatures open={isOpen} type={'damayan fund'}/>
+            <Signatures open={isOpen} type={'damayan fund'} preparedBy={user || ''}/>
             
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 

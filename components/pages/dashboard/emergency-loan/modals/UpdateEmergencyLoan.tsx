@@ -257,7 +257,7 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
             </div>
           </div>
 
-            <Signatures open={isOpen} type={'emergency loan'}/>
+            <Signatures open={isOpen} type={'emergency loan'} preparedBy={emergencyLoan.encodedBy.username} recieveByorDate={emergencyLoan.createdAt.split('T')[0]}/>
           
 
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}

@@ -215,7 +215,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
                 </div>
               </div>
 
-              <Signatures open={isOpen} type={'loan release'}/>
+              <Signatures open={isOpen} type={'loan release'} preparedBy={user || ''}/>
 
              
             </div>

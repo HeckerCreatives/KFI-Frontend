@@ -27,6 +27,8 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const online = useOnlineStore((state) => state.online);
+  const user = localStorage.getItem('user')
+
   
 
   const form = useForm<ExpenseVoucherFormData>({
@@ -150,7 +152,7 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
                  
                 </div>
               </div>
-              <Signatures open={isOpen} type={'expense voucher'}/>
+              <Signatures open={isOpen} type={'expense voucher'} preparedBy={user || ''}/>
             
               {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 

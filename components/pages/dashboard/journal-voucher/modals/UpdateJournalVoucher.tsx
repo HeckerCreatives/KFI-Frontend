@@ -252,7 +252,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
              deletedIds={deletedIds}
             />
           </div>
-          <Signatures open={isOpen} type={'journal voucher'}/>
+          <Signatures open={isOpen} type={'journal voucher'} preparedBy={journalVoucher.encodedBy.username} recieveByorDate={journalVoucher.createdAt.split('T')[0]}/>
           
         </div>
       </IonModal>
