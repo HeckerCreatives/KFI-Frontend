@@ -177,7 +177,6 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
     
   }
 
-  console.log('Entries',entries)
   return (
     <>
       {/* <div

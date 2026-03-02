@@ -150,6 +150,7 @@ const UpdateJVEntries = ({ isOpen, journalVoucher, entries, setEntries, setPrevE
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!font-normal [&>th]:!py-1.5 [&>th]:!text-xs">
+              <TableHead>Line</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>
               <TableHead>Acct. Code</TableHead>
@@ -168,6 +169,7 @@ const UpdateJVEntries = ({ isOpen, journalVoucher, entries, setEntries, setPrevE
                   key={entry._id}
                   className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]"
                 >
+                  <TableCell className=' text-center'>{entry?.line}</TableCell>
                   <TableCell>{entry?.client?.name}</TableCell>
                   <TableCell>{entry?.particular}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>

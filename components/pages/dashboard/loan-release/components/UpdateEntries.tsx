@@ -142,9 +142,8 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries
   return (
     <div className="pb-2 flex flex-col h-full">
       <div>
-        {transaction._id || transaction.id && (
            <AddEntry
-            transactionId={transaction._id || transaction.id}
+            transactionId={(transaction._id || transaction.id )?? ''}
             centerId={transaction.center._id}
             centerNo={transaction.center.centerNo}
             getEntries={getEntries}
@@ -154,7 +153,6 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries
             transaction={transaction}
             setEntries={setEntries}
           />
-        )}
        
       </div>
       <div className="relative overflow-auto flex-1">

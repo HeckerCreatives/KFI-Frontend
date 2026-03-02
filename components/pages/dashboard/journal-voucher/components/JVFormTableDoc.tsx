@@ -21,6 +21,7 @@ type JVFormTableDocProps = {
 const JVFormTableDoc = ({ index, entry, remove, form, loading }: JVFormTableDocProps) => {
   return (
     <TableRow className="[&>td]:border-2 [&>td]:!py-0 [&>td]:!px-2 [&>td]:!bg-white">
+       <TableCell className="text-center">{index + 1}</TableCell>
       <TableCell className="sticky left-0 min-w-[20rem] max-w-[20rem] z-10">
         <div className="flex items-start gap-1">
           <FormIonItem>

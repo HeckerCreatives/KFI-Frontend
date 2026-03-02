@@ -37,6 +37,7 @@ const JournalVoucherFormTable = ({ form, loading }: JournalVoucherFormTableProps
         <Table>
           <TableHeader>
             <TableHeadRow className="bg-slate-100 [&>th]:border-2 [&>th]:!font-normal [&>th]:!py-1.5 [&>th]:!text-xs">
+               <TableHead>Line</TableHead>
               <TableHead className="sticky left-0 min-w-[24rem] z-10">Name</TableHead>
               <TableHead className="sticky left-[20rem] min-w-[24rem] z-10">Particular</TableHead>
               <TableHead className="sticky left-[40rem] min-w-[14rem]  z-10">Acct. Code</TableHead>

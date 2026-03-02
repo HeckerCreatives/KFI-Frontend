@@ -21,6 +21,7 @@ import {
   IonList,
   IonAccordion,
   IonAccordionGroup,
+  useIonViewWillEnter,
   
 } from '@ionic/react';
 import ChartOfAccount from './dashboard/chart-of-account/ChartOfAccount';
@@ -82,6 +83,7 @@ import Activity from './dashboard/activity/AuditTrail';
 import BeginningBalance from './dashboard/beginning-balance/BeginningBalance';
 import ProjectedCollections from './dashboard/projected-collection/ProjectedCollections';
 import PortfolioAtRisk from './dashboard/portfolio-at-risk/PortfolioatRisk';
+import kfiAxios from '../utils/axios';
 
 type NavLink = {
   path?: string;
@@ -191,8 +193,25 @@ const Tabs = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
   const location = useLocation();
+  const [permissions, setPermissions] = useState<any>()
 
   const online = useOnlineStore((state) => state.online);
+
+  const checkPermissions = async () => {
+     try {
+      const result = await kfiAxios.get('/auth/permissions');
+        const { permissions} = result.data;
+        setPermissions(permissions)
+        console.log(permissions)
+      
+      } catch (error) {
+       return error
+    };
+  }
+
+   useIonViewWillEnter(() => {
+      checkPermissions();
+    });
   
 
 

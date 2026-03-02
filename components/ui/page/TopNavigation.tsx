@@ -1,5 +1,5 @@
-import { IonButton } from '@ionic/react';
-import React from 'react';
+import { IonButton, useIonViewWillEnter } from '@ionic/react';
+import React, { useState } from 'react';
 import TransactionNav from './nav-menu/TransactionNav';
 import GeneralLedgerNav from './nav-menu/GeneralLedgerNav';
 import SystemNav from './nav-menu/SystemNav';
@@ -11,16 +11,35 @@ import { jwtDecode } from 'jwt-decode';
 import { AccessToken, Permission } from '../../../types/types';
 import { dashboardResource, diagnosticsResource, generalLedgerResource, manageAccountResource, systemResource, transactionResource } from '../../utils/constants';
 import { DashboardSquare01Icon, ListViewIcon, UserMultiple02Icon  } from 'hugeicons-react';
+import kfiAxios from '../../utils/axios';
 
 
 const TopNavigation = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
+  const [permissions, setPermissions] = useState<any>()
+  
+  
+    const checkPermissions = async () => {
+       try {
+        const result = await kfiAxios.get('/auth/permissions');
+          const { permissions} = result.data;
+          setPermissions(permissions)
+        
+        } catch (error) {
+         return error
+      };
+    }
+  
+     useIonViewWillEnter(() => {
+        checkPermissions();
+      });
+
 
   return (
     <div className=" hidden lg:flex p-1 font-semibold text-sm h-12 bg-orange-50 rounded-md">
       <div className="flex items-center justify-start gap-4 h-full">
-        {isVisible(token.role, token.permissions, dashboardResource) && (
+        {isVisible(token.role, permissions, dashboardResource) && (
           <div>
             <IonButton
               fill="clear"
@@ -53,11 +72,10 @@ const TopNavigation = () => {
             </IonButton>
           </div>
         )}
-        {isVisible(token.role, token.permissions, transactionResource) && <TransactionNav />}
-         
-        {isVisible(token.role, token.permissions, generalLedgerResource) && <GeneralLedgerNav />}
-        {isVisible(token.role, token.permissions, systemResource) && <SystemNav />}
-        {isVisible(token.role, token.permissions, diagnosticsResource) && <Diagnostics />}
+        {isVisible(token.role, permissions, transactionResource) && <TransactionNav />}
+        {isVisible(token.role, permissions, generalLedgerResource) && <GeneralLedgerNav />}
+        {isVisible(token.role, permissions, systemResource) && <SystemNav />}
+        {isVisible(token.role, permissions, diagnosticsResource) && <Diagnostics />}
       </div>
     </div>
   );
