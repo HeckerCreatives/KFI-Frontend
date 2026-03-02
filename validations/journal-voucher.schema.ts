@@ -17,7 +17,7 @@ export const journalVoucherEntrySchema = z.object({
     .min(1, 'Credit is required')
     .max(255, 'Credit must only consist of 255 characters')
     .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Credit must be a number'),
-  cvForRecompute: z.string().optional().or(z.literal('')),
+  cvForRecompute: z.any().optional().or(z.literal('')),
   root: z.string().optional().or(z.literal('')),
 });
 

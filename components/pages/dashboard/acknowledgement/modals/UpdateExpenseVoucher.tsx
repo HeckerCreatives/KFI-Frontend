@@ -13,7 +13,7 @@ import { TData } from '../Acknowledgement';
 import { AcknowledgementFormData, acknowledgementSchema } from '../../../../../validations/acknowledgement.schema';
 import AcknowledgementForm from '../components/AcknowledgementForm';
 import UpdateAcknowledgementEntries from '../components/UpdateAcknowledgementEntries';
-import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import { formatAmount, formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
@@ -256,6 +256,20 @@ function removeCVTag(cv: string): string {
           <div className="border-t border-t-slate-400 mx-2 pt-5 flex-1">
             <UpdateAcknowledgementEntries isOpen={isOpen} acknowledgement={acknowledgement} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} />
           </div>
+
+          <div className="px-3">
+              <div className="grid grid-cols-3">
+                <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+                  <div>Diff: </div>
+                  <div>{`${formatNumber(Math.abs((form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - (form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`}</div>
+                </div>
+                <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
+                  <div>Total: </div>
+                  <div>{`${acknowledgement.amount.toLocaleString()}`}</div>
+                </div>
+              </div>
+            </div>
+                     
 
           <Signatures open={isOpen} type={'official receipt'}/>
           

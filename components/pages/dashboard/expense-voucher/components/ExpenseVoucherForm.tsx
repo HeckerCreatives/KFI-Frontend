@@ -86,7 +86,6 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
                 placeholder="Type here"
                 className="!p-2 rounded-md !text-[0.7rem]"
                 labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
-                readOnly
               />
             </FormIonItem>
             <FormIonItem className="[--min-height:0]">
@@ -99,7 +98,6 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
                 placeholder="Type here"
                 className="!p-2 rounded-md !text-[0.7rem]"
                 labelClassName="truncate !text-[0.7rem] min-w-24 !text-slate-600 text-end"
-                readOnly
               />
             </FormIonItem>
           </div>

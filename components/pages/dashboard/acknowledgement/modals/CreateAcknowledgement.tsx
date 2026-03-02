@@ -11,7 +11,7 @@ import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
-import { removeAmountComma } from '../../../../ui/utils/formatNumber';
+import { formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
@@ -128,6 +128,8 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
     }
   }
 
+  const amount = form.watch('amount')
+
   return (
     <>
       <div className="text-end">
@@ -162,6 +164,20 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
                 <AcknowledgementFormTable form={form} />
               </div>
             </div>
+
+             <div className="px-3">
+              <div className="grid grid-cols-3">
+                <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+                  <div>Diff: </div>
+                  <div>{`${formatNumber(Math.abs((form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - (form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`}</div>
+                </div>
+                <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
+                  <div>Total: </div>
+                  <div>{`${amount.toLocaleString()}`}</div>
+                </div>
+              </div>
+            </div>
+           
             <Signatures open={isOpen} type={'official receipt'}/>
 
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}

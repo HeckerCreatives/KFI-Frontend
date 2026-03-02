@@ -13,7 +13,7 @@ import UpdateExpenseVoucherEntries from '../components/UpdateExpenseVoucherEntri
 import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
-import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import { formatAmount, formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
@@ -242,6 +242,19 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
           <div className="border-t border-t-slate-200 mt-2 flex-1 py-2">
             <UpdateExpenseVoucherEntries isOpen={isOpen} expenseVoucher={expenseVoucher} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}/>
           </div>
+
+           <div className="px-3">
+              <div className="grid grid-cols-3">
+                <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+                  <div>Diff: </div>
+                  <div>{`${formatNumber(Math.abs(expenseVoucher.entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - expenseVoucher.entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`}</div>
+                </div>
+                <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
+                  <div>Total: </div>
+                  <div>{`${expenseVoucher.amount.toLocaleString()}`}</div>
+                </div>
+              </div>
+            </div>
           <Signatures open={isOpen} type={'expense voucher'}/>
           
         </div>

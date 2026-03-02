@@ -4,7 +4,7 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import { eye } from 'ionicons/icons';
 import JournalVoucherViewCard from '../components/EmergencyLoanViewCard';
 import { formatDateTable } from '../../../../utils/date-utils';
-import { formatNumber } from '../../../../ui/utils/formatNumber';
+import { formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import { EmergencyLoan } from '../../../../../types/types';
 import ViewELEntries from '../components/ViewELEntries';
 
@@ -79,6 +79,8 @@ const ViewEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan }) 
           <div className="flex-1 mt-4">
             <ViewELEntries emergencyLoan={emergencyLoan} isOpen={isOpen} />
           </div>
+
+       
         </div>
       </IonModal>
     </>

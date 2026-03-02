@@ -25,7 +25,7 @@ export const damayanFundSchema = z
     code: z
       .string()
       .min(1, 'JV # is required')
-      .regex(/^JV#[\d-]+$/i, { message: 'Must start with JV# followed by numbers or hyphens' }),
+      .regex(/^((JV|CV)#[\d-]+)$/i, { message: 'Must start with JV# or CV# followed by numbers or hyphens' }),
     centerLabel: z.string().min(1, 'Center code is required'),
     name: z.string().min(1, 'User is required'),
     centerValue: z.string().min(1, 'Center code is required'),

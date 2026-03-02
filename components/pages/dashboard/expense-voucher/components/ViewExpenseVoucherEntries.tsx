@@ -5,7 +5,7 @@ import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
 import { useIonToast } from '@ionic/react';
 import TablePagination from '../../../../ui/forms/TablePagination';
-import { formatNumber } from '../../../../ui/utils/formatNumber';
+import { formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import { useOnlineStore } from '../../../../../store/onlineStore';
@@ -118,6 +118,19 @@ const ViewExpenseVoucherEntries = ({ isOpen, expenseVoucher }: ViewEntriesProps)
       <div className="pt-2">
         <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
       </div>
+
+      <div className="px-3">
+                   <div className="grid grid-cols-3">
+                     <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+                       <div>Diff: </div>
+                       <div>{`${formatNumber((data.entries).reduce((acc, current) => acc + Number(removeAmountComma(current.debit ?? '')), 0) - data.entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit ?? '')), 0))}`}</div>
+                     </div>
+                     <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
+                       <div>Total: </div>
+                       <div>{`${expenseVoucher.amount.toLocaleString()}`}</div>
+                     </div>
+                   </div>
+              </div>
     </div>
   );
 };

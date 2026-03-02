@@ -79,6 +79,8 @@ const ViewDamayanFund = ({ damayanFund }: { damayanFund: DamayanFund }) => {
           <div className="flex-1 mt-4">
             <ViewDFEntries damayanFund={damayanFund} isOpen={isOpen} />
           </div>
+
+           
         </div>
       </IonModal>
     </>

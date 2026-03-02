@@ -59,7 +59,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
       setLoading(true);
       try {
         data.amount = removeAmountComma(data.amount);
-        data.entries = data.entries ? data.entries.map(entry => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit) })) : [];
+        data.entries = data.entries ? data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1 })) : [];
         const result = await kfiAxios.post('journal-voucher', data);
         const { success } = result.data;
         if (success) {

@@ -11,7 +11,7 @@ import { ReleaseFormData, releaseSchema } from '../../../../../validations/relea
 import ReleaseForm from '../components/ReleaseForm';
 import ReleaseFormTable from '../components/ReleaseFormTable';
 import { formatDateInput } from '../../../../utils/date-utils';
-import { removeAmountComma } from '../../../../ui/utils/formatNumber';
+import { formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
@@ -127,6 +127,8 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
     }
   }
 
+  const amount = form.watch('amount')
+
   return (
     <>
       <div className="text-end">
@@ -157,6 +159,19 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
               <ReleaseForm form={form} loading={loading} />
               <ReleaseFormTable form={form} />
             </div>
+
+            <div className="px-3">
+             <div className="grid grid-cols-3">
+               <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+                 <div>Diff: </div>
+                 <div>{`${formatNumber(Math.abs((form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - (form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`}</div>
+               </div>
+               <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
+                 <div>Total: </div>
+                 <div>{`${amount.toLocaleString()}`}</div>
+               </div>
+             </div>
+           </div>
             <Signatures open={isOpen} type={'official receipt'}/>
             
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}

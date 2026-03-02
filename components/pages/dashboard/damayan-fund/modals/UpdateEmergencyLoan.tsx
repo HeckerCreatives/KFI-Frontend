@@ -14,7 +14,7 @@ import { formatDateInput } from '../../../../utils/date-utils';
 import DamayanFundForm from '../components/DamayanFundForm';
 import UpdateDFEntries from '../components/UpdateDFEntries';
 import { DamayanFundFormData, damayanFundSchema } from '../../../../../validations/damayan-fund.schema';
-import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import { formatAmount, formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
@@ -230,6 +230,19 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
             <UpdateDFEntries isOpen={isOpen} damayanFund={damayanFund} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}  />
           </div>
+
+          <div className="px-3">
+             <div className="grid grid-cols-3">
+               <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+                 <div>Diff: </div>
+                 <div>{`${formatNumber(Math.abs((entries).reduce((acc, current) => acc + Number(removeAmountComma(current.debit)), 0) - (entries || []).reduce((acc, current) => acc + Number(removeAmountComma(current.credit)), 0)))}`}</div>
+               </div>
+               <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
+                 <div>Total: </div>
+                 <div>{`${form.watch('amount').toLocaleString()}`}</div>
+               </div>
+             </div>
+           </div>
 
           <Signatures open={isOpen} type={'damayan fund'}/>
           
