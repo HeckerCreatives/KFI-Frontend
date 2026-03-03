@@ -15,7 +15,7 @@ import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { TData } from '../LoanRelease';
-import { formatAmount, removeAmountComma } from '../../../../ui/utils/formatNumber';
+import { formatAmount, formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
@@ -45,6 +45,8 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
       interestRate: '',
     },
   });
+
+  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
 
   useEffect(() => {
     if (transaction) {
@@ -87,6 +89,11 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
     const finalDeletedIds = deletedIds.filter((id) =>
       prevEntries.some((e) => e._id === id)
     );
+
+     if (Number(removeAmountComma(difference)) !== 0) {
+      form.setError('root', { message: `Debit and Credit must be balanced` });
+      return;
+    }
 
 
     if(online){

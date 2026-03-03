@@ -30,8 +30,6 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
   const online = useOnlineStore((state) => state.online);
   const user = localStorage.getItem('user')
 
-  
-
 
   const form = useForm<LoanReleaseFormData>({
     resolver: zodResolver(loanReleaseSchema),
@@ -65,10 +63,17 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
     setIsOpen(false)
   }
 
+  const difference = `${formatNumber(Math.abs(form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`
+
   async function onSubmit(data: LoanReleaseFormData) {
     const glEntries = data.entries.filter((entry: EntryFormData) => entry.debit !== '' || entry.credit !== '' || entry.checkNo !== '' || entry.cycle !== '');
     if (glEntries.length < 1) {
       form.setError('entries', { message: 'Atleast 1 entry is required' });
+      return;
+    }
+
+    if (Number(difference) !== 0) {
+      form.setError('root', { message: `Debit and Credit must be balanced.` });
       return;
     }
 
@@ -193,7 +198,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
                 <div className="grid grid-cols-3">
                   <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
                     <div>Diff: </div>
-                    <div>{`${formatNumber(Math.abs(form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`}</div>
+                    <div>{difference}</div>
                   </div>
 
                   <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">

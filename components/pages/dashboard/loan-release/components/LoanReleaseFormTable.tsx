@@ -31,7 +31,7 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
   
 
   const [page, setPage] = useState(1);
-  const limit = 15;
+  const limit = 5;
 
   const { fields, replace, remove, append } = useFieldArray({
     control: form.control,

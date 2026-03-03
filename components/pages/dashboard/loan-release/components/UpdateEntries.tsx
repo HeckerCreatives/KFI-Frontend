@@ -5,7 +5,7 @@ import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
 import { IonButton, IonIcon, useIonToast } from '@ionic/react';
 import TablePagination from '../../../../ui/forms/TablePagination';
-import { formatNumber } from '../../../../ui/utils/formatNumber';
+import { formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import UpdateEntry from '../modals/entries/UpdateEntry';
 import DeleteEntry from '../modals/entries/DeleteEntry';
 import AddEntry from '../modals/entries/AddEntry';
@@ -38,8 +38,7 @@ type UpdateEntriesProps = {
 const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries, deletedIds, setDeletedIds, setPrevEntries }: UpdateEntriesProps) => {
   const [present] = useIonToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const online = useOnlineStore((state) => state.online);
-  
+  const online = useOnlineStore((state) => state.online);  
 
   const [data, setData] = useState<TData>({
     entries: [],
@@ -48,6 +47,9 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries
      nextPage: false,
      prevPage: false,
   });
+
+  const difference = `${formatNumber(Math.abs(data.entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - data.entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+
 
   const [page, setPage] = useState(1);
   const limit = 5
@@ -176,7 +178,7 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries
             
             {currentPageItems.map((entry: Entry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]">
-                  <TableCell className="text-center">{(currentPage - 1) * TABLE_LIMIT + (index + 1)}</TableCell>
+                  <TableCell className="text-center">{entry.line}</TableCell>
                   <TableCell>{entry?.client?.name}</TableCell>
                   <TableCell>{entry?.particular}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>
@@ -226,15 +228,11 @@ const UpdateEntries = ({ isOpen, transaction, currentAmount, entries, setEntries
         <div className="grid grid-cols-3">
           <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
             <div>Diff: </div>
-            <div>{`${formatNumber(Math.abs(data.entries.reduce((acc, entry) => acc + Number(entry.debit), 0) - data.entries.reduce((acc, entry) => acc + Number(entry.credit), 0)))}`}</div>
+            <div>{Number(removeAmountComma(difference)).toLocaleString()}</div>
           </div>
            <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
               <div>Total: </div>
-              <div>{`${transaction.amount.toLocaleString('en-US', {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 2,
-                  useGrouping: false,
-                })}`}</div>
+              <div>{`${transaction.amount.toLocaleString()}`}</div>
             </div>
           {/* <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
             <div>Total Debit: </div>
