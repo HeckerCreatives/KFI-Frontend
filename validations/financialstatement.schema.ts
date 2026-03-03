@@ -13,7 +13,7 @@ export const fschema = z.object({
 export const entries = z.object({
   _id: z.string().optional(),
   financialStatement: z.string().optional(),
-  line: z.string().optional(),
+  line: z.number().optional(),
   acctCode: z.string().min(1, 'Account code is required'),
   acctCodeName: z.string().optional(),
   acctCodeDescription: z.string().optional(),

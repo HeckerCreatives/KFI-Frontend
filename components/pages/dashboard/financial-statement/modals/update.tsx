@@ -72,6 +72,8 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
     
   }
 
+  console.log(form.formState.errors)
+
   return (
     <>
       <div className="text-start">
