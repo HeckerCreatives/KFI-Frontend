@@ -61,6 +61,7 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
              _id: isExisting ? entry._id : undefined,
             line: index + 1,
             acctCode: entry.acctCode,
+            acctCodeName: entry.acctCodeName,
             remarks: entry.remarks,
             amountType: entry.amountType
         };
@@ -111,7 +112,7 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
                     line: index + 1,
                     financialStatement: entry.financialStatement,
                     acctCode: entry.acctCode,
-                    acctCodeName: entry.acctCode,
+                    acctCodeName: entry.accCodeName,
                     remarks: entry.remarks,
                     amountType: entry.amountType
                 };
@@ -130,7 +131,7 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
         modal.current?.dismiss();
     }
 
-    console.log(form.formState.errors)
+    console.log(form.watch('entries'))
 
 
 
