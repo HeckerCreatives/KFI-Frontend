@@ -44,6 +44,8 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
     },
   });
 
+  
+
  
 
   async function onSubmit(data: TBEntriesFormData) {
@@ -105,8 +107,8 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
                     _id: entry._id,
                     line: Number(index + 1),
                     financialStatement: entry.financialStatement,
-                    acctCode: entry.acctCode,
-                    acctCodeName: entry.acctCode,
+                    acctCode: entry.acctCode._id,
+                    acctCodeName: entry.acctCode.code,
                     remarks: entry.remarks,
                     amountType: entry.amountType
                 };
