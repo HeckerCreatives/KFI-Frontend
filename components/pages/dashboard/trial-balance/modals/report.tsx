@@ -225,7 +225,7 @@ export default function TBReport() {
 
                       
                        <IonSelect
-                       placeholder='Due dates'
+                       placeholder='Select report code'
                        labelPlacement="stacked"
                         interface="popover"
                        value={form.watch('reportCode')}
@@ -250,8 +250,9 @@ export default function TBReport() {
                   <InputCheckbox
                       control={form.control}
                       name='summarizeBalance'
-                      disabled={loading}
+                      disabled={form.watch('includeBalance')}
                       className=' !w-4'
+                      
                       
                     
                     />
@@ -265,7 +266,7 @@ export default function TBReport() {
                   <InputCheckbox
                       control={form.control}
                       name="includeBalance"
-                      disabled={loading}
+                      disabled={form.watch('summarizeBalance')}
                       className=' !w-4'
                       
                     
