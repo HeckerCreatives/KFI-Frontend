@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GLFormData, glSchema } from '../../../../validations/gl.schema';
 import InputText from '../../../ui/forms/InputText';
-import { TErrorData, TFormError } from '../../../../types/types';
+import { AccessToken, TErrorData, TFormError } from '../../../../types/types';
 import checkError from '../../../utils/check-error';
 import formErrorHandler from '../../../utils/form-error-handler';
 import kfiAxios from '../../../utils/axios';
@@ -13,8 +13,13 @@ import { FileExportIcon } from 'hugeicons-react';
 import InputRadio from '../../../ui/forms/InputRadio';
 import ChartOfAccountSelection from '../../../ui/selections/ChartOfAccountSelection';
 import InputCheckbox from '../../../ui/forms/InputCheckbox';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../utils/permissions';
 
 const AuditTrail = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
    const form = useForm<GLFormData>({
@@ -212,12 +217,28 @@ const AuditTrail = () => {
                  
 
                 <div className="text-end mt-6 space-x-2">
-                  <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
-                    <FileExportIcon size={15} stroke='.8' className=' mr-1'/>
-                    {loading ? 'Loading...' : `${form.watch('type') === 'print' ? 'Print' : 'Export'}`}
-                  </IonButton>
-
+                  {form.watch('type') === 'print' ? (
+                    <>
+                    {canDoAction(token.role, permissions, 'audit trail', 'print') && 
+                      <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
+                        <FileExportIcon size={15} stroke='.8' className=' mr-1'/>
+                        {loading ? 'Loading...' : `${form.watch('type') === 'print' ? 'Print' : 'Export'}`}
+                      </IonButton>
+                    }
+                    </>
+                  ): (
+                    <>
+                    {canDoAction(token.role, permissions, 'audit trail', 'export') && 
+                      <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
+                        <FileExportIcon size={15} stroke='.8' className=' mr-1'/>
+                        {loading ? 'Loading...' : `${form.watch('type') === 'print' ? 'Print' : 'Export'}`}
+                      </IonButton>
+                    }
+                    </>
+                  )}
                  
+                 
+
                 
                 </div>
 

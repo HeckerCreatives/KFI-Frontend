@@ -33,6 +33,8 @@ export type TData = {
 
 const ExpenseVoucher = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
 
   const [present] = useIonToast();
 
@@ -177,9 +179,9 @@ const ExpenseVoucher = () => {
                <div className=" flex flex-col gap-4 flex-wrap">
               
                 <div className="flex items-start flex-wrap w-fit">
-                  <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'create') && <CreateExpenseVoucher getExpenseVouchers={getExpenseVouchers} />}</div>
-                  <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'print') && <PrintAllExpenseVoucher />}</div>
-                  <div>{canDoAction(token.role, token.permissions, 'expense voucher', 'export') && <ExportAllExpenseVoucher />}</div>
+                  <div>{canDoAction(token.role, permissions, 'expense voucher', 'create') && <CreateExpenseVoucher getExpenseVouchers={getExpenseVouchers} />}</div>
+                  <div>{canDoAction(token.role, permissions, 'expense voucher', 'print') && <PrintAllExpenseVoucher />}</div>
+                  <div>{canDoAction(token.role, permissions, 'expense voucher', 'export') && <ExportAllExpenseVoucher />}</div>
                   {online && (
                     <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                       <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
@@ -216,7 +218,7 @@ const ExpenseVoucher = () => {
                           <TableCell>{expenseVoucher.checkNo}</TableCell>
                           <TableCell>{formatNumber(expenseVoucher.amount)}</TableCell>
                           <TableCell>{expenseVoucher.encodedBy.username}</TableCell>
-                          {haveActions(token.role, 'expense voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                          {haveActions(token.role, 'expense voucher', permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <ExpenseVoucherActions
                                 expenseVoucher={expenseVoucher}

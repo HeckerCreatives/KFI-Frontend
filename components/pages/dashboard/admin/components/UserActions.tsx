@@ -7,6 +7,7 @@ import AddPermission from '../modal/AddPermission';
 import ChangePassword from '../modal/ChangePassword';
 import ActivityLogs from '../modal/ActivityLogs';
 import ViewAdmin from '../modal/ViewAdmin';
+import LoginLogs from '../modal/LoginLogs';
 
 type UserActionsProps = {
   user: User;
@@ -20,21 +21,10 @@ const UserActions = ({ user, setData }: UserActionsProps) => {
       <AddPermission user={user} setData={setData} />
       <ChangePassword user={user} />
       <ActivityLogs user={user} />
-      {/* <div className="text-end">
-        <div
-          id={`update-permissions-modal-${user._id}`}
-          className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
-        >
-          <IonIcon icon={logIn} className="text-[1rem]" /> Login Logs
-        </div>
-      </div> */}
-      <IonButton
-        fill="clear"
-        className="space-x-1 rounded-md w-28 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-pink-50 text-pink-900 capitalize min-h-4 text-xs"
-      >
-        <IonIcon icon={logIn} className="text-xs" />
-        <span>Login Logs</span>
-      </IonButton>
+
+      <LoginLogs user={user}/>
+      
+   
     </div>
     // <>
     //   <IonButton fill="clear" id={`user-${user._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">

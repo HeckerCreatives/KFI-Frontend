@@ -33,6 +33,8 @@ export type TData = {
 
 const Acknowledgement = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
 
   const [present] = useIonToast();
 
@@ -171,9 +173,9 @@ const Acknowledgement = () => {
 
               <div className="  flex flex-col gap-4 flex-wrap">
                 <div className="flex items-start flex-wrap">
-                  <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'create') && <CreateAcknowledgement getAcknowledgements={getAcknowledgements} />}</div>
-                  <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'print') && <PrintAllAcknowledgement />}</div>
-                  <div>{canDoAction(token.role, token.permissions, 'acknowledgement', 'export') && <ExportAllAcknowledgement />}</div>
+                  <div>{canDoAction(token.role, permissions, 'acknowledgement', 'create') && <CreateAcknowledgement getAcknowledgements={getAcknowledgements} />}</div>
+                  <div>{canDoAction(token.role, permissions, 'acknowledgement', 'print') && <PrintAllAcknowledgement />}</div>
+                  <div>{canDoAction(token.role, permissions, 'acknowledgement', 'export') && <ExportAllAcknowledgement />}</div>
                   {online && (
                     <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                       <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
@@ -195,7 +197,7 @@ const Acknowledgement = () => {
                       <TableHead>CHK. No.</TableHead>
                       <TableHead>Amount</TableHead>
                       <TableHead>Encoded By</TableHead>
-                      {haveActions(token.role, 'acknowledgement', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'acknowledgement', permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -211,7 +213,7 @@ const Acknowledgement = () => {
                           <TableCell>{acknowledgement.checkNo}</TableCell>
                           <TableCell>{formatMoney(acknowledgement.amount)}</TableCell>
                           <TableCell>{acknowledgement.encodedBy.username}</TableCell>
-                          {haveActions(token.role, 'acknowledgement', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                          {haveActions(token.role, 'acknowledgement', permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <AcknowledgementActions
                                 acknowledgement={acknowledgement}

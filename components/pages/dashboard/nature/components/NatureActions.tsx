@@ -3,8 +3,10 @@ import React from 'react';
 import { ellipsisVertical } from 'ionicons/icons';
 import UpdateNature from '../modals/UpdateNature';
 import DeleteNature from '../modals/DeleteNature';
-import { Nature } from '../../../../../types/types';
+import { AccessToken, Nature } from '../../../../../types/types';
 import { TNature } from '../Nature';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../../utils/permissions';
 
 type NatureActionsProps = {
   nature: Nature;
@@ -18,13 +20,18 @@ type NatureActionsProps = {
 };
 
 const NatureActions = ({ nature, setData, currentPage, setCurrentPage, getNatures, searchKey, sortKey, rowLength }: NatureActionsProps) => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
   return (
-    < div className=' flex items-center gap-2'>
-     
-          <UpdateNature nature={nature} setData={setData} />
-          <DeleteNature nature={nature} getNatures={getNatures} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
-        
-    </ div>
+    <div className=' flex items-center gap-2'>
+      {canDoAction(token.role, permissions, 'nature', 'update') && (
+        <UpdateNature nature={nature} setData={setData} />
+      )}
+      {canDoAction(token.role, permissions, 'nature', 'delete') && (
+        <DeleteNature nature={nature} getNatures={getNatures} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
+      )}  
+    </div>
   );
 };
 

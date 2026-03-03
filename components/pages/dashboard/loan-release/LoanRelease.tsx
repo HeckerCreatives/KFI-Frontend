@@ -34,6 +34,7 @@ export type TData = {
 
 const LoanRelease = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
 
   const [present] = useIonToast();
 
@@ -174,9 +175,9 @@ const LoanRelease = () => {
                 <div className=" bg-white flex flex-col gap-4 flex-wrap">
                  
                   <div className="flex items-center flex-wrap">
-                    <div>{canDoAction(token.role, token.permissions, 'loan release', 'create') && <CreateLoanRelease getTransactions={getTransactions} />}</div>
-                    <div>{canDoAction(token.role, token.permissions, 'loan release', 'print') && <PrintAllLoanRelease />}</div>
-                    <div>{canDoAction(token.role, token.permissions, 'loan release', 'export') && <ExportAllLoanRelease />}</div>
+                    <div>{canDoAction(token.role, permissions, 'loan release', 'create') && <CreateLoanRelease getTransactions={getTransactions} />}</div>
+                    <div>{canDoAction(token.role, permissions, 'loan release', 'print') && <PrintAllLoanRelease />}</div>
+                    <div>{canDoAction(token.role, permissions, 'loan release', 'export') && <ExportAllLoanRelease />}</div>
                     <div><Reports /></div>
                     {online && (
                       <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
@@ -199,7 +200,7 @@ const LoanRelease = () => {
                       <TableHead>CHK. No.</TableHead>
                       <TableHead>Amount</TableHead>
                       <TableHead>Encoded By</TableHead>
-                      {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'loan release', permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -215,7 +216,7 @@ const LoanRelease = () => {
                           <TableCell>{transaction.checkNo}</TableCell>
                           <TableCell>{formatMoney(transaction.amount)}</TableCell>
                           <TableCell>{transaction.encodedBy?.username}</TableCell>
-                          {haveActions(token.role, 'loan release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                          {haveActions(token.role, 'loan release', permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <LoanReleaseActions
                                 transaction={transaction}

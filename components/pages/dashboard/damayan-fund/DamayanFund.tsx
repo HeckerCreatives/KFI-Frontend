@@ -33,6 +33,8 @@ export type TData = {
 
 const DamayanFund = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
 
   const [present] = useIonToast();
 
@@ -178,9 +180,9 @@ const DamayanFund = () => {
                <div className=" flex flex-col gap-4 flex-wrap">
                 
                 <div className="flex items-start flex-wrap">
-                  <div>{canDoAction(token.role, token.permissions, 'damayan fund', 'create') && <CreateDamayanFund getDamayanFunds={getDamayanFunds} />}</div>
-                  <div>{canDoAction(token.role, token.permissions, 'damayan fund', 'print') && <PrintAllDamayanFund />}</div>
-                  <div>{canDoAction(token.role, token.permissions, 'damayan fund', 'export') && <ExportAllDamayanFund />}</div>
+                  <div>{canDoAction(token.role, permissions, 'damayan fund', 'create') && <CreateDamayanFund getDamayanFunds={getDamayanFunds} />}</div>
+                  <div>{canDoAction(token.role, permissions, 'damayan fund', 'print') && <PrintAllDamayanFund />}</div>
+                  <div>{canDoAction(token.role, permissions, 'damayan fund', 'export') && <ExportAllDamayanFund />}</div>
                   {online && (
                     <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                       <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
@@ -202,7 +204,7 @@ const DamayanFund = () => {
                       <TableHead>CHK. No.</TableHead>
                       <TableHead>Amount</TableHead>
                       <TableHead>Encoded By</TableHead>
-                      {haveActions(token.role, 'damayan fund', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'damayan fund', permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -218,7 +220,7 @@ const DamayanFund = () => {
                           <TableCell>{damayanFund.checkNo}</TableCell>
                           <TableCell>{formatMoney(damayanFund.amount)}</TableCell>
                           <TableCell>{damayanFund.encodedBy.username}</TableCell>
-                          {haveActions(token.role, 'damayan fund', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                          {haveActions(token.role, 'damayan fund', permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <DamayanFundActions
                                 damayanFund={damayanFund}

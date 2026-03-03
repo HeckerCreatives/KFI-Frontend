@@ -7,7 +7,7 @@ import UpdateSystemParameters from '../systemparameters/modals/UpdateParams';
 import kfiAxios from '../../../utils/axios';
 import CreateFS from './modals/create';
 import TablePagination from '../../../ui/forms/TablePagination';
-import { FinancialStatements } from '../../../../types/types';
+import { AccessToken, FinancialStatements } from '../../../../types/types';
 import UpdateFS from './modals/update';
 import DeleteFS from './modals/delete';
 import UpdateFSEntries from './modals/entries';
@@ -15,6 +15,8 @@ import CreateTB from './modals/create';
 import UpdateTB from './modals/update';
 import DeleteTB from './modals/delete';
 import TBReport from './modals/report';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../utils/permissions';
 
 export type TBS = {
   trialBalances: FinancialStatements[];
@@ -26,7 +28,9 @@ export type TBS = {
 
 const TrialBalance = () => {
   const [list, setList] = useState<any[]>([])
-   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
   
     const [data, setData] = useState<TBS>({
       trialBalances: [],
@@ -71,7 +75,10 @@ const TrialBalance = () => {
            <div className="px-3 pb-3 flex-1">
 
             <div className="flex items-center gap-2 flex-wrap">
+              {canDoAction(token.role, permissions, 'trial balance', 'create') && (
               <CreateTB getList={getList} />
+
+              )}
             <TBReport/>
 
               
@@ -99,10 +106,16 @@ const TrialBalance = () => {
                         <TableCell>{item.reportName}</TableCell>
                       
                         <TableCell className=' flex '>
-                          <UpdateTB item={item} getList={getList} currentPage={currentPage}/>
-                          <DeleteTB item={item} getList={getList} currentPage={currentPage}/>
-                          <UpdateFSEntries item={item} getList={getList} currentPage={currentPage}/>
-
+                           {canDoAction(token.role, permissions, 'trial balance', 'update') && (
+                              <UpdateTB item={item} getList={getList} currentPage={currentPage}/>
+                            )}
+                            {canDoAction(token.role, permissions, 'trial balance', 'delete') && (
+                               <DeleteTB item={item} getList={getList} currentPage={currentPage}/>
+                            )}
+                            {canDoAction(token.role, permissions, 'trial balance', 'update') && (
+                               <UpdateFSEntries item={item} getList={getList} currentPage={currentPage}/>
+                            )}
+                          
                         </TableCell>
                       
                       </TableRow>

@@ -37,11 +37,13 @@ const JournalVoucherActions = ({
   rowLength,
 }: JournalVoucherActionsProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
   return (
     <div>
-      {canDoAction(token.role, token.permissions, 'journal voucher', 'visible') && <ViewJournalVoucher journalVoucher={journalVoucher} />}
-      {canDoAction(token.role, token.permissions, 'journal voucher', 'update') && <UpdateJournalVoucher journalVoucher={journalVoucher} setData={setData} />}
-      {canDoAction(token.role, token.permissions, 'journal voucher', 'delete') && (
+      {canDoAction(token.role, permissions, 'journal voucher', 'visible') && <ViewJournalVoucher journalVoucher={journalVoucher} />}
+      {canDoAction(token.role, permissions, 'journal voucher', 'update') && <UpdateJournalVoucher journalVoucher={journalVoucher} setData={setData} />}
+      {canDoAction(token.role, permissions, 'journal voucher', 'delete') && (
         <DeleteJournalVoucher
           journalVoucher={journalVoucher}
           getJournalVouchers={getJournalVouchers}
@@ -51,33 +53,10 @@ const JournalVoucherActions = ({
           rowLength={rowLength}
         />
       )}
-      {canDoAction(token.role, token.permissions, 'journal voucher', 'print') && <PrintJournalVoucher journalVoucher={journalVoucher} />}
-      {canDoAction(token.role, token.permissions, 'expense voucher', 'export') && <ExportJournalVoucher journalVoucher={journalVoucher} />}
+      {canDoAction(token.role, permissions, 'journal voucher', 'print') && <PrintJournalVoucher journalVoucher={journalVoucher} />}
+      {canDoAction(token.role, permissions, 'expense voucher', 'export') && <ExportJournalVoucher journalVoucher={journalVoucher} />}
     </div>
-    // <>
-    //   <IonButton fill="clear" id={`journalVoucher-${journalVoucher._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
-    //     <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
-    //   </IonButton>
-    //   <IonPopover showBackdrop={false} trigger={`journalVoucher-${journalVoucher._id}`} triggerAction="click" className="[--max-width:11rem]">
-    //     <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
-    //       {canDoAction(token.role, token.permissions, 'journal voucher', 'visible') && <ViewJournalVoucher journalVoucher={journalVoucher} />}
-    //       {canDoAction(token.role, token.permissions, 'journal voucher', 'update') && <UpdateJournalVoucher journalVoucher={journalVoucher} setData={setData} />}
-    //       {canDoAction(token.role, token.permissions, 'journal voucher', 'delete') && (
-    //         <DeleteJournalVoucher
-    //           journalVoucher={journalVoucher}
-    //           getJournalVouchers={getJournalVouchers}
-    //           searchkey={searchKey}
-    //           sortKey={sortKey}
-    //           currentPage={currentPage}
-    //           rowLength={rowLength}
-    //         />
-    //       )}
-    //       {canDoAction(token.role, token.permissions, 'journal voucher', 'print') && <PrintJournalVoucher journalVoucher={journalVoucher} />}
-    //       {canDoAction(token.role, token.permissions, 'expense voucher', 'export') && <ExportJournalVoucher journalVoucher={journalVoucher} />}
-    //       <UpdateCVJournalVoucher index={journalVoucher._id} />
-    //     </IonContent>
-    //   </IonPopover>
-    // </>
+   
   );
 };
 

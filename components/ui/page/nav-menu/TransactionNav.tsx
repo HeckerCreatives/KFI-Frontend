@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
+import { IonButton, IonContent, IonIcon, IonPopover, useIonViewWillEnter } from '@ionic/react';
 import { chevronDownOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 import NoChildNav from './NoChildNav';
@@ -8,12 +8,15 @@ import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import { Task02Icon  } from 'hugeicons-react';
+import kfiAxios from '../../../utils/axios';
 
 
 const TransactionNav = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+   
 
   const fileLinks: NavLink[] = [
     { path: '/dashboard/loan-release', label: 'Loan Release', resource: 'loan release' },
@@ -38,6 +41,7 @@ const TransactionNav = () => {
     { path: '/dashboard/emergency-loan', label: 'Emergency Loan', resource: 'emergency loan' },
     { path: '/dashboard/damayan-fund', label: 'Damayan Fund', resource: 'damayan fund' },
   ];
+
 
   return (
     <div>
@@ -64,7 +68,7 @@ const TransactionNav = () => {
         <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
           {fileLinks.map(
             link =>
-              (token.role === 'superadmin' || token.permissions.find((e: Permission) => link.resource.includes(e.resource) && e.actions.visible)) &&
+              (token.role === 'superadmin' || permissions?.find((e: Permission) => link.resource.includes(e.resource) && e.actions.visible)) &&
               (link.children ? (
                 <WithChildNav key={link.label} label={link.label} resource={link.resource} childPaths={link.children} />
               ) : (

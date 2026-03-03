@@ -7,11 +7,13 @@ import UpdateSystemParameters from '../systemparameters/modals/UpdateParams';
 import kfiAxios from '../../../utils/axios';
 import CreateFS from './modals/create';
 import TablePagination from '../../../ui/forms/TablePagination';
-import { FinancialStatements } from '../../../../types/types';
+import { AccessToken, FinancialStatements } from '../../../../types/types';
 import UpdateFS from './modals/update';
 import DeleteFS from './modals/delete';
 import UpdateFSEntries from './modals/entries';
 import GenerateReport from './modals/generate-report';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../utils/permissions';
 
 export type TFS = {
   financialStatements: FinancialStatements[];
@@ -24,6 +26,8 @@ export type TFS = {
 const FinancialStatement = () => {
   const [list, setList] = useState<any[]>([])
    const [currentPage, setCurrentPage] = useState<number>(1);
+    const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+     const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
   
     const [data, setData] = useState<TFS>({
       financialStatements: [],
@@ -71,7 +75,9 @@ const FinancialStatement = () => {
            <div className="px-3 pb-3 flex-1">
 
             <div className="flex items-center gap-2 flex-wrap">
+              {canDoAction(token.role, permissions, 'financial statement', 'create') && (
               <CreateFS getList={getList} />
+              )}
 
               <GenerateReport/>
               
@@ -102,9 +108,18 @@ const FinancialStatement = () => {
                         <TableCell>{item.title}</TableCell>
                         <TableCell>{item.subTitle}</TableCell>
                         <TableCell className=' flex '>
-                          <UpdateFS item={item} getList={getList} currentPage={currentPage}/>
-                          <DeleteFS item={item} getList={getList} currentPage={currentPage}/>
-                          <UpdateFSEntries item={item} getList={getList} currentPage={currentPage}/>
+                           {canDoAction(token.role, permissions, 'financial statement', 'update') && (
+                            <UpdateFS item={item} getList={getList} currentPage={currentPage}/>
+                            
+                            )}
+                            {canDoAction(token.role, permissions, 'financial statement', 'delete') && (
+                            <DeleteFS item={item} getList={getList} currentPage={currentPage}/>
+                            )}
+                            {canDoAction(token.role, permissions, 'financial statement', 'update') && (
+                            <UpdateFSEntries item={item} getList={getList} currentPage={currentPage}/>
+                            )}
+                          
+                          
 
                         </TableCell>
                       

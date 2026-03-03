@@ -1,10 +1,11 @@
-import { IonContent, IonIcon, IonPopover } from '@ionic/react';
+import { IonContent, IonIcon, IonPopover, useIonViewWillEnter } from '@ionic/react';
 import { chevronForwardOutline } from 'ionicons/icons';
-import React from 'react';
+import React, { useState } from 'react';
 import NoChildNav from './NoChildNav';
 import classNames from 'classnames';
 import { AccessToken, Permission } from '../../../../types/types';
 import { jwtDecode } from 'jwt-decode';
+import kfiAxios from '../../../utils/axios';
 
 type WithChildNavProps = {
   label: string;
@@ -14,6 +15,7 @@ type WithChildNavProps = {
 
 const WithChildNav = ({ label, resource, childPaths }: WithChildNavProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
   return (
     <div>
       <div
@@ -30,7 +32,7 @@ const WithChildNav = ({ label, resource, childPaths }: WithChildNavProps) => {
         <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
           {childPaths.map(
             child =>
-              (token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === child.resource && e.actions.visible)) && (
+              (token.role === 'superadmin' || permissions?.find((e: Permission) => e.resource === child.resource && e.actions.visible)) && (
                 <NoChildNav key={child.path} label={child.label} path={child.path} resource={child.resource} />
               ),
           )}

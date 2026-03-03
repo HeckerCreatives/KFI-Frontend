@@ -33,6 +33,8 @@ export type TData = {
 
 const JournalVoucher = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
 
   const [present] = useIonToast();
 
@@ -182,9 +184,9 @@ const JournalVoucher = () => {
                  <div className=" bg-white flex flex-col gap-4 flex-wrap">
                  
                   <div className="flex items-start flex-wrap">
-                    <div>{canDoAction(token.role, token.permissions, 'journal voucher', 'create') && <CreateJournalVoucher getJournalVouchers={getJournalVouchers} />}</div>
-                    <div>{canDoAction(token.role, token.permissions, 'journal voucher', 'print') && <PrintAllJournalVoucher />}</div>
-                    <div>{canDoAction(token.role, token.permissions, 'journal voucher', 'export') && <ExportAllJournalVoucher />}</div>
+                    <div>{canDoAction(token.role, permissions, 'journal voucher', 'create') && <CreateJournalVoucher getJournalVouchers={getJournalVouchers} />}</div>
+                    <div>{canDoAction(token.role, permissions, 'journal voucher', 'print') && <PrintAllJournalVoucher />}</div>
+                    <div>{canDoAction(token.role, permissions, 'journal voucher', 'export') && <ExportAllJournalVoucher />}</div>
                     {online && (
                       <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                         <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
@@ -221,7 +223,7 @@ const JournalVoucher = () => {
                           <TableCell>{journalVoucher.checkNo}</TableCell>
                           <TableCell>{formatNumber(journalVoucher.amount)}</TableCell>
                           <TableCell>{journalVoucher.encodedBy.username}</TableCell>
-                          {haveActions(token.role, 'expense voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                          {haveActions(token.role, 'expense voucher', permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <JournalVoucherActions
                                 journalVoucher={journalVoucher}

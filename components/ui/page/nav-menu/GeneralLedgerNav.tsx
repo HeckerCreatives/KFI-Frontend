@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
+import { IonButton, IonContent, IonIcon, IonPopover, useIonViewWillEnter } from '@ionic/react';
 import { chevronDownOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 import NoChildNav from './NoChildNav';
@@ -8,12 +8,15 @@ import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import { CollectionsBookmarkIcon  } from 'hugeicons-react';
+import kfiAxios from '../../../utils/axios';
 
 
 const GeneralLedgerNav = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+  
 
   const fileLinks: NavLink[] = [
     { path: '/dashboard/audit-trail', label: 'Audit Trail', resource: 'audit trail' },
@@ -23,7 +26,7 @@ const GeneralLedgerNav = () => {
     { path: '/dashboard/trial-balance', label: 'Trial Balance', resource: 'trial balance' },
     { path: '/dashboard/beginning-balance', label: 'Beginning Balance', resource: 'beginning balance' },
     { path: "/dashboard/projected-collection", label: "Projected Collection", resource: "projected collection" },
-    { path: "/dashboard/portfolio-at-risk", label: "Portfolio at Risk", resource: "portfolio at risk" },
+    { path: "/dashboard/portfolio-at-risk", label: "Portfolio at Risk", resource: "portfolio" },
 
 
   ];
@@ -48,7 +51,7 @@ const GeneralLedgerNav = () => {
         <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
           {fileLinks.map(
             link =>
-              (token.role === 'superadmin' || token.permissions.find((e: Permission) => link.resource.includes(e.resource) && e.actions.visible)) &&
+              (token.role === 'superadmin' || permissions?.find((e: Permission) => link.resource.includes(e.resource) && e.actions.visible)) &&
               (link.children ? (
                 <WithChildNav key={link.label} label={link.label} resource={link.resource} childPaths={link.children} />
               ) : (

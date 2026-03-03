@@ -31,6 +31,8 @@ export type TWeeklySavingsTable = {
 
 const WeeklySavingTable = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
 
   const [present] = useIonToast();
 
@@ -162,8 +164,8 @@ const WeeklySavingTable = () => {
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
               <div className="flex flex-col lg:flex-row items-start justify-start gap-3 ">
                 <div className=' flex flex-wrap gap-2'>
-                  {canDoAction(token.role, token.permissions, 'weekly savings', 'print') && <PrintAllWeeklySavingsTable />}
-                  {canDoAction(token.role, token.permissions, 'weekly savings', 'export') && <ExportAllWeeklySavingsTable />}
+                  {canDoAction(token.role, permissions, 'weekly savings', 'print') && <PrintAllWeeklySavingsTable />}
+                  {canDoAction(token.role, permissions, 'weekly savings', 'export') && <ExportAllWeeklySavingsTable />}
                   {online && (
                       <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                         <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
@@ -179,7 +181,7 @@ const WeeklySavingTable = () => {
                       <TableHead>Range Amount From</TableHead>
                       <TableHead>Range Amount To</TableHead>
                       <TableHead>WSF</TableHead>
-                      {haveActions(token.role, 'weekly savings', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'weekly savings', permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -192,7 +194,7 @@ const WeeklySavingTable = () => {
                           <TableCell>{formatNumber(saving.rangeAmountFrom)}</TableCell>
                           <TableCell>{formatNumber(saving.rangeAmountTo)}</TableCell>
                           <TableCell>{formatNumber(saving.weeklySavingsFund)}</TableCell>
-                          {haveActions(token.role, 'weekly savings', token.permissions, ['update', 'delete']) && (
+                          {haveActions(token.role, 'weekly savings', permissions, ['update', 'delete']) && (
                             <TableCell>
                               <WeeklySavingTableActions
                                 saving={saving}

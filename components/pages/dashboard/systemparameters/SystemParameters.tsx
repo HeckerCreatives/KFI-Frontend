@@ -2,7 +2,7 @@ import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/re
 import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
-import { Nature as NatureType, TTableFilter } from '../../../../types/types';
+import { AccessToken, Nature as NatureType, TTableFilter } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
@@ -12,12 +12,16 @@ import { Signatures } from '../../../ui/common/Signatures';
 import UpdateSystemParameters from './modals/UpdateParams';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../utils/permissions';
 
 
 const SystemParameters = () => {
   const [signatures, setSignatures] = useState<Signatures[]>([])
   const online = useOnlineStore((state) => state.online);
   const [uploading, setUploading] = useState<boolean>(false)
+   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+    const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
  
 
     const getSignatures = async () => {
@@ -80,7 +84,9 @@ const SystemParameters = () => {
                         <TableCell>{item.checkedBy}</TableCell>
                         <TableCell>{item.approvedBy}</TableCell>
                         <TableCell>
+                          {canDoAction(token.role, permissions, 'system parameters', 'update') && (
                           <UpdateSystemParameters signatures={item} fetchData={getSignatures}/>
+                          )}
                         </TableCell>
                       
                       </TableRow>

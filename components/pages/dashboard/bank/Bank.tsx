@@ -28,6 +28,8 @@ export type TBank = {
 
 const Bank = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -164,7 +166,7 @@ const Bank = () => {
             
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
               <div className="flex flex-col lg:flex-row items-start justify-start gap-3">
-                <div className=' flex flex-wrap gap-2'>{canDoAction(token.role, token.permissions, 'bank', 'create') && <CreateBank getBanks={getBanks} />}
+                <div className=' flex flex-wrap gap-2'>{canDoAction(token.role, permissions, 'bank', 'create') && <CreateBank getBanks={getBanks} />}
                 {online && (
                       <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                         <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
@@ -180,7 +182,7 @@ const Bank = () => {
                     <TableHeadRow>
                       <TableHead>Code</TableHead>
                       <TableHead>Description</TableHead>
-                      {haveActions(token.role, 'bank', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'bank', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -192,7 +194,7 @@ const Bank = () => {
                         <TableRow key={bank._id}>
                           <TableCell>{bank.code}</TableCell>
                           <TableCell>{bank.description}</TableCell>
-                          {haveActions(token.role, 'bank', token.permissions, ['update', 'delete', 'visible']) && (
+                          {haveActions(token.role, 'bank', permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <BankActions
                                 bank={bank}

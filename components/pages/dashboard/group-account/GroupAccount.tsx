@@ -28,6 +28,8 @@ export type TGroupAccount = {
 
 const GroupAccount = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -168,7 +170,7 @@ const GroupAccount = () => {
 
               <div className=" flex lg:flex-row flex-col items-start justify-start">
                 <div className=' flex flex-wrap items-center gap-2'>
-                  {canDoAction(token.role, token.permissions, 'group of account', 'create') && <CreateGroupAccount getGroupAccounts={getGroupAccounts} />}
+                  {canDoAction(token.role, permissions, 'group of account', 'create') && <CreateGroupAccount getGroupAccounts={getGroupAccounts} />}
                  {!online && (
                     <IonButton disabled={uploading} onClick={uploadGroups} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                       <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
@@ -182,7 +184,7 @@ const GroupAccount = () => {
                   <TableHeader>
                     <TableHeadRow>
                       <TableHead>Group Account</TableHead>
-                      {haveActions(token.role, 'group of account', token.permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'group of account', permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -193,7 +195,7 @@ const GroupAccount = () => {
                       data.groupAccounts.map((groupAccount: GroupAccountType) => (
                         <TableRow key={groupAccount._id}>
                           <TableCell>{groupAccount.code}</TableCell>
-                          {haveActions(token.role, 'group of account', token.permissions, ['update', 'delete']) && (
+                          {haveActions(token.role, 'group of account', permissions, ['update', 'delete']) && (
                             <TableCell>
                               <GroupAccountActions
                                 groupAccount={groupAccount}

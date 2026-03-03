@@ -59,19 +59,26 @@ const Login = () => {
         const token = jwtDecode(access) as AccessToken;
         const permissions = token.permissions;
 
+        console.log(token, permissions)
+
+        // let path = '';
+        // if (token.role === 'superadmin') {
+        //   path = '/dashboard/home';
+        // } else {
+        //   let i = 0;
+        //   while (i <= arrangedResource.length && !path) {
+        //     const resource = permissions.find(e => e.resource === arrangedResource[i].resource);
+        //     if (resource?.actions.visible) {
+        //       path = arrangedResource[i].path;
+        //     }
+        //     i++;
+        //   }
+        // }
+
         let path = '';
-        if (token.role === 'superadmin') {
+        if (token.role === 'superadmin' || token.role === 'admin') {
           path = '/dashboard/home';
-        } else {
-          let i = 0;
-          while (i <= arrangedResource.length && !path) {
-            const resource = permissions.find(e => e.resource === arrangedResource[i].resource);
-            if (resource?.actions.visible) {
-              path = arrangedResource[i].path;
-            }
-            i++;
-          }
-        }
+        } 
         localStorage.setItem('auth', access);
         localStorage.setItem('user', token.username)
         localStorage.setItem('role', token.role)

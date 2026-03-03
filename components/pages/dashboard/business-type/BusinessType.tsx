@@ -29,6 +29,8 @@ export type TBusinessType = {
 
 const BusinessType = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -170,7 +172,7 @@ const BusinessType = () => {
            
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
                <div className="flex flex-col lg:flex-row items-start justify-start ">
-                <div className=' flex flex-wrap gap-2'>{canDoAction(token.role, token.permissions, 'business type', 'create') && <CreateBusinessType getBusinessTypes={getBusinessTypes} />}
+                <div className=' flex flex-wrap gap-2'>{canDoAction(token.role, permissions, 'business type', 'create') && <CreateBusinessType getBusinessTypes={getBusinessTypes} />}
                 {!online && (
                   <IonButton disabled={uploading} onClick={uploadBusinessTypes} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                     <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
@@ -184,7 +186,7 @@ const BusinessType = () => {
                   <TableHeader>
                     <TableHeadRow>
                       <TableHead>Business Type</TableHead>
-                      {haveActions(token.role, 'business type', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'business type', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -195,7 +197,7 @@ const BusinessType = () => {
                       data.businessTypes.map((businessType: BusinessTypeInt) => (
                         <TableRow key={businessType._id}>
                           <TableCell>{businessType.type}</TableCell>
-                          {haveActions(token.role, 'business type', token.permissions, ['update', 'delete', 'visible']) && (
+                          {haveActions(token.role, 'business type', permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <BusinessTypeActions
                                 businessType={businessType}

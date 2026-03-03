@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, Tabl
 import CreateNature from './modals/CreateNature';
 import NatureFilter from './components/NatureFilter';
 import NatureActions from './components/NatureActions';
-import { Nature as NatureType, TTableFilter } from '../../../../types/types';
+import { AccessToken, Nature as NatureType, TTableFilter } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
@@ -15,6 +15,8 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortNatures } from '../../../ui/utils/sort';
 import { Upload } from 'lucide-react';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../utils/permissions';
 
 export type TNature = {
   natures: NatureType[];
@@ -27,6 +29,9 @@ export type TNature = {
 const Nature = () => {
 
   const [present] = useIonToast();
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
@@ -152,7 +157,9 @@ const Nature = () => {
            
             <div className="relative overflow-auto px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
                <div className="flex items-center justify-center gap-2 flex-wrap">
-              <CreateNature getNatures={getNatures} />
+                {canDoAction(token.role, permissions, 'nature', 'create') && (
+                  <CreateNature getNatures={getNatures} />
+                )}
               {!online && (
                  <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                    <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}

@@ -22,29 +22,18 @@ type LoanActionsProps = {
 
 const LoanActions = ({ loan, setData, currentPage, setCurrentPage, getLoans, searchKey, sortKey, rowLength }: LoanActionsProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
 
   return (
     <div>
-      {canDoAction(token.role, token.permissions, 'product', 'visible') && <ViewLoanCodes loan={loan} />}
-      {canDoAction(token.role, token.permissions, 'product', 'update') && <UpdateLoan loan={loan} setData={setData} />}
-      {canDoAction(token.role, token.permissions, 'product', 'delete') && (
+      {canDoAction(token.role, permissions, 'product', 'visible') && <ViewLoanCodes loan={loan} />}
+      {canDoAction(token.role, permissions, 'product', 'update') && <UpdateLoan loan={loan} setData={setData} />}
+      {canDoAction(token.role, permissions, 'product', 'delete') && (
         <DeleteLoan loan={loan} getLoans={getLoans} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
       )}
     </div>
-    // <>
-    //   <IonButton fill="clear" id={`loan-${loan._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
-    //     <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
-    //   </IonButton>
-    //   <IonPopover showBackdrop={false} trigger={`loan-${loan._id}`} triggerAction="click" className="[--max-width:12rem]">
-    //     <IonContent>
-    //       {canDoAction(token.role, token.permissions, 'product', 'visible') && <ViewLoanCodes loan={loan} />}
-    //       {canDoAction(token.role, token.permissions, 'product', 'update') && <UpdateLoan loan={loan} setData={setData} />}
-    //       {canDoAction(token.role, token.permissions, 'product', 'delete') && (
-    //         <DeleteLoan loan={loan} getLoans={getLoans} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
-    //       )}
-    //     </IonContent>
-    //   </IonPopover>
-    // </>
+    
   );
 };
 

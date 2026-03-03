@@ -33,6 +33,8 @@ export type TData = {
 
 const Release = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
 
   const [present] = useIonToast();
 
@@ -145,9 +147,9 @@ const Release = () => {
                 <div className=" flex flex-col gap-4 flex-wrap">
                
                 <div className="flex items-start flex-wrap">
-                  <div>{canDoAction(token.role, token.permissions, 'release', 'create') && <CreateRelease getReleases={getReleases} />}</div>
-                  <div>{canDoAction(token.role, token.permissions, 'release', 'print') && <PrintAllRelease />}</div>
-                  <div>{canDoAction(token.role, token.permissions, 'release', 'export') && <ExportAllRelease />}</div>
+                  <div>{canDoAction(token.role, permissions, 'release', 'create') && <CreateRelease getReleases={getReleases} />}</div>
+                  <div>{canDoAction(token.role, permissions, 'release', 'print') && <PrintAllRelease />}</div>
+                  <div>{canDoAction(token.role, permissions, 'release', 'export') && <ExportAllRelease />}</div>
                 </div>
 
                  <div className="w-full flex-1 flex ">
@@ -164,7 +166,7 @@ const Release = () => {
                       <TableHead>CHK. No.</TableHead>
                       <TableHead>Amount</TableHead>
                       <TableHead>Encoded By</TableHead>
-                      {haveActions(token.role, 'release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'release', permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -180,7 +182,7 @@ const Release = () => {
                           <TableCell>{release.checkNo}</TableCell>
                           <TableCell>{formatMoney(release.amount)}</TableCell>
                           <TableCell>{release.encodedBy.username}</TableCell>
-                          {haveActions(token.role, 'release', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                          {haveActions(token.role, 'release', permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <ReleaseActions
                                 release={release}

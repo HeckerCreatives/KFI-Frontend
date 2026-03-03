@@ -18,6 +18,8 @@ const TopNavigation = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
   const [permissions, setPermissions] = useState<any>()
+  const storedPermissions = localStorage.getItem('permissions')
+  
   
   
     const checkPermissions = async () => {
@@ -25,6 +27,11 @@ const TopNavigation = () => {
         const result = await kfiAxios.get('/auth/permissions');
           const { permissions} = result.data;
           setPermissions(permissions)
+
+          if(permissions.lenght !== 0){
+          localStorage.setItem('permissions', JSON.stringify(permissions))
+
+          }
         
         } catch (error) {
          return error
@@ -34,6 +41,11 @@ const TopNavigation = () => {
      useIonViewWillEnter(() => {
         checkPermissions();
       });
+
+    console.log('Permissions',permissions)
+      
+
+
 
 
   return (

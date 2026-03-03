@@ -33,6 +33,8 @@ export type TData = {
 
 const EmergencyLoan = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
 
   const [present] = useIonToast();
 
@@ -174,9 +176,9 @@ const EmergencyLoan = () => {
                <div className=" flex flex-col gap-4 flex-wrap">
                
                 <div className="flex items-start flex-wrap">
-                  <div>{canDoAction(token.role, token.permissions, 'emergency loan', 'create') && <CreateEmergencyLoan getEmergencyLoans={getEmergencyLoans} />}</div>
-                  <div>{canDoAction(token.role, token.permissions, 'emergency loan', 'print') && <PrintAllEmergencyLoan />}</div>
-                  <div>{canDoAction(token.role, token.permissions, 'emergency loan', 'export') && <ExportAllEmergencyLoan />}</div>
+                  <div>{canDoAction(token.role, permissions, 'emergency loan', 'create') && <CreateEmergencyLoan getEmergencyLoans={getEmergencyLoans} />}</div>
+                  <div>{canDoAction(token.role, permissions, 'emergency loan', 'print') && <PrintAllEmergencyLoan />}</div>
+                  <div>{canDoAction(token.role, permissions, 'emergency loan', 'export') && <ExportAllEmergencyLoan />}</div>
                   {online && (
                     <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                       <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
@@ -198,7 +200,7 @@ const EmergencyLoan = () => {
                       <TableHead>CHK. No.</TableHead>
                       <TableHead>Amount</TableHead>
                       <TableHead>Encoded By</TableHead>
-                      {haveActions(token.role, 'emergency loan', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'emergency loan', permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -214,7 +216,7 @@ const EmergencyLoan = () => {
                           <TableCell>{emergencyLoan.checkNo}</TableCell>
                           <TableCell>{formatMoney(emergencyLoan.amount)}</TableCell>
                           <TableCell>{emergencyLoan.encodedBy?.username}</TableCell>
-                          {haveActions(token.role, 'emergency loan', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                          {haveActions(token.role, 'emergency loan', permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <EmergencyLoanActions
                                 emergencyLoan={emergencyLoan}

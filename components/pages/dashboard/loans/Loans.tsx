@@ -28,6 +28,8 @@ export type TLoan = {
 
 const Loans = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -160,7 +162,7 @@ const Loans = () => {
 
               <div className="flex flex-col lg:flex-row items-start justify-start flex-wrap gap-2">
                 <div className=' flex flex-wrap gap-2'>
-                  {canDoAction(token.role, token.permissions, 'product', 'create') && <CreateLoan getLoans={getLoans} />}
+                  {canDoAction(token.role, permissions, 'product', 'create') && <CreateLoan getLoans={getLoans} />}
                 {!online && (
                    <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
@@ -175,7 +177,7 @@ const Loans = () => {
                     <TableHeadRow>
                       <TableHead>Code</TableHead>
                       <TableHead>Description</TableHead>
-                      {haveActions(token.role, 'product', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'product', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -187,7 +189,7 @@ const Loans = () => {
                         <TableRow key={loan._id}>
                           <TableCell>{loan.code}</TableCell>
                           <TableCell>{loan.description}</TableCell>
-                          {haveActions(token.role, 'product', token.permissions, ['update', 'delete', 'visible']) && (
+                          {haveActions(token.role, 'product', permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <LoanActions
                                 loan={loan}

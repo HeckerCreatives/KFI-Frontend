@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonIcon, IonPopover } from '@ionic/react';
+import { IonButton, IonContent, IonIcon, IonPopover, useIonViewWillEnter } from '@ionic/react';
 import { chevronDownOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 import NoChildNav from './NoChildNav';
@@ -8,12 +8,31 @@ import classNames from 'classnames';
 import { usePathname } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import { ToolsIcon  } from 'hugeicons-react';
+import kfiAxios from '../../../utils/axios';
 
 
 const Diagnostics = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+   const [permissions, setPermissions] = useState<any>()
+  
+  
+    const checkPermissions = async () => {
+       try {
+        const result = await kfiAxios.get('/auth/permissions');
+          const { permissions} = result.data;
+          setPermissions(permissions)
+          console.log(permissions)
+        
+        } catch (error) {
+         return error
+      };
+    }
+  
+     useIonViewWillEnter(() => {
+        checkPermissions();
+      });
 
   const fileLinks: NavLink[] = [
     { path: '/dashboard/unbalance-entries', label: 'Unbalance Entries', resource: 'unbalance entries' },
@@ -41,7 +60,7 @@ const Diagnostics = () => {
         <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
           {fileLinks.map(
             link =>
-              (token.role === 'superadmin' || token.permissions.find((e: Permission) => link.resource.includes(e.resource) && e.actions.visible)) &&
+              (token.role === 'superadmin' || permissions?.find((e: Permission) => link.resource.includes(e.resource) && e.actions.visible)) &&
               (link.children ? (
                 <WithChildNav key={link.label} label={link.label} resource={link.resource} childPaths={link.children} />
               ) : (

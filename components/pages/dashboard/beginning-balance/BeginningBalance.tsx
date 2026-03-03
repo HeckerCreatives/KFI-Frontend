@@ -5,11 +5,13 @@ import TableNoRows from '../../../ui/forms/TableNoRows';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import kfiAxios from '../../../utils/axios';
 import TablePagination from '../../../ui/forms/TablePagination';
-import { BegBalance, FinancialStatements } from '../../../../types/types';
+import { AccessToken, BegBalance, FinancialStatements } from '../../../../types/types';
 import Create from './modals/create';
 import Delete from './modals/delete';
 import Update from './modals/update';
 import PrintExport from './modals/print&export';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../utils/permissions';
 
 export type TBS = {
   beginningBalances: BegBalance[];
@@ -21,7 +23,9 @@ export type TBS = {
 
 const BeginningBalance = () => {
   const [list, setList] = useState<any[]>([])
-   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
   
     const [data, setData] = useState<TBS>({
       beginningBalances: [],
@@ -66,7 +70,9 @@ const BeginningBalance = () => {
            <div className="px-3 pb-3 flex-1">
 
             <div className="flex items-center gap-2 flex-wrap">
+              {canDoAction(token.role, permissions, 'beginning balance', 'create') && (
               <Create getList={getList} />
+              )}
               <PrintExport/>
               
             </div>
@@ -98,9 +104,12 @@ const BeginningBalance = () => {
                         <TableCell>{item.credit.toLocaleString()}</TableCell>
                       
                         <TableCell className=' flex '>
-                          <Update item={item} getList={getList} currentPage={currentPage}/>
-                          <Delete item={item} getList={getList} currentPage={currentPage}/>
-
+                          {canDoAction(token.role, permissions, 'beginning balance', 'update') && (
+                            <Update item={item} getList={getList} currentPage={currentPage}/>
+                          )}
+                          {canDoAction(token.role, permissions, 'beginning balance', 'delete') && (
+                            <Delete item={item} getList={getList} currentPage={currentPage}/>
+                          )}
                         </TableCell>
                       
                       </TableRow>

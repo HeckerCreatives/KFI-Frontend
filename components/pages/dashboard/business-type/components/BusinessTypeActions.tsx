@@ -22,11 +22,13 @@ type BusinessTypeActionsProps = {
 
 const BusinessTypeActions = ({ businessType, setData, currentPage, setCurrentPage, getBusinessTypes, searchKey, sortKey, rowLength }: BusinessTypeActionsProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+
   return (
     <div>
-      {canDoAction(token.role, token.permissions, 'business type', 'visible') && <ViewBusinessType businessType={businessType} />}
-      {canDoAction(token.role, token.permissions, 'business type', 'update') && <UpdateBusinessType businessType={businessType} setData={setData} />}
-      {canDoAction(token.role, token.permissions, 'business type', 'delete') && (
+      {canDoAction(token.role, permissions, 'business type', 'visible') && <ViewBusinessType businessType={businessType} />}
+      {canDoAction(token.role, permissions, 'business type', 'update') && <UpdateBusinessType businessType={businessType} setData={setData} />}
+      {canDoAction(token.role, permissions, 'business type', 'delete') && (
         <DeleteBusinessType
           businessType={businessType}
           getBusinessTypes={getBusinessTypes}
