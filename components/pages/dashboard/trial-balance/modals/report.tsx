@@ -15,6 +15,7 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { tbreport, TBReportForm } from '../../../../../validations/trial-balance-schema';
 import InputTextarea from '../../../../ui/forms/InputTextarea';
 import { File } from 'lucide-react';
+import ModalHeader from '../../../../ui/page/ModalHeader';
 
 export default function TBReport() {
      const [present] = useIonToast();
@@ -34,6 +35,11 @@ export default function TBReport() {
             accountingYear: ''
           },
         });
+
+        function dismiss() {
+            form.reset();
+            modal.current?.dismiss();
+        }
     
     
         async function onSubmit(data: TBReportForm) {
@@ -85,6 +91,8 @@ export default function TBReport() {
             } finally {
             }
           }
+
+
   return (
      <>
       <div className="text-end">
@@ -104,7 +112,7 @@ export default function TBReport() {
           </IonToolbar>
         </IonHeader> */}
        <form onSubmit={form.handleSubmit(onSubmit)} className=' flex flex-col gap-2 bg-white p-4 w-full rounded-md shadow-md'>
-                <p className=' text-lg !font-semibold'>Trial Balance</p>
+                 <ModalHeader disabled={loading} title="Trial Balance " sub="" dismiss={dismiss} />
                 <div className=' w-full flex flex-col gap-2 p-4 border border-zinc-200 rounded-md'>
                   <p className=' text-sm !font-semibold'>Date</p>
 
