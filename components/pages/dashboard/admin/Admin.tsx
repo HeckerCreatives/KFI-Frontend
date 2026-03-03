@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import CreateUser from './modal/CreateUser';
-import { TTableFilter, User } from '../../../../types/types';
+import { AccessToken, TTableFilter, User } from '../../../../types/types';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import kfiAxios from '../../../utils/axios';
 import TablePagination from '../../../ui/forms/TablePagination';
@@ -17,6 +17,8 @@ import ManageAccountNav from '../../../ui/navs/ManageAccountNav';
 import classNames from 'classnames';
 import DashboardCard from '../home/components/DashboardCard';
 import { UserMultiple02Icon, UserBlock01Icon, UserMinus01Icon } from 'hugeicons-react';
+import { jwtDecode } from 'jwt-decode';
+import { canDoAction } from '../../../utils/permissions';
 
 export type TUser = {
   users: User[];
@@ -27,6 +29,8 @@ export type TUser = {
 };
 
 const Admin = () => {
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+    const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -144,8 +148,12 @@ const Admin = () => {
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
 
               <div className=' w-fit flex items-center flex-wrap gap-1'>
+                {canDoAction(token.role, permissions,'admin', 'create') && (
                 <CreateUser getUsers={getUsers} />
-                <BanUser selected={selected} setSelected={setSelected} refetch={refetch} banned={statistics.banned} active={statistics.active} />
+                )}
+                {canDoAction(token.role, permissions,'admin', 'update') && (
+                  <BanUser selected={selected} setSelected={setSelected} refetch={refetch} banned={statistics.banned} active={statistics.active} />
+                )}
               </div>
               <div className="relative overflow-auto rounded-xl mt-2">
                 <Table>

@@ -34,6 +34,7 @@ export type TClientMasterFile = {
 
 const ClientMasterFile = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -242,9 +243,9 @@ const ClientMasterFile = () => {
             <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
                <div className="flex items-start lg:items-center lg:flex-row flex-col flex-wrap gap-2 my-2">
                 <div className="flex flex-wrap">
-                  {canDoAction(token.role, token.permissions, 'clients', 'create') && <CreateClientMasterFile getClientsOffline={getClientsOffline} getClients={getClients} />}
-                  {canDoAction(token.role, token.permissions, 'clients', 'print') && <PrintAllClient />}
-                  {canDoAction(token.role, token.permissions, 'clients', 'export') && <ExportAllClient />}
+                  {canDoAction(token.role, permissions, 'clients', 'create') && <CreateClientMasterFile getClientsOffline={getClientsOffline} getClients={getClients} />}
+                  {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient />}
+                  {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient />}
                 </div>
                 <ClientMasterFileFilter getClientsOffline={getClientsOffline} getClients={getClients} />
               </div>
@@ -286,7 +287,7 @@ const ClientMasterFile = () => {
                       <TableHead className=' whitespace-nowrap'>City</TableHead>
                       <TableHead className=' whitespace-nowrap'>Zip Code</TableHead>
                       <TableHead className=' whitespace-nowrap'>Mobile No.</TableHead>
-                      {haveActions(token.role, 'clients', token.permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
+                      {haveActions(token.role, 'clients', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -305,7 +306,7 @@ const ClientMasterFile = () => {
                           <TableCell>{client.city}</TableCell>
                           <TableCell>{client.zipCode}</TableCell>
                           <TableCell>{client.mobileNo}</TableCell>
-                          {haveActions(token.role, 'clients', token.permissions, ['update', 'delete', 'visible']) && (
+                          {haveActions(token.role, 'clients', permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <ClientMasterFileActions
                               getClientsOffline={getClientsOffline}
