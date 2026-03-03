@@ -80,6 +80,8 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
     setDeletedIds([])
   }
 
+  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+
   async function onSubmit(data: UpdateExpenseVoucherFormData) {
         data.amount = removeAmountComma(data.amount);
 
@@ -105,6 +107,11 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
             cvForRecompute: entry.cvForRecompute
           };
         });
+
+      if (Number(removeAmountComma(difference)) !== 0) {
+        form.setError('root', { message: `Debit and Credit must be balanced.` });
+        return;
+      }
 
 
    if(online){
@@ -236,12 +243,14 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
               </IonButton>
             </div>
 
-            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+            
 
           </form>
           <div className="border-t border-t-slate-200 mt-2 flex-1 py-2">
             <UpdateExpenseVoucherEntries isOpen={isOpen} expenseVoucher={expenseVoucher} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}/>
           </div>
+
+          {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
            <div className="px-3">
               <div className="grid grid-cols-3">

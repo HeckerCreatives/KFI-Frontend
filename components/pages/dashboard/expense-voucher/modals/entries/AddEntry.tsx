@@ -74,6 +74,8 @@ const AddEntry = ({ expenseVoucherId, getEntries, entries, setEntries, transacti
   
         const debit = Number(removeAmountComma(data.debit));
         const credit = Number(removeAmountComma(data.credit));
+
+        const nextLine = entries.length + 1
   
         setEntries((prev: ExpenseVoucherEntry[]) => {
           const nextLine = prev.length > 0 
@@ -135,7 +137,8 @@ const AddEntry = ({ expenseVoucherId, getEntries, entries, setEntries, transacti
               _id: '',
               centerNo: ''
             }
-          }
+          },
+          line: nextLine
         };
   
         return {

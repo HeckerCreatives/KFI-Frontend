@@ -12,7 +12,7 @@ import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { formatDateInput } from '../../../../utils/date-utils';
-import { removeAmountComma } from '../../../../ui/utils/formatNumber';
+import { formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
@@ -56,7 +56,16 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
     setIsOpen(false);
   }
 
+  const entries = form.watch('entries') || []
+  const amount = form.watch('amount')
+
+  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+
   async function onSubmit(data: JournalVoucherFormData) {
+    if (Number(removeAmountComma(difference)) !== 0) {
+        form.setError('root', { message: `Debit and Credit must be balanced.` });
+        return;
+      }
     if(online){
       setLoading(true);
       try {
@@ -136,9 +145,27 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
             <div className="flex-1 mt-4">
               <JournalVoucherFormTable form={form} loading={loading} />
             </div>
+
+              {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
+             <div className="px-3">
+                            <div className="grid grid-cols-3">
+                              <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+                                <div>Diff: </div>
+                                <div>{difference}</div>
+                              </div>
+            
+                              <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
+                                <div>Total: </div>
+                                <div>{`${amount.toLocaleString()}`}</div>
+                              </div>
+                             
+                            </div>
+                          </div>
+            
               <Signatures open={isOpen} type={'journal voucher'} preparedBy={user || ''} recieveByorDate={form.watch('date')}/>
             
-            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+          
 
             <div className="text-end border-t mt-2 pt-1 space-x-2 px-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>

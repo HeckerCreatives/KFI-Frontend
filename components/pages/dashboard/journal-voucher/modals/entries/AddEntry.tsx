@@ -20,7 +20,7 @@ type AddEntryProps = {
   setData: React.Dispatch<React.SetStateAction<TData>>;
 };
 
-const AddEntry = ({ journalVoucherId, getEntries, setData, setEntries }: AddEntryProps) => {
+const AddEntry = ({ journalVoucherId, getEntries, setData, setEntries, entries }: AddEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -67,6 +67,7 @@ const AddEntry = ({ journalVoucherId, getEntries, setData, setEntries }: AddEntr
     
           const debit = Number(removeAmountComma(data.debit));
           const credit = Number(removeAmountComma(data.credit));
+          const nextline = entries.length + 1
 
           setEntries((prev: JournalVoucherEntry[]) => {
              const nextLine = prev.length > 0 
@@ -129,7 +130,8 @@ const AddEntry = ({ journalVoucherId, getEntries, setData, setEntries }: AddEntr
                 centerNo: ''
               }
             },
-            journalVoucher: ''
+            journalVoucher: '',
+            line: nextline
           };
 
          

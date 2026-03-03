@@ -369,6 +369,30 @@ export type DamayanFund = {
   amount: number;
   encodedBy: { username: string };
   entries: any[];
+//   entries: [
+//   {
+//       _id: string
+//       line: number,
+//       transaction: string,
+//       acctCode: {
+//           _id: string,
+//           code: string
+//       },
+//       client: {
+//           _id: string,
+//           name: string
+//       },
+//       particular: string,
+//       debit: number,
+//       credit: number,
+//       interest: any,
+//       cycle: any,
+//       checkNo: string,
+//       encodedBy: string,
+//       __v: 0,
+//       updatedAt: string
+//   },
+// ],
   createdAt: string
 
 };

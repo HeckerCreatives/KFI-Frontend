@@ -56,8 +56,16 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
     setIsOpen(false);
   }
 
+  const entries = form.watch('entries') || []
+
+  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+
 
   async function onSubmit(data: ExpenseVoucherFormData) {
+    if (Number(removeAmountComma(difference)) !== 0) {
+        form.setError('root', { message: `Debit and Credit must be balanced.` });
+        return;
+      }
    if(online){
      setLoading(true);
       try {
@@ -152,9 +160,11 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
                  
                 </div>
               </div>
+
+                 {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
               <Signatures open={isOpen} type={'expense voucher'} preparedBy={user || ''} recieveByorDate={form.watch('date')}/>
             
-              {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+           
 
             <div className="text-end mt-6 px-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
