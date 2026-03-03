@@ -98,6 +98,8 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
     return cv.replace(/CV#/g, "");
   }
 
+  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+
   
 
   async function onSubmit(data: EmergencyLoanFormData) {
@@ -110,6 +112,7 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
         const formattedEntries = entries.map((entry, index) => {
           const isExisting = prevIds.has(entry._id);
           return {
+            line: index + 1,
               _id: isExisting ? entry._id : undefined,
               client: entry.client._id,
               clientLabel: entry.client.name,
@@ -122,6 +125,11 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
           };
         });
         data.amount = removeAmountComma(data.amount);
+
+        if (Number(removeAmountComma(difference)) !== 0) {
+        form.setError('root', { message: `Debit and Credit must be balanced.` });
+        return;
+      }
     if(online){
       setLoading(true);
       try {
@@ -257,10 +265,12 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
             </div>
           </div>
 
+           {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
             <Signatures open={isOpen} type={'emergency loan'} preparedBy={emergencyLoan.encodedBy.username} recieveByorDate={emergencyLoan.createdAt.split('T')[0]}/>
           
 
-            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+           
 
         </div>
       </IonModal>

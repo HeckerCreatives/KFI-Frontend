@@ -58,7 +58,14 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
    setIsOpen(false)
   }
 
+  const difference = `${formatNumber(Math.abs((form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - (form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`
+
   async function onSubmit(data: DamayanFundFormData) {
+
+    if (Number(removeAmountComma(difference)) !== 0) {
+        form.setError('root', { message: `Debit and Credit must be balanced.` });
+        return;
+      }
     if(online){
       setLoading(true);
       try {
@@ -113,6 +120,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
     }
   }
 
+
   return (
     <>
       <div className="text-end">
@@ -158,9 +166,10 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
                </div>
              </div>
            </div>
+            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
             <Signatures open={isOpen} type={'damayan fund'} preparedBy={user || ''} recieveByorDate={form.watch('date')}/>
             
-            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+           
 
             <div className="text-end space-x-1 px-2">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>

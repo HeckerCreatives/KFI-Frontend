@@ -60,9 +60,16 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
     form.reset();
     setIsOpen(false)
   }
+  const entries = form.watch('entries') || []
+
+  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
 
 
   async function onSubmit(data: EmergencyLoanFormData) {
+    if (Number(removeAmountComma(difference)) !== 0) {
+        form.setError('root', { message: `Debit and Credit must be balanced` });
+        return;
+      }
     if(online){
       setLoading(true);
       try {
@@ -167,10 +174,12 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
              </div>
            </div>
 
+            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
             
             <Signatures open={isOpen} type={'emergency loan'} preparedBy={user || ''} recieveByorDate={form.watch('date')}/>
             
-            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+           
 
             <div className="text-end space-x-1 px-2">
               <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>

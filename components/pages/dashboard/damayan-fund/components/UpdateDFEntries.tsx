@@ -47,6 +47,8 @@ const UpdateDFEntries = ({ isOpen, damayanFund, setEntries, entries, deletedIds,
     prevPage: false,
   });
 
+  const difference = `${formatNumber(Math.abs(data.entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - data.entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+
   const [page, setPage] = useState(1);
         const limit = 5
         const totalPages = Math.ceil(data.entries.length / limit)
@@ -68,6 +70,8 @@ const UpdateDFEntries = ({ isOpen, damayanFund, setEntries, entries, deletedIds,
         }, [data.entries, page, limit]);
 
   const getEntries = async (page: number) => {
+
+    
     if(online){
       setData(prev => ({ ...prev, loading: true }));
       try {
@@ -142,6 +146,7 @@ const UpdateDFEntries = ({ isOpen, damayanFund, setEntries, entries, deletedIds,
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:font-normal [&>th]:!py-1.5 [&>th]:!text-xs">
+              <TableHead>Line</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>
               <TableHead>Acct. Code</TableHead>
@@ -156,6 +161,7 @@ const UpdateDFEntries = ({ isOpen, damayanFund, setEntries, entries, deletedIds,
             {
               currentPageItems.map((entry: DamayanFundEntry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]">
+                  <TableCell>{entry?.line}</TableCell>
                   <TableCell>{entry?.client?.name || ''}</TableCell>
                   <TableCell>{entry.particular || ''}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>

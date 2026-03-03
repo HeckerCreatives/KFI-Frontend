@@ -58,6 +58,9 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
     },
   });
 
+
+  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+
   useEffect(() => {
     if (damayanFund) {
       form.reset({
@@ -97,8 +100,8 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
           const isExisting = prevIds.has(entry._id);
           return {
               _id: isExisting ? entry._id : undefined,
-              client: entry.client._id,
-              clientLabel: entry.client.name,
+              client: entry.client?._id,
+              clientLabel: entry.client?.name,
               particular: entry.particular,
               acctCodeId: entry.acctCode._id,
               acctCode: entry.acctCode.code,
@@ -109,6 +112,13 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
           };
         });
         data.amount = removeAmountComma(data.amount);
+
+        
+if (Number(removeAmountComma(difference)) !== 0) {
+        form.setError('root', { message: `Debit and Credit must be balanced.` });
+        return;
+      }
+
     if(online){
       setLoading(true);
       try {
@@ -181,7 +191,7 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
     }
   }
 
-  console.log(form.formState.errors, damayanFund)
+  console.log(form.formState.errors)
 
   return (
     <>
@@ -244,10 +254,12 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
              </div>
            </div>
 
+           
+            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
           <Signatures open={isOpen} type={'damayan fund'} preparedBy={damayanFund.encodedBy.username} recieveByorDate={damayanFund.createdAt.split('T')[0]}/>
           
 
-            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
         </div>
       </IonModal>

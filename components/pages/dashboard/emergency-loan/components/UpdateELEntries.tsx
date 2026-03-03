@@ -141,6 +141,7 @@ const UpdateELEntries = ({ isOpen, emergencyLoan, entries, setEntries, deletedId
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!py-1.5 [&>th]:!font-normal [&>th]:!text-xs">
+              <TableHead>Line</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Particular</TableHead>
               <TableHead>Acct. Code</TableHead>
@@ -155,6 +156,7 @@ const UpdateELEntries = ({ isOpen, emergencyLoan, entries, setEntries, deletedId
             {
               currentPageItems.map((entry: EmergencyLoanEntry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]">
+                  <TableCell>{entry.line}</TableCell>
                   <TableCell>{entry?.client?.name || ''}</TableCell>
                   <TableCell>{entry.particular || ''}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>

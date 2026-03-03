@@ -75,6 +75,8 @@ const AddEntry = ({ emergencyLoanId, getEntries, entries, setEntries, setData, t
          
                const debit = Number(removeAmountComma(data.debit));
                const credit = Number(removeAmountComma(data.credit));
+
+               const nextLine = entries.length + 1
          
                setEntries((prev: EmergencyLoanEntry[]) => {
                 const nextLine = prev.length > 0 
@@ -134,6 +136,7 @@ const AddEntry = ({ emergencyLoanId, getEntries, entries, setEntries, setData, t
                  createdAt: new Date().toISOString(),
                  _synced: false,
                 action: "create",
+                line: nextLine
                }
          
                return {

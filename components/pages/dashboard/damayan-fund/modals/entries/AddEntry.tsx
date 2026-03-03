@@ -22,7 +22,7 @@ type AddEntryProps = {
   transaction: DamayanFund;
 };
 
-const AddEntry = ({ damayanFundId, getEntries, setEntries, setData }: AddEntryProps) => {
+const AddEntry = ({ damayanFundId, getEntries, setEntries, setData, entries }: AddEntryProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -76,6 +76,8 @@ const AddEntry = ({ damayanFundId, getEntries, setEntries, setData }: AddEntryPr
            
                  const debit = Number(removeAmountComma(data.debit));
                  const credit = Number(removeAmountComma(data.credit));
+
+                 const nextLine = entries.length + 1
            
                  setEntries((prev: DamayanFundEntry[]) => {
 
@@ -115,9 +117,6 @@ const AddEntry = ({ damayanFundId, getEntries, setEntries, setData }: AddEntryPr
                
                setData((prev: TDFData) => {
 
-                  const nextLine = prev.entries.length > 0 
-                ? Math.max(...prev.entries.map(e => e.line)) + 1 
-                : 1;
             
               const newEntry: DamayanFundEntry = {
                    _id: generateObjectId(),
