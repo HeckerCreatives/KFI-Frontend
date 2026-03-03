@@ -14,6 +14,7 @@ import UpdateFSEntries from './modals/entries';
 import CreateTB from './modals/create';
 import UpdateTB from './modals/update';
 import DeleteTB from './modals/delete';
+import TBReport from './modals/report';
 
 export type TBS = {
   trialBalances: FinancialStatements[];
@@ -71,8 +72,11 @@ const TrialBalance = () => {
 
             <div className="flex items-center gap-2 flex-wrap">
               <CreateTB getList={getList} />
+            <TBReport/>
+
               
             </div>
+
            
            
               <Table>

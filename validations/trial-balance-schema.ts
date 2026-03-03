@@ -26,5 +26,19 @@ export const tbentriesschema = z.object({
  
 });
 
+export const tbreport = z.object({
+ dateFrom: z.string().nonempty( 'Date from is required'),
+  dateTo: z.string().nonempty('Date to is required'),
+  accountingYear: z.string().optional(),
+  reportCode: z.string().optional(),
+  includeBalance: z.boolean().optional(),
+  summarizeBalance: z.boolean().optional(),
+ message: z.string().optional(),
+ displayZero: z.boolean().optional(),
+  type:z.string().optional()
+ 
+});
+
 export type TBFormData = z.infer<typeof tbchema>;
 export type TBEntriesFormData = z.infer<typeof tbentriesschema>;
+export type TBReportForm = z.infer<typeof tbreport>;
