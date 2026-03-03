@@ -41,6 +41,7 @@ const FSFormTableDoc = ({ index, entry, remove, form, loading = false }: FSFormT
                 chartOfAccountLabel={`entries.${index}.acctCodeName`}
                 chartOfAccountValue={`entries.${index}.acctCode`}
                 chartOfAccountDescription={`entries.${index}.acctCodeDescription`}
+                remarks={`entries.${index}.remarks`}
                 setValue={form.setValue}
                 clearErrors={form.clearErrors}
                 className="!min-h-3.5 text-[0.5rem]"

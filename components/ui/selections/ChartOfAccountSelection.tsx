@@ -35,6 +35,7 @@ type ChartOfAccountSelectionProps<T extends FieldValues> = {
   setValue: UseFormSetValue<T>;
   clearErrors: UseFormClearErrors<T>;
   chartOfAccountDescription?: Path<T>;
+  remarks?: Path<T>;
   chartOfAccountLabel: Path<T>;
   chartOfAccountValue: Path<T>;
   className?: string;
@@ -42,6 +43,7 @@ type ChartOfAccountSelectionProps<T extends FieldValues> = {
 
 const ChartOfAccountSelection = <T extends FieldValues>({
   chartOfAccountLabel,
+  remarks,
   chartOfAccountValue,
   setValue,
   clearErrors,
@@ -146,6 +148,7 @@ const ChartOfAccountSelection = <T extends FieldValues>({
     setValue(chartOfAccountLabel as Path<T>, codeValue as any);
     setValue(chartOfAccountValue as Path<T>, idValue as any);
     setValue(chartOfAccountValue as Path<T>, idValue as any);
+    setValue(remarks as Path<T>, chartOfAccount.description as any);
     setValue(chartOfAccountDescription as Path<T>, `${chartOfAccount.code} - ${chartOfAccount.description}`   as any);
     clearErrors(chartOfAccountLabel);
     clearErrors(chartOfAccountValue);
