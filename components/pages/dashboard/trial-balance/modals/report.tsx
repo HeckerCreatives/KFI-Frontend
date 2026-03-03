@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonModal, useIonToast } from '@ionic/react';
+import { IonButton, IonContent, IonModal, IonSelect, IonSelectOption, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { GLFormData, glSchema } from '../../../../../validations/gl.schema';
@@ -16,6 +16,8 @@ import { tbreport, TBReportForm } from '../../../../../validations/trial-balance
 import InputTextarea from '../../../../ui/forms/InputTextarea';
 import { File } from 'lucide-react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
+import classNames from 'classnames';
+import { TBS } from '../TrialBalance';
 
 export default function TBReport() {
      const [present] = useIonToast();
@@ -40,6 +42,35 @@ export default function TBReport() {
             form.reset();
             modal.current?.dismiss();
         }
+        const [data, setData] = useState<TBS>({
+              trialBalances: [],
+              loading: false,
+              totalPages: 0,
+              nextPage: false,
+              prevPage: false,
+            });
+        
+           const getList = async () => {
+                  try {
+                    const result = await kfiAxios.get('/trial-balance');
+        
+                    const { trialBalances, success,hasPrevPage, hasNextPage, totalPages } = result.data
+        
+                    if(success){
+                       setData(prev => ({
+                      ...prev,
+                      trialBalances: trialBalances,
+                      totalPages: totalPages,
+                      nextPage: hasNextPage,
+                      prevPage: hasPrevPage,
+                    }));
+                    }
+        
+                  } catch (error) {
+                  } finally {
+                  }
+                
+            };
     
     
         async function onSubmit(data: TBReportForm) {
@@ -91,6 +122,10 @@ export default function TBReport() {
             } finally {
             }
           }
+
+          useIonViewWillEnter(() => {
+              getList();
+            });
 
 
   return (
@@ -177,7 +212,7 @@ export default function TBReport() {
 
                      <div className='flex flex-col gap-1 w-full'>
                       <p className=' text-xs !font-medium'>Report Code</p>
-                      <InputText
+                      {/* <InputText
                         disabled={false}
                         name="reportCode"
                         control={form.control}
@@ -186,7 +221,27 @@ export default function TBReport() {
                         type='text'
                         className="!px-2 !py-2 rounded-md"
                         labelClassName="!text-slate-600 truncate min-w-28 !text-sm text-end"
-                      />
+                      /> */}
+
+                      
+                       <IonSelect
+                       placeholder='Due dates'
+                       labelPlacement="stacked"
+                        interface="popover"
+                       value={form.watch('reportCode')}
+                       onIonChange={e => {
+                           form.setValue('reportCode',e.target.value);
+                         }}
+                        className={classNames(
+                           '!border border-zinc-300 [--highlight-color-focused:none] !px-2 !py-1 text-xs !overflow-y-auto !min-w-[12rem] !max-h-[5rem] !min-h-[0.5rem] ',
+                         )}
+                         >
+                           {data.trialBalances.map((item, index) => (
+                             <IonSelectOption key={index}  value={item._id} className="text-xs [--min-height:0.5rem]">
+                              {item.reportCode} -{item.reportName}
+                             </IonSelectOption>
+                           ))}
+                         </IonSelect>
 
                     </div>
                  <div className=' w-full flex gap-2 p-4 border border-zinc-200 rounded-md'>
