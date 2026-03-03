@@ -17,8 +17,7 @@ import kfiAxios from '../../utils/axios';
 const TopNavigation = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
-  const [permissions, setPermissions] = useState<any>()
-  const storedPermissions = localStorage.getItem('permissions')
+  const permissions: Permission[] = JSON.parse(localStorage.getItem('permissions') || '[]')
   
   
   
@@ -26,9 +25,8 @@ const TopNavigation = () => {
        try {
         const result = await kfiAxios.get('/auth/permissions');
           const { permissions} = result.data;
-          setPermissions(permissions)
 
-          if(permissions.lenght !== 0){
+          if(permissions.length !== 0){
           localStorage.setItem('permissions', JSON.stringify(permissions))
 
           }
@@ -42,7 +40,6 @@ const TopNavigation = () => {
         checkPermissions();
       });
 
-    console.log('Permissions',permissions)
       
 
 

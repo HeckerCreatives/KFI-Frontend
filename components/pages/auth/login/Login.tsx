@@ -17,11 +17,12 @@ import { lockClosed, person } from 'ionicons/icons';
 import { jwtDecode } from 'jwt-decode';
 import { arrangedResource } from '../../../utils/constants';
 import { UserIcon, LogoutSquare01Icon, CircleIcon  } from 'hugeicons-react';
+import { useRouter } from 'next/navigation';
 
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const router = useIonRouter();
+  const router = useRouter();
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -50,55 +51,97 @@ const Login = () => {
 
   // };
 
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      setLoading(true);
-      const result = await kfiAxios.post('/auth/login',{username: data.username, password: data.password, deviceName: 'My PC Name', deviceType: 'desktop'});
-      const { success, access } = result.data;
-      if (success) {
-        const token = jwtDecode(access) as AccessToken;
-        const permissions = token.permissions;
+   const checkPermissions = async () => {
+         try {
+          const result = await kfiAxios.get('/auth/permissions');
+            const { permissions} = result.data;
+  
+            if(permissions.lenght !== 0){
+            localStorage.setItem('permissions', JSON.stringify(permissions))
+            }
 
-        console.log(token, permissions)
+            return permissions
+          
+          } catch (error) {
+           return error
+        };
+      }
 
-        // let path = '';
-        // if (token.role === 'superadmin') {
-        //   path = '/dashboard/home';
-        // } else {
-        //   let i = 0;
-        //   while (i <= arrangedResource.length && !path) {
-        //     const resource = permissions.find(e => e.resource === arrangedResource[i].resource);
-        //     if (resource?.actions.visible) {
-        //       path = arrangedResource[i].path;
-        //     }
-        //     i++;
-        //   }
-        // }
+ const onSubmit = async (data: LoginFormData) => {
+  try {
+    setLoading(true)
 
-        let path = '';
-        if (token.role === 'superadmin' || token.role === 'admin') {
-          path = '/dashboard/home';
-        } 
-        localStorage.setItem('auth', access);
-        localStorage.setItem('user', token.username)
-        localStorage.setItem('role', token.role)
-        router.push(path);
-        if (isPlatform('capacitor')) {
-          (window as any).location.reload(true);
-        } else if (isPlatform('electron')) {
-          (window as any).ipcRenderer.send('reload-window');
-        } else {
-          (window as any).location.reload();
+    const result = await kfiAxios.post('/auth/login', {
+      username: data.username,
+      password: data.password,
+      deviceName: 'My PC Name',
+      deviceType: 'desktop'
+    })
+
+    const { success, access } = result.data
+
+    if (!success) return
+
+    const token = jwtDecode(access) as AccessToken
+
+  
+    localStorage.setItem('auth', access)
+    localStorage.setItem('user', token.username)
+    localStorage.setItem('role', token.role)
+
+
+    if (token.role === 'superadmin' || token.role === 'user') {
+      const permRes = await kfiAxios.get('/auth/permissions')
+      const { permissions } = permRes.data
+
+      if (permissions?.length !== 0) {
+        localStorage.setItem(
+          'permissions',
+          JSON.stringify(permissions)
+        )
+
+        const hasDashboard = permissions.find(
+          (item: any) => item.resource === 'dashboard'
+        )?.actions?.visible
+
+        if (!hasDashboard) {
+          console.log('jwuerhgt')
+          router.push('/dashboard/kfi')
+        }else{
+          console.log('ccccc')
+
+          router.push('/dashboard/home')
         }
       }
-    } catch (error: any) {
-      const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-      const errors: TFormError[] | string = checkError(errs);
-      const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-      formErrorHandler(errors, form.setError, fields);
-      setLoading(false);
     }
-  };
+
+    setLoading(false)
+
+   
+    // Reload only if really required by your platform
+    if (isPlatform('capacitor')) {
+      window.location.reload()
+    } else if (isPlatform('electron')) {
+      (window as any).ipcRenderer.send('reload-window')
+    }
+
+  } catch (error: any) {
+    const errs: TErrorData | string =
+      error?.response?.data?.error ||
+      error?.response?.data?.msg ||
+      error.message
+
+    const errors: TFormError[] | string = checkError(errs)
+
+    const fields: string[] = Object.keys(
+      form.formState.defaultValues as Object
+    )
+
+    formErrorHandler(errors, form.setError, fields)
+
+    setLoading(false)
+  }
+}
 
   return (
     <IonPage>

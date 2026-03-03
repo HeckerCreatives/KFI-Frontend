@@ -43,10 +43,10 @@ import {
 } from 'ionicons/icons';
 import Admin from './dashboard/admin/Admin';
 import { jwtDecode } from 'jwt-decode';
-import { AccessToken } from '../../types/types';
+import { AccessToken, Permission } from '../../types/types';
 import Dashboard from './dashboard/home/Dashboard';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import Acknowledgement from './dashboard/acknowledgement/Acknowledgement';
 import Release from './dashboard/release/Release';
 import AuditTrail from './dashboard/audit-trail/AuditTrail';
@@ -84,6 +84,7 @@ import BeginningBalance from './dashboard/beginning-balance/BeginningBalance';
 import ProjectedCollections from './dashboard/projected-collection/ProjectedCollections';
 import PortfolioAtRisk from './dashboard/portfolio-at-risk/PortfolioatRisk';
 import kfiAxios from '../utils/axios';
+import HomeScreen from './dashboard/homepage/HomeScreen';
 
 type NavLink = {
   path?: string;
@@ -193,26 +194,10 @@ const Tabs = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
   const location = useLocation();
-  const [permissions, setPermissions] = useState<any>()
+  const router = useRouter()
 
   const online = useOnlineStore((state) => state.online);
-
-  const checkPermissions = async () => {
-     try {
-      const result = await kfiAxios.get('/auth/permissions');
-        const { permissions} = result.data;
-        setPermissions(permissions)
-        console.log(permissions)
-      
-      } catch (error) {
-       return error
-    };
-  }
-
-   useIonViewWillEnter(() => {
-      checkPermissions();
-    });
-  
+  const permissions: Permission[] = JSON.parse(localStorage.getItem('permissions') || '[]')
 
 
   const logout = () => {
@@ -229,6 +214,18 @@ const Tabs = () => {
   const openMenu = async () => {
     await menuController.open("main-menu");
   };
+
+  // useEffect(() => {
+  //   if(token.role !== 'superadmin'){
+  //     const hasDashboard = permissions.find((item) => item.resource === 'dashboard')?.actions.visible
+
+  //     console.log(hasDashboard)
+
+  //     if(!hasDashboard){
+  //       router.push('/dashboard/kfi')
+  //     }
+  //   }
+  // },[permissions])
 
   return (
     <>
@@ -440,6 +437,7 @@ const Tabs = () => {
           <IonRouterOutlet id="main-content">
             <Route path="/dashboard" render={() => <Redirect to={'/dashboard/home'} />} exact={true} />
             <Route path="/dashboard/home" render={() => <Dashboard />} exact={true} />
+            <Route path="/dashboard/kfi" render={() => <HomeScreen />} exact={true} />
             <Route path="/dashboard/admin" render={() => <Admin />} exact={true} />
             <Route path="/dashboard/client" render={() => <ClientMasterFile />} exact={true} />
             <Route path="/dashboard/loan-release" render={() => <LoanRelease />} exact={true} />
