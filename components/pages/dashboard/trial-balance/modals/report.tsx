@@ -104,7 +104,7 @@ export default function TBReport() {
         ref={modal}
         trigger="report-tb-modal"
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:32rem]  [--max-height:80%] "
+        className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:32rem] "
       >
         {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
@@ -262,7 +262,6 @@ export default function TBReport() {
                     {loading ? 'Loading...' : `${form.watch('type') === 'print' ? 'Print' : 'Export'}`}
                   </IonButton>
 
-                 
                 
                 </div>
 
