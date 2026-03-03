@@ -1,4 +1,4 @@
-import { IonButton, IonModal, useIonToast } from '@ionic/react';
+import { IonButton, IonContent, IonModal, useIonToast } from '@ionic/react';
 import React, { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { GLFormData, glSchema } from '../../../../../validations/gl.schema';
@@ -104,14 +104,15 @@ export default function TBReport() {
         ref={modal}
         trigger="report-tb-modal"
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:32rem]"
+        className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:32rem]  [--max-height:80%] "
       >
         {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
             <ModalHeader disabled={loading} title="Nature - Add Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader> */}
-       <form onSubmit={form.handleSubmit(onSubmit)} className=' flex flex-col gap-2 bg-white p-4 w-full rounded-md shadow-md'>
+       
+       <form onSubmit={form.handleSubmit(onSubmit)} className=' flex flex-col gap-2 bg-white !p-6 w-full rounded-md shadow-md h-full inner-content max-h-[90%]'>
                  <ModalHeader disabled={loading} title="Trial Balance " sub="" dismiss={dismiss} />
                 <div className=' w-full flex flex-col gap-2 p-4 border border-zinc-200 rounded-md'>
                   <p className=' text-sm !font-semibold'>Date</p>
@@ -173,6 +174,21 @@ export default function TBReport() {
                       />
 
                     </div>
+
+                     <div className='flex flex-col gap-1 w-full'>
+                      <p className=' text-xs !font-medium'>Report Code</p>
+                      <InputText
+                        disabled={false}
+                        name="reportCode"
+                        control={form.control}
+                        clearErrors={form.clearErrors}
+                        placeholder="Type here"
+                        type='text'
+                        className="!px-2 !py-2 rounded-md"
+                        labelClassName="!text-slate-600 truncate min-w-28 !text-sm text-end"
+                      />
+
+                    </div>
                  <div className=' w-full flex gap-2 p-4 border border-zinc-200 rounded-md'>
 
                   
@@ -217,6 +233,7 @@ export default function TBReport() {
 
                     </div>
 
+                    
               
 
                 <div className=' w-full flex flex-col gap-2 p-4 border border-zinc-200 rounded-md'>
