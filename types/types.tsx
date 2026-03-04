@@ -75,6 +75,7 @@ export interface ClientMasterFile {
   beneficiaries: Beneficiary[];
   children: Child[];
   image: Image
+  bankAccountNo: string
 }
 
 export type LoanCode = {

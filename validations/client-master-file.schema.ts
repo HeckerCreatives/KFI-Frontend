@@ -15,9 +15,10 @@ clientImage: z
         (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
         "Only .jpg, .jpeg, .png and .webp files are accepted."
       ),
-    z.string().url("Must be a valid image URL."),
+    z.string().or(z.literal('')),
   ])
   .optional(),
+
 
   name: z.string().min(1, 'Name is required'),
   address: z.string().min(1, 'Address is required'),

@@ -63,7 +63,8 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
       reason: client.reason,
       beneficiary: [{ name: '' }],
       children: [{ name: '' }],
-      clientImage: client.image?.path
+      clientImage: client.image?.path,
+      bankAccountNo: client.bankAccountNo
     },
   });
 
@@ -97,7 +98,9 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
         reason: client.reason,
         beneficiary: client.beneficiaries?.length > 0 ? client.beneficiaries : [{ name: '' }],
         children: client.children.length > 0 ? client.children : [{ name: '' }],
-        clientImage: client.image?.path
+        clientImage: client.image?.path,
+       bankAccountNo: client.bankAccountNo
+
 
       });
     }
@@ -166,6 +169,8 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
             centerNo: data.centerLabel,
             _id: data.center
            },
+           beneficiaries: data.beneficiary,
+           action: 'update'
       });
 
 

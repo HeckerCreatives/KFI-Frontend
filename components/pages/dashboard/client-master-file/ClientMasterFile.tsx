@@ -23,6 +23,7 @@ import { db } from '../../../../database/db';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { get } from 'http';
 import { filterAndSortClients } from '../../../ui/utils/sort';
+import { Upload } from 'lucide-react';
 
 export type TClientMasterFile = {
   clients: ClientMasterFileType[];
@@ -40,7 +41,6 @@ const ClientMasterFile = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('');
-
 
   //online status
   const online = useOnlineStore((state) => state.online);
@@ -219,6 +219,38 @@ const ClientMasterFile = () => {
   };
 
   const handlePagination = (page: number) => getCLientsData(page, searchKey, sortKey);
+  const [uploading, setUploading] = useState<boolean>(false)
+  
+
+   const uploadChanges = async () => {
+        setUploading(true)
+        try {
+          const list = await db.clientMasterFile.toArray();
+          const offlineChanges = list.filter(e => e.sync !== 'old');
+
+          console.log('Changes', offlineChanges)
+  
+          const result = await kfiAxios.post("/sync/upload/customers", { data: offlineChanges });
+          const { success } = result.data;
+          if (success) {
+            setUploading(false)
+             present({
+              message: 'Offline changes saved!',
+              duration: 1000,
+          });
+            setUploading(false)
+  
+          }
+        } catch (error: any) {
+            setUploading(false)
+            console.log(error)
+  
+            present({
+              message: `${error.response.data.error.message}`,
+              duration: 1000,
+            });
+        }
+    };
 
   useIonViewWillEnter(() => {
     getCLientsData(currentPage)
@@ -245,6 +277,11 @@ const ClientMasterFile = () => {
                   {canDoAction(token.role, permissions, 'clients', 'create') && <CreateClientMasterFile getClientsOffline={getClientsOffline} getClients={getClients} />}
                   {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient />}
                   {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient />}
+                
+                      <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                        <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
+                      </IonButton>
+                    
                 </div>
                 <ClientMasterFileFilter getClientsOffline={getClientsOffline} getClients={getClients} />
               </div>

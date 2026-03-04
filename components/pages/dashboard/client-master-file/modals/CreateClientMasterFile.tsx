@@ -27,7 +27,6 @@ const CreateClientMasterFile = ({ getClients, getClientsOffline }: CreateClientM
   const form = useForm<ClientMasterFileFormData>({
     resolver: zodResolver(clientMasterFileSchema),
     defaultValues: {
-      
       name: '',
       address: '',
       city: '',
@@ -105,8 +104,10 @@ const CreateClientMasterFile = ({ getClients, getClientsOffline }: CreateClientM
             centerNo: data.centerLabel,
             _id: data.center
            },
+          beneficiaries: data.beneficiary,
            createdAt: Date.now(),
-           sync:'new'
+           sync:'new',
+           action: 'create'
          });
          getClientsOffline(1);
          dismiss();
