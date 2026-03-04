@@ -169,7 +169,7 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
             _id: data.center
            },
            beneficiaries: data.beneficiary,
-           action: 'update',
+           action: existing.isOldData ? 'update' : 'create',
             _synced: false,
 
       });

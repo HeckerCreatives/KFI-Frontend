@@ -9,7 +9,7 @@ export async function syncClientMasterFile(apiData: any) {
 
   await db.clientMasterFile.clear();
 
-  const clients: ClientMasterFile[] = apiData.map((c: any) => ({...c, _synced: true}));
+  const clients: ClientMasterFile[] = apiData.map((c: any) => ({...c, _synced: true, isOldData: true}));
 
   await db.clientMasterFile.bulkPut(clients);
 
@@ -164,8 +164,8 @@ export async function syncGroupAccount(apiData: any) {
 
   const data: any[] = apiData.map((c: any) => ({
     ...c,
-    _synced: true
-
+    _synced: true,
+    isOldData: true
   }));
 
   await db.table("groupOfAccounts").bulkPut(data);

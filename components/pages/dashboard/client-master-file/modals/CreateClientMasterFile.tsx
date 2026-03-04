@@ -107,7 +107,8 @@ const CreateClientMasterFile = ({ getClients, getClientsOffline }: CreateClientM
           beneficiaries: data.beneficiary,
            createdAt: Date.now(),
            _synced: false,
-           action: 'create'
+           action: 'create',
+           isOldData: false
          });
          getClientsOffline(1);
          dismiss();

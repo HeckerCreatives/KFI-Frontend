@@ -3,13 +3,14 @@ import React, { useCallback, useState } from "react";
 import kfiAxios from "../../../utils/axios";
 import { db } from "../../../../database/db";
 
-type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers";
+type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers";
 
 export default function UploadChanges() {
   const [changes, setChanges] = useState<Record<SyncKey, number>>({
     clientMasterFile: 0,
     loanReleases: 0,
     expenseVouchers: 0,
+    journalVouchers: 0,
   });
     const [present] = useIonToast();
   
@@ -36,17 +37,24 @@ export default function UploadChanges() {
       label: "Expense Voucher",
       endpoint: "/sync/upload/expense-voucher",
     },
+    {
+      key: "journalVouchers",
+      label: "Journal Voucher",
+      endpoint: "/sync/upload/journal-voucher",
+    },
   ];
 
   const loadChanges = useCallback(async () => {
     const cmf = await db.clientMasterFile.toArray();
     const lr = await db.loanReleases.toArray();
     const ev = await db.expenseVouchers.toArray();
+    const jv = await db.journalVouchers.toArray();
 
     setChanges({
       clientMasterFile: cmf.filter((e) => e._synced === false).length,
       loanReleases: lr.filter((e) => e._synced === false).length,
       expenseVouchers: ev.filter((e) => e._synced === false).length,
+      journalVouchers: jv.filter((e) => e._synced === false).length,
     });
   }, []);
 
