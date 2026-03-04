@@ -82,8 +82,8 @@ const UpdateBank = ({ bank, setData }: { bank: Bank; setData: React.Dispatch<Rea
             const updated = {
               ...existing,
               ...data, 
+              action: existing.isOldData ? 'update' : 'create',
               _synced: false,
-              action: "update",
             };
             await db.banks.update(bank.id, updated);
             setData(prev => {

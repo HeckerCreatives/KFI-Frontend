@@ -13,13 +13,16 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import checkError from '../../../../utils/check-error';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import { randomUUID } from 'crypto';
 
 type UpdateGroupAccountProps = {
   groupAccount: GroupAccount;
   setData: React.Dispatch<React.SetStateAction<TGroupAccount>>;
+  getGroupAccounts: (page: number) => void;
+  currentPage: number
 };
 
-const UpdateGroupAccount = ({ groupAccount, setData }: UpdateGroupAccountProps) => {
+const UpdateGroupAccount = ({ groupAccount, setData, getGroupAccounts, currentPage }: UpdateGroupAccountProps) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
   const [present] = useIonToast();
@@ -64,6 +67,7 @@ const UpdateGroupAccount = ({ groupAccount, setData }: UpdateGroupAccountProps) 
             message: 'Group account successfully updated!.',
             duration: 1000,
           });
+          getGroupAccounts(currentPage)
           return;
         }
       } catch (error: any) {
@@ -86,8 +90,9 @@ const UpdateGroupAccount = ({ groupAccount, setData }: UpdateGroupAccountProps) 
                const updated = {
                  ...existing,
                  ...data, 
-                 _synced: false,
-                 action: "update",
+                 code: data.code,
+                  action: existing.isOldData ? 'update' : 'create',
+                  _synced: false,
                };
        
                await db.groupOfAccounts.update(groupAccount.id, updated);

@@ -14,25 +14,29 @@ import FormIonItem from '../../../../ui/utils/FormIonItem';
 import InputText from '../../../../ui/forms/InputText';
 import GroupOfAccountSelection from '../../../../ui/selections/GroupOfAccountSelection';
 import ChartOfAccountCard from '../components/ChartOfAccountCard';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
-const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAccount; setData: React.Dispatch<React.SetStateAction<TChartOfAccount>> }) => {
+const LinkChartOfAccount = ({ chartAccount, setData,getChartOfAccounts, currentPage }: { chartAccount: ChartOfAccount; setData: React.Dispatch<React.SetStateAction<TChartOfAccount>>,getChartOfAccounts: (page: number) => void, currentPage: number }, ) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
   const [present] = useIonToast();
+  const online = useOnlineStore((state) => state.online);
+  
 
   const form = useForm<ChartOfAccountFormData>({
     resolver: zodResolver(chartOfAccountSchema),
     defaultValues: {
-      groupAccount: '',
-      groupAccountLabel: '',
+      groupAccount: chartAccount?.groupAccount,
+      groupAccountLabel: chartAccount?.groupAccountLabel,
     },
   });
 
   useEffect(() => {
     if (chartAccount) {
       form.reset({
-        groupAccount: chartAccount?.groupOfAccount?._id,
-        groupAccountLabel: chartAccount?.groupOfAccount?.code,
+        groupAccount: chartAccount?.groupAccount,
+        groupAccountLabel: chartAccount?.groupAccountLabel,
       });
     }
   }, [chartAccount, form]);
@@ -44,7 +48,8 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
 
   async function onSubmit(data: ChartOfAccountFormData) {
     setLoading(true);
-    try {
+   if(online){
+     try {
       const result = await kfiAxios.patch(`/chart-of-account/link/${chartAccount._id}`, { groupOfAccount: data.groupAccount });
       const { success } = result.data;
       if (success) {
@@ -68,6 +73,44 @@ const LinkChartOfAccount = ({ chartAccount, setData }: { chartAccount: ChartOfAc
       formErrorHandler(errors, form.setError, fields);
     } finally {
       setLoading(false);
+    } 
+   }
+   else {
+        try {
+         const existing = await db.chartOfAccounts.get(chartAccount.id);
+
+         if (!existing) {
+           console.warn("Data not found");
+           return;
+         }
+         const updated = {
+           ...existing,
+           ...data, 
+           groupOfAccount: data.groupAccount,
+            action: existing.isOldData ? 'update' : 'create',
+            _synced: false,
+         };
+         await db.chartOfAccounts.update(chartAccount.id, updated);
+         setData(prev => {
+           const clone = [...prev.chartOfAccounts];
+           const index = clone.findIndex(c => c.id === chartAccount.id);
+  
+           if (index !== -1) {
+             clone[index] = updated;
+           }
+  
+           return { ...prev, chartOfAccounts: clone };
+         });
+         getChartOfAccounts(currentPage)
+         dismiss();
+         present({
+           message: "Data successfully updated!",
+           duration: 1000,
+         });
+  
+       } catch (error) {
+         console.error("Offline update failed:", error);
+       }
     }
   }
 

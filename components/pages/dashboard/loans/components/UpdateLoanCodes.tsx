@@ -14,7 +14,7 @@ type UpdateLoanCodesProps = {
 const UpdateLoanCodes = ({ loan, setData }: UpdateLoanCodesProps) => {
   return (
     <div className="mt-2">
-      <CreateLoanCodeForm productId={loan._id} setData={setData} />
+      <CreateLoanCodeForm productId={loan._id} setData={setData} loanId={loan.id} />
       <div className="max-h-[60vh] overflow-auto">
         <div className="relative overflow-auto">
           <Table>

@@ -27,7 +27,7 @@ const GroupAccountActions = ({ groupAccount, setData, currentPage, setCurrentPag
   return (
     <div>
       {canDoAction(token.role, permissions, 'group of account', 'visible') && <ViewGroupAccount groupAccount={groupAccount} />}
-      {canDoAction(token.role, permissions, 'group of account', 'update') && <UpdateGroupAccount groupAccount={groupAccount} setData={setData} />}
+      {canDoAction(token.role, permissions, 'group of account', 'update') && <UpdateGroupAccount groupAccount={groupAccount} setData={setData} getGroupAccounts={getGroupAccounts} currentPage={currentPage} />}
       {canDoAction(token.role, permissions, 'group of account', 'delete') && (
         <DeleteGroupAccount
           groupAccount={groupAccount}

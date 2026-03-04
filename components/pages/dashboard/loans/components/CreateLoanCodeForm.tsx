@@ -4,7 +4,7 @@ import FormIonItem from '../../../../ui/utils/FormIonItem';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import InputText from '../../../../ui/forms/InputText';
 import ChartOfAccountSelection from '../../../../ui/selections/ChartOfAccountSelection';
-import { IonButton, IonIcon } from '@ionic/react';
+import { IonButton, IonIcon, useIonToast } from '@ionic/react';
 import { save, trashBin } from 'ionicons/icons';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,14 +14,21 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import kfiAxios from '../../../../utils/axios';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateLoanCodeFormProps = {
   productId: string;
   setData: React.Dispatch<React.SetStateAction<TLoan>>;
+  loanId: string
 };
 
-const CreateLoanCodeForm = ({ productId, setData }: CreateLoanCodeFormProps) => {
+const CreateLoanCodeForm = ({ productId, setData, loanId }: CreateLoanCodeFormProps) => {
   const [loading, setLoading] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  const [present] = useIonToast();
+  
+  
 
   const form = useForm({
     resolver: zodResolver(loanCodeSchema),
@@ -34,9 +41,13 @@ const CreateLoanCodeForm = ({ productId, setData }: CreateLoanCodeFormProps) => 
     },
   });
 
+          console.log(productId)
+
+
   const onSubmit = async (data: LoanCodeFormData) => {
     setLoading(true);
-    try {
+    if(online){
+      try {
       const result = await kfiAxios.post(`/loan/code`, { loan: productId, ...data });
       const { success } = result.data;
       if (success) {
@@ -57,7 +68,53 @@ const CreateLoanCodeForm = ({ productId, setData }: CreateLoanCodeFormProps) => 
     } finally {
       setLoading(false);
     }
-  };
+    } else {
+     try {
+          const existing = await db.productLoans.get(loanId);
+
+
+          if (!existing) {
+            console.warn("Data not found");
+            return;
+          }
+
+          const updated = {
+            ...existing,
+            ...data,
+            loanCodes: {...existing.loanCodes, data}, 
+            action: existing.isOldData ? "update" : "create",
+            _synced: false,
+          };
+
+          await db.productLoans.update(loanId, updated);
+
+          setData((prev) => ({
+            ...prev,
+            loans: prev.loans.map((loan) =>
+              loan.id === loanId ? updated : loan
+            ),
+          }));
+
+          present({
+            message: "Data successfully updated!",
+            duration: 1000,
+          });
+        setLoading(false);
+
+
+        } catch (error) {
+        setLoading(false);
+
+          console.log(error);
+
+          present({
+            message: "Failed to save record. Please try again.",
+            duration: 1200,
+          });
+        }
+         }
+    }
+    
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2 items-center !flex-wrap mb-2">

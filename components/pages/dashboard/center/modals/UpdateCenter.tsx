@@ -101,8 +101,8 @@ const UpdateCenter = ({ center, setData }: { center: Center; setData: React.Disp
         const updated = {
           ...existing,
           ...data, 
+          action: existing.isOldData ? 'update' : 'create',
           _synced: false,
-          action: "update",
         };
 
         await db.centers.update(center.id, updated);

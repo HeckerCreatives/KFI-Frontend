@@ -67,6 +67,7 @@ const CreateBank = ({ getBanks }: CreateBankProps) => {
           ...data,
           _synced: false,  
           action: "create",
+          isOldData: false
         });
 
         getBanks(1);

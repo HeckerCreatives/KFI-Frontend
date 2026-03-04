@@ -55,13 +55,13 @@ const DeleteLoan = ({ loan, getLoans, searchkey, sortKey, currentPage, rowLength
     } else {
       try {
       if (loan._id) {
-          await db.loanProducts.update(loan.id, {
+          await db.productLoans.update(loan.id, {
             deletedAt: new Date().toISOString(),
             _synced: false,
             action: "delete",
           });
         } else {
-          await db.loanProducts.delete(loan.id);
+          await db.productLoans.delete(loan.id);
         }
       getLoans(currentPage);
       dismiss()

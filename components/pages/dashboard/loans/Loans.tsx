@@ -29,6 +29,7 @@ export type TLoan = {
 const Loans = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+  
 
   const [present] = useIonToast();
 
@@ -80,8 +81,9 @@ const Loans = () => {
     setData(prev => ({ ...prev, loading: true }));
     try {
       const limit = TABLE_LIMIT;
-      let data = await db.loanProducts.toArray();
-      const filteredData = data.filter(e => !e.deletedAt);
+      let data = await db.productLoans.toArray();
+      console.log(data)
+      const filteredData = data.filter(e => e.action !== 'delete');
       let allData = filterAndSortProducts(filteredData, keyword, sort);
       const totalItems = allData.length;
       const totalPages = Math.ceil(totalItems / limit);
@@ -162,7 +164,7 @@ const Loans = () => {
 
               <div className="flex flex-col lg:flex-row items-start justify-start flex-wrap gap-2">
                 <div className=' flex flex-wrap gap-2'>
-                  {canDoAction(token.role, permissions, 'product', 'create') && <CreateLoan getLoans={getLoans} />}
+                  {canDoAction(token.role, permissions, 'product', 'create') && <CreateLoan getLoans={getLoans} currentPage={currentPage} />}
                 {!online && (
                    <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}

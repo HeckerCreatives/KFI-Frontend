@@ -76,7 +76,7 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
       }
     } else {
       try {
-         const existing = await db.loanProducts.get(loan.id);
+         const existing = await db.productLoans.get(loan.id);
   
           if (!existing) {
             console.warn("Data not found");
@@ -85,8 +85,8 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
           const updated = {
             ...existing,
             ...data, 
+            action: existing.isOldData ? 'update' : 'create',
             _synced: false,
-            action: "update",
           };
           await db.loanProducts.update(loan.id, updated);
           setData(prev => {

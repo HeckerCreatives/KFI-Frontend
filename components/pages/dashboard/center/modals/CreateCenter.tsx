@@ -68,7 +68,8 @@ const CreateCenter = ({ getCenters }: CreateCenterProps) => {
       await db.centers.add({
         ...data, 
         _synced: false,
-        action: "create"
+        action: "create",
+        isOldData: false
       });
       getCenters(1);
       dismiss()

@@ -149,7 +149,10 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
   } else {
     // OFFLINE UPDATE
     try {
-      const existing = await db.clientMasterFile.get(client.id);
+
+      console.log(client._id)
+      const existing = await db.clientMasterFile.get(client._id);
+      
 
       if (!existing) {
         console.warn("Client not found.");
@@ -157,7 +160,7 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
         return;
       }
 
-      await db.clientMasterFile.update(client.id, {
+      await db.clientMasterFile.update(client._id, {
           ...existing.data,
           ...data,
           business: {

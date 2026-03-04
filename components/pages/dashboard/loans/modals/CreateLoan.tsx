@@ -14,9 +14,10 @@ import { db } from '../../../../../database/db';
 
 type CreateLoanProps = {
   getLoans: (page: number) => void;
+  currentPage: number
 };
 
-const CreateLoan = ({ getLoans }: CreateLoanProps) => {
+const CreateLoan = ({ getLoans, currentPage }: CreateLoanProps) => {
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
   const online = useOnlineStore((state) => state.online);
@@ -69,12 +70,13 @@ const CreateLoan = ({ getLoans }: CreateLoanProps) => {
       }
     } else {
        try {
-        await db.loanProducts.add({
+        await db.productLoans.add({
           ...data,
+          isOldData: false,
           _synced: false,  
           action: "create",
         });
-        getLoans(1);
+        getLoans(currentPage);
         dismiss();
         present({
           message: "Loan Products successfully created!",

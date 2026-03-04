@@ -85,7 +85,9 @@ const GroupAccount = () => {
             
                   let data = await db.groupOfAccounts.toArray();
 
-                  const filteredData = data.filter(e => !e.deletedAt);
+                  console.log('GOA', data)
+
+                  const filteredData = data.filter(e => e.action !== 'delete');
                   let allData = filterAndSortGOA(filteredData, keyword, sort);
             
                   const totalItems = allData.length;

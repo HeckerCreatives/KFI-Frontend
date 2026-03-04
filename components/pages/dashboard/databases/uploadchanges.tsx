@@ -2,8 +2,9 @@ import { IonButton, useIonToast, useIonViewWillEnter } from "@ionic/react";
 import React, { useCallback, useState } from "react";
 import kfiAxios from "../../../utils/axios";
 import { db } from "../../../../database/db";
+import { business, key } from "ionicons/icons";
 
-type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers";
+type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks";
 
 export default function UploadChanges() {
   const [changes, setChanges] = useState<Record<SyncKey, number>>({
@@ -11,6 +12,10 @@ export default function UploadChanges() {
     loanReleases: 0,
     expenseVouchers: 0,
     journalVouchers: 0,
+    groupOfAccounts: 0,
+    chartOfAccounts: 0,
+    centers: 0,
+    banks: 0
   });
     const [present] = useIonToast();
   
@@ -21,11 +26,14 @@ export default function UploadChanges() {
     key: SyncKey;
     label: string;
     endpoint: string;
+    field?: string
   }[] = [
     {
       key: "clientMasterFile",
       label: "Client Master File",
-      endpoint: "/sync/upload/customers",
+      endpoint: "/sync/customer",
+      field:'clients'
+
     },
     {
       key: "loanReleases",
@@ -42,6 +50,30 @@ export default function UploadChanges() {
       label: "Journal Voucher",
       endpoint: "/sync/upload/journal-voucher",
     },
+    {
+      key: "groupOfAccounts",
+      label: "Group of Accounts",
+      endpoint: "/sync/group-accounts",
+      field:'groupAccounts'
+    },
+    {
+      key: "chartOfAccounts",
+      label: "Chart of Accounts",
+      endpoint: "/sync/chart-of-accounts",
+      field:'chartOfAccounts'
+    },
+    {
+      key: "centers",
+      label: "Centers",
+      endpoint: "/sync/centers",
+      field:'centers'
+    },
+    {
+      key: "banks",
+      label: "Banks",
+      endpoint: "/sync/banks",
+      field:'banks'
+    },
   ];
 
   const loadChanges = useCallback(async () => {
@@ -49,60 +81,99 @@ export default function UploadChanges() {
     const lr = await db.loanReleases.toArray();
     const ev = await db.expenseVouchers.toArray();
     const jv = await db.journalVouchers.toArray();
+    const goa = await db.groupOfAccounts.toArray();
+    const coa = await db.chartOfAccounts.toArray();
+    const centers = await db.centers.toArray();
+    const banks = await db.banks.toArray();
 
     setChanges({
       clientMasterFile: cmf.filter((e) => e._synced === false).length,
       loanReleases: lr.filter((e) => e._synced === false).length,
       expenseVouchers: ev.filter((e) => e._synced === false).length,
       journalVouchers: jv.filter((e) => e._synced === false).length,
+      groupOfAccounts: goa.filter((e) => e._synced === false).length,
+      chartOfAccounts: coa.filter((e) => e._synced === false).length,
+      centers: centers.filter((e) => e._synced === false).length,
+      banks: banks.filter((e) => e._synced === false).length,
     });
   }, []);
 
-  const uploadChanges = async (key: SyncKey, endpoint: string) => {
-    try {
-      setLoading(key);
+ const uploadChanges = async (
+  key: SyncKey,
+  endpoint: string,
+  field?: string
+) => {
+  try {
+    setLoading(key);
 
-      const list = await (db as any)[key].toArray();
-      const offlineChanges = list.filter((e: any) => e._synced === false);
+    const list = await (db as any)[key].toArray();
+    const offlineChanges = list.filter((e: any) => e._synced === false);
 
-      if (!offlineChanges.length) return;
+    if (!offlineChanges.length) return;
 
-      const result = await kfiAxios.post(endpoint, {
-        data: offlineChanges,
-      });
+    const payload = offlineChanges.map((item: any) => {
+      const {
+        isOldData,
+        id,
+        deletedAt,
+        createdAt,
+        groupAccount,
+        groupAccountLabel,
+        deptStatus,
+        center,
+        business,
+        ...rest
+      } = item;
 
-      if (result.data.success) {
-        // Mark as synced
-        for (const item of offlineChanges) {
-          await (db as any)[key].update(item.id, { _synced: true });
-        }
+      return {
+        ...rest,
+        center:
+          typeof center === "object" && center?._id
+            ? center._id
+            : center,
+        business: typeof business === "object" && business?._id
+            ? business._id
+            : business,
+      };
+    });
+
+    const result = await kfiAxios.post(endpoint, {
+      [field || "data"]: payload,
+    });
+
+    if (result.data.success) {
+      for (const item of offlineChanges) {
+        await (db as any)[key].update(item.id, { _synced: true });
       }
-
-      await loadChanges();
-       present({
-        message: 'All changes has been saved.',
-        duration: 1000,
-      });
-    } catch (error) {
-         present({
-        message: 'Error occured, please try again.',
-        duration: 1000,
-      });
-      console.log(error);
-    } finally {
-      setLoading(null);
     }
-  };
+
+    await loadChanges();
+
+    present({
+      message: "All changes has been saved.",
+      duration: 1000,
+    });
+
+  } catch (error) {
+    present({
+      message: "Error occured, please try again.",
+      duration: 1000,
+    });
+    console.log(error);
+  } finally {
+    setLoading(null);
+  }
+};
 
   useIonViewWillEnter(() => {
     loadChanges();
   });
 
   return (
-    <div className="bg-white rounded-md shadow-sm p-4 w-full max-w-[25rem]">
+    <div className="bg-white rounded-md shadow-sm p-4 w-full max-w-[40rem]">
       <p className="text-sm !font-bold">Upload Offline Changes</p>
 
-      <div className="flex flex-col gap-1 mt-4">
+      <div className=" w-full grid grid-cols-2 gap-1 mt-4">
         {tables.map((table) => {
           const count = changes[table.key];
 
@@ -131,7 +202,7 @@ export default function UploadChanges() {
                 size="small"
                 disabled={!count || loading === table.key}
                 onClick={() =>
-                  uploadChanges(table.key, table.endpoint)
+                  uploadChanges(table.key, table.endpoint, table.field)
                 }
                 className=" "
               >

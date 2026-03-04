@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncBusinessTypes, syncCenters, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncGroupAccount, syncJournalVoucher, syncLoanRelease, syncLoanReleaseDueDates, syncOR } from "../../../../database/sync"
+import { syncAR, syncBanks, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncOR, syncProductLoans } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -17,6 +17,12 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "center", label: "Syncing center", status: "pending" },
    { id: "business-types", label: "Syncing business types", status: "pending" },
    { id: "group-acc", label: "Syncing group of accounts", status: "pending" },
+   { id: "chart-acc", label: "Syncing chart of accounts", status: "pending" },
+   { id: "loans", label: "Syncing product loans", status: "pending" },
+   { id: "center", label: "Syncing centers", status: "pending" },
+   { id: "banks", label: "Syncing banks", status: "pending" },
+
+
   // { id: "loanReleases", label: "Syncing Loan Releases", status: "pending" },
   // { id: "expenseVouchers", label: "Syncing Expense Vouchers", status: "pending" },
   // { id: "officialReceipts", label: "Syncing Official Receipts", status: "pending" },
@@ -60,27 +66,41 @@ export function BackupEntriesModalContent({
 
     try {
       updateStepStatus("clientMasterFile", "loading")
-      const client = await kfiAxios.get(`/sync/customers`)
+      const client = await kfiAxios.get(`/sync/customers?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
       await syncClientMasterFile(client.data?.customers || [])
       updateStepStatus("clientMasterFile", "complete")
 
       updateStepStatus("center", "loading")
-      const center = await kfiAxios.get(`/sync/selection/center`)
-      console.log('center',center)
+      const center = await kfiAxios.get(`/sync/selection/center?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
       await syncCenters(center.data?.centers || [])
       updateStepStatus("center", "complete")
 
       updateStepStatus("business-types", "loading")
-      const businessTypes = await kfiAxios.get(`/sync/selection/business-types`)
-      console.log('businessTypes',businessTypes)
+      const businessTypes = await kfiAxios.get(`/sync/selection/business-types?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
       await syncBusinessTypes(businessTypes.data?.businessTypes || [])
       updateStepStatus("business-types", "complete")
 
       updateStepStatus("group-acc", "loading")
-      const groupAcc = await kfiAxios.get(`/sync/selection/group-accounts`)
-      console.log('groupAcc',groupAcc)
-      await syncGroupAccount(groupAcc.data?.businessTypes || [])
+      const groupAcc = await kfiAxios.get(`/sync/group-accounts?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      await syncGroupAccount(groupAcc.data?.groupAccounts || [])
       updateStepStatus("group-acc", "complete")
+
+      updateStepStatus("chart-acc", "loading")
+      const chartAcc = await kfiAxios.get(`/sync/chart-of-accounts?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      await syncChartAccount(chartAcc.data?.chartOfAccounts || [])
+      updateStepStatus("chart-acc", "complete")
+
+      updateStepStatus("loans", "loading")
+      const loans = await kfiAxios.get(`/sync/loans?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      await syncProductLoans(loans.data?.loans || [])
+      updateStepStatus("loans", "complete")
+
+       updateStepStatus("banks", "loading")
+      const banks = await kfiAxios.get(`/sync/banks?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      console.log('banks', banks)
+      await syncBanks(banks.data?.banks || [])
+      updateStepStatus("banks", "complete")
+
 
 
       setIsComplete(true)

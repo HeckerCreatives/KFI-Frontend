@@ -13,12 +13,15 @@ export type NavLink = {
 
 export type ChartOfAccount = {
   _id: string;
+  id: string;
   code: string;
   description: string;
   classification: string;
   nature: string;
   deptStatus: string;
-  groupOfAccount?: GroupAccount;
+  groupOfAccount: GroupAccount
+  groupAccount: string
+  groupAccountLabel: string
 };
 
 export type Beneficiary = {

@@ -23,7 +23,7 @@ const ChartOfAccountActions = ({ chartAccount, setData, getChartOfAccounts, curr
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
 
   return (
-    <div>{canDoAction(token.role, permissions, 'chart of account', 'update') && <LinkChartOfAccount chartAccount={chartAccount} setData={setData} />}</div>
+    <div>{canDoAction(token.role, permissions, 'chart of account', 'update') && <LinkChartOfAccount chartAccount={chartAccount} setData={setData} getChartOfAccounts={getChartOfAccounts} currentPage={currentPage} />}</div>
     
   );
 };

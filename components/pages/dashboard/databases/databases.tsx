@@ -30,8 +30,6 @@ const Databases = () => {
 
   };
 
- 
-
       useEffect(() => {
       const init = async () => {
         await getClients();    // read inserted data
@@ -40,10 +38,6 @@ const Databases = () => {
       init();
     }, []);
 
-     const dropDatabase = async () => {
-      await db.delete(); 
-  console.log("Database deleted");
-    }
 
 
 

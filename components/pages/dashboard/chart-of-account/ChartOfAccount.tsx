@@ -87,8 +87,10 @@ const ChartOfAccount = () => {
                       const limit = TABLE_LIMIT;
                 
                       let data = await db.chartOfAccounts.toArray();
+
+                      console.log(data)
     
-                      const filteredData = data.filter(e => !e.deletedAt);
+                      const filteredData = data.filter(e => e.action !== 'delete');
                       let allData = filterAndSortCOA(filteredData, keyword, sort);
                 
                       const totalItems = allData.length;

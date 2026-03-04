@@ -9,7 +9,11 @@ export async function syncClientMasterFile(apiData: any) {
 
   await db.clientMasterFile.clear();
 
-  const clients: ClientMasterFile[] = apiData.map((c: any) => ({...c, _synced: true, isOldData: true}));
+  const clients: ClientMasterFile[] = apiData.map((c: any) => ({...c, 
+    _synced: true, 
+    isOldData: true,
+    id: c._id
+  }));
 
   await db.clientMasterFile.bulkPut(clients);
 
@@ -25,7 +29,8 @@ export async function syncCenters(apiData: any) {
 
   const data: any[] = apiData.map((c: any) => ({
     ...c,
-    _synced: true
+    _synced: true,
+    isOldData: true
   }));
 
   await db.table("centers").bulkPut(data);
@@ -36,24 +41,6 @@ export async function syncCenters(apiData: any) {
 }
 
 
-export async function syncBanks(apiData: any) {
-    console.log('Data Banks', apiData)
-  if (!apiData) return;
-
-    await db.banks.clear();
-
-  const data: any[] = apiData?.map((c: any) => ({
-    ...c,
-    _id: c._id,
-    code: c.code,
-  }));
-
-  await db.table("banks").bulkPut(data);
-
-  console.log('Sync sucess', data)
-
-  return true;
-}
 
 export async function syncSystemParams(apiData: any) {
     console.log('Data', apiData)
@@ -155,12 +142,12 @@ export async function syncLoanProducts(apiData: any) {
 
 
 
-//genral ledgers
+//genral ledgers updated
 export async function syncGroupAccount(apiData: any) {
   console.log('syncGroupAccount', apiData)
   if (!apiData) return;
 
-    await db.businessTypes.clear();
+    await db.groupOfAccounts.clear();
 
   const data: any[] = apiData.map((c: any) => ({
     ...c,
@@ -174,6 +161,30 @@ export async function syncGroupAccount(apiData: any) {
 
   return true;
 }
+
+export async function syncChartAccount(apiData: any) {
+  console.log('syncChartAccount', apiData)
+  if (!apiData) return;
+
+    await db.chartOfAccounts.clear();
+
+  const data: any[] = apiData.map((c: any) => ({
+    ...c,
+    id: c._id,
+    groupAccount: c.groupOfAccount?._id || '',
+    groupAccountLabel: c.groupOfAccount?.code || '',
+    _synced: true,
+    isOldData: true,
+
+  }));
+
+  await db.table("chartOfAccounts").bulkPut(data);
+
+  console.log('Sync chartOfAccounts sucess', data)
+
+  return true;
+}
+
 export async function syncBusinessTypes(apiData: any) {
   console.log('Data Business', apiData)
   if (!apiData) return;
@@ -191,6 +202,48 @@ export async function syncBusinessTypes(apiData: any) {
 
   return true;
 }
+
+export async function syncProductLoans(apiData: any) {
+  console.log('Data syncProductLoans', apiData)
+  if (!apiData) return;
+
+    await db.productLoans.clear();
+
+  const data: any[] = apiData.map((c: any) => ({
+    ...c,
+    id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+  await db.table("productLoans").bulkPut(data);
+
+  console.log('Sync syncProductLoans sucess', data)
+
+  return true;
+}
+
+
+export async function syncBanks(apiData: any) {
+    console.log('Data Banks', apiData)
+  if (!apiData) return;
+
+    await db.banks.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+  await db.table("banks").bulkPut(data);
+
+  console.log('Sync sucess', data)
+
+  return true;
+}
+
 
 
 

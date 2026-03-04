@@ -57,7 +57,7 @@ const ViewLoanCodes = ({ loan }: { loan: Loan }) => {
                   </TableHeadRow>
                 </TableHeader>
                 <TableBody>
-                  {loan.loanCodes.map((loanCode: LoanCode) => (
+                  {loan.loanCodes?.map((loanCode: LoanCode) => (
                     <TableRow key={loanCode._id} className="border-b-0">
                       <TableCell className="border-4 border-slate-100 align-top max-w-40 min-w-40">{loanCode.module}</TableCell>
                       <TableCell className="border-4 border-slate-100 align-top max-w-40 min-w-40">{loanCode.loanType}</TableCell>

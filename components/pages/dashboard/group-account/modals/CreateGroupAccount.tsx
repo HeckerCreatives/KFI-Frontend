@@ -64,7 +64,8 @@ const CreateGroupAccount = ({ getGroupAccounts }: CreateGroupAccount) => {
         {
         ...data, 
         _synced: false,
-        action: "create"
+        action: "create",
+        isOldData: false
       }
       );
       getGroupAccounts(1);

@@ -84,8 +84,10 @@ const Bank = () => {
                           const limit = TABLE_LIMIT;
                     
                           let data = await db.banks.toArray();
+
+                          console.log(data)
         
-                          const filteredData = data.filter(e => !e.deletedAt);
+                          const filteredData = data.filter(e => e.action !== 'delete');
                           let allData = filterAndSortBanks(filteredData, keyword, sort);
                     
                           const totalItems = allData.length;

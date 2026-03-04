@@ -6,6 +6,7 @@ export class KfiDatabase extends Dexie {
   banks!: Table<any>;
   businessTypes!: Table<any>;
   chartOfAccounts!: Table<any>;
+  productLoans!: Table<any>;
   clients!: Table<any>;
   loanCodes!: Table<any>;
   loanProducts!: Table<any>;
@@ -42,14 +43,14 @@ export class KfiDatabase extends Dexie {
         //transactions
       clientMasterFile: "++id, _id, acctNumber, centerNo, name",
       centers: "++id, centerNo, description",
-
+      chartOfAccounts: "++id, _id, code, description",
+      productLoans: "++id, _id",
+      banks: "++id,_id",
       
       newClientMasterFile: "++id",
       loanReleases: "++id",
-      banks: "++id,_id, code",
       businessTypes: "++id, action",
       
-      chartOfAccounts: "++id, code, description",
       clients: "++id, name, center",
       loanCodes: "++id, loan",
       loanProducts: "++id, code",

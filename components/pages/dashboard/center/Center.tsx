@@ -87,6 +87,7 @@ const Center = () => {
             const limit = TABLE_LIMIT;
       
             let data = await db.centers.toArray();
+            console.log(data)
             const filteredCenters = data.filter(e => !e.deletedAt);
             let allData = filterAndSortCenter(filteredCenters, keyword, sort);
       
@@ -109,7 +110,6 @@ const Center = () => {
               nextPage: hasNextPage,
             }));
 
-            console.log(centers)
       
             setCurrentPage(page);
             setSearchKey(keyword);
@@ -132,31 +132,6 @@ const Center = () => {
     getCenters(currentPage);
   });
 
-  const uploadCenters = async () => {
-    setUploading(true)
-    try {
-      const centerLists = await db.centers.toArray();
-      const offlineChanges = centerLists.filter(e => e._synced === false);
-      const result = await kfiAxios.put("sync/upload/centers", { centers: offlineChanges });
-      const { success } = result.data;
-      if (success) {
-        // alert("Offline changes saved!");
-        present({
-          message: 'Offline changes saved!',
-          duration: 1000,
-        });
-      setUploading(false)
-        getCenters(1);
-      }
-    } catch (error) {
-      setUploading(false)
-
-      present({
-        message: 'Failed to saved changes',
-        duration: 1000,
-      });
-    }
-  };
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
@@ -172,11 +147,7 @@ const Center = () => {
                   {canDoAction(token.role, permissions, 'center', 'create') && <CreateCenter getCenters={getCenters} />}
                   {canDoAction(token.role, permissions, 'center', 'print') && <PrintAllCenter />}
                   {canDoAction(token.role, permissions, 'center', 'export') && <ExportAllCenter />}
-                  {!online && (
-                    <IonButton disabled={uploading} onClick={uploadCenters} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                    </IonButton>
-                  )}
+                 
                 </div>
                 <CenterFilter getCenters={getCenters} />
               </div>
