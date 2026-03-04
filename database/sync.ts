@@ -9,7 +9,7 @@ export async function syncClientMasterFile(apiData: any) {
 
   await db.clientMasterFile.clear();
 
-  const clients: ClientMasterFile[] = apiData.map((c: any) => ({...c,sync: 'old'}));
+  const clients: ClientMasterFile[] = apiData.map((c: any) => ({...c, _synced: true}));
 
   await db.clientMasterFile.bulkPut(clients);
 
@@ -25,6 +25,7 @@ export async function syncCenters(apiData: any) {
 
   const data: any[] = apiData.map((c: any) => ({
     ...c,
+    _synced: true
   }));
 
   await db.table("centers").bulkPut(data);
@@ -153,6 +154,26 @@ export async function syncLoanProducts(apiData: any) {
 }
 
 
+
+//genral ledgers
+export async function syncGroupAccount(apiData: any) {
+  console.log('syncGroupAccount', apiData)
+  if (!apiData) return;
+
+    await db.businessTypes.clear();
+
+  const data: any[] = apiData.map((c: any) => ({
+    ...c,
+    _synced: true
+
+  }));
+
+  await db.table("groupOfAccounts").bulkPut(data);
+
+  console.log('Sync syncGroupAccount sucess', data)
+
+  return true;
+}
 export async function syncBusinessTypes(apiData: any) {
   console.log('Data Business', apiData)
   if (!apiData) return;
@@ -161,6 +182,7 @@ export async function syncBusinessTypes(apiData: any) {
 
   const data: any[] = apiData.map((c: any) => ({
     ...c,
+    _synced: true
   }));
 
   await db.table("businessTypes").bulkPut(data);
@@ -169,6 +191,8 @@ export async function syncBusinessTypes(apiData: any) {
 
   return true;
 }
+
+
 
 export async function syncCoa(apiData: any) {
   console.log('Data', apiData)

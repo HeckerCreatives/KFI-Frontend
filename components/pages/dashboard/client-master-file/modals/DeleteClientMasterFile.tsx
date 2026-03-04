@@ -69,7 +69,7 @@ const DeleteClientMasterFile = ({ client, getClients, searchkey, sortKey, curren
         if (row.sync === 'new') {
           await db.clientMasterFile.delete(row.id);
         } else {
-          await db.clientMasterFile.update(row.id, { sync: 'deleted', action: 'delete' });
+          await db.clientMasterFile.update(row.id, {  _synced: false, action: 'delete' });
         }
         getClientsOffline(1)
 

@@ -12,6 +12,7 @@ import InputText from '../../../ui/forms/InputText';
 import ModalHeader from '../../../ui/page/ModalHeader';
 import { BackupModalContent } from './backupdata-modal';
 import { BackupEntriesModalContent } from './backupdata-entries-modal';
+import UploadChanges from './uploadchanges';
 
 
 const Databases = () => {
@@ -54,8 +55,9 @@ const Databases = () => {
           <PageTitle pages={['All Files', 'Databases']} />
           <div className="px-3 pb-3 flex-1">
 
-            <div className=' grid grid-cols-4 gap-6'>
-               <div className=' bg-white rounded-md p-4 flex flex-col gap-4 h-fit w-full'>
+            <div className=' flex flex-wrap gap-6'>
+              
+               {/* <div className=' bg-white rounded-md p-4 flex flex-col gap-4 h-fit w-full'>
           <p className=' text-sm !font-bold'>Sync Database</p>
           <IonButton onClick={() => setBackupData(true)} fill="clear" id="export_all_client" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
             <RefreshIcon stroke='.8' size={15} className=' mr-2'/>
@@ -81,52 +83,51 @@ const Databases = () => {
 
           </IonModal>
 
-        </div>
+        </div> */}
 
-        <div className=' bg-white rounded-md p-4 flex flex-col gap-4 w-full'>
-          <p className=' text-sm !font-bold'>Sync Data Entries</p>
-          <div className=' w-full flex gap-2'>
-            <div className=' flex flex-col gap-1 w-full'>
-              <p className=' text-xs'>From</p>
-              <IonInput value={from} onIonChange={(e) => setFrom(e.target.value)} type='date' placeholder='Date' 
-                className={'text-xs !p-2  !bg-white ![--background:white] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-zinc-300 ![--min-height:0.75rem] !min-h-[0.75rem]'}
-              />
-            </div>
+          <div className=' bg-white rounded-md p-4 flex flex-col gap-4 w-full h-fit max-w-[25rem]'>
+            <p className=' text-sm !font-bold'>Sync Database</p>
+            <div className=' w-full flex gap-2'>
+              <div className=' flex flex-col gap-1 w-full'>
+                <p className=' text-xs'>From</p>
+                <IonInput value={from} onIonChange={(e) => setFrom(e.target.value)} type='date' placeholder='Date' 
+                  className={'text-xs !p-2  !bg-white ![--background:white] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-zinc-300 ![--min-height:0.75rem] !min-h-[0.75rem]'}
+                />
+              </div>
 
-            <div className=' flex flex-col gap-1 w-full'>
-              <p className=' text-xs'>To</p>
-              <IonInput value={to} onIonChange={(e) => setTo(e.target.value)} type='date' placeholder='Date' 
-               className={'text-xs !p-2  !bg-white ![--background:white] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-zinc-300 ![--min-height:0.75rem] !min-h-[0.75rem]'}/>
-            </div>
-            
-          </div>
-          <IonButton disabled={from === '' && to === ''} onClick={() => setDataEntries(true)} fill="clear" id="export_all_client" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-            <RefreshIcon stroke='.8' size={15} className=' mr-2'/>
-            Sync
-          </IonButton>
-
-           <IonModal
-          isOpen={dataEntries}
-           onDidDismiss={() => setDataEntries(false)}
-          className=" [--border-radius:0.7rem] auto-height [--max-width:34rem] [--width:95%]"
-          >
-            <div className=' p-6'>
-             <BackupEntriesModalContent
-              onClose={() => setDataEntries(false)}
-              dateFrom={from}
-              dateTo={to}
+              <div className=' flex flex-col gap-1 w-full'>
+                <p className=' text-xs'>To</p>
+                <IonInput value={to} onIonChange={(e) => setTo(e.target.value)} type='date' placeholder='Date' 
+                className={'text-xs !p-2  !bg-white ![--background:white] md:![--padding-bottom:0] ![--padding-top:0] ![--padding-start:0] border border-zinc-300 ![--min-height:0.75rem] !min-h-[0.75rem]'}/>
+              </div>
               
-            />
+            </div>
+            <IonButton disabled={from === '' && to === ''} onClick={() => setDataEntries(true)} fill="clear" id="export_all_client" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+              <RefreshIcon stroke='.8' size={15} className=' mr-2'/>
+              Sync
+            </IonButton>
+
+            <IonModal
+            isOpen={dataEntries}
+            onDidDismiss={() => setDataEntries(false)}
+            className=" [--border-radius:0.7rem] auto-height [--max-width:34rem] [--width:95%]"
+            >
+              <div className=' p-6'>
+              <BackupEntriesModalContent
+                onClose={() => setDataEntries(false)}
+                dateFrom={from}
+                dateTo={to}
+                
+              />
+              </div>
+
+            </IonModal>
+
             </div>
 
-          </IonModal>
-
-          </div>
+            <UploadChanges/>
           </div>
            
-           
-       
-
           </div>
         </div>
       </IonContent>

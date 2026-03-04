@@ -1,5 +1,5 @@
 export function filterAndSortClients(clients: any, search: string, sort: any) {
-  let result = [...clients].filter(c => c.sync !== 'deleted');
+  let result = [...clients].filter(c => c.action !== 'delete');
 
   console.log('clients', clients)
 

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncBusinessTypes, syncCenters, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncJournalVoucher, syncLoanRelease, syncLoanReleaseDueDates, syncOR } from "../../../../database/sync"
+import { syncAR, syncBusinessTypes, syncCenters, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncGroupAccount, syncJournalVoucher, syncLoanRelease, syncLoanReleaseDueDates, syncOR } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -16,6 +16,7 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "clientMasterFile", label: "Syncing clients", status: "pending" },
    { id: "center", label: "Syncing center", status: "pending" },
    { id: "business-types", label: "Syncing business types", status: "pending" },
+   { id: "group-acc", label: "Syncing group of accounts", status: "pending" },
   // { id: "loanReleases", label: "Syncing Loan Releases", status: "pending" },
   // { id: "expenseVouchers", label: "Syncing Expense Vouchers", status: "pending" },
   // { id: "officialReceipts", label: "Syncing Official Receipts", status: "pending" },
@@ -74,6 +75,12 @@ export function BackupEntriesModalContent({
       console.log('businessTypes',businessTypes)
       await syncBusinessTypes(businessTypes.data?.businessTypes || [])
       updateStepStatus("business-types", "complete")
+
+      updateStepStatus("group-acc", "loading")
+      const groupAcc = await kfiAxios.get(`/sync/selection/group-accounts`)
+      console.log('groupAcc',groupAcc)
+      await syncGroupAccount(groupAcc.data?.businessTypes || [])
+      updateStepStatus("group-acc", "complete")
 
 
       setIsComplete(true)

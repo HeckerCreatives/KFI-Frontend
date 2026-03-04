@@ -80,8 +80,6 @@ const GroupAccount = () => {
     }
     } else {
        setData(prev => ({ ...prev, loading: true }));
-
-            
                 try {
                   const limit = TABLE_LIMIT;
             
