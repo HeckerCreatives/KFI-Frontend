@@ -2,9 +2,9 @@ import Dexie, { Table } from "dexie";
 
 
 export class KfiDatabase extends Dexie {
+  loanReleases!: Table<any>;
   banks!: Table<any>;
   businessTypes!: Table<any>;
-  centers!: Table<any>;
   chartOfAccounts!: Table<any>;
   clients!: Table<any>;
   loanCodes!: Table<any>;
@@ -15,7 +15,6 @@ export class KfiDatabase extends Dexie {
   systemParameters!: Table<any>;
   weeklySavings!: Table<any>;
   groupOfAccounts!: Table<any>;
-  loanReleases!: Table<any>;
   dueDates!: Table<any>;
   journalVouchers!: Table<any>;
   journalVoucherEntries!: Table<any>;
@@ -30,15 +29,26 @@ export class KfiDatabase extends Dexie {
   damayanFunds!: Table<any>;
   damayanFundEntries!: Table<any>;
 
+  //customer
   clientMasterFile!: Table<any>;
+  newclientMasterFile!: Table<any>;
+  centers!: Table<any>;
+
 
   constructor() {
     super("kfi");
 
     this.version(1).stores({
+        //transactions
+      clientMasterFile: "++id, _id, acctNumber, centerNo, name",
+      centers: "++id, centerNo, description",
+
+      
+      newClientMasterFile: "++id",
+      loanReleases: "++id",
       banks: "++id,_id, code",
       businessTypes: "++id, action",
-      centers: "++id, centerNo, description",
+      
       chartOfAccounts: "++id, code, description",
       clients: "++id, name, center",
       loanCodes: "++id, loan",
@@ -62,12 +72,6 @@ export class KfiDatabase extends Dexie {
       emergencyLoanEntries: "++id, emergencyLoan",
       damayanFunds: "++id, code, center",
       damayanFundEntries: "++id, damayanFund",
-
-     clientMasterFile: "++id, _id, acctNumber, centerNo, name",
-
-     //transactions
-     loanReleases: "++id, code, center",
-
     });
   }
 }

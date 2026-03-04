@@ -57,7 +57,6 @@ const DeleteClientMasterFile = ({ client, getClients, searchkey, sortKey, curren
           .equals(client.id)
           .first();
 
-          console.log(client._id, row)
 
         if (!row) {
           present({
@@ -67,15 +66,11 @@ const DeleteClientMasterFile = ({ client, getClients, searchkey, sortKey, curren
           return;
         }
 
-        await db.clientMasterFile.delete(row.id);
-
-        present({
-          message: "Client record deleted.",
-          duration: 1200,
-        });
-
-
-        dismiss();
+        if (row.sync === 'new') {
+          await db.clientMasterFile.delete(row.id);
+        } else {
+          await db.clientMasterFile.update(row.id, { sync: 'deleted' });
+        }
         getClientsOffline(1)
 
       } catch (error) {

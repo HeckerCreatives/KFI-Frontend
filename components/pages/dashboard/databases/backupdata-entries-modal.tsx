@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncJournalVoucher, syncLoanRelease, syncLoanReleaseDueDates, syncOR } from "../../../../database/sync"
+import { syncAR, syncBusinessTypes, syncCenters, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncJournalVoucher, syncLoanRelease, syncLoanReleaseDueDates, syncOR } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -13,13 +13,16 @@ interface SyncStep {
 }
 
 const SYNC_STEPS: SyncStep[] = [
-  { id: "loanReleases", label: "Syncing Loan Releases", status: "pending" },
-  { id: "expenseVouchers", label: "Syncing Expense Vouchers", status: "pending" },
-  { id: "officialReceipts", label: "Syncing Official Receipts", status: "pending" },
-  { id: "ackReceipts", label: "Syncing Acknowledgement Receipts", status: "pending" },
-  { id: "emergencyLoans", label: "Syncing Emergency Loans", status: "pending" },
-  { id: "damayanFunds", label: "Syncing Damayan Funds", status: "pending" },
-  { id: "journalVouchers", label: "Syncing Journal Vouchers", status: "pending" },
+   { id: "clientMasterFile", label: "Syncing clients", status: "pending" },
+   { id: "center", label: "Syncing center", status: "pending" },
+   { id: "business-types", label: "Syncing business types", status: "pending" },
+  // { id: "loanReleases", label: "Syncing Loan Releases", status: "pending" },
+  // { id: "expenseVouchers", label: "Syncing Expense Vouchers", status: "pending" },
+  // { id: "officialReceipts", label: "Syncing Official Receipts", status: "pending" },
+  // { id: "ackReceipts", label: "Syncing Acknowledgement Receipts", status: "pending" },
+  // { id: "emergencyLoans", label: "Syncing Emergency Loans", status: "pending" },
+  // { id: "damayanFunds", label: "Syncing Damayan Funds", status: "pending" },
+  // { id: "journalVouchers", label: "Syncing Journal Vouchers", status: "pending" },
 ]
 
 interface BackupModalContentProps {
@@ -55,47 +58,25 @@ export function BackupEntriesModalContent({
     setSteps(SYNC_STEPS)
 
     try {
-      updateStepStatus("loanReleases", "loading")
-      const loanRelease = await kfiAxios.get(`/sync/loan-releases?dateFrom=${dateFrom}&dateTo=${dateTo}`)
-      await syncLoanRelease(loanRelease.data?.loanReleases || [])
-      await syncLoanReleaseDueDates(loanRelease.data?.dueDates || [])
-      updateStepStatus("loanReleases", "complete")
+      updateStepStatus("clientMasterFile", "loading")
+      const client = await kfiAxios.get(`/sync/customers`)
+      await syncClientMasterFile(client.data?.customers || [])
+      updateStepStatus("clientMasterFile", "complete")
 
-      updateStepStatus("expenseVouchers", "loading")
-      const expenseVoucher = await kfiAxios.get(`/sync/expense-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}`)
-      await syncExpenseVoucher(expenseVoucher.data?.expenseVouchers || [])
-      updateStepStatus("expenseVouchers", "complete")
+      updateStepStatus("center", "loading")
+      const center = await kfiAxios.get(`/sync/selection/center`)
+      console.log('center',center)
+      await syncCenters(center.data?.centers || [])
+      updateStepStatus("center", "complete")
 
-      updateStepStatus("officialReceipts", "loading")
-      const or = await kfiAxios.get(`/sync/official-receipts?dateFrom=${dateFrom}&dateTo=${dateTo}`)
-      await syncOR(or.data?.officialReceipts || [])
-      updateStepStatus("officialReceipts", "complete")
-
-      updateStepStatus("ackReceipts", "loading")
-      const ar = await kfiAxios.get(`/sync/acknowledgement-receipts?dateFrom=${dateFrom}&dateTo=${dateTo}`)
-      await syncAR(ar.data?.acknowledgementReceipts || [])
-      updateStepStatus("ackReceipts", "complete")
-
-      updateStepStatus("emergencyLoans", "loading")
-      const emergencyLoan = await kfiAxios.get(`/sync/emergency-loans?dateFrom=${dateFrom}&dateTo=${dateTo}`)
-      await syncEmergencyLoan(emergencyLoan.data?.emergencyLoans || [])
-      updateStepStatus("emergencyLoans", "complete")
-
-      updateStepStatus("damayanFunds", "loading")
-      const damayanFund = await kfiAxios.get(`/sync/damayan-funds?dateFrom=${dateFrom}&dateTo=${dateTo}`)
-      await syncDmayanFund(damayanFund.data?.damayanFunds || [])
-      updateStepStatus("damayanFunds", "complete")
-
-      updateStepStatus("journalVouchers", "loading")
-      const journalVoucher = await kfiAxios.get(`/sync/journal-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}`);
-      await syncJournalVoucher(journalVoucher.data?.journalVouchers || [])
-
-      updateStepStatus("journalVouchers", "complete")
-
+      updateStepStatus("business-types", "loading")
+      const businessTypes = await kfiAxios.get(`/sync/selection/business-types`)
+      console.log('businessTypes',businessTypes)
+      await syncBusinessTypes(businessTypes.data?.businessTypes || [])
+      updateStepStatus("business-types", "complete")
 
 
       setIsComplete(true)
-    //   present({ message: "Backup completed successfully!", duration: 1200 })
     } catch (err: any) {
       console.error(err)
       setError("An error occurred while syncing. Please try again.")

@@ -40,7 +40,7 @@ const ActionLogs = () => {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
       if (keyword) filter.search = keyword;
       if (sort) filter.sort = sort;
-      const result = await kfiAxios.get('/activity-log', { params: filter });
+      const result = await kfiAxios.get('/activity-logs', { params: filter });
       const { success, activities, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({

@@ -25,7 +25,7 @@ const Databases = () => {
 
 
   const getClients = async () => {
-    const data = await db.banks.toArray();
+    const data = await db.loanReleases.toArray();
 
   };
 
@@ -40,9 +40,9 @@ const Databases = () => {
     }, []);
 
      const dropDatabase = async () => {
-    await db.delete(); 
-console.log("Database deleted");
-  }
+      await db.delete(); 
+  console.log("Database deleted");
+    }
 
 
 
@@ -121,10 +121,8 @@ console.log("Database deleted");
 
           </IonModal>
 
-         
-
-        </div>
-            </div>
+          </div>
+          </div>
            
            
        

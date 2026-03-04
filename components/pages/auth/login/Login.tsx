@@ -18,11 +18,14 @@ import { jwtDecode } from 'jwt-decode';
 import { arrangedResource } from '../../../utils/constants';
 import { UserIcon, LogoutSquare01Icon, CircleIcon  } from 'hugeicons-react';
 import { useRouter } from 'next/navigation';
+import { useOnlineStore } from '../../../../store/onlineStore';
 
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const online = useOnlineStore((state) => state.online);
+  const setOnline = useOnlineStore((state) => state.setOnline);
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -88,6 +91,7 @@ const Login = () => {
     localStorage.setItem('auth', access)
     localStorage.setItem('user', token.username)
     localStorage.setItem('role', token.role)
+    console.log(token)
 
 
     if (token.role === 'superadmin' || token.role === 'user') {
@@ -197,6 +201,11 @@ const Login = () => {
                     <div className="space-y-2">
                       <h6 className="text-orange-600 text-[1.7rem] !font-[600] m-0">Welcome Back!</h6>
                       <p className="text-slate-500 text-sm ">Login to your account</p>
+                    </div>
+
+                    <div className=' flex items-center w-full'>
+                      <button onClick={() => setOnline(false)} className={`py-2 text-sm w-full rounded-md ${!online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Offline</button>
+                      <button onClick={() => setOnline(true)} className={`py-2 text-sm w-full rounded-md ${online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Online</button>
                     </div>
                   </div>
                   <div>

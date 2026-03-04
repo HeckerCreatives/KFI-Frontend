@@ -22,18 +22,16 @@ const AppShell = () => {
     setAuthChecked(true);
   }, []);
 
-   useEffect(() => {
-      const handleOnline = () => setOnline(true);
-      const handleOffline = () => setOnline(false);
-      window.addEventListener("online", handleOnline);
-      window.addEventListener("offline", handleOffline);
-      return () => {
-        window.removeEventListener("online", handleOnline);
-        window.removeEventListener("offline", handleOffline);
-      };
-
-    // setOnline(false)
-  }, [setOnline]);
+  //  useEffect(() => {
+  //     const handleOnline = () => setOnline(true);
+  //     const handleOffline = () => setOnline(false);
+  //     window.addEventListener("online", handleOnline);
+  //     window.addEventListener("offline", handleOffline);
+  //     return () => {
+  //       window.removeEventListener("online", handleOnline);
+  //       window.removeEventListener("offline", handleOffline);
+  //     };
+  // }, [setOnline]);
 
 
   if (!authChecked) {

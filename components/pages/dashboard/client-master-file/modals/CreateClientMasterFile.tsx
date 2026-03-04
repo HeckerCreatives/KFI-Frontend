@@ -93,15 +93,23 @@ const CreateClientMasterFile = ({ getClients, getClientsOffline }: CreateClientM
   
     else {
       try {
-        await db.clientMasterFile.add({
-          ...data,                          
-          _id: crypto.randomUUID(),  
-          offline: true,       
-          createdAt: Date.now()
-        });
-
-        getClientsOffline(1);
-        dismiss();
+         await db.clientMasterFile.add({
+           ...data,                          
+           _id: crypto.randomUUID(),  
+           offline: true,
+           business: {
+            type: data.businessLabel,
+            _id: data.business
+           },
+           center:{
+            centerNo: data.centerLabel,
+            _id: data.center
+           },
+           createdAt: Date.now(),
+           sync:'new'
+         });
+         getClientsOffline(1);
+         dismiss();
 
       } catch (err) {
         console.error("Offline save failed", err);
@@ -111,7 +119,6 @@ const CreateClientMasterFile = ({ getClients, getClientsOffline }: CreateClientM
     }
   }
 
-  console.log(form.watch('bankAccountNo'))
 
 
   return (

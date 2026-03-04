@@ -1,9 +1,8 @@
 export function filterAndSortClients(clients: any, search: string, sort: any) {
-  let result = [...clients];
+  let result = [...clients].filter(c => c.sync !== 'deleted');
 
   console.log('clients', clients)
 
-  // --- SEARCH ---
   if (search) {
     const term = search.toLowerCase();
     result = result.filter(c =>

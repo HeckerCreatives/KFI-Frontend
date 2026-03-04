@@ -9,25 +9,31 @@ export async function syncClientMasterFile(apiData: any) {
 
   await db.clientMasterFile.clear();
 
-  const clients: ClientMasterFile[] = apiData.map((c: any) => ({
-    ...c,
-    business: c.business
-      ? { _id: c.business, type: c.businessLabel }
-      : { _id: '', type: '' },
-    center: c.center
-      ? {
-          _id: c.center,
-          centerNo: c.centerLabel || '',
-          description: c.centerLabel || '',
-        }
-      : { _id: '', centerNo: '', description: '' },
-  }));
+  const clients: ClientMasterFile[] = apiData.map((c: any) => ({...c,sync: 'old'}));
 
   await db.clientMasterFile.bulkPut(clients);
 
-  console.log('Sync success', clients);
+  console.log('CMF Sync success', clients);
   return true;
 }
+
+export async function syncCenters(apiData: any) {
+  console.log('Data Centers', apiData)
+  if (!apiData) return;
+
+    await db.centers.clear();
+
+  const data: any[] = apiData.map((c: any) => ({
+    ...c,
+  }));
+
+  await db.table("centers").bulkPut(data);
+
+  console.log('Center Sync sucess', data)
+
+  return true;
+}
+
 
 export async function syncBanks(apiData: any) {
     console.log('Data Banks', apiData)
@@ -146,23 +152,6 @@ export async function syncLoanProducts(apiData: any) {
   return true;
 }
 
-export async function syncCenters(apiData: any) {
-  console.log('Data Centers', apiData)
-  if (!apiData) return;
-
-    await db.centers.clear();
-
-  const data: any[] = apiData.map((c: any) => ({
-    ...c,
-    _id: c._id,
-  }));
-
-  await db.table("centers").bulkPut(data);
-
-  console.log('Sync sucess', data)
-
-  return true;
-}
 
 export async function syncBusinessTypes(apiData: any) {
   console.log('Data Business', apiData)
@@ -172,12 +161,11 @@ export async function syncBusinessTypes(apiData: any) {
 
   const data: any[] = apiData.map((c: any) => ({
     ...c,
-    _id: c._id,
   }));
 
   await db.table("businessTypes").bulkPut(data);
 
-  console.log('Sync sucess', data)
+  console.log('Sync businessTypes sucess', data)
 
   return true;
 }

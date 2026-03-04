@@ -23,7 +23,6 @@ const Diagnostics = () => {
         const result = await kfiAxios.get('/auth/permissions');
           const { permissions} = result.data;
           setPermissions(permissions)
-          console.log(permissions)
         
         } catch (error) {
          return error

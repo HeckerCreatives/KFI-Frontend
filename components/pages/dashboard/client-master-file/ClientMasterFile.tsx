@@ -225,7 +225,6 @@ const ClientMasterFile = () => {
     getStatisticsData()
   });
 
-  console.log('Offline List', data)
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">

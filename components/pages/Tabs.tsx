@@ -196,8 +196,9 @@ const Tabs = () => {
   const location = useLocation();
   const router = useRouter()
 
-  const online = useOnlineStore((state) => state.online);
   const permissions: Permission[] = JSON.parse(localStorage.getItem('permissions') || '[]')
+  const online = useOnlineStore((state) => state.online);
+  const setOnline = useOnlineStore((state) => state.setOnline);
 
 
   const logout = () => {
@@ -418,6 +419,11 @@ const Tabs = () => {
                     className="flex items-center gap-2 text-[0.8rem] text-slate-700 font-semibold hover:bg-slate-100 py-1 px-3 cursor-pointer active:bg-slate-200"
                   >
                     <IonIcon icon={logOut} /> Logout
+                  </div>
+
+                  <div className=' flex items-center w-full'>
+                    <button onClick={() => setOnline(false)} className={`py-2 text-sm w-full rounded-md ${!online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Offline</button>
+                     <button onClick={() => setOnline(true)} className={`py-2 text-sm w-full rounded-md ${online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Online</button>
                   </div>
                 </IonContent>
               </IonPopover>

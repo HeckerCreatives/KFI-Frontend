@@ -6,16 +6,18 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
 
 export const clientMasterFileSchema = z.object({
-clientImage: z.union([
-  z
-    .instanceof(File)
-    .refine((file) => file.size <= MAX_FILE_SIZE, "Max file size is 5MB.")
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-      "Only .jpg, .jpeg, .png and .webp files are accepted."
-    ),
-  z.string().url("Must be a valid image URL."),
-]),
+clientImage: z
+  .union([
+    z
+      .instanceof(File)
+      .refine((file) => file.size <= MAX_FILE_SIZE, "Max file size is 5MB.")
+      .refine(
+        (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+        "Only .jpg, .jpeg, .png and .webp files are accepted."
+      ),
+    z.string().url("Must be a valid image URL."),
+  ])
+  .optional(),
 
   name: z.string().min(1, 'Name is required'),
   address: z.string().min(1, 'Address is required'),

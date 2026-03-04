@@ -157,6 +157,15 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
       await db.clientMasterFile.update(client.id, {
           ...existing.data,
           ...data,
+          sync: 'updated',
+          business: {
+            type: data.businessLabel,
+            _id: data.business
+           },
+           center:{
+            centerNo: data.centerLabel,
+            _id: data.center
+           },
       });
 
 

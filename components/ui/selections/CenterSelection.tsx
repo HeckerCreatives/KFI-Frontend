@@ -67,7 +67,6 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
     const value = ionInputRef.current?.value;
     if(online){
     setLoading(true);
-
        try {
         const filter: any = { keyword: value, page, limit: 10 };
         const result = await kfiAxios.get('/center/selection', { params: filter });
@@ -118,6 +117,8 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
 
             const hasPrevPage = page > 1;
             const hasNextPage = page < totalPages;
+
+            console.log(centers)
       
             setData(prev => ({
                ...prev,
@@ -137,6 +138,7 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
     }
    
   };
+
 
   const handleSelectCenter = async (center: Option) => {
      const result = await kfiAxios.get(`/center/officer/${center._id}`);
