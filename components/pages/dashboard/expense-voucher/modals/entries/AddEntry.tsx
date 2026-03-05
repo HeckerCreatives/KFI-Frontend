@@ -78,9 +78,7 @@ const AddEntry = ({ expenseVoucherId, getEntries, entries, setEntries, transacti
         const nextLine = entries.length + 1
   
         setEntries((prev: ExpenseVoucherEntry[]) => {
-          const nextLine = prev.length > 0 
-              ? Math.max(...prev.map(e => e.line)) + 1 
-              : 1;
+         
         const newEntry: ExpenseVoucherEntry = {
           _id: generateObjectId(),
           expenseVoucher: transaction._id,
@@ -138,7 +136,9 @@ const AddEntry = ({ expenseVoucherId, getEntries, entries, setEntries, transacti
               centerNo: ''
             }
           },
-          line: nextLine
+          line: nextLine,
+          action: "create",
+
         };
   
         return {

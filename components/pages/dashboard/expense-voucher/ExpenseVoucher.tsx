@@ -96,8 +96,11 @@ const ExpenseVoucher = () => {
          let data = await db.expenseVouchers.toArray();
 
          console.log(data)
-         const filteredData = data.filter(e => !e.deletedAt);
-        let allData = filterAndSortLoanRelease(formatEVList(filteredData), keyword, sort, from, to);
+         const filteredData = data.filter(e => e.action !== 'delete');
+        let allData = filterAndSortLoanRelease(filteredData, keyword, sort, from, to);
+        console.log(allData)
+
+
          const totalItems = allData.length;
          const totalPages = Math.ceil(totalItems / limit);
          const start = (page - 1) * limit;
@@ -129,36 +132,6 @@ const ExpenseVoucher = () => {
     }
   };
 
-   const uploadChanges = async () => {
-          setUploading(true)
-          try {
-            const list = await db.expenseVouchers.toArray();
-            const offlineChanges = list.filter(e => e._synced === false);
-            console.log(offlineChanges)
-          
-    
-            const result = await kfiAxios.put("sync/upload/expense-vouchers", { expenseVouchers: offlineChanges });
-            const { success } = result.data;
-            if (success) {
-              setUploading(false)
-               present({
-                  message: 'Offline changes saved!',
-                  duration: 1000,
-                });
-              getExpenseVouchers(currentPage);
-              setUploading(false)
-    
-            }
-          } catch (error: any) {
-              setUploading(false)
-              console.log(error)
-    
-              present({
-                message: `${error.response.data.error.message}`,
-                duration: 1000,
-              });
-          }
-      };
 
   const handlePagination = (page: number) => getExpenseVouchers(page, searchKey, sortKey);
 
@@ -182,11 +155,7 @@ const ExpenseVoucher = () => {
                   <div>{canDoAction(token.role, permissions, 'expense voucher', 'create') && <CreateExpenseVoucher getExpenseVouchers={getExpenseVouchers} />}</div>
                   <div>{canDoAction(token.role, permissions, 'expense voucher', 'print') && <PrintAllExpenseVoucher />}</div>
                   <div>{canDoAction(token.role, permissions, 'expense voucher', 'export') && <ExportAllExpenseVoucher />}</div>
-                  {online && (
-                    <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                    </IonButton>
-                  )}
+                  
                 </div>
 
                   <div className="w-full flex-1 flex">

@@ -133,8 +133,28 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
         const entries = formatLREntries(data.entries)
         await db.loanReleases.add({
           ...data,
-          entries: entries,
-          encodedBy: user ?? '',
+           entries: entries.map((item, index) => ({
+            ...item,
+            line: index + 1,
+            action: 'create',
+            _synced: false,
+          })), 
+           bank:{
+            code: data.bankCodeLabel,
+            description: data.bankCodeLabel,
+            _id: data.bankCode
+          },
+          center: {
+            _id: data.center,
+            description: data.centerLabel
+          },
+          loan: {
+            code: data.typeOfLoanLabel,
+            _id: data.typeOfLoan
+          },
+          encodedBy:{
+            username: user
+          },
           _synced: false,  
           action: "create",
         });
@@ -209,14 +229,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
                         useGrouping: false,
                       })}`}</div>
                   </div>
-                  {/* <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
-                    <div>Total Debit: </div>
-                    <div>{`${formatNumber(form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0))}`}</div>
-                  </div>
-                  <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
-                    <div>Total Credit: </div>
-                    <div>{`${formatNumber(form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0))}`}</div>
-                  </div> */}
+                  
                 </div>
               </div>
 

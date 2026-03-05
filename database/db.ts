@@ -2,7 +2,6 @@ import Dexie, { Table } from "dexie";
 
 
 export class KfiDatabase extends Dexie {
-  loanReleases!: Table<any>;
   banks!: Table<any>;
   businessTypes!: Table<any>;
   chartOfAccounts!: Table<any>;
@@ -17,7 +16,6 @@ export class KfiDatabase extends Dexie {
   weeklySavings!: Table<any>;
   groupOfAccounts!: Table<any>;
   dueDates!: Table<any>;
-  journalVouchers!: Table<any>;
   journalVoucherEntries!: Table<any>;
   expenseVouchers!: Table<any>;
   expenseVoucherEntries!: Table<any>;
@@ -35,13 +33,20 @@ export class KfiDatabase extends Dexie {
   newclientMasterFile!: Table<any>;
   centers!: Table<any>;
   financialStatements!: Table<any>
+  beginningBalance!: Table<any>
+  journalVouchers!: Table<any>;
+
+
+  //transactions
+  loanReleases!: Table<any>;
+
 
 
   constructor() {
     super("kfi");
 
     this.version(1).stores({
-        //transactions
+      
       clientMasterFile: "++id, _id, acctNumber, centerNo, name",
       centers: "++id, centerNo, description",
       chartOfAccounts: "++id, _id, code, description",
@@ -49,10 +54,18 @@ export class KfiDatabase extends Dexie {
       banks: "++id,_id",
       weeklySavings: "++id, _id",
       financialStatements: "++id, _id",
+      beginningBalance: "++id, _id",
+
+      //trnsactions
+      loanReleases: "++id",
+      expenseVouchers: "++id, _id",
+      journalVouchers: "++id, _id",
+
+
+
 
       
       newClientMasterFile: "++id",
-      loanReleases: "++id",
       businessTypes: "++id, action",
       clients: "++id, name, center",
       loanCodes: "++id, loan",
@@ -63,9 +76,7 @@ export class KfiDatabase extends Dexie {
       systemParameters: "++id",
       groupOfAccounts: "++id, code",
       dueDates: "++id, loanRelease",
-      journalVouchers: "++id, code, center",
       journalVoucherEntries: "++id, journalVoucher",
-      expenseVouchers: "++id, code, center",
       expenseVoucherEntries: "++id, expenseVoucher",
       officialReceipts: "++id, code, center",
       officialReceiptEntries: "++id, acknowledgement",

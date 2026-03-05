@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncBanks, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncWeeklySavings } from "../../../../database/sync"
+import { syncAR, syncBanks, syncBeginningBalance, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncWeeklySavings } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -26,15 +26,17 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "natures", label: "Syncing natures", status: "pending" },
    { id: "sparameters", label: "Syncing system parameters", status: "pending" },
    { id: "fs", label: "Syncing financial statements", status: "pending" },
+   { id: "begbalance", label: "Syncing beginning balance", status: "pending" },
 
+   //transactions
+   { id: "loanrelease", label: "Syncing loan release", status: "pending" },
+   { id: "expenseVouchers", label: "Syncing Expense Vouchers", status: "pending" },
+   { id: "journalVouchers", label: "Syncing Journal Vouchers", status: "pending" },
 
-  // { id: "loanReleases", label: "Syncing Loan Releases", status: "pending" },
-  // { id: "expenseVouchers", label: "Syncing Expense Vouchers", status: "pending" },
   // { id: "officialReceipts", label: "Syncing Official Receipts", status: "pending" },
   // { id: "ackReceipts", label: "Syncing Acknowledgement Receipts", status: "pending" },
   // { id: "emergencyLoans", label: "Syncing Emergency Loans", status: "pending" },
   // { id: "damayanFunds", label: "Syncing Damayan Funds", status: "pending" },
-  // { id: "journalVouchers", label: "Syncing Journal Vouchers", status: "pending" },
 ]
 
 interface BackupModalContentProps {
@@ -135,6 +137,32 @@ export function BackupEntriesModalContent({
       console.log('fs', fs)
       await syncFinancialStatements(fs.data?.data.items || [])
       updateStepStatus("fs", "complete")
+
+      updateStepStatus("begbalance", "loading")
+      const begbalance = await kfiAxios.get(`/sync/beginning-balances?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      console.log('begbalance', fs)
+      await syncBeginningBalance(begbalance.data?.data.items || [])
+      updateStepStatus("begbalance", "complete")
+
+
+      //transactions
+      updateStepStatus("loanrelease", "loading")
+      const loanrelease = await kfiAxios.get(`/sync/loan-releases?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      console.log('loanrelease', loanrelease)
+      await syncLoanRelease(loanrelease.data?.transactions || [])
+      updateStepStatus("loanrelease", "complete")
+
+      updateStepStatus("expenseVouchers", "loading")
+      const expenseVouchers = await kfiAxios.get(`/sync/expense-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      console.log('expenseVouchers', expenseVouchers)
+      await syncExpenseVoucher(expenseVouchers.data?.expenseVouchers || [])
+      updateStepStatus("expenseVouchers", "complete")
+
+      updateStepStatus("journalVouchers", "loading")
+      const journalVouchers = await kfiAxios.get(`/sync/journal-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      console.log('journalVouchers', journalVouchers)
+      await syncExpenseVoucher(journalVouchers.data?.journalVouchers || [])
+      updateStepStatus("journalVouchers", "complete")
 
 
 

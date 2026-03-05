@@ -99,10 +99,23 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
       const entries = formatEVEntries(data.entries || [])
       await db.expenseVouchers.add({
         ...data,
-        entries: entries,
-        encodedBy: '',
+         entries: entries.map((item, index) => ({
+            ...item,
+            line: index + 1,
+            action: 'create',
+            _synced: false,
+          })), 
+         bank:{
+            code: data.bankLabel,
+            description: data.bankLabel,
+            _id: data.bank
+          },
+          encodedBy:{
+            username: user
+          },
         _synced: false,  
         action: "create",
+        isOldData: false
       });
       getExpenseVouchers(1);
       dismiss();

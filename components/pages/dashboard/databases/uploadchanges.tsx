@@ -22,7 +22,7 @@ export default function UploadChanges() {
     suppliers: 0,
     natures: 0,
     systemParameters: 0,
-    productLoans: 0
+    productLoans: 0,
   });
     const [present] = useIonToast();
   
@@ -45,12 +45,15 @@ export default function UploadChanges() {
     {
       key: "loanReleases",
       label: "Loan Releases",
-      endpoint: "/sync/upload/loan-release",
+      endpoint: "/sync/loan-releases",
+       field:'loanReleases'
     },
     {
       key: "expenseVouchers",
       label: "Expense Voucher",
-      endpoint: "/sync/upload/expense-voucher",
+      endpoint: "/sync/expense-vouchers",
+    field:'expenseVouchers'
+
     },
     {
       key: "journalVouchers",
@@ -180,6 +183,16 @@ export default function UploadChanges() {
         rangeAmountFrom,
         rangeAmountTo,
         weeklySavingsFund,
+        entries,
+        acctMonth,
+        acctYear,
+        bank,
+        amount,
+        noOfWeeks,
+        code,
+        cvNo,
+        loan,
+        client,
         ...rest
       } = item;
 
@@ -188,6 +201,21 @@ export default function UploadChanges() {
         rangeAmountFrom: Number(removeAmountComma(rangeAmountFrom)),
         rangeAmountTo: Number(removeAmountComma(rangeAmountTo)),
         weeklySavingsFund: Number(removeAmountComma(weeklySavingsFund)),
+        acctMonth: Number(acctMonth),
+        acctYear: Number(acctYear),
+        bank: bank._id,
+        amount: Number(removeAmountComma(amount)),
+        noOfWeeks: Number(removeAmountComma(noOfWeeks)),
+        code: code ?? cvNo,
+        loan: loan?._id,
+        entries: entries.map((item: any, index: number) => ({
+            ...item,
+            debit: Number(removeAmountComma(item.debit)),
+            credit: Number(removeAmountComma(item.credit)),
+            acctCode: item.acctCode._id,
+             client: item.client?._id,
+
+        })) ,
         center:
           typeof center === "object" && center?._id
             ? center._id

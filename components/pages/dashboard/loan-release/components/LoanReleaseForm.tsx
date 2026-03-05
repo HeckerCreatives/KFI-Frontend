@@ -96,35 +96,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               
             />
           </FormIonItem>
-          {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            <FormIonItem className="w-full [--min-height:0]">
-              <InputText
-                disabled={loading}
-                name="acctMonth"
-                control={form.control}
-                clearErrors={form.clearErrors}
-                label="Account Month"
-                placeholder="Type here"
-                className="!p-2 rounded-md !text-[0.7rem]"
-                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem]  !text-slate-600 text-end"
-                readOnly
-              />
-            </FormIonItem>
-
-            <FormIonItem className="w-full [--min-height:0]">
-              <InputText
-                disabled={loading}
-                name="acctYear"
-                control={form.control}
-                clearErrors={form.clearErrors}
-                label="Account Year"
-                placeholder="Type here"
-                className="!p-2 rounded-md !text-[0.7rem]"
-                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem]  !text-slate-600 text-end"
-                readOnly
-              />
-            </FormIonItem>
-          </div> */}
+         
            <FormIonItem className="w-full [--min-height:0]">
               <InputText
                 disabled={loading}

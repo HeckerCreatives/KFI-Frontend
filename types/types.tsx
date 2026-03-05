@@ -412,6 +412,7 @@ export type Transaction = {
   checkDate: string;
   checkNo: string;
   code: string;
+  cvNo?: string;
   cycle: number;
   date: string;
   entries: any[];

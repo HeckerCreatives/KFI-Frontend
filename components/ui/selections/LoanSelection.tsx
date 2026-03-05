@@ -87,7 +87,7 @@ const LoanSelection = <T extends FieldValues>({ loanLabel, loanValue, setValue, 
     } else {
        try {
         const limit = TABLE_LIMIT;
-        let allData = await db.loanProducts.toArray();
+        let allData = await db.productLoans.toArray();
         let allOptions: Option[] = allData.map(item => ({
           _id: item._id,
           code: item.code || '',       

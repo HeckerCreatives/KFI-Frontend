@@ -64,37 +64,6 @@ const UpdateEntry = ({ entry, setData, entries, setEntries, transaction }: Updat
     setIsOpen(false);
   }
 
-  // const onSubmit = async (data: EntryFormData) => {
-  //   setLoading(true);
-  //   setLoading(true);
-  //   try {
-  //     data.credit = removeAmountComma(data.credit as string);
-  //     data.debit = removeAmountComma(data.debit as string);
-  //     const result = await kfiAxios.put(`/expense-voucher/entries/${entry.expenseVoucher}/${entry._id}`, data);
-  //     const { success, entry: updatedEntry } = result.data;
-  //     if (success) {
-  //       setData((prev: TData) => {
-  //         const index = prev.entries.findIndex((entry: ExpenseVoucherEntry) => entry._id === updatedEntry._id);
-  //         if (index < 0) return prev;
-  //         prev.entries[index] = { ...updatedEntry };
-  //         return { ...prev };
-  //       });
-  //       present({ message: 'Entry successfully updated', duration: 1000 });
-  //       dismiss();
-  //       return;
-  //     }
-  //     present({ message: 'Failed to update the entry', duration: 1000 });
-  //   } catch (error: any) {
-  //     const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-  //     const errors: TFormError[] | string = checkError(errs);
-  //     const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-  //     formErrorHandler(errors, form.setError, fields);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-
   const onSubmit = async (data: ExpenseVoucherEntryFormData) => {
     setLoading(true);
     try {

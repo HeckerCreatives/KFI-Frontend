@@ -148,10 +148,20 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
         const updated = {
           ...existing,
           ...partialUpdate, 
-          entries: entries, 
+          entries: entries.map((item, index) => ({
+            ...item,
+            line: index + 1,
+            action: existing.isOldData ? 'update' : 'create',
+            _synced: false,
+          })), 
+          bank:{
+            code: transaction.bank.code,
+            description: transaction.bank.description,
+            _id: transaction.bank._id
+          },
           deletedIds: finalDeletedIds,
+          action: existing.isOldData ? 'update' : 'create',
           _synced: false,
-          action: "update",
         };
         await db.loanReleases.update(transaction.id, updated);
         setData(prev => {
@@ -330,7 +340,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
 
           {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
-          <Signatures open={isOpen} type={'loan release'} preparedBy={transaction.encodedBy.username} recieveByorDate={transaction.createdAt.split('T')[0]}/>
+          <Signatures open={isOpen} type={'loan release'} preparedBy={transaction.encodedBy.username} recieveByorDate={transaction.createdAt?.split('T')[0] || ''}/>
           
 
         </div>

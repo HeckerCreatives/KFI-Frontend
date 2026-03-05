@@ -159,7 +159,7 @@ const UpdateExpenseVoucherEntries = ({ isOpen, expenseVoucher, entries, setEntri
             {
               currentPageItems.map((entry: ExpenseVoucherEntry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]">
-                  <TableCell className=' text-center'>{entry?.line}</TableCell>
+                  <TableCell className=' text-center'>{((page - 1) * limit) + index + 1}</TableCell>
                   <TableCell>{entry?.client?.name || ''}</TableCell>
                   <TableCell>{entry?.particular || ''}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>

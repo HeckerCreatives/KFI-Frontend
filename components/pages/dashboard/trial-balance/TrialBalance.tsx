@@ -43,13 +43,12 @@ const TrialBalance = () => {
    const getList = async (page: number) => {
           try {
             const result = await kfiAxios.get('/trial-balance');
-
-            const { trialBalances, success,hasPrevPage, hasNextPage, totalPages } = result.data
+            const { data, success,hasPrevPage, hasNextPage, totalPages } = result.data
 
             if(success){
                setData(prev => ({
               ...prev,
-              trialBalances: trialBalances,
+              trialBalances: data.items,
               totalPages: totalPages,
               nextPage: hasNextPage,
               prevPage: hasPrevPage,

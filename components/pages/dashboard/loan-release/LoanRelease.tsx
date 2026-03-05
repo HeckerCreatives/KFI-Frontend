@@ -94,8 +94,10 @@ const LoanRelease = () => {
        try {
          const limit = TABLE_LIMIT;
          let data = await db.loanReleases.toArray();
-         const filteredData = data.filter(e => !e.deletedAt);
-         let allData = filterAndSortLoanRelease(formatLoanReleaseList(filteredData), keyword, sort, from, to);
+
+         console.log(data)
+         const filteredData = data.filter(e => e.action !== 'delete');
+         let allData = filterAndSortLoanRelease(filteredData, keyword, sort, from, to);
          const totalItems = allData.length;
          const totalPages = Math.ceil(totalItems / limit);
          const start = (page - 1) * limit;
@@ -127,35 +129,6 @@ const LoanRelease = () => {
     }
   };
 
-   const uploadChanges = async () => {
-      setUploading(true)
-      try {
-        const list = await db.loanReleases.toArray();
-        const offlineChanges = list.filter(e => e._synced === false);
-         const formatted = offlineChanges.map(formatLoanReleaseForUpload);
-
-        const result = await kfiAxios.put("sync/upload/loan-releases", { loanReleases: formatted });
-        const { success } = result.data;
-        if (success) {
-          setUploading(false)
-           present({
-              message: 'Offline changes saved!',
-              duration: 1000,
-            });
-          getTransactions(currentPage);
-          setUploading(false)
-
-        }
-      } catch (error: any) {
-          setUploading(false)
-          console.log(error)
-
-          present({
-            message: `${error.response.data.error.message}`,
-            duration: 1000,
-          });
-      }
-  };
 
   const handlePagination = (page: number) => getTransactions(page, searchKey, sortKey);
 
@@ -179,11 +152,7 @@ const LoanRelease = () => {
                     <div>{canDoAction(token.role, permissions, 'loan release', 'print') && <PrintAllLoanRelease />}</div>
                     <div>{canDoAction(token.role, permissions, 'loan release', 'export') && <ExportAllLoanRelease />}</div>
                     <div><Reports /></div>
-                    {online && (
-                      <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                        <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                      </IonButton>
-                    )}
+                    
                   </div>
 
                    <div className="w-full flex-1 flex">
@@ -210,7 +179,7 @@ const LoanRelease = () => {
                       data.transactions.length > 0 &&
                       data.transactions.map((transaction: Transaction, i: number) => (
                         <TableRow key={transaction._id}>
-                          <TableCell className="min-w-44 max-w-44 sticky left-0 bg-white">{transaction.code}</TableCell>
+                          <TableCell className="min-w-44 max-w-44 sticky left-0 bg-white">{transaction.code ?? transaction.cvNo}</TableCell>
                           <TableCell>{formatDateTable(transaction.date)}</TableCell>
                           <TableCell className="max-w-52 truncate">{transaction.bank?.description}</TableCell>
                           <TableCell>{transaction.checkNo}</TableCell>

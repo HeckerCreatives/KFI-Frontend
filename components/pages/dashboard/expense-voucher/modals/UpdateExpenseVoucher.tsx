@@ -157,29 +157,25 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
         }
         const updated = {
           ...data,
-          entries: entries, 
+          entries: entries.map((item, index) => ({
+            ...item,
+            line: index + 1,
+            action: existing.isOldData ? 'update' : 'create',
+            _synced: false,
+          })), 
+          bank:{
+            code: data.bankLabel,
+            description: data.bankLabel,
+            _id: data.bank
+          },
           deletedIds: finalDeletedIds,
+          action: existing.isOldData ? 'update' : 'create',
           _synced: false,
-          action: "update",
         };
 
-        console.log('Form Data',updated)
         await db.expenseVouchers.update(expenseVoucher.id, updated);
         getExpenseVouchers(currentPage)
-        // setData(prev => {
-        //   const clone = [...prev.expenseVouchers];
-        //   const index = clone.findIndex(c => c.id === expenseVoucher.id);
-        //   if (index !== -1) {
-        //     clone[index] = {
-        //       ...clone[index],  
-        //       ...data,
-        //       entries: entries,
-              
-        //     };
-        //   }
-        //   return { ...prev, expenseVouchers: clone };
-        // });
-
+  
         dismiss();
         present({
           message: "Data successfully updated!",
@@ -264,7 +260,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
                 </div>
               </div>
             </div>
-          <Signatures open={isOpen} type={'expense voucher'} preparedBy={expenseVoucher.encodedBy.username} recieveByorDate={expenseVoucher.createdAt.split('T')[0]}/>
+          <Signatures open={isOpen} type={'expense voucher'} preparedBy={expenseVoucher.encodedBy.username} recieveByorDate={expenseVoucher.createdAt?.split('T')[0] || ''}/>
           
         </div>
       </IonModal>

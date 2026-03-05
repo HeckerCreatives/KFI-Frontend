@@ -236,7 +236,7 @@ export default function TBReport() {
                            '!border border-zinc-300 [--highlight-color-focused:none] !px-2 !py-1 text-xs !overflow-y-auto !min-w-[12rem] !max-h-[5rem] !min-h-[0.5rem] ',
                          )}
                          >
-                           {data.trialBalances.map((item, index) => (
+                           {data.trialBalances?.map((item, index) => (
                              <IonSelectOption key={index}  value={item._id} className="text-xs [--min-height:0.5rem]">
                               {item.reportCode} -{item.reportName}
                              </IonSelectOption>
