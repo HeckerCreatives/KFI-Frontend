@@ -41,12 +41,12 @@ const FinancialStatement = () => {
           try {
             const result = await kfiAxios.get('/financial-statement');
 
-            const { financialStatements, success,hasPrevPage, hasNextPage, totalPages } = result.data
+            const { data, success,hasPrevPage, hasNextPage, totalPages } = result.data
 
             if(success){
                setData(prev => ({
               ...prev,
-              financialStatements: financialStatements,
+              financialStatements: data.items,
               totalPages: totalPages,
               nextPage: hasNextPage,
               prevPage: hasPrevPage,

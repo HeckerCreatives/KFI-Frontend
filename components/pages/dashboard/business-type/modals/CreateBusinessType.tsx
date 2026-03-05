@@ -63,7 +63,8 @@ const CreateBusinessType = ({ getBusinessTypes }: CreateBusinessTypeProps) => {
      await db.businessTypes.add({
             ...data, 
             _synced: false,
-            action: "create"
+            action: "create",
+            isOldData: false
           });
           getBusinessTypes(1);
           dismiss()

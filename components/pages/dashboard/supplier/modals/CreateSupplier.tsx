@@ -66,6 +66,7 @@ const CreateSupplier = ({ getSuppliers }: CreateSupplierProps) => {
           ...data,
           _synced: false,  
           action: "create",
+          isOldData: false,
         });
         getSuppliers(1);
         dismiss();

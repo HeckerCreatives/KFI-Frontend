@@ -117,7 +117,7 @@ const Loans = () => {
   const uploadChanges = async () => {
       setUploading(true)
       try {
-        const list = await db.loanProducts.toArray();
+        const list = await db.productLoans.toArray();
         const offlineChanges: any = [];
           list.map(e => {
             if (e._synced === false) {

@@ -46,11 +46,12 @@ export class KfiDatabase extends Dexie {
       chartOfAccounts: "++id, _id, code, description",
       productLoans: "++id, _id",
       banks: "++id,_id",
+      weeklySavings: "++id, _id",
+
       
       newClientMasterFile: "++id",
       loanReleases: "++id",
       businessTypes: "++id, action",
-      
       clients: "++id, name, center",
       loanCodes: "++id, loan",
       loanProducts: "++id, code",
@@ -58,7 +59,6 @@ export class KfiDatabase extends Dexie {
       paymentSchedules: "++id",
       suppliers: "++id, code, description",
       systemParameters: "++id",
-      weeklySavings: "++id",
       groupOfAccounts: "++id, code",
       dueDates: "++id, loanRelease",
       journalVouchers: "++id, code, center",

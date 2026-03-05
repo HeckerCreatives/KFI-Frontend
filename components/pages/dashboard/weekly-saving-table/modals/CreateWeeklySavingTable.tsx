@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
@@ -9,6 +9,8 @@ import kfiAxios from '../../../../utils/axios';
 import { TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
+import { useOnlineStore } from '../../../../../store/onlineStore';
+import { db } from '../../../../../database/db';
 
 type CreateWeeklySavingTableProps = {
   getWeeklySavings: (page: number) => void;
@@ -17,6 +19,10 @@ type CreateWeeklySavingTableProps = {
 const CreateWeeklySavingTable = ({ getWeeklySavings }: CreateWeeklySavingTableProps) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  const [present] = useIonToast();
+  
+  
 
   const form = useForm<WeeklySavingTableFormData>({
     resolver: zodResolver(weeklySavingTableSchema),
@@ -34,7 +40,8 @@ const CreateWeeklySavingTable = ({ getWeeklySavings }: CreateWeeklySavingTablePr
 
   async function onSubmit(data: WeeklySavingTableFormData) {
     setLoading(true);
-    try {
+    if(online){
+      try {
       const result = await kfiAxios.post('/weekly-saving', data);
       const { success } = result.data;
       if (success) {
@@ -49,6 +56,23 @@ const CreateWeeklySavingTable = ({ getWeeklySavings }: CreateWeeklySavingTablePr
       formErrorHandler(errors, form.setError, fields);
     } finally {
       setLoading(false);
+    }
+    } else {
+       await db.weeklySavings.add(
+              {
+              ...data, 
+              _synced: false,
+              action: "create",
+              isOldData: false
+            }
+            );
+            getWeeklySavings(1);
+            dismiss()
+            present({
+                  message: 'Data successfully created!.',
+                  duration: 1000,
+                });
+            return;
     }
   }
 

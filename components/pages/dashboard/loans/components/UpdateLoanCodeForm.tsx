@@ -21,9 +21,10 @@ type UpdateLoanCodeFormProps = {
   loanCode: LoanCode;
   setData: React.Dispatch<React.SetStateAction<TLoan>>;
   productId: string;
+  itemId: string
 };
 
-const UpdateLoanCodeForm = ({ loanCode, setData, productId }: UpdateLoanCodeFormProps) => {
+const UpdateLoanCodeForm = ({ loanCode, setData, productId, itemId }: UpdateLoanCodeFormProps) => {
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
   const online = useOnlineStore((state) => state.online);
@@ -110,48 +111,54 @@ const UpdateLoanCodeForm = ({ loanCode, setData, productId }: UpdateLoanCodeForm
         setLoading(false);
       }
     } else {
-       try {
-        const product = await db.loanProducts.get(productId);
+      try {
 
-        if (!product) {
-          present({
-            message: "Product not found.",
-            duration: 1000,
-          });
-          return;
-        }
+        console.log(productId, itemId)
+      const product = await db.productLoans.get(productId);
 
-        const updatedLoanCodes = product.loanCodes.filter(
-          (item: any) => item.acctCode !== loanCode.acctCode
-        );
-
-        await db.loanProducts.update(product.id, {
-          ...product,
-          loanCodes: updatedLoanCodes,
-          _synced: false,
-          action: "update",
-        });
-
-        setData(prev => {
-          const clone = [...prev.loans];
-          const idx = clone.findIndex(l => l.id === product.id);
-          if (idx !== -1) clone[idx] = { ...product, loanCodes: updatedLoanCodes };
-          return { ...prev, loans: clone };
-        });
-
+      if (!product) {
         present({
-          message: "Data successfully deleted!",
+          message: "Product not found.",
           duration: 1000,
         });
-      } catch (error) {
-        console.log(error)
-        present({
-          message: "Failed to delete record. Please try again.",
-          duration: 1200,
-        });
+        return;
       }
-    }
-  };
+
+      const updatedLoanCodes = product.loanCodes.filter(
+        (item: any) => item._id !== itemId
+      );
+
+      const updatedProduct = {
+        ...product,
+        loanCodes: updatedLoanCodes,
+        _synced: false,
+        action: 'update'
+      };
+
+      await db.productLoans.update(product.id, updatedProduct);
+
+      setData((prev) => ({
+        ...prev,
+        loans: prev.loans.map((loan) =>
+          loan.id === product.id ? updatedProduct : loan
+        ),
+      }));
+
+      present({
+        message: "Loan code successfully deleted!",
+        duration: 1000,
+      });
+
+            } catch (error) {
+              console.log(error);
+
+              present({
+                message: "Failed to delete record. Please try again.",
+                duration: 1200,
+              });
+            }
+        }
+      };
 
   return (
     <TableRow className="border-b-0">

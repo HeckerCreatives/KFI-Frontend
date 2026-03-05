@@ -60,18 +60,7 @@ export async function syncSystemParams(apiData: any) {
   return true;
 }
 
-export async function syncSuppliers(apiData: any) {
-    console.log('Data suppliers', apiData)
-  if (!apiData) return;
 
-  await db.suppliers.clear();
-
-  await db.table("suppliers").bulkAdd(apiData);
-
-  console.log('Sync sucess suppliers', apiData)
-
-  return true;
-}
 
 export async function syncPaymentSchedules(apiData: any) {
   console.log('Data', apiData)
@@ -91,23 +80,6 @@ export async function syncPaymentSchedules(apiData: any) {
   return true;
 }
 
-export async function syncNatures(apiData: any) {
-  console.log('Data', apiData)
-  if (!apiData) return;
-
-    await db.natures.clear();
-
-  const data: any[] = apiData.map((c: any) => ({
-    ...c,
-    _id: c._id,
-  }));
-
-  await db.table("natures").bulkPut(data);
-
-  console.log('Sync sucess', data)
-
-  return true;
-}
 
 export async function syncLoanCodes(apiData: any) {
   console.log('Data', apiData)
@@ -193,12 +165,34 @@ export async function syncBusinessTypes(apiData: any) {
 
   const data: any[] = apiData.map((c: any) => ({
     ...c,
-    _synced: true
+     id: c._id,
+    _synced: true,
+    isOldData: true,
   }));
 
   await db.table("businessTypes").bulkPut(data);
 
   console.log('Sync businessTypes sucess', data)
+
+  return true;
+}
+
+export async function syncBusinessSuppliers(apiData: any) {
+  console.log('Data syncBusinessSuppliers', apiData)
+  if (!apiData) return;
+
+    await db.suppliers.clear();
+
+  const data: any[] = apiData.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+  await db.table("suppliers").bulkPut(data);
+
+  console.log('Sync suppliers sucess', data)
 
   return true;
 }
@@ -223,7 +217,6 @@ export async function syncProductLoans(apiData: any) {
   return true;
 }
 
-
 export async function syncBanks(apiData: any) {
     console.log('Data Banks', apiData)
   if (!apiData) return;
@@ -243,6 +236,82 @@ export async function syncBanks(apiData: any) {
 
   return true;
 }
+
+export async function syncWeeklySavings(apiData: any) {
+    console.log('Data syncWeeklySavings', apiData)
+  if (!apiData) return;
+
+    await db.weeklySavings.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+  await db.table("weeklySavings").bulkPut(data);
+
+  console.log('Sync sucess weeklySavings', data)
+
+  return true;
+}
+
+export async function syncSuppliers(apiData: any) {
+    console.log('Data suppliers', apiData)
+  if (!apiData) return;
+
+  await db.suppliers.clear();
+
+  await db.table("suppliers").bulkAdd(apiData);
+
+  console.log('Sync sucess suppliers', apiData)
+
+  return true;
+}
+
+export async function syncNatures(apiData: any) {
+  console.log('Data natures', apiData)
+  if (!apiData) return;
+
+ await db.natures.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+   await db.table("natures").bulkPut(data);
+
+  console.log('Sync sucess natures', data)
+
+  return true;
+}
+
+export async function syncSystemParameters(apiData: any) {
+  console.log('Data systemParameters', apiData)
+  if (!apiData) return;
+
+ await db.systemParameters.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+   await db.table("systemParameters").bulkPut(data);
+
+  console.log('Sync sucess systemParameters', data)
+
+  return true;
+}
+
+
+
 
 
 
@@ -277,17 +346,7 @@ export async function syncGoa(apiData: any) {
   return true;
 }
 
-export async function syncWeeklySavings(apiData: any) {
-  console.log('Data Weekly Savings', apiData)
-  if (!apiData) return;
-  await db.weeklySavings.clear();
 
-  await db.table("weeklySavings").bulkAdd(apiData);
-
-  console.log('Sync sucess Weekly savings', apiData)
-
-  return true;
-}
 
 
 

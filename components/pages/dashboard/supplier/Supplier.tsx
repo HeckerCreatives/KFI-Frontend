@@ -81,7 +81,7 @@ const Supplier = () => {
       try {
         const limit = TABLE_LIMIT;
         let data = await db.suppliers.toArray();
-        const filteredData = data.filter(e => !e.deletedAt);
+        const filteredData = data.filter(e => e.action !== 'delete');
         let allData = filterAndSortSuppliers(filteredData, keyword, sort);
         const totalItems = allData.length;
         const totalPages = Math.ceil(totalItems / limit);
@@ -113,32 +113,6 @@ const Supplier = () => {
     }
   };
 
-  const uploadChanges = async () => {
-      setUploading(true)
-      try {
-        const list = await db.suppliers.toArray();
-        const offlineChanges = list.filter(e => e._synced === false);
-        const result = await kfiAxios.put("sync/upload/suppliers", { suppliers: offlineChanges });
-        const { success } = result.data;
-        if (success) {
-          setUploading(false)
-           present({
-              message: 'Offline changes saved!',
-              duration: 1000,
-            });
-          getSuppliers(currentPage);
-          setUploading(false)
-
-        }
-      } catch (error: any) {
-          setUploading(false)
-
-          present({
-            message: `${error.response.data.error.message}`,
-            duration: 1000,
-          });
-      }
-  };
 
   const handlePagination = (page: number) => getSuppliers(page, searchKey, sortKey);
 
@@ -156,11 +130,7 @@ const Supplier = () => {
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
                <div className="flex flex-col lg:flex-row items-start justify-start ">
                 <div className=' flex flex-wrap gap-2'>{canDoAction(token.role, permissions, 'business supplier', 'create') && <CreateSupplier getSuppliers={getSuppliers} />}
-                 {online && (
-                   <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                     <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                   </IonButton>
-                 )}
+                 
                 </div>
                 <SupplierFilter getSuppliers={getSuppliers} />
               </div>

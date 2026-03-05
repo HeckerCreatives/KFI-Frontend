@@ -88,8 +88,8 @@ const UpdateWeeklySavingTable = ({ saving, setData }: UpdateWeeklySavingTablePro
         const updated = {
           ...existing,
           ...data, 
-          _synced: false,
-          action: "update",
+          action: existing.isOldData ? 'update' : 'create',
+           _synced: false,
         };
         await db.weeklySavings.update(saving.id, updated);
         setData(prev => {

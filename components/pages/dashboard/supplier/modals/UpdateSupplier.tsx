@@ -52,8 +52,8 @@ const UpdateSupplier = ({ supplier, setData }: { supplier: Supplier; setData: Re
       if (success) {
         setData(prev => {
           let clone = [...prev.suppliers];
-          let index = clone.findIndex(e => e._id === result.data.supplier._id);
-          clone[index] = { ...result.data.supplier };
+          let index = clone.findIndex(e => e._id === result.data.suppliers._id);
+          clone[index] = { ...result.data.suppliers };
           return { ...prev, suppliers: clone };
         });
         dismiss();
@@ -83,8 +83,8 @@ const UpdateSupplier = ({ supplier, setData }: { supplier: Supplier; setData: Re
         const updated = {
           ...existing,
           ...data, 
+          action: existing.isOldData ? 'update' : 'create',
           _synced: false,
-          action: "update",
         };
         await db.suppliers.update(supplier.id, updated);
         setData(prev => {

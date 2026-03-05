@@ -62,6 +62,7 @@ const CreateNature = ({ getNatures }: CreateNatureProps) => {
          ...data,
          _synced: false,  
          action: "create",
+         isOldData: false,
        });
        getNatures(1);
        dismiss();

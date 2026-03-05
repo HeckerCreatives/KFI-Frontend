@@ -78,8 +78,8 @@ const UpdateSystemParameters = ({ signatures, fetchData }: UpdateParamaters) => 
               const updated = {
                 ...existing,
                 ...data, 
+                action: existing.isOldData ? 'update' : 'create',
                 _synced: false,
-                action: "update",
               };
               await db.systemParameters.update(signatures.id, updated);
               dismiss();

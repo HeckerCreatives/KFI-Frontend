@@ -70,8 +70,9 @@ const CreateLoanCodeForm = ({ productId, setData, loanId }: CreateLoanCodeFormPr
     }
     } else {
      try {
-          const existing = await db.productLoans.get(loanId);
+          setLoading(true);
 
+          const existing = await db.productLoans.get(loanId);
 
           if (!existing) {
             console.warn("Data not found");
@@ -80,8 +81,7 @@ const CreateLoanCodeForm = ({ productId, setData, loanId }: CreateLoanCodeFormPr
 
           const updated = {
             ...existing,
-            ...data,
-            loanCodes: {...existing.loanCodes, data}, 
+            loanCodes: [...existing.loanCodes, data], 
             action: existing.isOldData ? "update" : "create",
             _synced: false,
           };
@@ -96,23 +96,22 @@ const CreateLoanCodeForm = ({ productId, setData, loanId }: CreateLoanCodeFormPr
           }));
 
           present({
-            message: "Data successfully updated!",
+            message: "Loan code successfully added!",
             duration: 1000,
           });
-        setLoading(false);
-
 
         } catch (error) {
-        setLoading(false);
-
           console.log(error);
 
           present({
             message: "Failed to save record. Please try again.",
             duration: 1200,
           });
+
+        } finally {
+          setLoading(false);
         }
-         }
+      }
     }
     
 

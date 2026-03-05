@@ -3,8 +3,9 @@ import React, { useCallback, useState } from "react";
 import kfiAxios from "../../../utils/axios";
 import { db } from "../../../../database/db";
 import { business, key } from "ionicons/icons";
+import { removeAmountComma } from "../../../ui/utils/formatNumber";
 
-type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks";
+type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters";
 
 export default function UploadChanges() {
   const [changes, setChanges] = useState<Record<SyncKey, number>>({
@@ -15,7 +16,12 @@ export default function UploadChanges() {
     groupOfAccounts: 0,
     chartOfAccounts: 0,
     centers: 0,
-    banks: 0
+    banks: 0,
+    weeklySavings: 0,
+    businessTypes: 0,
+    suppliers: 0,
+    natures: 0,
+    systemParameters: 0
   });
     const [present] = useIonToast();
   
@@ -74,6 +80,36 @@ export default function UploadChanges() {
       endpoint: "/sync/banks",
       field:'banks'
     },
+     {
+      key: "weeklySavings",
+      label: "Weekly Savings",
+      endpoint: "/sync/weekly-savings",
+      field:'weeklySavings'
+    },
+    {
+      key: "businessTypes",
+      label: "Business Types",
+      endpoint: "/sync/business-types",
+      field:'businessTypes'
+    },
+    {
+      key: "suppliers",
+      label: "Suppliers",
+      endpoint: "/sync/suppliers",
+      field:'suppliers'
+    },
+    {
+      key: "natures",
+      label: "Natures",
+      endpoint: "/sync/natures",
+      field:'natures'
+    },
+    {
+      key: "systemParameters",
+      label: "System Parameters",
+      endpoint: "/sync/signature-params",
+      field:'signatureParams'
+    },
   ];
 
   const loadChanges = useCallback(async () => {
@@ -85,6 +121,11 @@ export default function UploadChanges() {
     const coa = await db.chartOfAccounts.toArray();
     const centers = await db.centers.toArray();
     const banks = await db.banks.toArray();
+    const ws = await db.weeklySavings.toArray();
+    const bt = await db.businessTypes.toArray();
+    const suppliers = await db.suppliers.toArray();
+    const natures = await db.natures.toArray();
+    const params = await db.systemParameters.toArray();
 
     setChanges({
       clientMasterFile: cmf.filter((e) => e._synced === false).length,
@@ -95,6 +136,11 @@ export default function UploadChanges() {
       chartOfAccounts: coa.filter((e) => e._synced === false).length,
       centers: centers.filter((e) => e._synced === false).length,
       banks: banks.filter((e) => e._synced === false).length,
+      weeklySavings: ws.filter((e) => e._synced === false).length,
+      businessTypes: bt.filter((e) => e._synced === false).length,
+      suppliers: suppliers.filter((e) => e._synced === false).length,
+      natures: natures.filter((e) => e._synced === false).length,
+      systemParameters: params.filter((e) => e._synced === false).length,
     });
   }, []);
 
@@ -122,11 +168,17 @@ export default function UploadChanges() {
         deptStatus,
         center,
         business,
+        rangeAmountFrom,
+        rangeAmountTo,
+        weeklySavingsFund,
         ...rest
       } = item;
 
       return {
         ...rest,
+        rangeAmountFrom: Number(removeAmountComma(rangeAmountFrom)),
+        rangeAmountTo: Number(removeAmountComma(rangeAmountTo)),
+        weeklySavingsFund: Number(removeAmountComma(weeklySavingsFund)),
         center:
           typeof center === "object" && center?._id
             ? center._id

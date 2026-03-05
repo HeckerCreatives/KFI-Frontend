@@ -124,32 +124,6 @@ const GroupAccount = () => {
     }
   };
 
-    const uploadGroups = async () => {
-      setUploading(true)
-      try {
-        const groupAccountLists = await db.groupOfAccounts.toArray();
-        const offlineChanges = groupAccountLists.filter(e => e._synced === false);
-        const result = await kfiAxios.put("sync/upload/group-of-accounts", { groupAccounts: offlineChanges });
-        const { success } = result.data;
-        if (success) {
-          setUploading(false)
-           present({
-              message: 'Offline changes saved!',
-              duration: 1000,
-            });
-          getGroupAccounts(1);
-          setUploading(false)
-
-        }
-      } catch (error: any) {
-          setUploading(false)
-
-          present({
-            message: `${error.response.data.error.message}`,
-            duration: 1000,
-          });
-      }
-    };
 
   const handlePagination = (page: number) => getGroupAccounts(page, searchKey, sortKey);
 
@@ -171,11 +145,7 @@ const GroupAccount = () => {
               <div className=" flex lg:flex-row flex-col items-start justify-start">
                 <div className=' flex flex-wrap items-center gap-2'>
                   {canDoAction(token.role, permissions, 'group of account', 'create') && <CreateGroupAccount getGroupAccounts={getGroupAccounts} />}
-                 {!online && (
-                    <IonButton disabled={uploading} onClick={uploadGroups} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                    </IonButton>
-                  )}
+                 
                 </div>
                 <GroupAccountFilter getGroupAccounts={getGroupAccounts} />
               </div>

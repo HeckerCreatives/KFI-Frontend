@@ -78,8 +78,8 @@ const UpdateNature = ({ nature, setData }: UpdateNatureProps) => {
         const updated = {
           ...existing,
           ...data, 
+          action: existing.isOldData ? 'update' : 'create',
           _synced: false,
-          action: "update",
         };
         await db.natures.update(nature.id, updated);
         setData(prev => {

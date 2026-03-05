@@ -85,7 +85,8 @@ const WeeklySavingTable = () => {
       try {
         const limit = TABLE_LIMIT;
         let data = await db.weeklySavings.toArray();
-        const filteredData = data.filter(e => !e.deletedAt);
+        console.log(data)
+        const filteredData = data.filter(e => e.action !== 'delete');
         let allData = filterAndSortSavings(filteredData, keyword, sort);
         const totalItems = allData.length;
         const totalPages = Math.ceil(totalItems / limit);

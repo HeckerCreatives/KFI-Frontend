@@ -38,7 +38,9 @@ const SystemParameters = () => {
         } else {
                 try {
                   let data = await db.systemParameters.toArray();
-                  const allData = data.filter(e => !e.deletedAt);
+
+                  console.log(data)
+                  const allData = data.filter(e => e.action !== 'delete');
                   setSignatures(allData)
                  
                 

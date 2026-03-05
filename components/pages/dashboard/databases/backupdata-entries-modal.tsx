@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncBanks, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncOR, syncProductLoans } from "../../../../database/sync"
+import { syncAR, syncBanks, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncWeeklySavings } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -21,6 +21,10 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "loans", label: "Syncing product loans", status: "pending" },
    { id: "center", label: "Syncing centers", status: "pending" },
    { id: "banks", label: "Syncing banks", status: "pending" },
+   { id: "wsavings", label: "Syncing weekly savings", status: "pending" },
+   { id: "bsupliers", label: "Syncing suppliers", status: "pending" },
+   { id: "natures", label: "Syncing natures", status: "pending" },
+   { id: "sparameters", label: "Syncing system parameters", status: "pending" },
 
 
   // { id: "loanReleases", label: "Syncing Loan Releases", status: "pending" },
@@ -95,11 +99,35 @@ export function BackupEntriesModalContent({
       await syncProductLoans(loans.data?.loans || [])
       updateStepStatus("loans", "complete")
 
-       updateStepStatus("banks", "loading")
+      updateStepStatus("banks", "loading")
       const banks = await kfiAxios.get(`/sync/banks?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
       console.log('banks', banks)
       await syncBanks(banks.data?.banks || [])
       updateStepStatus("banks", "complete")
+
+      updateStepStatus("wsavings", "loading")
+      const wsavings = await kfiAxios.get(`/sync/weekly-savings?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      console.log('wsavings', wsavings)
+      await syncWeeklySavings(wsavings.data?.weelySavings || [])
+      updateStepStatus("wsavings", "complete")
+
+      updateStepStatus("bsupliers", "loading")
+      const bsupliers = await kfiAxios.get(`/sync/suppliers?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      console.log('bsupliers', bsupliers)
+      await syncBusinessSuppliers(bsupliers.data?.suppliers || [])
+      updateStepStatus("bsupliers", "complete")
+
+       updateStepStatus("natures", "loading")
+      const natures = await kfiAxios.get(`/sync/natures?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      console.log('natures', natures)
+      await syncNatures(natures.data?.natures || [])
+      updateStepStatus("natures", "complete")
+
+      updateStepStatus("sparameters", "loading")
+      const sparameters = await kfiAxios.get(`/sync/signature-params?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      console.log('sparameters', sparameters)
+      await syncSystemParameters(sparameters.data?.signatureParams || [])
+      updateStepStatus("sparameters", "complete")
 
 
 

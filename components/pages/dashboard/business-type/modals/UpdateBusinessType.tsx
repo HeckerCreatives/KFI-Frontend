@@ -46,10 +46,14 @@ const UpdateBusinessType = ({ businessType, setData }: { businessType: BusinessT
       const result = await kfiAxios.put(`/business-type/${businessType._id}`, data);
       const { success } = result.data;
       if (success) {
-        setData(prev => {
+         setData(prev => {
           let clone = [...prev.businessTypes];
-          let index = clone.findIndex(e => e._id === result.data.businessType._id);
-          clone[index] = { ...result.data.businessType };
+          let index = clone.findIndex(e => e._id === result.data.data._id);
+          clone[index] = { ...result.data.data };
+          present({
+            message: 'Successfully updated!.',
+            duration: 1000,
+          });
           return { ...prev, businessTypes: clone };
         });
         dismiss();
@@ -69,7 +73,7 @@ const UpdateBusinessType = ({ businessType, setData }: { businessType: BusinessT
     }
    } else {
        try {
-            const existing = await db.businessTypes.get(businessType.id);
+            const existing = await db.businessTypes.get(businessType._id);
     
             if (!existing) {
               console.warn("Business type not found");
@@ -79,15 +83,15 @@ const UpdateBusinessType = ({ businessType, setData }: { businessType: BusinessT
             const updated = {
               ...existing,
               ...data, 
-              _synced: false,
-              action: "update",
+              action: existing.isOldData ? 'update' : 'create',
+               _synced: false,
             };
     
-            await db.businessTypes.update(businessType.id, updated);
+            await db.businessTypes.update(businessType._id, updated);
     
             setData(prev => {
               const clone = [...prev.businessTypes];
-              const index = clone.findIndex(c => c.id === businessType.id);
+              const index = clone.findIndex(c => c._id === businessType._id);
     
               if (index !== -1) {
                 clone[index] = updated;

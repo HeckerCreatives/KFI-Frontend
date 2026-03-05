@@ -130,38 +130,7 @@ const BusinessType = () => {
     getBusinessTypes(currentPage);
   });
 
-  const uploadBusinessTypes = async () => {
-    setUploading(true)
-    try {
-      const businessTypeLists = await db.businessTypes.toArray();
-      const offlineChanges = businessTypeLists.filter(e => e._synced === false);
-      const result = await kfiAxios.put("sync/upload/business-types", { businessTypes: offlineChanges });
-      const { success, error } = result.data;
-      if (success) {
-        
-         present({
-          message: 'Offline changes saved!',
-          duration: 1000,
-        });
-        setUploading(false)
-
-        getBusinessTypes(currentPage);
-      } else {
-         present({
-          message: `${error.message}`,
-          duration: 1000,
-        });
-      }
-    } catch (error: any) {
-      setUploading(false)
-
-      present({
-        message: `${error.response.data.error.message}`,
-        duration: 1000,
-      });
-    }
-  };
-
+ 
 
   return (
     <IonPage className="w-full flex items-center justify-center h-full bg-zinc-100">
@@ -173,11 +142,7 @@ const BusinessType = () => {
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
                <div className="flex flex-col lg:flex-row items-start justify-start ">
                 <div className=' flex flex-wrap gap-2'>{canDoAction(token.role, permissions, 'business type', 'create') && <CreateBusinessType getBusinessTypes={getBusinessTypes} />}
-                {!online && (
-                  <IonButton disabled={uploading} onClick={uploadBusinessTypes} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                    <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                  </IonButton>
-                )}
+                
                 </div>
                 <BusinessTypeFilter getBusinessTypes={getBusinessTypes} />
               </div>
