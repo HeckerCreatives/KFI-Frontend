@@ -14,6 +14,7 @@ import UpdateFSEntries from './modals/entries';
 import GenerateReport from './modals/generate-report';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../utils/permissions';
+import { useOnlineStore } from '../../../../store/onlineStore';
 
 export type TFS = {
   financialStatements: FinancialStatements[];
@@ -25,9 +26,11 @@ export type TFS = {
 
 const FinancialStatement = () => {
   const [list, setList] = useState<any[]>([])
-   const [currentPage, setCurrentPage] = useState<number>(1);
-    const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
-     const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
+  const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+  const online = useOnlineStore((state) => state.online);
+     
   
     const [data, setData] = useState<TFS>({
       financialStatements: [],

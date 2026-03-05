@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncBanks, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncWeeklySavings } from "../../../../database/sync"
+import { syncAR, syncBanks, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncWeeklySavings } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -25,6 +25,7 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "bsupliers", label: "Syncing suppliers", status: "pending" },
    { id: "natures", label: "Syncing natures", status: "pending" },
    { id: "sparameters", label: "Syncing system parameters", status: "pending" },
+   { id: "fs", label: "Syncing financial statements", status: "pending" },
 
 
   // { id: "loanReleases", label: "Syncing Loan Releases", status: "pending" },
@@ -128,6 +129,12 @@ export function BackupEntriesModalContent({
       console.log('sparameters', sparameters)
       await syncSystemParameters(sparameters.data?.signatureParams || [])
       updateStepStatus("sparameters", "complete")
+
+      updateStepStatus("fs", "loading")
+      const fs = await kfiAxios.get(`/sync/financial-statements?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      console.log('fs', fs)
+      await syncFinancialStatements(fs.data?.data.items || [])
+      updateStepStatus("fs", "complete")
 
 
 

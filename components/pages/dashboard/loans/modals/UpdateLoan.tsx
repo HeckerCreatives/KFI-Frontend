@@ -4,42 +4,53 @@ import { createSharp, save } from 'ionicons/icons';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
-import { UpdateProductLoanFormData, updateProductSchema } from '../../../../../validations/loan.schema';
+import { ProductLoanFormData, productSchema, UpdateProductLoanFormData, updateProductSchema } from '../../../../../validations/loan.schema';
 import { Loan, TErrorData, TFormError } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { TLoan } from '../Loans';
-import FormIonItem from '../../../../ui/utils/FormIonItem';
-import InputText from '../../../../ui/forms/InputText';
-import UpdateLoanCodes from '../components/UpdateLoanCodes';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import LoanForm from '../components/LoanForm';
 
 const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<React.SetStateAction<TLoan>> }) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
   const online = useOnlineStore((state) => state.online);
-  
+
+ const formatLoans = loan.loanCodes.map((item) => ({
+    module: item.module || "",
+    loanType: item.loanType || "",
+    acctCode: item.acctCode?._id || "",
+    sortOrder: item.sortOrder?.toString() || "",
+    acctCodeLabel: `${item.acctCode.code} - ${item.acctCode?.description}` || ""
+  }))
 
   const [present] = useIonToast();
 
-  const form = useForm<UpdateProductLoanFormData>({
-    resolver: zodResolver(updateProductSchema),
-    defaultValues: {
-      code: loan.code,
-      description: loan.description,
-    },
-  });
+  const form = useForm<ProductLoanFormData>({
+      resolver: zodResolver(productSchema),
+      defaultValues: {
+        _id: loan._id,
+        id: loan._id,
+        code: loan.code,
+        description: loan.description,
+        loanCodes:  formatLoans
+      },
+    });
 
   useEffect(() => {
     if (loan) {
       form.reset({
+         _id: loan._id,
+        id: loan._id,
         code: loan.code,
         description: loan.description,
+        loanCodes:  formatLoans
       });
     }
-  }, [loan, form]);
+  }, [loan]);
 
   function dismiss() {
     form.reset();
@@ -144,58 +155,23 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
             <ModalHeader disabled={loading} title="Product - Edit Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader> */}
+       
         <div className="inner-content !p-6">
             <ModalHeader disabled={loading} title="Product - Edit Record" sub="Manage product records." dismiss={dismiss} />
 
-          <div className=' mt-4'>
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <FormIonItem className="flex-1">
-                <InputText
-                  disabled={loading}
-                  name="code"
-                  control={form.control}
-                  clearErrors={form.clearErrors}
-                  label="Code"
-                  placeholder="Type here"
-                  className="!px-2 !py-2 rounded-md"
-                />
-              </FormIonItem>
-
-              <div className=' flex items-center gap-2'>
-                <FormIonItem className="flex-1">
-                  <InputText
-                    disabled={loading}
-                    name="description"
-                    control={form.control}
-                    clearErrors={form.clearErrors}
-                    label="Description"
-                    placeholder="Type here"
-                    className="!px-2 !py-2 rounded-md"
-                  />
-                </FormIonItem>
-                <IonButton
-                  onClick={form.handleSubmit(onSubmit)}
-                  disabled={loading}
-                  type="button"
-                  title="Save changes"
-                  fill="clear"
-                  className="max-h-10 min-h-9 mt-1.5 !p-0 bg-green-600 text-white capitalize font-semibold rounded-md m-0"
-                  strong
-                >
-                  <IonIcon icon={save} className="text-sm" />
+              <form onSubmit={form.handleSubmit(onSubmit)} className=' mt-4'>
+              <LoanForm form={form} loading={loading} />
+              <div className="text-end mt-6 space-x-2">
+                <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
+                  {loading ? 'Saving...' : 'Save'}
+                </IonButton>
+                <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
+                  Cancel
                 </IonButton>
               </div>
-              
-            </div>
+            </form>
 
-            <UpdateLoanCodes loan={loan} setData={setData} />
-
-            <div className="text-end mt-6 space-x-2">
-              <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
-                Cancel
-              </IonButton>
-            </div>
-          </div>
+         
         </div>
       </IonModal>
     </>

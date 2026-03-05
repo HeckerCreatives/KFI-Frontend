@@ -18,6 +18,8 @@ export const updateCodeSchema = z.object({
 
 export const productSchema = z
   .object({
+    _id: z.string().optional(),
+    id: z.string().optional(),
     code: z.string().min(1, 'Code is required'),
     description: z.string().optional().or(z.literal('')),
     loanCodes: z.array(loanCodeSchema),

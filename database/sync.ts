@@ -310,6 +310,26 @@ export async function syncSystemParameters(apiData: any) {
   return true;
 }
 
+export async function syncFinancialStatements(apiData: any) {
+  console.log('Data syncFinancialStatements', apiData)
+  if (!apiData) return;
+
+ await db.financialStatements.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+   await db.table("financialStatements").bulkPut(data);
+
+  console.log('Sync syncFinancialStatements', data)
+
+  return true;
+}
+
 
 
 

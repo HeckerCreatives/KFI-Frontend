@@ -22,6 +22,7 @@ const CreateLoan = ({ getLoans, currentPage }: CreateLoanProps) => {
   const [present] = useIonToast();
   const online = useOnlineStore((state) => state.online);
   
+  
 
   const modal = useRef<HTMLIonModalElement>(null);
 

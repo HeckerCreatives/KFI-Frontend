@@ -26,19 +26,7 @@ const TablePagination = ({ currentPage, totalPages, onPageChange, visibleRange =
   // };
 
   return (
-    // <div className="pagination text-center py-3 flex items-center justify-center gap-4">
-    //   {visiblePages.map(page => (
-    //     <button
-    //       disabled={disabled}
-    //       key={page}
-    //       onClick={() => currentPage !== page && onPageChange(page)}
-    //       className={classNames(`${getFontSize(page)} font-semibold cursor-pointer`, currentPage === page && 'underline')}
-    //       aria-current={currentPage === page ? 'page' : undefined}
-    //     >
-    //       {page}
-    //     </button>
-    //   ))}
-    // </div>
+  
 
     <div className="w-full pb-3">
       <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">

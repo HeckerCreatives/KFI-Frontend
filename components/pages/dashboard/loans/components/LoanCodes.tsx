@@ -4,16 +4,42 @@ import FormIonItem from '../../../../ui/utils/FormIonItem';
 import { ProductLoanFormData } from '../../../../../validations/loan.schema';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
 import { IonButton, IonIcon } from '@ionic/react';
-import { trashBin } from 'ionicons/icons';
+import { arrowBack, arrowForward, trashBin } from 'ionicons/icons';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import ChartOfAccountSelection from '../../../../ui/selections/ChartOfAccountSelection';
 import classNames from 'classnames';
+import { useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
+import React from 'react';
 
 const LoanCodes = ({ form, loading }: { form: UseFormReturn<ProductLoanFormData>; loading: boolean }) => {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: `loanCodes`,
   });
+
+  const [page, setPage] = useState(1);
+  const limit = 5;
+
+
+
+    const handleNextPage = () => {
+      if (page !== Math.ceil(fields.length / limit)) {
+        setPage(prev => prev + 1);
+      }
+    };
+  
+    const handlePrevPage = () => {
+      if (page > 0) {
+        setPage(prev => prev - 1);
+      }
+    };
+  
+  
+    const currentPageItems = React.useMemo(() => {
+      return fields.slice((page - 1) * limit, page * limit);
+    }, [fields, page, limit]);
+  
 
   return (
     <div className="mt-2">
@@ -41,8 +67,10 @@ const LoanCodes = ({ form, loading }: { form: UseFormReturn<ProductLoanFormData>
             </TableHeadRow>
           </TableHeader>
           <TableBody>
-            {fields.map((_, index) => (
-              <TableRow key={`loanCodes-${index}`} className="border-b-0">
+            
+            {fields.map((field, index) => (
+              
+              <TableRow key={`loanCodes-${field.id}`} className="border-b-0">
                 <TableCell className="border-4 border-slate-100 align-top">
                   <FormIonItem className="flex-1">
                     <InputSelect
@@ -133,6 +161,37 @@ const LoanCodes = ({ form, loading }: { form: UseFormReturn<ProductLoanFormData>
             ))}
           </TableBody>
         </Table>
+
+       <div className="flex items-center justify-end gap-2 mt-3">
+        
+
+         {/* {fields.length > 0 && (
+                  <div className="w-full pb-3">
+                    <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">
+                      <div>
+                        <IonButton onClick={handlePrevPage} disabled={page === 1} fill="clear" className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md">
+                          <IonIcon icon={arrowBack} />
+                        </IonButton>
+                      </div>
+                      <div>
+                        <div className="text-sm !font-semibold  px-3 py-1.5 rounded-lg text-slate-700">
+                          {page} / {Math.ceil(fields.length / limit)}
+                        </div>
+                      </div>
+                      <div>
+                        <IonButton
+                          onClick={handleNextPage}
+                          disabled={page === Math.ceil(fields.length / limit)}
+                          fill="clear"
+                          className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                        >
+                          <IonIcon icon={arrowForward} />
+                        </IonButton>
+                      </div>
+                    </div>
+                  </div>
+                )} */}
+      </div>
       </div>
     </div>
   );

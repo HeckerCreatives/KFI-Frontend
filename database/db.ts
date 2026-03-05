@@ -34,6 +34,7 @@ export class KfiDatabase extends Dexie {
   clientMasterFile!: Table<any>;
   newclientMasterFile!: Table<any>;
   centers!: Table<any>;
+  financialStatements!: Table<any>
 
 
   constructor() {
@@ -47,6 +48,7 @@ export class KfiDatabase extends Dexie {
       productLoans: "++id, _id",
       banks: "++id,_id",
       weeklySavings: "++id, _id",
+      financialStatements: "++id, _id",
 
       
       newClientMasterFile: "++id",
