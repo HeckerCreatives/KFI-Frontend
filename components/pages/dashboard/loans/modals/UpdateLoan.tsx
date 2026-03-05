@@ -14,7 +14,7 @@ import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
 import LoanForm from '../components/LoanForm';
 
-const UpdateLoan = ({ loan, setData, getLoans }: { loan: Loan; setData: React.Dispatch<React.SetStateAction<TLoan>>, getLoans: (currentage: number) => void }) => {
+const UpdateLoan = ({ loan, setData, getLoans, currentPage }: { loan: Loan; currentPage: number, setData: React.Dispatch<React.SetStateAction<TLoan>>, getLoans: (currentage: number) => void }) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
   const online = useOnlineStore((state) => state.online);
@@ -26,7 +26,7 @@ const UpdateLoan = ({ loan, setData, getLoans }: { loan: Loan; setData: React.Di
     loanType: item.loanType || "",
     acctCode: item.acctCode?._id || "",
     sortOrder: item.sortOrder?.toString() || "",
-    acctCodeLabel: `${item.acctCode.code} - ${item.acctCode?.description}` || ""
+    acctCodeLabel: `${item.acctCode.code ?? ''}  ${item.acctCode?.description}` || ""
   }))
 
   const [present] = useIonToast();
@@ -59,7 +59,7 @@ const UpdateLoan = ({ loan, setData, getLoans }: { loan: Loan; setData: React.Di
     modal.current?.dismiss();
   }
 
-  async function onSubmit(data: UpdateProductLoanFormData) {
+  async function onSubmit(data: ProductLoanFormData) {
     if(online){
       setLoading(true);
       try {
@@ -72,6 +72,7 @@ const UpdateLoan = ({ loan, setData, getLoans }: { loan: Loan; setData: React.Di
             clone[index] = { ...result.data.loan };
             return { ...prev, loans: clone };
           });
+          getLoans(currentPage)
           dismiss();
           present({
             message: 'Product successfully updated!.',
@@ -95,14 +96,21 @@ const UpdateLoan = ({ loan, setData, getLoans }: { loan: Loan; setData: React.Di
             console.warn("Data not found");
             return;
           }
+
+           const formatLoanCodes = data.loanCodes.map((item) => ({
+            ...item,
+            _id: item._id || "",
+            id: item._id || "",
+            acctCode: {
+              _id: item.acctCode,
+              description: item.acctCodeLabel
+            },
+          
+          }))
           const updated = {
             ...existing,
             ...data,
-            acctCode:{
-              _id: data.code,
-              description: data.description
-
-            } ,
+             loanCodes: formatLoanCodes,
             action: existing.isOldData ? 'update' : 'create',
             _synced: false,
           };

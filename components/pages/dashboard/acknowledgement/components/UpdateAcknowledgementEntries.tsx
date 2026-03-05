@@ -166,7 +166,7 @@ const UpdateAcknowledgementEntries = ({ isOpen, acknowledgement, setEntries, del
                   <TableCell>{entry?.loanReleaseEntryId ? `${entry?.loanReleaseEntryId?.transaction?.code}` : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? formatDateTable(entry?.loanReleaseEntryId?.transaction?.dueDate) : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? entry?.loanReleaseEntryId?.transaction?.noOfWeeks : ''}</TableCell>
-                  <TableCell>{entry?.loanReleaseEntryId ? entry.loanReleaseEntryId.client.name : ''}</TableCell>
+                  <TableCell>{entry?.loanReleaseEntryId ? entry.loanReleaseEntryId.client?.name : ''}</TableCell>
                   <TableCell>{entry?.acctCode?.code}</TableCell>
                   <TableCell>{entry?.acctCode?.description}</TableCell>
                   <TableCell className="text-end">{formatNumber(entry?.debit as number)}</TableCell>

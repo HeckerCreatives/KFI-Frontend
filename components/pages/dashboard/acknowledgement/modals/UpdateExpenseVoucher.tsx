@@ -271,7 +271,7 @@ function removeCVTag(cv: string): string {
             </div>
                      
 
-          <Signatures open={isOpen} type={'official receipt'} preparedBy={acknowledgement.encodedBy.username} recieveByorDate={acknowledgement.createdAt.split('T')[0]}/>
+          <Signatures open={isOpen} type={'official receipt'} preparedBy={acknowledgement.encodedBy.username} recieveByorDate={acknowledgement.createdAt?.split('T')[0]}/>
           
         </div>
       </IonModal>

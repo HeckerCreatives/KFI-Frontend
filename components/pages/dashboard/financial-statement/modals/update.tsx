@@ -49,7 +49,8 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
 
   async function onSubmit(data: FSFormData) {
       setLoading(true);
-      try {
+     if(online){
+       try {
         const result = await kfiAxios.put(`/financial-statement/${item._id}`, data);
         const { success } = result.data;
         if (success) {
@@ -69,6 +70,41 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
       } finally {
         setLoading(false);
       }
+     } else {
+       try {
+                     const existing = await db.financialStatements.get(item._id);
+                     if (!existing) {
+                       console.warn("Data not found");
+                       return;
+                     }
+                     const updated = {
+                       ...existing,
+                       ...data, 
+                       primary: {
+                          month: data.primaryMonth,
+                          year: data.primaryYear,
+                        },
+                        secondary: {
+                          month: data.secondaryMonth,
+                          year: data.secondaryYear,
+                        },
+                        action: existing.isOldData ? 'update' : 'create',
+                        _synced: false,
+                     };
+             
+                     await db.financialStatements.update(item._id, updated);
+             
+                    getList(currentPage)
+                     dismiss();
+                     present({
+                       message: "Data successfully updated!",
+                       duration: 1000,
+                     });
+             
+                   } catch (error) {
+                     console.error("Offline update failed:", error);
+                   }
+     }
     
   }
 

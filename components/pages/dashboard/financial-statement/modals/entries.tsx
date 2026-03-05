@@ -16,14 +16,16 @@ import { TFS } from '../FinancialStatement';
 import { createSharp } from 'ionicons/icons';
 import FinancialStatementEntryForm from './entries-form';
 import FSFormTable from '../components/entry-table';
+import { update } from 'pullstate';
 
 type UpdateProps = {
     item: FinancialStatements
     currentPage: number
     getList: (page: number) => void;
+    key: number
 };
 
-const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
+const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
@@ -138,7 +140,7 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
   return (
     <>
       <div className="text-start">
-        <IonButton fill="clear" id="update-fs-entries" 
+        <IonButton fill="clear" id={`update-fs-entries-${item._id}`}
         
        className="space-x-1 rounded-md w-24 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-purple-100 text-purple-900 capitalize text-xs"
         >
@@ -148,7 +150,7 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
       </div>
       <IonModal
         ref={modal}
-        trigger="update-fs-entries"
+        trigger={`update-fs-entries-${item._id}`}
         backdropDismiss={false}
         onWillPresent={getEntries}
         className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:64rem]"

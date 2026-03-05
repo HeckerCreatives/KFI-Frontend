@@ -15,9 +15,10 @@ import { fschema, FSFormData } from '../../../../../validations/financialstateme
 
 type CreateProps = {
   getList: (page: number) => void;
+  currentPage: number
 };
 
-const CreateFS = ({ getList }: CreateProps) => {
+const CreateFS = ({ getList, currentPage }: CreateProps) => {
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
@@ -39,7 +40,8 @@ const CreateFS = ({ getList }: CreateProps) => {
 
   async function onSubmit(data: FSFormData) {
       setLoading(true);
-      try {
+    if(online){
+        try {
         const result = await kfiAxios.post('/financial-statement', data);
         const { success } = result.data;
         if (success) {
@@ -59,6 +61,32 @@ const CreateFS = ({ getList }: CreateProps) => {
       } finally {
         setLoading(false);
       }
+    } else {
+       await db.financialStatements.add(
+              {
+              ...data, 
+              primary: {
+                month: data.primaryMonth,
+                year: data.primaryYear,
+              },
+              secondary: {
+                month: data.secondaryMonth,
+                year: data.secondaryYear,
+              },
+              _synced: false,
+              action: "create",
+              isOldData: false
+            }
+            );
+            getList(currentPage);
+            dismiss()
+            present({
+                  message: 'Group of account successfully created!.',
+                  duration: 1000,
+                });
+            return;
+    }
+    
     
   }
 

@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react';
+import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import TableNoRows from '../../../ui/forms/TableNoRows';
@@ -15,6 +15,9 @@ import GenerateReport from './modals/generate-report';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
+import { TABLE_LIMIT } from '../../../utils/constants';
+import { db } from '../../../../database/db';
+import { filterAndSortGOA } from '../../../ui/utils/sort';
 
 export type TFS = {
   financialStatements: FinancialStatements[];
@@ -30,6 +33,8 @@ const FinancialStatement = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
   const online = useOnlineStore((state) => state.online);
+  const [present] = useIonToast();
+  
      
   
     const [data, setData] = useState<TFS>({
@@ -41,7 +46,8 @@ const FinancialStatement = () => {
     });
 
    const getList = async (page: number) => {
-          try {
+        if(online){
+            try {
             const result = await kfiAxios.get('/financial-statement');
 
             const { data, success,hasPrevPage, hasNextPage, totalPages } = result.data
@@ -55,13 +61,42 @@ const FinancialStatement = () => {
               prevPage: hasPrevPage,
             }));
             }
-
-           
-    
            
           } catch (error) {
           } finally {
           }
+        } else {
+           setData(prev => ({ ...prev, loading: true }));
+          try {
+            const limit = TABLE_LIMIT;
+            let data = await db.financialStatements.toArray();
+            console.log(data)
+            const filteredData = data.filter(e => e.action !== 'delete');
+            let allData = filterAndSortGOA(filteredData, '', '');
+            const totalItems = allData.length;
+            const totalPages = Math.ceil(totalItems / limit);
+            const start = (page - 1) * limit;
+            const end = start + limit;
+            const fs = allData.slice(start, end);
+            const hasPrevPage = page > 1;
+            const hasNextPage = page < totalPages;
+            setData(prev => ({
+              ...prev,
+              financialStatements: fs,
+              totalPages,
+              prevPage: hasPrevPage,
+              nextPage: hasNextPage,
+            }));
+            setCurrentPage(page);
+          } catch (error) {
+            present({
+              message: 'Failed to load records.',
+              duration: 1000,
+            });
+          } finally {
+            setData(prev => ({ ...prev, loading: false }));
+          }
+        }
         
     };
 
@@ -79,7 +114,7 @@ const FinancialStatement = () => {
 
             <div className="flex items-center gap-2 flex-wrap">
               {canDoAction(token.role, permissions, 'financial statement', 'create') && (
-              <CreateFS getList={getList} />
+              <CreateFS getList={getList} currentPage={currentPage} />
               )}
 
               <GenerateReport/>
@@ -94,8 +129,8 @@ const FinancialStatement = () => {
                     {/* <TableHead>Prepared By</TableHead> */}
                     <TableHead>Report Name</TableHead>
                     <TableHead>Type</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Subtitle</TableHead>
+                    {/* <TableHead>Title</TableHead>
+                    <TableHead>Subtitle</TableHead> */}
                     <TableHead>Action</TableHead>
                   </TableHeadRow>
                 </TableHeader>
@@ -108,18 +143,18 @@ const FinancialStatement = () => {
                         <TableCell className=' capitalize'>{item.reportCode}</TableCell>
                         <TableCell>{item.reportName}</TableCell>
                         <TableCell>{item.type}</TableCell>
-                        <TableCell>{item.title}</TableCell>
-                        <TableCell>{item.subTitle}</TableCell>
+                        {/* <TableCell>{item.title}</TableCell>
+                        <TableCell>{item.subTitle}</TableCell> */}
                         <TableCell className=' flex '>
                            {canDoAction(token.role, permissions, 'financial statement', 'update') && (
-                            <UpdateFS item={item} getList={getList} currentPage={currentPage}/>
+                            <UpdateFS key={item._id} item={item} getList={getList} currentPage={currentPage}/>
                             
                             )}
                             {canDoAction(token.role, permissions, 'financial statement', 'delete') && (
                             <DeleteFS item={item} getList={getList} currentPage={currentPage}/>
                             )}
                             {canDoAction(token.role, permissions, 'financial statement', 'update') && (
-                            <UpdateFSEntries item={item} getList={getList} currentPage={currentPage}/>
+                            <UpdateFSEntries key={index} item={item} getList={getList} currentPage={currentPage}/>
                             )}
                           
                           

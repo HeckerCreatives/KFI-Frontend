@@ -18,6 +18,7 @@ type Option = {
   dueDate: string;
   noOfWeeks: number;
   name: string;
+  clientId: string;
   centerNo: string;
   loanRelease: string;
   loanReleaseId?: string;
@@ -42,6 +43,7 @@ type LoanReleaseEntrySelectionProps<T extends FieldValues> = {
   particular: Path<T>;
   loanReleaseId: Path<T>;
   className?: string;
+  client?: string;
 };
 
 const LoanReleaseEntrySelection = <T extends FieldValues>({
@@ -52,6 +54,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
   noOfWeeks,
   name,
   particular,
+  client,
   setValue,
   clearErrors,
   className = '',
@@ -109,6 +112,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
     setValue(dueDate as Path<T>, formatDateTable(loanEntry.dueDate) as PathValue<T, Path<T>> as any);
     setValue(noOfWeeks as Path<T>, `${loanEntry.noOfWeeks}` as PathValue<T, Path<T>> as any);
     setValue(name as Path<T>, loanEntry.name as PathValue<T, Path<T>> as any);
+    setValue(client as Path<T>, loanEntry.clientId as PathValue<T, Path<T>> as any);
     setValue(particular as Path<T>, `${loanEntry.centerNo} - ${loanEntry.name}` as PathValue<T, Path<T>> as any);
     setValue(
       loanReleaseId as Path<T>,

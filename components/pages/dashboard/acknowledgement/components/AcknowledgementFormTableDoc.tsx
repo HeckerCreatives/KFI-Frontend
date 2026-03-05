@@ -37,6 +37,7 @@ const AcknowledgementFormTableDoc = ({ entry, remove, form, index, sticky }: Ack
               noOfWeeks={`entries.${index}.noOfWeeks`}
               name={`entries.${index}.name`}
               particular={`entries.${index}.particular`}
+              client={`entries.${index}.clientId`}
               setValue={form.setValue}
               clearErrors={form.clearErrors}
               className="!min-h-3.5 text-[0.5rem]"
