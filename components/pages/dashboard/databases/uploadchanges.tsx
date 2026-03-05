@@ -5,7 +5,7 @@ import { db } from "../../../../database/db";
 import { business, key } from "ionicons/icons";
 import { removeAmountComma } from "../../../ui/utils/formatNumber";
 
-type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters";
+type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans";
 
 export default function UploadChanges() {
   const [changes, setChanges] = useState<Record<SyncKey, number>>({
@@ -21,7 +21,8 @@ export default function UploadChanges() {
     businessTypes: 0,
     suppliers: 0,
     natures: 0,
-    systemParameters: 0
+    systemParameters: 0,
+    productLoans: 0
   });
     const [present] = useIonToast();
   
@@ -110,6 +111,12 @@ export default function UploadChanges() {
       endpoint: "/sync/signature-params",
       field:'signatureParams'
     },
+    {
+      key: "productLoans",
+      label: "Loan products",
+      endpoint: "/sync/loans",
+      field:'loans'
+    },
   ];
 
   const loadChanges = useCallback(async () => {
@@ -126,6 +133,7 @@ export default function UploadChanges() {
     const suppliers = await db.suppliers.toArray();
     const natures = await db.natures.toArray();
     const params = await db.systemParameters.toArray();
+    const loans = await db.productLoans.toArray();
 
     setChanges({
       clientMasterFile: cmf.filter((e) => e._synced === false).length,
@@ -141,6 +149,7 @@ export default function UploadChanges() {
       suppliers: suppliers.filter((e) => e._synced === false).length,
       natures: natures.filter((e) => e._synced === false).length,
       systemParameters: params.filter((e) => e._synced === false).length,
+      productLoans: loans.filter((e) => e._synced === false).length,
     });
   }, []);
 

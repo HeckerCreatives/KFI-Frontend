@@ -165,11 +165,7 @@ const Loans = () => {
               <div className="flex flex-col lg:flex-row items-start justify-start flex-wrap gap-2">
                 <div className=' flex flex-wrap gap-2'>
                   {canDoAction(token.role, permissions, 'product', 'create') && <CreateLoan getLoans={getLoans} currentPage={currentPage} />}
-                {!online && (
-                   <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                     <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                   </IonButton>
-                 )}
+               
                 </div>
                 <LoanFilter getLoans={getLoans} />
               </div>

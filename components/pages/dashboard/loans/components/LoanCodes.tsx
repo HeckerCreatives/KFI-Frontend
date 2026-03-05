@@ -163,8 +163,7 @@ const LoanCodes = ({ form, loading }: { form: UseFormReturn<ProductLoanFormData>
         </Table>
 
        <div className="flex items-center justify-end gap-2 mt-3">
-        
-
+      
          {/* {fields.length > 0 && (
                   <div className="w-full pb-3">
                     <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">

@@ -1,6 +1,8 @@
 import z from 'zod';
 
 export const loanCodeSchema = z.object({
+  _id: z.string().optional(),
+  id: z.string().optional(),
   module: z.string().min(1, 'Module is required'),
   loanType: z.string().min(1, 'Loan type is required'),
   acctCodeLabel: z.string().min(1, 'Account Code is required'),

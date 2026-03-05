@@ -28,7 +28,7 @@ const LoanActions = ({ loan, setData, currentPage, setCurrentPage, getLoans, sea
   return (
     <div>
       {canDoAction(token.role, permissions, 'product', 'visible') && <ViewLoanCodes loan={loan} />}
-      {canDoAction(token.role, permissions, 'product', 'update') && <UpdateLoan loan={loan} setData={setData} />}
+      {canDoAction(token.role, permissions, 'product', 'update') && <UpdateLoan loan={loan} setData={setData} getLoans={getLoans} />}
       {canDoAction(token.role, permissions, 'product', 'delete') && (
         <DeleteLoan loan={loan} getLoans={getLoans} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
       )}

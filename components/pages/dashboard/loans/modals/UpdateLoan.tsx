@@ -14,12 +14,14 @@ import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
 import LoanForm from '../components/LoanForm';
 
-const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<React.SetStateAction<TLoan>> }) => {
+const UpdateLoan = ({ loan, setData, getLoans }: { loan: Loan; setData: React.Dispatch<React.SetStateAction<TLoan>>, getLoans: (currentage: number) => void }) => {
   const [loading, setLoading] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
   const online = useOnlineStore((state) => state.online);
 
  const formatLoans = loan.loanCodes.map((item) => ({
+    _id: item._id || "",
+    id: item._id || "",
     module: item.module || "",
     loanType: item.loanType || "",
     acctCode: item.acctCode?._id || "",
@@ -95,11 +97,16 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
           }
           const updated = {
             ...existing,
-            ...data, 
+            ...data,
+            acctCode:{
+              _id: data.code,
+              description: data.description
+
+            } ,
             action: existing.isOldData ? 'update' : 'create',
             _synced: false,
           };
-          await db.loanProducts.update(loan.id, updated);
+          await db.productLoans.update(loan.id, updated);
           setData(prev => {
             const clone = [...prev.loans];
             const index = clone.findIndex(c => c.id === loan.id);
@@ -108,6 +115,7 @@ const UpdateLoan = ({ loan, setData }: { loan: Loan; setData: React.Dispatch<Rea
             }
             return { ...prev, loans: clone };
           });
+          getLoans(1)
           dismiss();
           present({
             message: "Data successfully updated!",
