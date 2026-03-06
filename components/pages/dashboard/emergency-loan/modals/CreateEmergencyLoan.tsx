@@ -39,8 +39,8 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
       code: '',
       // centerValue: '',
       // centerLabel: '',
-      clientValue: '',
-      clientLabel: '',
+      // clientValue: '',
+      // clientLabel: '',
       refNo: '',
       remarks: '',
       date: formatDateInput(new Date().toISOString()),
@@ -52,7 +52,7 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
       bankCodeLabel: '',
       amount: '0',
       entries: [],
-      mode: 'create',
+      // mode: 'create',
     },
   });
 
@@ -104,10 +104,33 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
         // const entries = data.entries
         await db.emergencyLoans.add({
           ...data,
-          entries: entries,
-          encodedBy: '',
-          _synced: false,  
+           entries: data.entries.map((item, index) => ({
+            ...item,
+            line: index + 1,
+            acctCode: {
+              _id: item.acctCodeId,
+              code: item.acctCode,
+              description: item.description
+            },
+            client:{
+              center: item.particular,
+              name: item.clientLabel,
+              _id: item.client,
+            },
+             encodedBy: {
+              username: user
+            },
+             action: 'create',
+          _synced: false,
+          })), 
+           bank:{
+              code: data.bankCodeLabel,
+              description: data.bankCodeLabel,
+              _id: data.bankCode
+            },
+           
           action: "create",
+          _synced: false
         });
         getEmergencyLoans(1);
         dismiss();

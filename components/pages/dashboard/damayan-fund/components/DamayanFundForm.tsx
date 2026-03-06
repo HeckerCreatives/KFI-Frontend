@@ -48,7 +48,7 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
                 labelClassName="truncate min-w-[7.6rem] !text-[0.7rem] lg:min-w-20 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <CenterSelection centerLabel="centerLabel" centerValue="centerValue" clearErrors={form.clearErrors} setValue={form.setValue} className=" text-xs" />
+            <CenterSelection centerLabel="centerLabel" centerValue="center" clearErrors={form.clearErrors} setValue={form.setValue} className=" text-xs" />
           </div>
 
           <div className="flex items-start gap-2 flex-nowrap">

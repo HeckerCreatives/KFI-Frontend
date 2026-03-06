@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
 export const emergencyLoanEntrySchema = z.object({
+   line: z.number().optional(),
+    _id: z.any().optional(),
+    id: z.any().optional(),
+    _synced: z.any().optional(),
+    action: z.any().optional(),
   client: z.string().optional().or(z.literal('')),
   clientLabel: z.string().optional().or(z.literal('')),
   particular: z.string().optional().or(z.literal('')),
@@ -29,8 +34,8 @@ export const emergencyLoanSchema = z
     user: z.string().min(1, 'User is required'),
     // centerLabel: z.string().min(1, 'Center code is required'),
     // centerValue: z.string().min(1, 'Center code is required'),
-    clientLabel: z.string().min(1, 'Client is required'),
-    clientValue: z.string().min(1, 'Client is required'),
+    // clientLabel: z.string().min(1, 'Client is required'),
+    // clientValue: z.string().min(1, 'Client is required'),
     refNo: z.string().optional().or(z.literal('')),
     remarks: z.string().optional().or(z.literal('')),
     date: z.string().min(1, 'Date is required').max(255, 'Date must only consist of 255 characters'),
@@ -55,19 +60,19 @@ export const emergencyLoanSchema = z
       .min(1, 'Amount is required')
       .max(255, 'Amount must only consist of 255 characters')
       .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Amount must be a number'),
-    entries: z.array(emergencyLoanEntrySchema).optional(),
-    mode: z.string().refine(value => ['create', 'update'].includes(value), 'Mode is required'),
+    entries: z.array(emergencyLoanEntrySchema).min(1, 'Please add atleast 1 entry'),
+    // mode: z.string().refine(value => ['create', 'update'].includes(value), 'Mode is required'),
   })
-  .superRefine((data, ctx) => {
-    if (data.mode !== 'create') return;
-    if (data.entries && data.entries.length === 0) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Please add atleast 1 entry',
-        path: ['entries'],
-      });
-    }
-  });
+  // .superRefine((data, ctx) => {
+  //   if (data.mode !== 'create') return;
+  //   if (data.entries && data.entries.length === 0) {
+  //     ctx.addIssue({
+  //       code: z.ZodIssueCode.custom,
+  //       message: 'Please add atleast 1 entry',
+  //       path: ['entries'],
+  //     });
+  //   }
+  // });
 
 export type EmergencyLoanFormData = z.infer<typeof emergencyLoanSchema>;
 export type EmergencyLoanEntryFormData = z.infer<typeof emergencyLoanEntrySchema>;

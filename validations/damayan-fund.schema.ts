@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
 export const damayanFundEntrySchema = z.object({
+   line: z.number().optional(),
+  _id: z.any().optional(),
+  id: z.any().optional(),
+  _synced: z.any().optional(),
+  action: z.any().optional(),
   client: z.string().optional().or(z.literal('')),
   clientLabel: z.string().optional().or(z.literal('')),
   particular: z.string().optional().or(z.literal('')),
@@ -28,7 +33,7 @@ export const damayanFundSchema = z
       .regex(/^((JV|CV)#[\d-]+)$/i, { message: 'Must start with JV# or CV# followed by numbers or hyphens' }),
     centerLabel: z.string().min(1, 'Center code is required'),
     name: z.string().min(1, 'User is required'),
-    centerValue: z.string().min(1, 'Center code is required'),
+    center: z.string().min(1, 'Center code is required'),
     nature: z.string().min(1, 'Nature is required'),
     refNo: z.string().optional().or(z.literal('')),
     remarks: z.string().optional().or(z.literal('')),
@@ -54,7 +59,7 @@ export const damayanFundSchema = z
       .min(1, 'Amount is required')
       .max(255, 'Amount must only consist of 255 characters')
       .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Amount must be a number'),
-    entries: z.array(damayanFundEntrySchema).optional(),
+    entries: z.array(damayanFundEntrySchema).min(1, 'Please add atleast 1 entry'),
     mode: z.string().refine(value => ['create', 'update'].includes(value), 'Mode is required'),
   })
   .superRefine((data, ctx) => {

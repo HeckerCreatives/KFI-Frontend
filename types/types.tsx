@@ -373,6 +373,7 @@ export type DamayanFund = {
   amount: number;
   encodedBy: { username: string };
   entries: any[];
+  nature: string
 //   entries: [
 //   {
 //       _id: string

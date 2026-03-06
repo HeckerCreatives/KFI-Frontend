@@ -4,7 +4,7 @@ export const acknowledgementEntrySchema = z.object({
   clientId: z.string().optional(),
   clientName: z.string().optional(),
   loanReleaseId: z.string().optional(),
-  week: z.number().optional(),
+  week: z.any().optional(),
   acctCodeDesc: z.string().optional(),
         
   loanReleaseEntryId: z.string().optional().or(z.literal('')),

@@ -162,7 +162,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData, getList, currentPage }:
 
       try {
 
-       const existing = await db.journalVouchers.get(journalVoucher.id);
+       const existing = await db.journalVouchers.get(journalVoucher._id);
         if (!existing) {
           console.log("Data not found");
           return;
@@ -192,7 +192,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData, getList, currentPage }:
           _synced: false,
           action: "update",
         };
-        await db.journalVouchers.update(journalVoucher.id, updated);
+        await db.journalVouchers.update(journalVoucher._id, updated);
         setData(prev => {
           const clone = [...prev.journalVouchers];
           const index = clone.findIndex(c => c.id === journalVoucher.id);

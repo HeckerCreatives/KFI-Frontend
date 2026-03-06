@@ -35,6 +35,7 @@ const AcknowledgementFormTableDoc = ({ entry, remove, form, index, sticky }: Ack
               cvNo={`entries.${index}.cvNo`}
               dueDate={`entries.${index}.dueDate`}
               noOfWeeks={`entries.${index}.noOfWeeks`}
+              week={`entries.${index}.week`}
               name={`entries.${index}.name`}
               particular={`entries.${index}.particular`}
               client={`entries.${index}.clientId`}
@@ -52,7 +53,7 @@ const AcknowledgementFormTableDoc = ({ entry, remove, form, index, sticky }: Ack
       </TableCell>
       <TableCell className="min-w-20 max-w-20 sticky left-[20rem] z-10 hidden lg:table-cell">
         <FormIonItem className="">
-          <InputText readOnly control={form.control} name={`entries.${index}.noOfWeeks`} clearErrors={form.clearErrors} className="!px-2 min-w-full rounded-sm" />
+          <InputText readOnly control={form.control} name={`entries.${index}.week`} clearErrors={form.clearErrors} className="!px-2 min-w-full rounded-sm" />
         </FormIonItem>
       </TableCell>
       <TableCell className="min-w-60 max-w-60 sticky left-[25rem] z-10 hidden lg:table-cell">

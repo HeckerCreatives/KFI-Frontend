@@ -126,7 +126,8 @@ const ORLoadEntries = ({center, form}: Props) => {
       description: entry.description ?? '',
       debit: `${entry.debit ?? '0'}`,
       credit: `${entry.credit ?? entry.debit ?? '0'}`,
-      clientId: entry.clientId ?? ''
+      clientId: entry.clientId ?? '',
+      week: Number(entry.week)
     };
   };
 

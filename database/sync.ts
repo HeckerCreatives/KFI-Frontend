@@ -412,6 +412,46 @@ export async function syncJournalVoucher(apiData: any) {
   return true;
 }
 
+export async function syncDamayanFund(apiData: any) {
+  console.log('Data syncDamayanFund', apiData)
+  if (!apiData) return;
+
+ await db.damayanFunds.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+   await db.table("damayanFunds").bulkPut(data);
+
+  console.log('Sync syncDamayanFund', data)
+
+  return true;
+}
+
+export async function syncEmergencyLoan(apiData: any) {
+  console.log('Data syncEmergencyLoan', apiData)
+  if (!apiData) return;
+
+ await db.emergencyLoans.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+   await db.table("emergencyLoans").bulkPut(data);
+
+  console.log('Sync syncEmergencyLoan', data)
+
+  return true;
+}
+
 
 
 
@@ -488,17 +528,6 @@ export async function syncAR(apiData: any) {
   return true;
 }
 
-export async function syncEmergencyLoan(apiData: any) {
-  console.log('Data el', apiData)
-  if (!apiData) return;
-
-  await db.emergencyLoans.clear();
-  await db.table("emergencyLoans").bulkAdd(apiData);
-
-  console.log('Sync sucess el', apiData)
-
-  return true;
-}
 
 export async function syncDmayanFund(apiData: any) {
   console.log('Data df', apiData)

@@ -55,11 +55,18 @@ const DeleteEmergencyLoan = ({ emergencyLoan, getEmergencyLoans, searchkey, sort
     } else {
       try {
       if (emergencyLoan._id) {
-          await db.emergencyLoans.update(emergencyLoan.id, {
-            deletedAt: new Date().toISOString(),
-            _synced: false,
-            action: "delete",
-          });
+           const existing = await db.emergencyLoans.get(emergencyLoan.id);
+                
+                  await db.emergencyLoans.update(emergencyLoan.id, {
+                    deletedAt: new Date().toISOString(),
+                    entries: existing.entries.map((item: any) => ({
+                      ...item,
+                      action: 'delete',
+                      _synced: false,
+                    })),
+                    _synced: false,
+                    action: "delete",
+                  });
         } else {
           await db.emergencyLoans.delete(emergencyLoan.id);
         }

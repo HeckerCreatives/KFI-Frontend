@@ -94,8 +94,8 @@ const EmergencyLoan = () => {
        try {
          const limit = TABLE_LIMIT;
          let data = await db.emergencyLoans.toArray();
-         const filteredData = data.filter(e => !e.deletedAt);
-        let allData = filterAndSortLoanRelease(formatELList(filteredData), keyword, sort, from, to);
+         const filteredData = data.filter(e => e.action !== 'delete');
+        let allData = filterAndSortLoanRelease(filteredData, keyword, sort, from, to);
          console.log(allData)
 
          const totalItems = allData.length;

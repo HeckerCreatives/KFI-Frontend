@@ -134,33 +134,6 @@ const Acknowledgement = () => {
     getAcknowledgements(currentPage);
   });
 
-  const uploadChanges = async () => {
-          setUploading(true)
-          try {
-            const list = await db.officialReceipts.toArray();
-            const offlineChanges = list.filter(e => e._synced === false);
-            console.log(offlineChanges)
-            const result = await kfiAxios.put("sync/upload/official-receipts", { officialReceipts: offlineChanges });
-            const { success } = result.data;
-            if (success) {
-              setUploading(false)
-               present({
-                  message: 'Offline changes saved!',
-                  duration: 1000,
-                });
-              getAcknowledgements(currentPage);
-              setUploading(false)
-    
-            }
-          } catch (error: any) {
-              setUploading(false)
-    
-              present({
-                message: `${error.response.data.error.message}`,
-                duration: 1000,
-              });
-          }
-        };
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
@@ -176,11 +149,7 @@ const Acknowledgement = () => {
                   <div>{canDoAction(token.role, permissions, 'acknowledgement', 'create') && <CreateAcknowledgement getAcknowledgements={getAcknowledgements} />}</div>
                   <div>{canDoAction(token.role, permissions, 'acknowledgement', 'print') && <PrintAllAcknowledgement />}</div>
                   <div>{canDoAction(token.role, permissions, 'acknowledgement', 'export') && <ExportAllAcknowledgement />}</div>
-                  {online && (
-                    <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                    </IonButton>
-                  )}
+                  
                 </div>
 
                  <div className="w-full flex-1 flex">

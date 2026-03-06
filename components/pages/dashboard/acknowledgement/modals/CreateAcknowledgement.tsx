@@ -63,7 +63,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
     if(online){
       setLoading(true);
       try {
-        data.amount = removeAmountComma(data.amount);
+        data.amount = Number(removeAmountComma(data.amount));
         data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
         data.entries = data.entries
           ? data.entries.map((entry: any, index: number) => ({
@@ -80,22 +80,24 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
               line: index + 1,
             }))
           : [];
+
+          console.log(data)
           
-        const result = await kfiAxios.post('acknowledgement', data);
-        const { success } = result.data;
-        if (success) {
-          getAcknowledgements(1);
-          present({
-            message: 'Official Receipt successfully added.',
-            duration: 1000,
-          });
-          dismiss();
-          return;
-        }
-        present({
-          message: 'Failed to add a new official receipt. Please try again.',
-          duration: 1000,
-        });
+         const result = await kfiAxios.post('acknowledgement', data);
+         const { success } = result.data;
+         if (success) {
+           getAcknowledgements(1);
+           present({
+             message: 'Official Receipt successfully added.',
+             duration: 1000,
+           });
+           dismiss();
+           return;
+         }
+         present({
+           message: 'Failed to add a new official receipt. Please try again.',
+           duration: 1000,
+         });
       } catch (error: any) {
         const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
         const errors: TFormError[] | string = checkError(errs);

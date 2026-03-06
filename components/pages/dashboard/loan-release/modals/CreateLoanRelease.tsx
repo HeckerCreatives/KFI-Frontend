@@ -63,15 +63,12 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
     setIsOpen(false)
   }
 
+  console.log(form.formState.errors, form.watch('entries'))
   const difference = `${formatNumber(Math.abs(form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`
 
   async function onSubmit(data: LoanReleaseFormData) {
     const glEntries = data.entries.filter((entry: EntryFormData) => entry.debit !== '' || entry.credit !== '' || entry.checkNo !== '' || entry.cycle !== '');
-    if (glEntries.length < 1) {
-      form.setError('entries', { message: 'Atleast 1 entry is required' });
-      return;
-    }
-
+  
     if (Number(difference) !== 0) {
       form.setError('root', { message: `Debit and Credit must be balanced.` });
       return;
@@ -80,7 +77,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
     let totalDebit = 0;
     let totalCredit = 0;
 
-    data.entries = glEntries.map((entry, index) => {
+    data.entries = data.entries.map((entry, index) => {
       const debit = removeAmountComma(entry.debit as string);
       const credit = removeAmountComma(entry.credit as string);
 
@@ -97,10 +94,6 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
       return;
     }
 
-  //  if (totalCredit + totalDebit !== Number(data.amount)) {
-  //    form.setError('root', { message: 'Total of debit and credit must be balanced with the amount field.' });
-  //    return;
-  //  }
 
     if(online){
       setLoading(true);

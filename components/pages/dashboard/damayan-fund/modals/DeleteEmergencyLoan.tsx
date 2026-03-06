@@ -6,6 +6,8 @@ import { DamayanFund, EmergencyLoan } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import { entries } from '../../../../../validations/beginningbalance.schema';
+import { actions } from '../../../../utils/constants';
 
 type DeleteDamayanFundProps = {
   damayanFund: DamayanFund;
@@ -55,8 +57,15 @@ const DeleteDamayanFund = ({ damayanFund, getDamayanFunds, searchkey, sortKey, r
    } else {
     try {
     if (damayanFund._id) {
+        const existing = await db.damayanFunds.get(damayanFund.id);
+      
         await db.damayanFunds.update(damayanFund.id, {
           deletedAt: new Date().toISOString(),
+          entries: existing.entries.map((item: any) => ({
+            ...item,
+            action: 'delete',
+            _synced: false,
+          })),
           _synced: false,
           action: "delete",
         });

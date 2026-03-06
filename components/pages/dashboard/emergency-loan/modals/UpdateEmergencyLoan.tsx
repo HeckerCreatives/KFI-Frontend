@@ -35,6 +35,25 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
   const [preventries, setPrevEntries] = useState<EmergencyLoanEntry[]>(emergencyLoan.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const online = useOnlineStore((state) => state.online);
+  const user = localStorage.getItem('user')
+
+
+   const formattedEntries = emergencyLoan.entries.map((item) => ({
+    ...item,
+     line: item.line,
+      _id: item._id,
+      id: item._id,
+      client: item.client?._id,
+      clientLabel: item.client?.name,
+      particular: item.particular,
+      acctCodeId: item.acctCode._id,
+      acctCode: item.acctCode.code,
+      description: item.acctCode.description,
+      debit: String(item.debit) ?? '0' ,
+      credit: String(item.credit) ?? '0' ,
+      interest: (item.interest || item.interestRate) === null ? '0' : String(item.interest || item.interestRate),
+
+  }))
   
 
   const form = useForm<EmergencyLoanFormData>({
@@ -53,17 +72,18 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
       bankCode: '',
       bankCodeLabel: '',
       amount: '0',
-      mode: 'update',
+      // mode: 'update',
     },
   });
+
 
   useEffect(() => {
     if (emergencyLoan) {
       form.reset({
         code: emergencyLoan.code,
-        user: emergencyLoan.user,
-        clientLabel: '',
-        clientValue: '',
+        user: user || '',
+        // clientLabel: '',
+        // clientValue: '',
         // centerLabel: emergencyLoan?.center?.centerNo,
         // centerValue: emergencyLoan?.center?._id,
         refNo: emergencyLoan.refNo,
@@ -76,7 +96,8 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
         bankCode: emergencyLoan.bank._id,
         bankCodeLabel: `${emergencyLoan.bank.code}`,
         amount: `${formatAmount(emergencyLoan.amount)}`,
-        mode: 'update',
+        entries: formattedEntries,
+        
       });
     }
   }, [emergencyLoan, form]);
@@ -114,8 +135,8 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
           return {
             line: index + 1,
               _id: isExisting ? entry._id : undefined,
-              client: entry.client._id,
-              clientLabel: entry.client.name,
+              client: entry.client?._id,
+              clientLabel: entry.client?.name,
               particular: entry.particular,
               acctCodeId: entry.acctCode._id,
               acctCode: entry.acctCode.code,
@@ -138,16 +159,12 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
         const result = await kfiAxios.put(`emergency-loan/${emergencyLoan._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
         const { success, emergencyLoan: updatedEmergencyLoan } = result.data;
         if (success) {
-          setData(prev => {
-            const index = prev.emergencyLoans.findIndex(emergencyLoan => emergencyLoan._id === updatedEmergencyLoan._id);
-            if (index < 0) return prev;
-            prev.emergencyLoans[index] = { ...updatedEmergencyLoan };
-            return { ...prev };
-          });
+          
           present({
             message: 'Emergency loan successfully updated.',
             duration: 1000,
           });
+          getEmergencyLoans(currentPage)
           dismiss()
           return;
         }
@@ -172,10 +189,34 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
         }
         const updated = {
           ...data,
-          entries: entries, 
-          deletedIds: finalDeletedIds,
+          entries: data.entries.map((item, index) => ({
+            ...item,
+            line: index + 1,
+            acctCode: {
+              _id: item.acctCodeId,
+              code: item.acctCode,
+              description: item.description
+            },
+            client:{
+              center: item.particular,
+              name: item.clientLabel,
+              _id: item.client,
+            },
+           
+            action: item._id ? 'update' : 'create',
           _synced: false,
-          action: "update",
+          })), 
+           bank:{
+              code: data.bankCodeLabel,
+              description: data.bankCodeLabel,
+              _id: data.bankCode
+            },
+             encodedBy: {
+              username: user
+            },
+          
+          action: existing.isOldData ? 'update' : 'create',
+          _synced: false,
         };
 
         console.log('Form Data',updated)
@@ -249,7 +290,9 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
             </div>
           </form>
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
-            <UpdateELEntries isOpen={isOpen} emergencyLoan={emergencyLoan} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} />
+            <EmergencyLoanFormTable form={form} />
+    
+            {/* <UpdateELEntries isOpen={isOpen} emergencyLoan={emergencyLoan} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} /> */}
           </div>
 
           <div className="px-3">
@@ -267,7 +310,7 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
 
            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
-            <Signatures open={isOpen} type={'emergency loan'} preparedBy={emergencyLoan.encodedBy.username} recieveByorDate={emergencyLoan.createdAt.split('T')[0]}/>
+            <Signatures open={isOpen} type={'emergency loan'} preparedBy={emergencyLoan.encodedBy?.username} recieveByorDate={emergencyLoan.createdAt?.split('T')[0] || ''}/>
           
 
            

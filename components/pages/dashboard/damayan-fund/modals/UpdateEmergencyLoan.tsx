@@ -18,6 +18,7 @@ import { formatAmount, formatNumber, removeAmountComma } from '../../../../ui/ut
 import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import DamayanFundFormTable from '../components/DamayanFundFormTable';
 
 type UpdateDamayanFundProps = {
   damayanFund: DamayanFund;
@@ -35,6 +36,23 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
   const [preventries, setPrevEntries] = useState<DamayanFundEntry[]>(damayanFund.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const online = useOnlineStore((state) => state.online);
+
+  const fomattedEntries = damayanFund.entries.map((item) => ({
+    ...item,
+     line: item.line,
+      _id: item._id,
+      id: item._id,
+      client: item.client?._id,
+      clientLabel: item.client?.name,
+      particular: item.particular,
+      acctCodeId: item.acctCode._id,
+      acctCode: item.acctCode.code,
+      description: item.acctCode.description,
+      debit: String(item.debit) ?? '0' ,
+      credit: String(item.credit) ?? '0' ,
+      interest: (item.interest || item.interestRate) === null ? '0' : String(item.interest || item.interestRate),
+
+  }))
     
 
   const form = useForm<DamayanFundFormData>({
@@ -42,7 +60,7 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
     defaultValues: {
       code: '',
       centerLabel: '',
-      centerValue: '',
+      center: '',
       refNo: '',
       remarks: '',
       date: formatDateInput(new Date().toISOString()),
@@ -54,7 +72,9 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
       bankCodeLabel: '',
       amount: '0',
       mode: 'update',
-      name: ''
+      name: '',
+      entries: fomattedEntries
+      
     },
   });
 
@@ -66,7 +86,7 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
       form.reset({
         code: damayanFund.code,
         centerLabel: damayanFund?.center?.centerNo,
-        centerValue: damayanFund?.center?._id,
+        center: damayanFund?.center?._id,
         refNo: damayanFund.refNo,
         remarks: damayanFund.remarks,
         date: formatDateInput(damayanFund.date),
@@ -78,7 +98,9 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
         bankCodeLabel: `${damayanFund.bank.code}`,
         amount: `${formatAmount(damayanFund.amount)}`,
         mode: 'update',
-        name: ''
+        nature: damayanFund.nature,
+        entries: fomattedEntries,
+        name: damayanFund.name
       });
     }
   }, [damayanFund, form]);
@@ -94,23 +116,6 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
         preventries.some((e) => e._id === id)
         );
 
-        const prevIds = new Set(preventries.map((e) => e._id));
-
-        const formattedEntries = entries.map((entry, index) => {
-          const isExisting = prevIds.has(entry._id);
-          return {
-              _id: isExisting ? entry._id : undefined,
-              client: entry.client?._id,
-              clientLabel: entry.client?.name,
-              particular: entry.particular,
-              acctCodeId: entry.acctCode._id,
-              acctCode: entry.acctCode.code,
-              description: entry.acctCode.description,
-              debit: entry.debit,
-              credit: entry.debit,
-            
-          };
-        });
         data.amount = removeAmountComma(data.amount);
 
         
@@ -123,7 +128,7 @@ if (Number(removeAmountComma(difference)) !== 0) {
       setLoading(true);
       try {
        
-        const result = await kfiAxios.put(`damayan-fund/${damayanFund._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
+        const result = await kfiAxios.put(`damayan-fund/${damayanFund._id}`, {...data, entries: data.entries,});
         const { success, damayanFund: updatedDamayanFund } = result.data;
         if (success) {
           setData(prev => {
@@ -132,6 +137,8 @@ if (Number(removeAmountComma(difference)) !== 0) {
             prev.damayanFunds[index] = { ...updatedDamayanFund };
             return { ...prev };
           });
+        getDamayanFunds(currentPage)
+
           present({
             message: 'Damayan fund successfully updated.',
             duration: 1000,
@@ -160,10 +167,35 @@ if (Number(removeAmountComma(difference)) !== 0) {
         }
         const updated = {
           ...data,
-          entries: entries, 
-          deletedIds: finalDeletedIds,
+          entries: data.entries.map((item, index) => ({
+            ...item,
+            line: index + 1,
+            acctCode: {
+              _id: item.acctCodeId,
+              code: item.acctCode,
+              description: item.description
+            },
+            client:{
+              center: item.particular,
+              name: item.clientLabel,
+              _id: item.client,
+            },
+           
+             action: item._id ? 'update' : 'create',
           _synced: false,
-          action: "update",
+          })), 
+           bank:{
+              code: data.bankCodeLabel,
+              description: data.bankCodeLabel,
+              _id: data.bankCode
+            },
+           center:{
+              centerNo: data.centerLabel,
+              description: data.centerLabel,
+              _id: data.center,
+            },
+          action: existing.isOldData ? 'update' : 'create',
+          _synced: false,
         };
 
         console.log('Form Data',updated)
@@ -238,7 +270,9 @@ if (Number(removeAmountComma(difference)) !== 0) {
             </div>
           </form>
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
-            <UpdateDFEntries isOpen={isOpen} damayanFund={damayanFund} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}  />
+            <DamayanFundFormTable form={form} />
+            
+            {/* <UpdateDFEntries isOpen={isOpen} damayanFund={damayanFund} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}  /> */}
           </div>
 
           <div className="px-3">
@@ -257,7 +291,7 @@ if (Number(removeAmountComma(difference)) !== 0) {
            
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
-          <Signatures open={isOpen} type={'damayan fund'} preparedBy={damayanFund.encodedBy.username} recieveByorDate={damayanFund.createdAt.split('T')[0]}/>
+          <Signatures open={isOpen} type={'damayan fund'} preparedBy={damayanFund.encodedBy.username} recieveByorDate={damayanFund.createdAt?.split('T')[0] || ''}/>
           
 
 

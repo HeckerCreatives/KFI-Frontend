@@ -384,6 +384,7 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
         <IonButton
           onClick={() =>
             append({
+              line: fields.length + 1,
               client: '',
               particular: '',
               acctCodeId: '',

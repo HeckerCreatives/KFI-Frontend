@@ -25,7 +25,6 @@ export class KfiDatabase extends Dexie {
   acknowledgementReceiptEntries!: Table<any>;
   emergencyLoans!: Table<any>;
   emergencyLoanEntries!: Table<any>;
-  damayanFunds!: Table<any>;
   damayanFundEntries!: Table<any>;
 
   //customer
@@ -35,6 +34,8 @@ export class KfiDatabase extends Dexie {
   financialStatements!: Table<any>
   beginningBalance!: Table<any>
   journalVouchers!: Table<any>;
+  damayanFunds!: Table<any>;
+
 
 
   //transactions
@@ -60,6 +61,8 @@ export class KfiDatabase extends Dexie {
       loanReleases: "++id",
       expenseVouchers: "++id, _id",
       journalVouchers: "++id, _id",
+      damayanFunds: "++id, _id",
+
 
 
 
@@ -84,7 +87,6 @@ export class KfiDatabase extends Dexie {
       acknowledgementReceiptEntries: "++id, release",
       emergencyLoans: "++id, code, center",
       emergencyLoanEntries: "++id, emergencyLoan",
-      damayanFunds: "++id, code, center",
       damayanFundEntries: "++id, damayanFund",
     });
   }

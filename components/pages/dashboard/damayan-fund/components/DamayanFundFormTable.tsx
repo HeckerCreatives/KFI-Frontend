@@ -17,7 +17,7 @@ const DamayanFundFormTable = ({ form }: EmergencyLoanFormTableProps) => {
     name: 'entries',
   });
 
-  const handleAddEntry = () => append({ client: '', clientLabel: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0' });
+  const handleAddEntry = () => append({line: fields.length + 1, client: '', clientLabel: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0' });
 
    const [page, setPage] = useState(1);
   const limit = 5;

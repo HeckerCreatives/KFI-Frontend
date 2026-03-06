@@ -36,7 +36,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
     resolver: zodResolver(damayanFundSchema),
     defaultValues: {
       code: '',
-      centerValue: '',
+      center: '',
       centerLabel: '',
       refNo: '',
       remarks: '',
@@ -100,8 +100,36 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
          // const entries = data.entries
          await db.damayanFunds.add({
            ...data,
-           entries: entries,
-           encodedBy: '',
+           entries: data.entries.map((item, index) => ({
+            ...item,
+            line: index + 1,
+            acctCode: {
+              _id: item.acctCodeId,
+              code: item.acctCode,
+              description: item.description
+            },
+            client:{
+              center: item.particular,
+              name: item.clientLabel,
+              _id: item.client,
+            },
+           
+            action: 'create',
+            _synced: false,
+          })),
+            bank:{
+              code: data.bankCodeLabel,
+              description: data.bankCodeLabel,
+              _id: data.bankCode
+            },
+           center:{
+              centerNo: data.centerLabel,
+              description: data.centerLabel,
+              _id: data.center,
+            },
+           encodedBy: {
+            username: user
+           },
            _synced: false,  
            action: "create",
          });

@@ -22,6 +22,7 @@ type Option = {
   centerNo: string;
   loanRelease: string;
   loanReleaseId?: string;
+  week: number
 };
 
 export type TLoanReleaseEntries = {
@@ -39,6 +40,7 @@ type LoanReleaseEntrySelectionProps<T extends FieldValues> = {
   cvNo: Path<T>;
   dueDate: Path<T>;
   noOfWeeks: Path<T>;
+  week?: Path<T>;
   name: Path<T>;
   particular: Path<T>;
   loanReleaseId: Path<T>;
@@ -54,6 +56,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
   noOfWeeks,
   name,
   particular,
+  week,
   client,
   setValue,
   clearErrors,
@@ -111,6 +114,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
     setValue(cvNo as Path<T>, `${loanEntry.cvNo}` as PathValue<T, Path<T>> as any);
     setValue(dueDate as Path<T>, formatDateTable(loanEntry.dueDate) as PathValue<T, Path<T>> as any);
     setValue(noOfWeeks as Path<T>, `${loanEntry.noOfWeeks}` as PathValue<T, Path<T>> as any);
+    setValue(week as Path<T>, `${loanEntry.week}` as PathValue<T, Path<T>> as any);
     setValue(name as Path<T>, loanEntry.name as PathValue<T, Path<T>> as any);
     setValue(client as Path<T>, loanEntry.clientId as PathValue<T, Path<T>> as any);
     setValue(particular as Path<T>, `${loanEntry.centerNo} - ${loanEntry.name}` as PathValue<T, Path<T>> as any);
@@ -161,7 +165,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6  border-2 !border-slate-200">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Release Entry Selection LRES TSX" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Release Entry Selection" />
 
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">

@@ -5,7 +5,7 @@ import { db } from "../../../../database/db";
 import { business, key } from "ionicons/icons";
 import { removeAmountComma } from "../../../ui/utils/formatNumber";
 
-type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans";
+type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans";
 
 export default function UploadChanges() {
   const [changes, setChanges] = useState<Record<SyncKey, number>>({
@@ -23,8 +23,12 @@ export default function UploadChanges() {
     natures: 0,
     systemParameters: 0,
     productLoans: 0,
+    damayanFunds: 0,
+    emergencyLoans: 0
   });
     const [present] = useIonToast();
+  const user = localStorage.getItem('user')
+
   
 
   const [loading, setLoading] = useState<SyncKey | null>(null);
@@ -60,6 +64,20 @@ export default function UploadChanges() {
       label: "Journal Voucher",
       endpoint: "/sync/journal-vouchers",
         field:'journalVouchers'
+
+    },
+    {
+      key: "damayanFunds",
+      label: "Damayan Funds",
+      endpoint: "/sync/damayan-funds",
+        field:'damayanFunds'
+
+    },
+    {
+      key: "emergencyLoans",
+      label: "Emergency Loans",
+      endpoint: "/sync/emergency-loans",
+        field:'emergencyLoans'
 
     },
     {
@@ -139,12 +157,15 @@ export default function UploadChanges() {
     const natures = await db.natures.toArray();
     const params = await db.systemParameters.toArray();
     const loans = await db.productLoans.toArray();
+    const damayan = await db.damayanFunds.toArray();
+    const emergencyl = await db.emergencyLoans.toArray();
 
     setChanges({
       clientMasterFile: cmf.filter((e) => e._synced === false).length,
       loanReleases: lr.filter((e) => e._synced === false).length,
       expenseVouchers: ev.filter((e) => e._synced === false).length,
       journalVouchers: jv.filter((e) => e._synced === false).length,
+      damayanFunds: damayan.filter((e) => e._synced === false).length,
       groupOfAccounts: goa.filter((e) => e._synced === false).length,
       chartOfAccounts: coa.filter((e) => e._synced === false).length,
       centers: centers.filter((e) => e._synced === false).length,
@@ -155,6 +176,7 @@ export default function UploadChanges() {
       natures: natures.filter((e) => e._synced === false).length,
       systemParameters: params.filter((e) => e._synced === false).length,
       productLoans: loans.filter((e) => e._synced === false).length,
+      emergencyLoans: emergencyl.filter((e) => e._synced === false).length,
     });
   }, []);
 
@@ -198,6 +220,7 @@ export default function UploadChanges() {
         date,
         checkDate,
         supplier,
+        centerLabel,
         ...rest
       } = item;
 
@@ -213,14 +236,16 @@ export default function UploadChanges() {
         noOfWeeks: Number(removeAmountComma(noOfWeeks)),
         code: code ?? cvNo,
         loan: loan?._id,
+        centerLabel: center?.description,
         date: date?.split('T')[0],
         checkDate: date?.split('T')[0],
         supplier: supplier?._id,
+        name: user,
         entries: entries.map((item: any, index: number) => ({
             ...item,
             debit: Number(removeAmountComma(item.debit)),
             credit: Number(removeAmountComma(item.credit)),
-            acctCode: item.acctCodeId,
+            acctCode: item.acctCodeId || item.acctCode._id,
             client: item.clientId || item.client?._id,
 
         })) ,

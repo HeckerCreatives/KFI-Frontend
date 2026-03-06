@@ -55,11 +55,17 @@ const DeleteLoanRelease = ({ transaction, getTransactions, searchkey, sortKey, r
     } else {
       try {
       if (transaction._id) {
-          await db.loanReleases.update(transaction.id, {
-            deletedAt: new Date().toISOString(),
-            _synced: false,
-            action: "delete",
-          });
+          const existing = await db.loanReleases.get(transaction.id);
+           await db.loanReleases.update(transaction.id, {
+             deletedAt: new Date().toISOString(),
+             entries: existing.entries.map((item: any) => ({
+               ...item,
+               action: 'delete',
+               _synced: false,
+             })),
+             _synced: false,
+             action: "delete",
+           });
         } else {
           await db.loanReleases.delete(transaction.id);
         }

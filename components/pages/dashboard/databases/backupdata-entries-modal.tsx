@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncBanks, syncBeginningBalance, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncWeeklySavings } from "../../../../database/sync"
+import { syncAR, syncBanks, syncBeginningBalance, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDamayanFund, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncWeeklySavings } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -32,11 +32,13 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "loanrelease", label: "Syncing loan release", status: "pending" },
    { id: "expenseVouchers", label: "Syncing Expense Vouchers", status: "pending" },
    { id: "journalVouchers", label: "Syncing Journal Vouchers", status: "pending" },
+   { id: "emergencyLoans", label: "Syncing Emergency Loans", status: "pending" },
+   { id: "damayanFunds", label: "Syncing Damayan Funds", status: "pending" },
+
+
 
   // { id: "officialReceipts", label: "Syncing Official Receipts", status: "pending" },
   // { id: "ackReceipts", label: "Syncing Acknowledgement Receipts", status: "pending" },
-  // { id: "emergencyLoans", label: "Syncing Emergency Loans", status: "pending" },
-  // { id: "damayanFunds", label: "Syncing Damayan Funds", status: "pending" },
 ]
 
 interface BackupModalContentProps {
@@ -163,6 +165,18 @@ export function BackupEntriesModalContent({
       console.log('journalVouchers', journalVouchers)
       await syncJournalVoucher(journalVouchers.data?.journalVouchers || [])
       updateStepStatus("journalVouchers", "complete")
+
+      updateStepStatus("emergencyLoans", "loading")
+      const emergencyLoans = await kfiAxios.get(`/sync/emergency-loans?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      console.log('emergencyLoans', emergencyLoans)
+      await syncEmergencyLoan(emergencyLoans.data?.emergencyLoans || [])
+      updateStepStatus("emergencyLoans", "complete")
+
+      updateStepStatus("damayanFunds", "loading")
+      const damayanFunds = await kfiAxios.get(`/sync/damayan-funds?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      console.log('damayanFunds', damayanFunds)
+      await syncDamayanFund(damayanFunds.data?.damayanFunds || [])
+      updateStepStatus("damayanFunds", "complete")
 
 
 

@@ -22,7 +22,7 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
     },[watchDate])
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-3 gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 px-3 gap-2">
         <div className="space-y-2">
           <FormIonItem className="[--min-height:0]">
             <InputText
@@ -36,25 +36,10 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
               labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-16 !text-slate-600 text-end"
             />
           </FormIonItem>
+         
+
+
           {/* <div className="flex items-start gap-2 flex-nowrap">
-            <FormIonItem className="flex-1 [--min-height:0]">
-              <InputText
-                disabled={loading}
-                readOnly
-                name="centerLabel"
-                control={form.control}
-                clearErrors={form.clearErrors}
-                label="Center Code"
-                placeholder="Click find to search for center code"
-                className="!p-2 rounded-md !text-[0.7rem] "
-                labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-16 !text-slate-600 text-end"
-              />
-            </FormIonItem>
-            <CenterSelection centerLabel="centerLabel" centerValue="centerValue" clearErrors={form.clearErrors} setValue={form.setValue} className="text-xs" />
-          </div> */}
-
-
-          <div className="flex items-start gap-2 flex-nowrap">
             <FormIonItem className="flex-1 [--min-height:0]">
               <InputText
                 disabled={loading}
@@ -70,12 +55,9 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
 
             </FormIonItem>
             <CenterClientSelection clientLabel='clientLabel' clientValue='clientValue' clearErrors={form.clearErrors} setValue={form.setValue} className="text-xs" centerLabel={'code'} centerValue={'code'}  />
-          </div>
+          </div> */}
 
-          
-
-        </div>
-        <div className="space-y-2">
+           <div className="space-y-2">
           <FormIonItem className="[--min-height:0]">
             <InputText
               disabled={loading}
@@ -116,6 +98,11 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
             />
           </FormIonItem>
         </div>
+
+          
+
+        </div>
+       
       
       <div className="space-y-2">
         <FormIonItem className="[--min-height:0]">

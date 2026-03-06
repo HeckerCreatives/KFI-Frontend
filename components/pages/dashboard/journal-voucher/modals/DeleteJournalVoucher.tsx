@@ -55,11 +55,17 @@ const DeleteJournalVoucher = ({ journalVoucher, getJournalVouchers, searchkey, s
     } else {
       try {
       if (journalVoucher._id) {
-          await db.journalVouchers.update(journalVoucher.id, {
-            deletedAt: new Date().toISOString(),
-            _synced: false,
-            action: "delete",
-          });
+          const existing = await db.journalVouchers.get(journalVoucher.id);
+                  await db.journalVouchers.update(journalVoucher.id, {
+                    deletedAt: new Date().toISOString(),
+                    entries: existing.entries.map((item: any) => ({
+                      ...item,
+                      action: 'delete',
+                      _synced: false,
+                    })),
+                    _synced: false,
+                    action: "delete",
+                  });
         } else {
           await db.journalVouchers.delete(journalVoucher.id);
         }
