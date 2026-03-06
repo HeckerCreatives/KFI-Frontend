@@ -26,7 +26,8 @@ const DeleteFS = ({item,getList,currentPage }: DeleteNatureProps) => {
 
   async function handleDelete() {
       setLoading(true);
-      try {
+     if(online){
+       try {
         const result = await kfiAxios.delete(`/financial-statement/${item._id}`);
         const { success } = result.data;
         if (success) {
@@ -46,6 +47,32 @@ const DeleteFS = ({item,getList,currentPage }: DeleteNatureProps) => {
       } finally {
         setLoading(false);
       }
+     } else {
+       if (item._id) {
+                   const existing = await db.financialStatements.get(item.id);
+        
+                 await db.financialStatements.update(item.id, {
+                             deletedAt: new Date().toISOString(),
+                             entries: existing.entries.map((item: any) => ({
+                               ...item,
+                               action: 'delete',
+                               _synced: false,
+                             })),
+                             _synced: false,
+                             action: "delete",
+                           });
+              } else {
+                await db.financialStatements.delete(item.id);
+              }
+            getList(currentPage);
+            dismiss()
+             present({
+                  message: 'Data successfully deleted!.',
+                  duration: 1000,
+                });
+             
+              
+     }
    
   }
 

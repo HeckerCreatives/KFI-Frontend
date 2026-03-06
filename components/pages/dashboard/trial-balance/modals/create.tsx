@@ -41,7 +41,8 @@ const CreateTB = ({ getList }: CreateProps) => {
 
   async function onSubmit(data: TBFormData) {
       setLoading(true);
-      try {
+     if(online){
+       try {
         const result = await kfiAxios.post('/trial-balance', data);
         const { success } = result.data;
         if (success) {
@@ -61,6 +62,23 @@ const CreateTB = ({ getList }: CreateProps) => {
       } finally {
         setLoading(false);
       }
+     } else {
+      await db.trialBalance.add(
+                    {
+                    ...data, 
+                    _synced: false,
+                    action: "create",
+                    isOldData: false
+                  }
+                  );
+                  getList(0);
+                  dismiss()
+                  present({
+                        message: 'Group of account successfully created!.',
+                        duration: 1000,
+                      });
+                  return;
+          }
     
   }
 

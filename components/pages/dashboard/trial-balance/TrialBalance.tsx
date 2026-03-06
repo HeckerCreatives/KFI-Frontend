@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react';
+import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import TableNoRows from '../../../ui/forms/TableNoRows';
@@ -17,6 +17,10 @@ import DeleteTB from './modals/delete';
 import TBReport from './modals/report';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../utils/permissions';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { TABLE_LIMIT } from '../../../utils/constants';
+import { db } from '../../../../database/db';
+import { filterAndSortGOA } from '../../../ui/utils/sort';
 
 export type TBS = {
   trialBalances: FinancialStatements[];
@@ -31,6 +35,11 @@ const TrialBalance = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+  const online = useOnlineStore((state) => state.online);
+
+  const [present] = useIonToast();
+  
+  
   
     const [data, setData] = useState<TBS>({
       trialBalances: [],
@@ -41,7 +50,8 @@ const TrialBalance = () => {
     });
 
    const getList = async (page: number) => {
-          try {
+         if(online){
+           try {
             const result = await kfiAxios.get('/trial-balance');
             const { data, success,hasPrevPage, hasNextPage, totalPages } = result.data
 
@@ -58,6 +68,38 @@ const TrialBalance = () => {
           } catch (error) {
           } finally {
           }
+         } else {
+            setData(prev => ({ ...prev, loading: true }));
+                    try {
+                      const limit = TABLE_LIMIT;
+                      let data = await db.trialBalance.toArray();
+                      console.log(data)
+                      const filteredData = data.filter(e => e.action !== 'delete');
+                      let allData = filterAndSortGOA(filteredData, '', '');
+                      const totalItems = allData.length;
+                      const totalPages = Math.ceil(totalItems / limit);
+                      const start = (page - 1) * limit;
+                      const end = start + limit;
+                      const fs = allData.slice(start, end);
+                      const hasPrevPage = page > 1;
+                      const hasNextPage = page < totalPages;
+                      setData(prev => ({
+                        ...prev,
+                        trialBalances: fs,
+                        totalPages,
+                        prevPage: hasPrevPage,
+                        nextPage: hasNextPage,
+                      }));
+                      setCurrentPage(page);
+                    } catch (error) {
+                      present({
+                        message: 'Failed to load records.',
+                        duration: 1000,
+                      });
+                    } finally {
+                      setData(prev => ({ ...prev, loading: false }));
+                    }
+         }
         
     };
 

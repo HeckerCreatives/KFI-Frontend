@@ -1,6 +1,11 @@
 import z from 'zod';
 
 export const tbchema = z.object({
+   _id: z.string().optional(),
+  id: z.string().optional(),
+  action: z.string().optional(),
+  synced: z.any().optional(),
+  line: z.any().optional(),
   reportCode: z.string().min(1, 'Report code is required'),
   reportName: z.string().min(1, 'Report name is required'),
  
@@ -8,6 +13,9 @@ export const tbchema = z.object({
 
 export const entries = z.object({
   _id: z.string().optional(),
+  id: z.string().optional(),
+  action: z.string().optional(),
+  synced: z.any().optional(),
   line: z.any().optional(),
   acctCode: z.string().min(1, 'Account code is required'),
   acctCodeName: z.string().optional(),

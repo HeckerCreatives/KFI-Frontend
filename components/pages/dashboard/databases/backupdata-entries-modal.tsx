@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncBanks, syncBeginningBalance, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDamayanFund, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncWeeklySavings } from "../../../../database/sync"
+import { syncAR, syncBanks, syncBeginningBalance, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDamayanFund, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncTrialBalance, syncWeeklySavings } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -27,6 +27,7 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "sparameters", label: "Syncing system parameters", status: "pending" },
    { id: "fs", label: "Syncing financial statements", status: "pending" },
    { id: "begbalance", label: "Syncing beginning balance", status: "pending" },
+   { id: "trialbal", label: "Syncing trial balance", status: "pending" },
 
    //transactions
    { id: "loanrelease", label: "Syncing loan release", status: "pending" },
@@ -57,7 +58,7 @@ export function BackupEntriesModalContent({
   const [isSyncing, setIsSyncing] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
   const [error, setError] = useState<string | null>(null)
-    const [present] = useIonToast();
+  const [present] = useIonToast();
   
 
   const completedSteps = steps.filter((s) => s.status === "complete").length
@@ -145,6 +146,12 @@ export function BackupEntriesModalContent({
       console.log('begbalance', fs)
       await syncBeginningBalance(begbalance.data?.data.items || [])
       updateStepStatus("begbalance", "complete")
+
+      updateStepStatus("trialbal", "loading")
+      const trialbal = await kfiAxios.get(`/sync/trial-balances?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      console.log('trialbal', trialbal)
+      await syncTrialBalance(trialbal.data?.data.items || [])
+      updateStepStatus("trialbal", "complete")
 
 
       //transactions

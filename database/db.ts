@@ -33,6 +33,7 @@ export class KfiDatabase extends Dexie {
   centers!: Table<any>;
   financialStatements!: Table<any>
   beginningBalance!: Table<any>
+  trialBalance!: Table<any>
   journalVouchers!: Table<any>;
   damayanFunds!: Table<any>;
 
@@ -56,6 +57,7 @@ export class KfiDatabase extends Dexie {
       weeklySavings: "++id, _id",
       financialStatements: "++id, _id",
       beginningBalance: "++id, _id",
+      trialBalance: "++id, _id",
 
       //trnsactions
       loanReleases: "++id",

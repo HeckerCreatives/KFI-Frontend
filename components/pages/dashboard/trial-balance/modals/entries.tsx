@@ -73,7 +73,8 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
 
 
 
-      try {
+     if(online){
+       try {
         const result = await kfiAxios.post(`/trial-balance/entry/${item._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
         const { success } = result.data;
         if (success) {
@@ -93,12 +94,53 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
       } finally {
         setLoading(false);
       }
+     } else {
+       try {
+                 const existing = await db.trialBalance.get(item.id);
+                 if (!existing) {
+                   console.warn("Data not found");
+                   return;
+                 }
+                 const updated = {
+                   ...existing,
+                   ...data, 
+                    entries: data.entries.map((item) => ({
+                      ...item,
+                      acctCode: {
+                        _id: item.acctCode,
+                        code: item.acctCodeName,
+                        description: item.acctCodeDescription,
+                      },
+                      action: item._id ? 'update' : 'create',
+                      _synced: false,
+                    })),
+                    action: existing.isOldData ? 'update' : 'create',
+                    _synced: false,
+                 };
+          
+                 await db.financialStatements.update(item.id, updated);
+          
+                getList(currentPage)
+                 dismiss();
+                 present({
+                   message: "Data successfully updated!",
+                   duration: 1000,
+                 });
+                setLoading(false)
+      
+          
+               } catch (error) {
+                setLoading(false)
+                 console.error("Offline update failed:", error);
+               }
+     }
     
   }
 
 
   const getEntries = async () => {
-          try {
+         if(online){
+           try {
             const result = await kfiAxios.get(`/trial-balance/entry/${item._id}`);
 
             const { trialBalanceEntries, success } = result.data as any
@@ -119,6 +161,17 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
           } catch (error) {
           } finally {
           }
+         } else {
+            const data = await db.trialBalance.get(item.id)
+                const entries = data.entries.map((item: any) => ({
+                  ...item,
+                  acctCode: item.acctCode._id,
+                  acctCodeLabel: item.acctCode.code,
+                  acctCodeDescription: item.acctCode.description,
+                }))
+          
+                form.setValue('entries', entries)
+         }
         
     };
 

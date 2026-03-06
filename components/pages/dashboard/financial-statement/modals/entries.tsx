@@ -17,6 +17,7 @@ import { createSharp } from 'ionicons/icons';
 import FinancialStatementEntryForm from './entries-form';
 import FSFormTable from '../components/entry-table';
 import { update } from 'pullstate';
+import { entries } from '../../../../../validations/beginningbalance.schema';
 
 type UpdateProps = {
     item: FinancialStatements
@@ -33,6 +34,7 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
   const [present] = useIonToast();
    const [prevEntries, setPrevEntries] = useState<any[]>([]);
    const [deletedIds, setDeletedIds] = useState<string[]>([]);
+   
   
   
   const form = useForm<FSEntriesFormData>({
@@ -77,9 +79,8 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
         .map(e => typeof e === 'string' ? e : e._id)
         .filter(id => !currentIds.has(id));
 
-
-
-      try {
+      if(online){
+        try {
         const result = await kfiAxios.put(`/financial-statement/entry/${item._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
         const { success } = result.data;
         if (success) {
@@ -99,12 +100,61 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
       } finally {
         setLoading(false);
       }
+      } else {
+         try {
+           const existing = await db.financialStatements.get(item.id);
+           if (!existing) {
+             console.warn("Data not found");
+             return;
+           }
+           const updated = {
+             ...existing,
+             ...data, 
+             primary: {
+                month: data.primaryMonth,
+                year: data.primaryYear,
+              },
+              secondary: {
+                month: data.secondaryMonth,
+                year: data.secondaryYear,
+              },
+              entries: data.entries.map((item) => ({
+                ...item,
+                acctCode: {
+                  _id: item.acctCode,
+                  code: item.acctCodeName,
+                  description: item.acctCodeDescription,
+                },
+                action: item._id ? 'update' : 'create',
+                _synced: false,
+              })),
+              action: existing.isOldData ? 'update' : 'create',
+              _synced: false,
+           };
+    
+           await db.financialStatements.update(item.id, updated);
+    
+          getList(currentPage)
+           dismiss();
+           present({
+             message: "Data successfully updated!",
+             duration: 1000,
+           });
+          setLoading(false)
+
+    
+         } catch (error) {
+          setLoading(false)
+           console.error("Offline update failed:", error);
+         }
+      }
     
   }
 
 
   const getEntries = async () => {
-          try {
+    if(online){
+       try {
             const result = await kfiAxios.get(`/financial-statement/entry/${item._id}`);
 
             const { financialStatementEntries, success } = result.data as any
@@ -125,6 +175,18 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
           } catch (error) {
           } finally {
           }
+    } else {
+      const data = await db.financialStatements.get(item.id)
+      const entries = data.entries.map((item: any) => ({
+        ...item,
+        acctCode: item.acctCode._id,
+        acctCodeLabel: item.acctCode.code,
+        acctCodeDescription: item.acctCode.description,
+      }))
+
+      form.setValue('entries', entries)
+    }
+         
         
     };
 
@@ -133,7 +195,8 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
         modal.current?.dismiss();
     }
 
-    console.log(form.watch('entries'))
+    console.log(form.formState.errors)
+
 
 
 

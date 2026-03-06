@@ -5,7 +5,7 @@ import { db } from "../../../../database/db";
 import { business, key } from "ionicons/icons";
 import { removeAmountComma } from "../../../ui/utils/formatNumber";
 
-type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans";
+type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans" | "financialStatements";
 
 export default function UploadChanges() {
   const [changes, setChanges] = useState<Record<SyncKey, number>>({
@@ -24,7 +24,8 @@ export default function UploadChanges() {
     systemParameters: 0,
     productLoans: 0,
     damayanFunds: 0,
-    emergencyLoans: 0
+    emergencyLoans: 0,
+    financialStatements: 0,
   });
     const [present] = useIonToast();
   const user = localStorage.getItem('user')
@@ -140,6 +141,12 @@ export default function UploadChanges() {
       endpoint: "/sync/loans",
       field:'loans'
     },
+    {
+      key: "financialStatements",
+      label: "Financial Statements",
+      endpoint: "/sync//financial-statements",
+      field:'financialStatements'
+    },
   ];
 
   const loadChanges = useCallback(async () => {
@@ -159,6 +166,7 @@ export default function UploadChanges() {
     const loans = await db.productLoans.toArray();
     const damayan = await db.damayanFunds.toArray();
     const emergencyl = await db.emergencyLoans.toArray();
+    const fs = await db.financialStatements.toArray();
 
     setChanges({
       clientMasterFile: cmf.filter((e) => e._synced === false).length,
@@ -177,6 +185,7 @@ export default function UploadChanges() {
       systemParameters: params.filter((e) => e._synced === false).length,
       productLoans: loans.filter((e) => e._synced === false).length,
       emergencyLoans: emergencyl.filter((e) => e._synced === false).length,
+      financialStatements: fs.filter((e) => e._synced === false).length,
     });
   }, []);
 
@@ -221,6 +230,8 @@ export default function UploadChanges() {
         checkDate,
         supplier,
         centerLabel,
+        primary,
+        secondary,
         ...rest
       } = item;
 
@@ -241,6 +252,10 @@ export default function UploadChanges() {
         checkDate: date?.split('T')[0],
         supplier: supplier?._id,
         name: user,
+        primaryYear: Number(primary?.year),
+        primaryMonth: Number(primary?.month),
+        secondaryYear: Number(secondary?.year),
+        secondaryMonth: Number(secondary?.month),
         entries: entries.map((item: any, index: number) => ({
             ...item,
             debit: Number(removeAmountComma(item.debit)),

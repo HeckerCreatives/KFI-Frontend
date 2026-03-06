@@ -35,7 +35,7 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
     primaryYear: String(item.primary.year),
     primaryMonth: String(item.primary.month),
     type: item.type,
-    secondaryMonth: String(item.secondary?.year ?? ''),
+    secondaryMonth: String(item.secondary?.month ?? ''),
     secondaryYear: String(item.secondary?.year ?? ''),
     reportCode: item.reportCode,
     reportName: item.reportName
@@ -72,7 +72,8 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
       }
      } else {
        try {
-                     const existing = await db.financialStatements.get(item._id);
+                     const existing = await db.financialStatements.get(item.id);
+
                      if (!existing) {
                        console.warn("Data not found");
                        return;
@@ -91,8 +92,11 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
                         action: existing.isOldData ? 'update' : 'create',
                         _synced: false,
                      };
+
+                     console.log(updated)
+
              
-                     await db.financialStatements.update(item._id, updated);
+                     await db.financialStatements.update(item.id, updated);
              
                     getList(currentPage)
                      dismiss();
@@ -100,8 +104,12 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
                        message: "Data successfully updated!",
                        duration: 1000,
                      });
+
+                     setLoading(false)
              
                    } catch (error) {
+                     setLoading(false)
+
                      console.error("Offline update failed:", error);
                    }
      }

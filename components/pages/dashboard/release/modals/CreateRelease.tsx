@@ -64,6 +64,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
       setLoading(true);
       try {
         data.amount = removeAmountComma(data.amount);
+        data.acctMonth = (removeAmountComma(data.acctMonth));
         data.cashCollection = removeAmountComma(data.cashCollection as string);
       data.entries = data.entries
         ? data.entries.map((entry: any, index: number) => ({
@@ -73,14 +74,22 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
             loanReleaseEntryId: entry.loanReleaseEntryId || entry.loanReleaseId || '',
             loanReleaseId: entry.loanReleaseId || '',
             dueDate: formatDateInput(entry.dueDate ?? ''),
-            week: entry.noOfWeeks,
+            week: Number(entry.noOfWeeks),
+            noOfWeeks: entry.noOfWeeks,
             acctCodeDesc: entry.description,
             debit: Number(removeAmountComma(entry.debit)),
             credit: Number(removeAmountComma(entry.credit)),
             line: index + 1,
+            type: data.type,
           }))
         : [];
-        const result = await kfiAxios.post('release', data);
+        const result = await kfiAxios.post('release', {
+          ...data,
+          acctMonth: Number(data.acctMonth),
+          acctYear: Number(data.acctYear),
+          amount: Number(data.amount),
+          cashCollection: Number(data.cashCollection)
+        });
         const { success } = result.data;
         if (success) {
           getReleases(1);
@@ -130,6 +139,8 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
   }
 
   const amount = form.watch('amount')
+
+  console.log(form.formState.errors)
 
   return (
     <>

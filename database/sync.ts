@@ -319,6 +319,7 @@ export async function syncFinancialStatements(apiData: any) {
   const data: any[] = apiData?.map((c: any) => ({
     ...c,
      id: c._id,
+     _id: c._id,
     _synced: true,
     isOldData: true,
   }));
@@ -346,6 +347,26 @@ export async function syncBeginningBalance(apiData: any) {
    await db.table("beginningBalance").bulkPut(data);
 
   console.log('Sync syncBeginningBalance', data)
+
+  return true;
+}
+
+export async function syncTrialBalance(apiData: any) {
+  console.log('Data syncTrialBalance', apiData)
+  if (!apiData) return;
+
+ await db.trialBalance.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+   await db.table("trialBalance").bulkPut(data);
+
+  console.log('Sync syncTrialBalance', data)
 
   return true;
 }

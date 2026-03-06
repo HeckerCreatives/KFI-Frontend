@@ -46,7 +46,8 @@ const UpdateTB = ({ getList, item, currentPage }: UpdateProps) => {
 
   async function onSubmit(data: TBFormData) {
       setLoading(true);
-      try {
+      if(online){
+        try {
         const result = await kfiAxios.put(`/trial-balance/${item._id}`, data);
         const { success } = result.data;
         if (success) {
@@ -65,6 +66,42 @@ const UpdateTB = ({ getList, item, currentPage }: UpdateProps) => {
         formErrorHandler(errors, form.setError, fields);
       } finally {
         setLoading(false);
+      }
+      } else {
+          try {
+                             const existing = await db.trialBalance.get(item.id);
+        
+                             if (!existing) {
+                               console.warn("Data not found");
+                               return;
+                             }
+                             const updated = {
+                               ...existing,
+                               ...data, 
+                             
+                                action: existing.isOldData ? 'update' : 'create',
+                                _synced: false,
+                             };
+        
+                             console.log(updated)
+        
+                     
+                             await db.trialBalance.update(item.id, updated);
+                     
+                            getList(currentPage)
+                             dismiss();
+                             present({
+                               message: "Data successfully updated!",
+                               duration: 1000,
+                             });
+        
+                             setLoading(false)
+                     
+                           } catch (error) {
+                             setLoading(false)
+        
+                             console.error("Offline update failed:", error);
+                           }
       }
     
   }

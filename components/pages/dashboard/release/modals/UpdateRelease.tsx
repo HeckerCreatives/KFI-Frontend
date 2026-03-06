@@ -266,7 +266,7 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
              </div>
            </div>
 
-          <Signatures open={isOpen} type={'official receipt'} preparedBy={release.encodedBy.username} recieveByorDate={release.createdAt.split('T')[0]}/>
+          <Signatures open={isOpen} type={'official receipt'} preparedBy={release.encodedBy?.username} recieveByorDate={release.createdAt?.split('T')[0] || ''}/>
           
         </div>
       </IonModal>

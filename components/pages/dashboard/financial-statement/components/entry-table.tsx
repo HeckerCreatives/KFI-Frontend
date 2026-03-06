@@ -21,7 +21,7 @@ const FSFormTable = ({ form, loading = false }: ExpenseVoucherFormTableProps) =>
 
   const addEntry = () => {
     form.clearErrors('entries');
-    append({acctCode: '', remarks : '', amountType: ''});
+    append({line: fields.length + 1,acctCode: '', remarks : '', amountType: ''});
   };
 
   const deleteEntry = (index: number) => {

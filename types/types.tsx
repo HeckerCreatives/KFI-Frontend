@@ -587,6 +587,9 @@ export type FinancialStatements = {
      year: number,
      month: number},
   _id: string,
+  id?: string,
+  action: string,
+  _synced: boolean,
   reportCode: string,
   reportName: string,
   type: string,
@@ -594,6 +597,7 @@ export type FinancialStatements = {
   subTitle: string,
   createdAt: string,
   updatedAt: string,
+  entries: any[]
 };
 
 export type BegBalance = {

@@ -114,7 +114,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
     setValue(cvNo as Path<T>, `${loanEntry.cvNo}` as PathValue<T, Path<T>> as any);
     setValue(dueDate as Path<T>, formatDateTable(loanEntry.dueDate) as PathValue<T, Path<T>> as any);
     setValue(noOfWeeks as Path<T>, `${loanEntry.noOfWeeks}` as PathValue<T, Path<T>> as any);
-    setValue(week as Path<T>, `${loanEntry.week}` as PathValue<T, Path<T>> as any);
+    week && setValue(week as Path<T>, `${loanEntry.week}` as PathValue<T, Path<T>> as any);
     setValue(name as Path<T>, loanEntry.name as PathValue<T, Path<T>> as any);
     setValue(client as Path<T>, loanEntry.clientId as PathValue<T, Path<T>> as any);
     setValue(particular as Path<T>, `${loanEntry.centerNo} - ${loanEntry.name}` as PathValue<T, Path<T>> as any);
