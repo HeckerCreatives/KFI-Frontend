@@ -10,7 +10,7 @@ import InputTextarea from '../../../../ui/forms/InputTextarea';
 import classNames from 'classnames';
 
 type TForm = {
-  form: UseFormReturn<ExpenseVoucherFormData | UpdateExpenseVoucherFormData>;
+  form: UseFormReturn<ExpenseVoucherFormData>;
   loading?: boolean;
 };
 

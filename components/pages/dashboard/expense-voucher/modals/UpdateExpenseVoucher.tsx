@@ -17,6 +17,7 @@ import { formatAmount, formatNumber, removeAmountComma } from '../../../../ui/ut
 import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import ExpenseVoucherFormTable from '../components/ExpenseVoucherFormTable';
 
 type UpdateExpenseVoucherProps = {
   expenseVoucher: ExpenseVoucher;
@@ -33,9 +34,33 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
   const [preventries, setPrevEntries] = useState<ExpenseVoucherEntry[]>(expenseVoucher.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const online = useOnlineStore((state) => state.online);
+  const user = localStorage.getItem('user')
+
+
+  const fomattedEntries = expenseVoucher.entries.map((item) => ({
+    ...item,
+     line: item.line,
+      _id: item._id,
+      id: item._id,
+      client: item.client?._id,
+      clientLabel: item.client?.name,
+      particular: item.particular,
+      acctCodeId: item.acctCode._id,
+      acctCode: item.acctCode.code,
+      description: item.acctCode.description,
+      debit: String(item.debit) ?? '0' ,
+      credit: String(item.credit) ?? '0' ,
+      interest: (item.interest || item.interestRate) === null ? '0' : String(item.interest || item.interestRate),
+      cycle: item.cycle ?? '',
+      checkNo: item.cycle ?? '' ,
+      typeOfLoan: '',
+      cvForRecompute: item.cvForRecompute,
+    
+
+  }))
   
-  const form = useForm<UpdateExpenseVoucherFormData>({
-    resolver: zodResolver(updateExpenseVoucherSchema),
+  const form = useForm<ExpenseVoucherFormData>({
+    resolver: zodResolver(expenseVoucherSchema),
     defaultValues: {
       code: '',
       supplier: '',
@@ -57,7 +82,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
     if (expenseVoucher) {
       form.reset({
         code: expenseVoucher.code,
-        supplier: `${expenseVoucher.supplier}`,
+        supplier: `${expenseVoucher.supplier.code}`,
         supplierId: expenseVoucher.supplier._id,
         refNo: expenseVoucher.refNo,
         remarks: expenseVoucher.remarks,
@@ -69,6 +94,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
         bank: expenseVoucher.bank._id,
         bankLabel: `${expenseVoucher.bank.code}`,
         amount: `${formatAmount(expenseVoucher.amount)}`,
+        entries: fomattedEntries
         
       });
     }
@@ -80,38 +106,26 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
     setDeletedIds([])
   }
 
-  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+  const difference = `${formatNumber(Math.abs(form.watch('entries')?.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - form.watch('entries')?.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
 
-  async function onSubmit(data: UpdateExpenseVoucherFormData) {
+  async function onSubmit(data: ExpenseVoucherFormData) {
         data.amount = removeAmountComma(data.amount);
 
-      const finalDeletedIds = deletedIds.filter((id) =>
-          preventries.some((e) => e._id === id)
-          );
-
-        const prevIds = new Set(preventries.map((e) => e._id));
-
-        const formattedEntries = entries.map((entry, index) => {
-          const isExisting = prevIds.has(entry._id);
-          return {
-            line: index + 1 ,
-            _id: isExisting ? entry._id : undefined,
-            client: entry.client?._id ?? "",
-            clientLabel: entry.client.name ?? "",
-            particular: entry.particular,
-            acctCodeId: entry.acctCode?._id ?? "",
-            acctCode: entry.acctCode?.code ?? "",
-            description: entry.acctCode?.description ?? "",
-            debit: entry.debit?.toString() ?? "",
-            credit: entry.credit?.toString() ?? "",
-            cvForRecompute: entry.cvForRecompute
-          };
-        });
 
       if (Number(removeAmountComma(difference)) !== 0) {
         form.setError('root', { message: `Debit and Credit must be balanced.` });
         return;
       }
+
+       const entriesPayload = data.entries.map((item) => ({
+              ...item,
+              debit: Number(removeAmountComma(item.debit || '0')) ?? '0' ,
+              credit: Number(removeAmountComma(item.credit || '0')) ?? '0' ,
+              // interest: Number(removeAmountComma(item.interest || 0)) ?? '0',
+              action: item._id ? 'update' : 'create',
+              _synced: false,
+            }))
+      
 
 
    if(online){
@@ -119,7 +133,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
       try {
 
       
-        const result = await kfiAxios.put(`/expense-voucher/${expenseVoucher._id}`, {...data, entries: formattedEntries,deletedIds: finalDeletedIds});
+        const result = await kfiAxios.put(`/expense-voucher/${expenseVoucher._id}`, {...data, entries: entriesPayload});
         const { success, expenseVoucher: updatedExpenseVoucher } = result.data;
         if (success) {
           setData(prev => {
@@ -157,18 +171,35 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
         }
         const updated = {
           ...data,
-          entries: entries.map((item, index) => ({
+          entries: data.entries.map((item, index) => ({
             ...item,
             line: index + 1,
-            action: existing.isOldData ? 'update' : 'create',
-            _synced: false,
+            acctCode: {
+              _id: item.acctCodeId,
+              code: item.acctCode,
+              description: item.description
+            },
+            client:{
+              center: item.particular,
+              name: item.clientLabel,
+              _id: item.client,
+            },
+           action: item._id ? 'update' : 'create',
+          _synced: false,
           })), 
           bank:{
             code: data.bankLabel,
             description: data.bankLabel,
             _id: data.bank
           },
-          deletedIds: finalDeletedIds,
+           supplier:{
+              code: data.supplier,
+              description: data.supplier,
+              _id: data.supplierId,
+            },
+          encodedBy:{
+            username: user
+          },
           action: existing.isOldData ? 'update' : 'create',
           _synced: false,
         };
@@ -243,7 +274,9 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
 
           </form>
           <div className="border-t border-t-slate-200 mt-2 flex-1 py-2">
-            <UpdateExpenseVoucherEntries isOpen={isOpen} expenseVoucher={expenseVoucher} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}/>
+            <ExpenseVoucherFormTable form={form} loading={loading} />
+            
+            {/* <UpdateExpenseVoucherEntries isOpen={isOpen} expenseVoucher={expenseVoucher} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}/> */}
           </div>
 
           {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
@@ -251,8 +284,10 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
            <div className="px-3">
               <div className="grid grid-cols-3">
                 <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
-                  <div>Diff: </div>
-                  <div>{`${formatNumber(Math.abs(expenseVoucher.entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - expenseVoucher.entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`}</div>
+                  <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+                    <div>Diff: </div>
+                    <div>{difference}</div>
+                  </div>
                 </div>
                 <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
                   <div>Total: </div>

@@ -58,7 +58,9 @@ export default function UploadChanges() {
     {
       key: "journalVouchers",
       label: "Journal Voucher",
-      endpoint: "/sync/upload/journal-voucher",
+      endpoint: "/sync/journal-vouchers",
+        field:'journalVouchers'
+
     },
     {
       key: "groupOfAccounts",
@@ -195,6 +197,7 @@ export default function UploadChanges() {
         client,
         date,
         checkDate,
+        supplier,
         ...rest
       } = item;
 
@@ -205,19 +208,20 @@ export default function UploadChanges() {
         weeklySavingsFund: Number(removeAmountComma(weeklySavingsFund)),
         acctMonth: Number(acctMonth),
         acctYear: Number(acctYear),
-        bank: bank._id,
+        bank: bank?._id,
         amount: Number(removeAmountComma(amount)),
         noOfWeeks: Number(removeAmountComma(noOfWeeks)),
         code: code ?? cvNo,
         loan: loan?._id,
-        date: date.split('T')[0],
-        checkDate: date.split('T')[0],
+        date: date?.split('T')[0],
+        checkDate: date?.split('T')[0],
+        supplier: supplier?._id,
         entries: entries.map((item: any, index: number) => ({
             ...item,
             debit: Number(removeAmountComma(item.debit)),
             credit: Number(removeAmountComma(item.credit)),
             acctCode: item.acctCodeId,
-            client: item.clientId,
+            client: item.clientId || item.client?._id,
 
         })) ,
         center:

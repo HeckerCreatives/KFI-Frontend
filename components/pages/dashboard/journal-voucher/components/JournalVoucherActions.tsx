@@ -42,7 +42,7 @@ const JournalVoucherActions = ({
   return (
     <div>
       {canDoAction(token.role, permissions, 'journal voucher', 'visible') && <ViewJournalVoucher journalVoucher={journalVoucher} />}
-      {canDoAction(token.role, permissions, 'journal voucher', 'update') && <UpdateJournalVoucher journalVoucher={journalVoucher} setData={setData} />}
+      {canDoAction(token.role, permissions, 'journal voucher', 'update') && <UpdateJournalVoucher journalVoucher={journalVoucher} setData={setData} getList={getJournalVouchers} currentPage={currentPage} />}
       {canDoAction(token.role, permissions, 'journal voucher', 'delete') && (
         <DeleteJournalVoucher
           journalVoucher={journalVoucher}

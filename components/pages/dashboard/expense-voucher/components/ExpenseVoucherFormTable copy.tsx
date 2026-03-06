@@ -23,7 +23,7 @@ const ExpenseVoucherFormTable = ({ form, loading = false }: ExpenseVoucherFormTa
 
   const addEntry = () => {
     form.clearErrors('entries');
-    append({line: fields.length + 1 , client: '', clientLabel: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0', cvForRecompute: '' });
+    append({ client: '', clientLabel: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0', cvForRecompute: '' });
   };
 
   const deleteEntry = (index: number) => {

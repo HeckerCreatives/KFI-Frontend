@@ -2,6 +2,10 @@ import z from 'zod';
 
 export const expenseVoucherEntrySchema = z.object({
   line: z.number().optional(),
+  _id: z.any().optional(),
+  id: z.any().optional(),
+  _synced: z.any().optional(),
+  action: z.any().optional(),
   client: z.string().optional().or(z.literal('')),
   clientLabel: z.string().optional().or(z.literal('')),
   particular: z.string().optional().or(z.literal('')),

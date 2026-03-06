@@ -2,6 +2,11 @@ import z from 'zod';
 
 export const journalVoucherEntrySchema = z.object({
   client: z.string().optional().or(z.literal('')),
+  _id: z.any().optional().or(z.literal('')),
+  id: z.any().optional(),
+  _synced: z.any().optional(),
+  action: z.any().optional(),
+  line: z.any().optional().or(z.literal('')),
   clientLabel: z.string().optional().or(z.literal('')),
   particular: z.string().optional().or(z.literal('')),
   acctCodeId: z.string().min(1, 'Account Code Id is required').max(255, 'Account Code Id must only consist of 255 characters'),
@@ -52,7 +57,7 @@ export const journalVoucherSchema = z
       .max(255, 'Amount must only consist of 255 characters')
       .refine(value => !isNaN(Number(value.replace(',', '').replace('.', ''))), 'Amount must be a number'),
     remarks: z.string().min(1, 'Particular is required').max(255, 'Particular must only consist of 255 characters').optional().or(z.literal('')),
-    entries: z.array(journalVoucherEntrySchema).optional(),
+    entries: z.array(journalVoucherEntrySchema).min(1, 'Please add atleast 1 entry'),
     mode: z.string().refine(value => ['create', 'update'].includes(value), 'Mode is required'),
   })
   .superRefine((data, ctx) => {

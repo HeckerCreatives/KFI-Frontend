@@ -59,7 +59,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
   const entries = form.watch('entries') || []
   const amount = form.watch('amount')
 
-  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+  const difference = `${formatNumber(Math.abs((form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - (form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
 
   async function onSubmit(data: JournalVoucherFormData) {
     if (Number(removeAmountComma(difference)) !== 0) {
@@ -96,13 +96,22 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
       }
     } else {
        try {
-        const entries = formatJVEntries(data.entries || [])
         console.log('Form Data',data)
         await db.journalVouchers.add({
           ...data,
-           entries: entries.map((item, index) => ({
+           entries: data.entries.map((item, index) => ({
             ...item,
             line: index + 1,
+             acctCode: {
+              _id: item.acctCodeId,
+              code: item.acctCode,
+              description: item.description
+            },
+            client:{
+              center: item.particular,
+              name: item.clientLabel,
+              _id: item.client,
+            },
             action: 'create',
             _synced: false,
           })), 
@@ -114,6 +123,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
           encodedBy:{
             username: user
           },
+          amount:Number(removeAmountComma(data.amount)),
         _synced: false,  
         action: "create",
         isOldData: false

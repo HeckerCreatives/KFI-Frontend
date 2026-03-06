@@ -96,12 +96,22 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
       }
    } else {
     try {
-      const entries = formatEVEntries(data.entries || [])
       await db.expenseVouchers.add({
         ...data,
-         entries: entries.map((item, index) => ({
+         entries: data.entries.map((item, index) => ({
             ...item,
             line: index + 1,
+            acctCode: {
+              _id: item.acctCodeId,
+              code: item.acctCode,
+              description: item.description
+            },
+            client:{
+              center: item.particular,
+              name: item.clientLabel,
+              _id: item.client,
+            },
+           
             action: 'create',
             _synced: false,
           })), 
@@ -110,6 +120,11 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
             description: data.bankLabel,
             _id: data.bank
           },
+           supplier:{
+              code: data.supplier,
+              description: data.supplier,
+              _id: data.supplierId,
+            },
           encodedBy:{
             username: user
           },
@@ -154,7 +169,7 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
 
           <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col mt-4">
             <div>
-              <ExpenseVoucherForm form={form as UseFormReturn<ExpenseVoucherFormData | UpdateExpenseVoucherFormData>} loading={loading} />
+              <ExpenseVoucherForm form={form} loading={loading} />
             </div>
             <div className="flex-1 mt-2">
               <ExpenseVoucherFormTable form={form} loading={loading} />

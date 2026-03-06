@@ -161,7 +161,7 @@ export function BackupEntriesModalContent({
       updateStepStatus("journalVouchers", "loading")
       const journalVouchers = await kfiAxios.get(`/sync/journal-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
       console.log('journalVouchers', journalVouchers)
-      await syncExpenseVoucher(journalVouchers.data?.journalVouchers || [])
+      await syncJournalVoucher(journalVouchers.data?.journalVouchers || [])
       updateStepStatus("journalVouchers", "complete")
 
 

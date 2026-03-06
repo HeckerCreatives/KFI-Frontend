@@ -18,13 +18,16 @@ import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
 import { formatJVEntriesSubmit } from '../../../../ui/utils/fomatData';
+import JournalVoucherFormTable from '../components/JournalVoucherFormTable';
 
 type UpdateJournalVoucherProps = {
   journalVoucher: JournalVoucher;
   setData: React.Dispatch<React.SetStateAction<TData>>;
+  getList: (page: number) =>  void,
+  currentPage: number
 };
 
-const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherProps) => {
+const UpdateJournalVoucher = ({ journalVoucher, setData, getList, currentPage }: UpdateJournalVoucherProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,8 +35,6 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
   const [preventries, setPrevEntries] = useState<JournalVoucherEntry[]>(journalVoucher.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const online = useOnlineStore((state) => state.online);
-  
-  
 
 
   const form = useForm<JournalVoucherFormData>({
@@ -69,8 +70,8 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
         acctYear: `${journalVoucher.acctYear}`,
         checkNo: `${journalVoucher.checkNo}`,
         checkDate: formatDateInput(journalVoucher.checkDate),
-        bank: journalVoucher.bank._id,
-        bankLabel: `${journalVoucher.bank.code}`,
+        bank: journalVoucher.bank?._id,
+        bankLabel: `${journalVoucher.bank?.code}`,
         amount: `${formatAmount(journalVoucher.amount)}`,
         mode: 'update',
         entries: formatJVEntriesSubmit(journalVoucher.entries),
@@ -84,7 +85,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
     setDeletedIds([])
   }
 
-  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+  const difference = `${formatNumber(Math.abs((form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - (form.watch('entries') || []).reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
 
   async function onSubmit(data: JournalVoucherFormData) {
 
@@ -120,6 +121,8 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
         form.setError('root', { message: `Debit and Credit must be balanced.` });
         return;
       }
+
+      console.log(data)
 
 
 
@@ -164,11 +167,28 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
           console.log("Data not found");
           return;
         }
+
         
         const updated = {
           ...existing,
-          entries: entries, 
-          deletedIds: finalDeletedIds,
+          entries: data.entries.map((item, index) => ({
+            ...item,
+            line: index + 1,
+            acctCode: {
+              _id: item.acctCodeId,
+              code: item.acctCode,
+              description: item.description
+            },
+            client:{
+              center: item.particular,
+              name: item.clientLabel,
+              _id: item.client,
+            },
+           action: item._id ? 'update' : 'create',
+          _synced: false,
+          })), 
+            amount:Number(removeAmountComma(data.amount)),
+            nature: data.nature,
           _synced: false,
           action: "update",
         };
@@ -185,6 +205,8 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
           }
           return { ...prev, journalVouchers: clone };
         });
+
+        getList(currentPage)
 
         dismiss();
         present({
@@ -252,13 +274,8 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
            
 
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
-            <UpdateJVEntries isOpen={isOpen} journalVoucher={journalVoucher} 
-              entries={entries}
-             setEntries={setEntries}
-             setPrevEntries={setPrevEntries}
-             setDeletedIds={setDeletedIds}
-             deletedIds={deletedIds}
-            />
+            <JournalVoucherFormTable form={form} loading={loading} />
+          
           </div>
 
            {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
@@ -277,7 +294,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData }: UpdateJournalVoucherP
                              
                             </div>
                           </div>
-          <Signatures open={isOpen} type={'journal voucher'} preparedBy={journalVoucher.encodedBy.username} recieveByorDate={journalVoucher.createdAt.split('T')[0]}/>
+          <Signatures open={isOpen} type={'journal voucher'} preparedBy={journalVoucher.encodedBy.username} recieveByorDate={journalVoucher.createdAt?.split('T')[0] || ''}/>
           
         </div>
       </IonModal>

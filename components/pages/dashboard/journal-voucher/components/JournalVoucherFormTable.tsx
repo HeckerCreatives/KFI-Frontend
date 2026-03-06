@@ -20,7 +20,7 @@ const JournalVoucherFormTable = ({ form, loading }: JournalVoucherFormTableProps
 
   const addEntry = () => {
     form.clearErrors('entries');
-    append({ client: '', clientLabel: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0', cvForRecompute: '' });
+    append({line: fields.length + 1, client: '', clientLabel: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0', cvForRecompute: '' });
   };
 
   const deleteEntry = (index: number) => {
