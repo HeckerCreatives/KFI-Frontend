@@ -417,6 +417,7 @@ export type Transaction = {
   date: string;
   entries: any[];
   interest: number;
+  interestRate: number;
   loan: { _id: string; code: string };
   noOfWeeks: number;
   refNo: string;

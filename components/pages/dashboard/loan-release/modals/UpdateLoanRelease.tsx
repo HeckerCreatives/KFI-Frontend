@@ -3,7 +3,7 @@ import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon, IonGrid, IonRow, I
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ModalHeader from '../../../../ui/page/ModalHeader';
-import { UpdateLoanReleaseFormData, updateLoanReleaseSchema } from '../../../../../validations/loan-release.schema';
+import { LoanReleaseFormData, loanReleaseSchema, UpdateLoanReleaseFormData, updateLoanReleaseSchema } from '../../../../../validations/loan-release.schema';
 import { createSharp } from 'ionicons/icons';
 import { Entry, TErrorData, TFormError, Transaction } from '../../../../../types/types';
 import { formatDateTable } from '../../../../utils/date-utils';
@@ -20,6 +20,8 @@ import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
 import { formatLREntries } from '../../../../ui/utils/fomatData';
+import LoanReleaseFormTable from '../components/LoanReleaseFormTable';
+import LoanReleaseFormTableUpdate from '../components/LoanReleaseFormTableUpdate';
 
 type UpdateLoanReleaseProps = {
   transaction: Transaction;
@@ -35,6 +37,24 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const online = useOnlineStore((state) => state.online);
   
+  const formattedEntries = transaction.entries.map((item) => ({
+    ...item,
+    _id: item._id,
+    id: item._id,
+    line: item.line,
+    clientId: item.client._id,
+    client: item.client.name,
+    particular: item.particular,
+    acctCodeId: item.acctCode._id,
+    acctCode: item.acctCode.code,
+    description: item.acctCode.description,
+    debit: String(item.debit) ?? '0' ,
+    credit: String(item.credit) ?? '0' ,
+    interest: (item.interest || item.interestRate) === null ? '0' : String(item.interest || item.interestRate),
+    cycle: item.cycle ?? '',
+    checkNo: item.cycle ?? '' ,
+    typeOfLoan: '',
+  }))
   
 
   const form = useForm<UpdateLoanReleaseFormData>({
@@ -43,20 +63,26 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
       amount: '0',
       cycle: '',
       interestRate: '',
+      entries: formattedEntries
     },
   });
 
-  const difference = `${formatNumber(Math.abs(entries.reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
 
   useEffect(() => {
     if (transaction) {
       form.reset({
         amount: `${formatAmount(transaction.amount)}`,
+        centerLabel: transaction.center.centerNo,
         cycle: `${transaction.cycle}`,
-        interestRate: `${transaction.interest}`,
+        interestRate: `${transaction.interest || transaction.interestRate}`,
+        entries: formattedEntries
       });
     }
   }, [transaction, form]);
+
+  const difference = `${formatNumber(Math.abs(form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.debit || '')), 0) - form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.credit || 0)), 0)))}`
+
+  
 
   function dismiss() {
     form.reset();
@@ -66,34 +92,19 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
 
   async function onSubmit(data: UpdateLoanReleaseFormData) {
 
-    const prevIds = new Set(prevEntries.map((e) => e._id));
-    const formattedEntries = entries.map((entry, index) => {
-      const isExisting = prevIds.has(entry._id);
-      return {
-        _id: isExisting ? entry._id : undefined,
-        line: index + 1,
-        clientId: entry.client?._id ?? "",
-        client: entry.client?.name ?? "",
-        particular: `${entry.center?.centerNo ?? ""} - ${entry.client?.name ?? ""}`,
-        acctCodeId: entry.acctCode?._id ?? "",
-        acctCode: entry.acctCode?.code ?? "",
-        description: entry.acctCode?.description ?? "",
-        debit: entry.debit?.toString() ?? "",
-        credit: entry.credit?.toString() ?? "",
-        interest: entry.interest?.toString() ?? "",
-        cycle: entry.cycle?.toString() ?? "",
-        checkNo: entry.checkNo ?? "",
-      };
-    });
-
-    const finalDeletedIds = deletedIds.filter((id) =>
-      prevEntries.some((e) => e._id === id)
-    );
-
      if (Number(removeAmountComma(difference)) !== 0) {
       form.setError('root', { message: `Debit and Credit must be balanced` });
       return;
     }
+
+    const entriesPayload = data.entries.map((item) => ({
+        ...item,
+        debit: Number(removeAmountComma(item.debit || '0')) ?? '0' ,
+        credit: Number(removeAmountComma(item.credit || '0')) ?? '0' ,
+        interest: Number(removeAmountComma(item.interest || 0)) ?? '0',
+        action: item._id ? 'update' : 'create',
+        _synced: false,
+      }))
 
 
     if(online){
@@ -102,7 +113,8 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
       try {
        
         data.amount = removeAmountComma(data.amount);
-        const result = await kfiAxios.put(`/transaction/loan-release/${transaction._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
+        const result = await kfiAxios.put(`/transaction/loan-release/${transaction._id}`, {...data, 
+          entries: entriesPayload });
         const { success, transaction: updatedTransaction } = result.data;
         if (success) {
           setData(prev => {
@@ -148,18 +160,13 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
         const updated = {
           ...existing,
           ...partialUpdate, 
-          entries: entries.map((item, index) => ({
-            ...item,
-            line: index + 1,
-            action: existing.isOldData ? 'update' : 'create',
-            _synced: false,
-          })), 
+          entries: entriesPayload,
           bank:{
             code: transaction.bank.code,
             description: transaction.bank.description,
             _id: transaction.bank._id
           },
-          deletedIds: finalDeletedIds,
+          // deletedIds: finalDeletedIds,
           action: existing.isOldData ? 'update' : 'create',
           _synced: false,
         };
@@ -196,12 +203,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
 
   return (
     <>
-      {/* <div
-        onClick={() => setIsOpen(true)}
-        className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
-      >
-        <IonIcon icon={createSharp} className="text-[1rem]" /> Edit
-      </div> */}
+     
       <IonButton
         onClick={() => setIsOpen(true)}
         type="button"
@@ -216,11 +218,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
         backdropDismiss={false}
         className=" [--border-radius:0.7rem] auto-height [--max-width:84rem] [--width:95%]"
       >
-        {/* <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Loan Release - Edit Record" sub="Transaction" dismiss={dismiss} />
-          </IonToolbar>
-        </IonHeader> */}
+      
         <div className="inner-content h-screen flex flex-col gap-3 !p-6">
           <ModalHeader disabled={loading} title="Loan Release - Edit Record" sub="Manage loan release records." dismiss={dismiss} />
 
@@ -235,10 +233,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
                 <LoanReleaseViewCard label="Date" value={formatDateTable(transaction.date)} labelClassName="" />
                  <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} labelClassName="" containerClassName="w-full" />
                   <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="" />
-                {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  <LoanReleaseViewCard label="Account Month" value={`${transaction.acctMonth}`} labelClassName="" containerClassName="w-full" />
-                  <LoanReleaseViewCard label="Account Year" value={`${transaction.acctYear}`} labelClassName="" />
-                </div> */}
+               
                 <LoanReleaseViewCard label="Number of Weeks" value={`${transaction.noOfWeeks}`} labelClassName="" />
                 <LoanReleaseViewCard label="Type of Loan" value={`${transaction.loan?.code}`} labelClassName="" />
               </div>
@@ -335,10 +330,27 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
             </div>
           </form>
           <div className="border-t border-t-slate-400 pt-5 flex-1">
-            <UpdateEntries isOpen={isOpen} transaction={transaction} currentAmount={`${transaction.amount}`} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}/>
+            <LoanReleaseFormTableUpdate form={form}/>
+
+            {/* <UpdateEntries isOpen={isOpen} transaction={transaction} currentAmount={`${transaction.amount}`} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries}/> */}
           </div>
 
           {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
+
+          <div className="px-3">
+                <div className="grid grid-cols-3">
+                  <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
+                    <div>Diff: </div>
+                    <div>{difference}</div>
+                  </div>
+
+                  <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
+                    <div>Total: </div>
+                    <div>{`${transaction.amount.toLocaleString()}`}</div>
+                  </div>
+                  
+                </div>
+              </div>
 
           <Signatures open={isOpen} type={'loan release'} preparedBy={transaction.encodedBy.username} recieveByorDate={transaction.createdAt?.split('T')[0] || ''}/>
           

@@ -1,6 +1,11 @@
 import z from 'zod';
 
 export const entriesSchema = z.object({
+  _id: z.string().optional().or(z.literal('')),
+  id: z.string().optional().or(z.literal('')),
+  line: z.any().optional().or(z.literal('')),
+  action: z.string().optional().or(z.literal('')),
+  _synced: z.any().optional().or(z.literal('')),
   clientId: z.string().optional().or(z.literal('')),
   client: z.string().optional().or(z.literal('')),
   particular: z.string().optional().or(z.literal('')),
@@ -88,6 +93,12 @@ export const updateLoanReleaseSchema = z.object({
     .min(1, 'Interest rate is required')
     .max(255, 'Interest rate must only consist of 255 characters')
     .refine(value => !isNaN(Number(value)), 'Interest rate must be a number'),
+    entries: z.array(entriesSchema).min(1, 'Pease add atleast 1 entry'),
+  center: z.string().optional(),
+  typeOfLoan: z.string().optional(),
+  isEduc: z.boolean().optional(),
+  centerLabel: z.string().optional(),
+
 });
 
 export type LoanReleaseFormData = z.infer<typeof loanReleaseSchema>;

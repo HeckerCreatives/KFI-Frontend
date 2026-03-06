@@ -100,10 +100,23 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
         console.log('Form Data',data)
         await db.journalVouchers.add({
           ...data,
-          entries: entries,
-          encodedBy: '',
-          _synced: false,  
-          action: "create",
+           entries: entries.map((item, index) => ({
+            ...item,
+            line: index + 1,
+            action: 'create',
+            _synced: false,
+          })), 
+         bank:{
+            code: data.bankLabel,
+            description: data.bankLabel,
+            _id: data.bank
+          },
+          encodedBy:{
+            username: user
+          },
+        _synced: false,  
+        action: "create",
+        isOldData: false
         });
         getJournalVouchers(1);
         dismiss();

@@ -193,6 +193,8 @@ export default function UploadChanges() {
         cvNo,
         loan,
         client,
+        date,
+        checkDate,
         ...rest
       } = item;
 
@@ -208,12 +210,14 @@ export default function UploadChanges() {
         noOfWeeks: Number(removeAmountComma(noOfWeeks)),
         code: code ?? cvNo,
         loan: loan?._id,
+        date: date.split('T')[0],
+        checkDate: date.split('T')[0],
         entries: entries.map((item: any, index: number) => ({
             ...item,
             debit: Number(removeAmountComma(item.debit)),
             credit: Number(removeAmountComma(item.credit)),
-            acctCode: item.acctCode._id,
-             client: item.client?._id,
+            acctCode: item.acctCodeId,
+            client: item.clientId,
 
         })) ,
         center:

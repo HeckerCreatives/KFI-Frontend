@@ -31,11 +31,33 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage, setData, setEn
     setIsOpen(false);
   }
 
+
   const handleDelete = async () => {
       setLoading(true);
       try {
       setData((prev: TData) => {
         const updatedEntries = prev.entries.map((e) =>
+          e._id === entry._id
+            ? {
+                ...e,
+                _synced: false,
+                // action: e._id ? "update" : "create",
+              }
+            : e
+        );
+
+        return {
+          ...prev,
+          entries: updatedEntries,
+        }
+
+        
+
+        
+      });
+
+       setEntries((prev: any) => {
+        const updatedEntries = prev.entries.map((e: any) =>
           e._id === entry._id
             ? {
                 ...e,
@@ -48,11 +70,13 @@ const DeleteEntry = ({ entry, getEntries, rowLength, currentPage, setData, setEn
         return {
           ...prev,
           entries: updatedEntries,
-        };
+        }
+
+        
+
+        
       });
         setDeletedIds((prev: string[]) => [...prev, entry._id])
-
-
         present({
           message: 'Entry successfully deleted',
           duration: 1000,

@@ -157,6 +157,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
           },
           _synced: false,  
           action: "create",
+          isOldData: false
         });
         getTransactions(1);
         dismiss();

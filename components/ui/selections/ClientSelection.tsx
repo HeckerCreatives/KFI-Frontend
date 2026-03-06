@@ -129,8 +129,12 @@ const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setV
     const clientId = client._id as PathValue<T, Path<T>>;
     const particular = `${client.center.centerNo} - ${client.name}`;
 
+    console.log(clientParticular)
+    
+
     setValue(clientLabel as Path<T>, clientName as any);
     setValue(clientValue as Path<T>, clientId as any);
+    // setValue(clientParticular as Path<T>, particular as any);
     clientParticular && setValue(clientParticular as Path<T>, particular as any);
     clearErrors(clientLabel);
     clearErrors(clientValue);

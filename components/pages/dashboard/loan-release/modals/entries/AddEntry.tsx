@@ -114,7 +114,8 @@ const AddEntry = ({ transactionId, centerNo, centerId, getEntries, currentAmount
         createdAt: new Date().toISOString(),
         line: nextLine,
         _synced: false,
-         action:"create" 
+         action:"create",
+  
       };
 
       return [...prev, newEntry];
@@ -156,6 +157,8 @@ const AddEntry = ({ transactionId, centerNo, centerId, getEntries, currentAmount
         transaction: "",
         createdAt: new Date().toISOString(),
         line: nextLine,
+        _synced: false,
+         action:"create",
       };
 
       return {
