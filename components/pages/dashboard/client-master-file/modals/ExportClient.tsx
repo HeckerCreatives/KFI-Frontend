@@ -11,6 +11,7 @@ import { SoaFormData, soaSchema } from '../../../../../validations/soa-shema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputText from '../../../../ui/forms/InputText';
 import InputRadio from '../../../../ui/forms/InputRadio';
+import LoanReleaseSelectionClient from '../../../../ui/selections/LoanReleaseSelectionClient';
 
 const ExportClient = ({ client }: { client: ClientMasterFile }) => {
   const [present] = useIonToast();
@@ -68,7 +69,6 @@ const ExportClient = ({ client }: { client: ClientMasterFile }) => {
   }
   }
 
-  console.log(form.watch('loanReleaseId'))
 
   return (
     <>
@@ -116,7 +116,7 @@ const ExportClient = ({ client }: { client: ClientMasterFile }) => {
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md w-full"
               />
-              <LoanReleaseSelection setValue={form.setValue} clearErrors={form.clearErrors} loanReleaseLabel={'loanReleaseLabel'} loanReleaseValue={'loanReleaseId'}/>
+              <LoanReleaseSelectionClient setValue={form.setValue} clearErrors={form.clearErrors} loanReleaseLabel={'loanReleaseLabel'} loanReleaseValue={'loanReleaseId'} id={client._id}/>
 
             </div>
 
