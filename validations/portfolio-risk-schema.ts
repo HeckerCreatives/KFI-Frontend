@@ -22,6 +22,8 @@ export const portfoliodocument = z.object({
     accountOfficer: z.string().optional(),
     lessThanDate: z.string().optional(),
     greaterThanDate: z.string().optional(),
+    lessThanDateNumber: z.string().optional(),
+    greaterThanDateNumber: z.string().optional(),
     collectionType: z.string().optional(),
     centerType: z.string().optional(),
     type: z.string().nonempty('Type is required'),

@@ -350,7 +350,7 @@ const PortfolioAtRisk = () => {
 
                                      <InputText
                                         disabled={false}
-                                        name="lessThanDate"
+                                        name="lessThanDateNumber"
                                         control={form.control}
                                         clearErrors={form.clearErrors}
                                         placeholder="Type here"
@@ -376,7 +376,7 @@ const PortfolioAtRisk = () => {
 
                                      <InputText
                                         disabled={false}
-                                        name="greaterThanDate"
+                                        name="greaterThanDateNumber"
                                         control={form.control}
                                         clearErrors={form.clearErrors}
                                         placeholder="Type here"
