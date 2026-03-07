@@ -5,7 +5,7 @@ import { db } from "../../../../database/db";
 import { business, key } from "ionicons/icons";
 import { removeAmountComma } from "../../../ui/utils/formatNumber";
 
-type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans" | "financialStatements" | "trialBalance" | "beginningBalance";
+type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans" | "financialStatements" | "trialBalance" | "beginningBalance" | "acknowledgementReceipts";
 
 export default function UploadChanges() {
   const [changes, setChanges] = useState<Record<SyncKey, number>>({
@@ -28,6 +28,7 @@ export default function UploadChanges() {
     financialStatements: 0,
     trialBalance: 0,
     beginningBalance: 0,
+    acknowledgementReceipts: 0,
   });
     const [present] = useIonToast();
   const user = localStorage.getItem('user')
@@ -68,6 +69,12 @@ export default function UploadChanges() {
       endpoint: "/sync/journal-vouchers",
         field:'journalVouchers'
 
+    },
+     {
+      key: "acknowledgementReceipts",
+      label: "Official Receipts",
+      endpoint: "/sync/official-receipts",
+      field:'acknowledgementReceipts'
     },
     {
       key: "damayanFunds",
@@ -161,6 +168,7 @@ export default function UploadChanges() {
       endpoint: "/sync/beginning-balances",
       field:'beginningBalances'
     },
+   
   ];
 
   const loadChanges = useCallback(async () => {
@@ -183,6 +191,7 @@ export default function UploadChanges() {
     const fs = await db.financialStatements.toArray();
     const trialb = await db.trialBalance.toArray();
     const beginningb = await db.beginningBalance.toArray();
+    const or = await db.acknowledgementReceipts.toArray();
 
     setChanges({
       clientMasterFile: cmf.filter((e) => e._synced === false).length,
@@ -204,6 +213,7 @@ export default function UploadChanges() {
       financialStatements: fs.filter((e) => e._synced === false).length,
       trialBalance: trialb.filter((e) => e._synced === false).length,
       beginningBalance: beginningb.filter((e) => e._synced === false).length,
+      acknowledgementReceipts: or.filter((e) => e._synced === false).length,
     });
   }, []);
 
@@ -252,6 +262,8 @@ export default function UploadChanges() {
         secondary,
         loanCodes,
         year,
+        bankCode,
+        cashCollection,
         ...rest
       } = item;
 
@@ -277,6 +289,8 @@ export default function UploadChanges() {
         secondaryYear: Number(secondary?.year),
         secondaryMonth: Number(secondary?.month),
         year: Number(year),
+        bankCode: bankCode?._id,
+        cashCollection: Number(removeAmountComma(cashCollection)),
         entries: entries?.map((item: any, index: number) => ({
             ...item,
             debit: Number(removeAmountComma(item.debit)),
@@ -284,7 +298,7 @@ export default function UploadChanges() {
             acctCode: item.acctCodeId || item.acctCode._id,
             acctCodeId: item.acctCodeId || item.acctCode._id,
             client: item.clientId || item.client?._id,
-            line: Number(item.line)
+            line: Number(item.line),
 
         })) ,
         loanCodes: loanCodes?.map((item: any, index: number) => ({

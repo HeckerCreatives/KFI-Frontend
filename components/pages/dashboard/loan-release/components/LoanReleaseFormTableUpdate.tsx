@@ -121,6 +121,32 @@ const LoanReleaseFormTableUpdate = ({ form }: LoanReleaseFormTableProps) => {
 
   return (
     <div className="px-2">
+
+       <div className="text-start my-2">
+        <IonButton
+          onClick={() =>
+            append({
+              line: fields.length + 1,
+              client: '',
+              particular: '',
+              acctCodeId: '',
+              acctCode: '',
+              description: '',
+              debit: '',
+              credit: '',
+              cycle: '',
+              checkNo: '',
+            })
+          }
+          // disabled={!didLoad}
+          type="button"
+          fill="clear"
+          className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+          strong
+        >
+          + Add Entries
+        </IonButton>
+      </div>
       
       <div className="relative overflow-auto flex">
         <Table className=' hidden md:table sticky left-0 z-50 translate-x-1 '>
@@ -220,31 +246,7 @@ const LoanReleaseFormTableUpdate = ({ form }: LoanReleaseFormTableProps) => {
           </div>
         )}
       </div>
-      <div className="text-start my-2">
-        <IonButton
-          onClick={() =>
-            append({
-              line: fields.length + 1,
-              client: '',
-              particular: '',
-              acctCodeId: '',
-              acctCode: '',
-              description: '',
-              debit: '',
-              credit: '',
-              cycle: '',
-              checkNo: '',
-            })
-          }
-          // disabled={!didLoad}
-          type="button"
-          fill="clear"
-          className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
-          strong
-        >
-          + Add Entries
-        </IonButton>
-      </div>
+     
     </div>
   );
 };

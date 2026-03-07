@@ -26,9 +26,11 @@ import LoanReleaseFormTableUpdate from '../components/LoanReleaseFormTableUpdate
 type UpdateLoanReleaseProps = {
   transaction: Transaction;
   setData: React.Dispatch<React.SetStateAction<TData>>;
+  getTransactions: (page: number, keyword?: string, sort?: string) => void;
+  currentPage: number
 };
 
-const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => {
+const UpdateLoanRelease = ({ transaction, setData, currentPage, getTransactions }: UpdateLoanReleaseProps) => {
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,9 +52,10 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
     description: item.acctCode.description,
     debit: String(item.debit) ?? '0' ,
     credit: String(item.credit) ?? '0' ,
-    interest: (item.interest || item.interestRate) === null ? '0' : String(item.interest || item.interestRate),
-    cycle: item.cycle ?? '',
-    checkNo: item.cycle ?? '' ,
+    interest: String(item.interest ?? '0') || String(item.interestRate ?? '0'),
+    interestRate: String(item.interest ?? '0') || String(item.interestRate ?? '0') ,
+    cycle: String(item.cycle ?? '0'),
+    checkNo: String(item.checkNo ?? '0'),
     typeOfLoan: '',
   }))
   
@@ -101,7 +104,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
         ...item,
         debit: Number(removeAmountComma(item.debit || '0')) ?? '0' ,
         credit: Number(removeAmountComma(item.credit || '0')) ?? '0' ,
-        interest: Number(removeAmountComma(item.interest || 0)) ?? '0',
+        interest: Number(removeAmountComma(item.interest || '0')) ?? '0',
         action: item._id ? 'update' : 'create',
         _synced: false,
       }))
@@ -160,7 +163,19 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
         const updated = {
           ...existing,
           ...partialUpdate, 
-          entries: entriesPayload,
+          entries: data.entries?.map((item) => ({
+            ...item,
+            interest: item.interest || '0',
+            acctCode: {
+              _id: item.acctCodeId,
+              code: item.acctCode,
+              description: item.description
+            },
+            client:{
+              name: item.client,
+              _id: item.clientId
+            }
+          })),
           bank:{
             code: transaction.bank.code,
             description: transaction.bank.description,
@@ -171,19 +186,7 @@ const UpdateLoanRelease = ({ transaction, setData }: UpdateLoanReleaseProps) => 
           _synced: false,
         };
         await db.loanReleases.update(transaction.id, updated);
-        setData(prev => {
-          const clone = [...prev.transactions];
-          const index = clone.findIndex(c => c.id === transaction.id);
-          if (index !== -1) {
-            clone[index] = {
-              ...clone[index],     
-              ...partialUpdate, 
-              entries: entries,
-              
-            };
-          }
-          return { ...prev, transactions: clone };
-        });
+        getTransactions(currentPage)
         dismiss();
         present({
           message: "Data successfully updated!",

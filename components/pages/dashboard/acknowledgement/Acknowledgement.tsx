@@ -93,9 +93,9 @@ const Acknowledgement = () => {
     setData(prev => ({ ...prev, loading: true }));
      try {
        const limit = TABLE_LIMIT;
-       let data = await db.officialReceipts.toArray();
-       const filteredData = data.filter(e => !e.deletedAt);
-      let allData = filterAndSortLoanRelease(formatELList(filteredData), keyword, sort, from, to);
+       let data = await db.acknowledgementReceipts.toArray();
+       const filteredData = data.filter(e => e.action !== 'delete');
+      let allData = filterAndSortLoanRelease(filteredData, keyword, sort, from, to);
        console.log(data)
        const totalItems = allData.length;
        const totalPages = Math.ceil(totalItems / limit);

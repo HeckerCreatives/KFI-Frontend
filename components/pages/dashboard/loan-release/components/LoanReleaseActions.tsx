@@ -32,7 +32,7 @@ const LoanReleaseActions = ({ transaction, setData, getTransactions, searchKey, 
   return (
     <div className="flex items-center gap-1">
       <ViewLoanRelease transaction={transaction} />
-      {canDoAction(token.role, permissions, 'loan release', 'update') && <UpdateLoanRelease transaction={transaction} setData={setData} />}
+      {canDoAction(token.role, permissions, 'loan release', 'update') && <UpdateLoanRelease transaction={transaction} setData={setData} getTransactions={getTransactions} currentPage={currentPage} />}
       {canDoAction(token.role, permissions, 'loan release', 'delete') && (
         <DeleteLoanRelease transaction={transaction} getTransactions={getTransactions} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />
       )}

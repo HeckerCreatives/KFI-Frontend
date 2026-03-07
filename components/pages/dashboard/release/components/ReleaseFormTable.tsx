@@ -152,7 +152,7 @@ const ReleaseFormTable = ({ form }: ReleaseFormTableProps) => {
   };
 
   const handleAddEntry = () =>
-    append({ loanReleaseEntryId: '', loanReleaseId: '', dueDate: '', noOfWeeks: '', name: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0' });
+    append({ line: fields.length + 1, loanReleaseEntryId: '', dueDate: '', noOfWeeks: '', name: '', particular: '', acctCodeId: '', acctCode: '', description: '', debit: '0', credit: '0' });
 
   function dismiss() {
     setIsOpen(false);

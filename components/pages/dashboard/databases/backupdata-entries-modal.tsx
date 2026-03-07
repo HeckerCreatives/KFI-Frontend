@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncBanks, syncBeginningBalance, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDamayanFund, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncTrialBalance, syncWeeklySavings } from "../../../../database/sync"
+import { syncAR, syncBanks, syncBeginningBalance, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDamayanFund, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncTrialBalance, syncUsers, syncWeeklySavings } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -28,6 +28,7 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "fs", label: "Syncing financial statements", status: "pending" },
    { id: "begbalance", label: "Syncing beginning balance", status: "pending" },
    { id: "trialbal", label: "Syncing trial balance", status: "pending" },
+   { id: "users", label: "Syncing users", status: "pending" },
 
    //transactions
    { id: "loanrelease", label: "Syncing loan release", status: "pending" },
@@ -35,6 +36,7 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "journalVouchers", label: "Syncing Journal Vouchers", status: "pending" },
    { id: "emergencyLoans", label: "Syncing Emergency Loans", status: "pending" },
    { id: "damayanFunds", label: "Syncing Damayan Funds", status: "pending" },
+   { id: "or", label: "Syncing acknowledgements", status: "pending" },
 
 
 
@@ -153,6 +155,12 @@ export function BackupEntriesModalContent({
       await syncTrialBalance(trialbal.data?.data.items || [])
       updateStepStatus("trialbal", "complete")
 
+      updateStepStatus("users", "loading")
+      const users = await kfiAxios.get(`/sync/users?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      console.log('users', users)
+      await syncUsers(users.data?.users|| [])
+      updateStepStatus("users", "complete")
+
 
       //transactions
       updateStepStatus("loanrelease", "loading")
@@ -184,6 +192,12 @@ export function BackupEntriesModalContent({
       console.log('damayanFunds', damayanFunds)
       await syncDamayanFund(damayanFunds.data?.damayanFunds || [])
       updateStepStatus("damayanFunds", "complete")
+
+      updateStepStatus("or", "loading")
+      const or = await kfiAxios.get(`/sync/acknowledgement-receipts?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      console.log('or', or)
+      await syncOR(or.data?.acknowledgements || [])
+      updateStepStatus("or", "complete")
 
 
 

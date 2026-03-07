@@ -59,8 +59,6 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
     setIsOpen(false);
   }
 
-  console.log(form.formState.errors)
-
   async function onSubmit(data: AcknowledgementFormData) {
     if(online){
       setLoading(true);
@@ -110,9 +108,8 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
     } else {
        try {
          // const entries = data.entries
-         await db.officialReceipts.add({
+         await db.acknowledgementReceipts.add({
            ...data,
-           encodedBy: '',
           entries: data.entries?.map((item) => ({
               ...item,
               client: {
@@ -128,6 +125,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
                 code: item.cvNo,
                 _id: item.loanReleaseId || item.loanReleaseEntryId
               },
+
               action: 'create',
               _synced: false,
               week: item.week
@@ -137,9 +135,13 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
               centerNo: data.centerName,
               description: data.centerLabel
             },
-            bank: {
+            bankCode: {
               _id: data.bankCode,
-              code: data.bankCodeLabel
+              code: data.bankCodeLabel,
+              description: data.bankCodeLabel,
+            },
+            encodedBy:{
+              username: user
             },
            _synced: false,  
            action: "create",

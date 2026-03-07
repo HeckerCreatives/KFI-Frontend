@@ -63,32 +63,34 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
     if(online){
       setLoading(true);
       try {
-        data.amount = removeAmountComma(data.amount);
+        data.amount = (removeAmountComma(data.amount));
         data.acctMonth = (removeAmountComma(data.acctMonth));
-        data.cashCollection = removeAmountComma(data.cashCollection as string);
-      data.entries = data.entries
-        ? data.entries.map((entry: any, index: number) => ({
-            ...entry,
-            clientId: entry.clientId,
-            clientName: entry.name,
-            loanReleaseEntryId: entry.loanReleaseEntryId || entry.loanReleaseId || '',
-            loanReleaseId: entry.loanReleaseId || '',
-            dueDate: formatDateInput(entry.dueDate ?? ''),
-            week: Number(entry.noOfWeeks),
-            noOfWeeks: entry.noOfWeeks,
-            acctCodeDesc: entry.description,
-            debit: Number(removeAmountComma(entry.debit)),
-            credit: Number(removeAmountComma(entry.credit)),
-            line: index + 1,
-            type: data.type,
-          }))
-        : [];
+        data.acctYear = (removeAmountComma(data.acctYear));
+        data.amount = (removeAmountComma(data.amount));
+               data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
+               data.entries = data.entries
+                 ? data.entries.map((entry: any, index: number) => ({
+                     ...entry,
+                     clientId: entry.clientId,
+                     clientName: entry.name,
+                     loanReleaseEntryId: entry.loanReleaseEntryId || entry.loanReleaseId || '',
+                     loanReleaseId: entry.loanReleaseId || '',
+                     week: Number(entry.week),
+                     cctCodeDesc: entry.description,
+                     debit: Number(removeAmountComma(entry.debit)),
+                     credit: Number(removeAmountComma(entry.credit)),
+                     dueDate: new Date(entry.dueDate || '').toISOString().split('T')[0] ,
+                     line: index + 1,
+                   }))
+                 : [];
+       
         const result = await kfiAxios.post('release', {
           ...data,
           acctMonth: Number(data.acctMonth),
           acctYear: Number(data.acctYear),
           amount: Number(data.amount),
           cashCollection: Number(data.cashCollection)
+         
         });
         const { success } = result.data;
         if (success) {
@@ -114,15 +116,44 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
       }
     } else {
       try {
-         const entries = data.entries
-         // const entries = data.entries
-         await db.acknowledgementReceipts.add({
-           ...data,
-           entries: entries,
-           encodedBy: '',
-           _synced: false,  
-           action: "create",
-         });
+          await db.releaseReceipts.add({
+                   ...data,
+                  entries: data.entries?.map((item) => ({
+                      ...item,
+                      client: {
+                        name: item.clientName,
+                        _id: item.client || item.clientId
+                      },
+                      acctCode: {
+                        code: item.acctCode,
+                        description: item.acctCodeDesc,
+                        _id: item.acctCodeId
+                      },
+                      loanRelease:{
+                        code: item.cvNo,
+                        _id: item.loanReleaseId || item.loanReleaseEntryId
+                      },
+                      dueDate: new Date(item.dueDate || '').toLocaleString().split('T')[0] ,
+                      action: 'create',
+                      _synced: false,
+                      week: Number(item.week)
+                    })),
+                    center: {
+                      _id: data.center,
+                      centerNo: data.centerName,
+                      description: data.centerLabel
+                    },
+                    bankCode: {
+                      _id: data.bankCode,
+                      code: data.bankCodeLabel,
+                      description: data.bankCodeLabel,
+                    },
+                    encodedBy:{
+                      username: user
+                    },
+                   _synced: false,  
+                   action: "create",
+                 });
          getReleases(1);
          dismiss();
          present({

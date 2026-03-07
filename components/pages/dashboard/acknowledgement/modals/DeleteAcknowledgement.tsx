@@ -55,13 +55,13 @@ const DeleteAcknowledgement = ({ acknowledgement, getAcknowledgements, searchkey
     } else {
       try{
       if (acknowledgement._id) {
-          await db.officialReceipts.update(acknowledgement.id, {
+          await db.acknowledgementReceipts.update(acknowledgement.id, {
             deletedAt: new Date().toISOString(),
             _synced: false,
             action: "delete",
           });
         } else {
-          await db.officialReceipts.delete(acknowledgement.id);
+          await db.acknowledgementReceipts.delete(acknowledgement.id);
         }
       getAcknowledgements(currentPage);
       dismiss()

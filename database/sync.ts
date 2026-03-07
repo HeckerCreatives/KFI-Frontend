@@ -371,6 +371,26 @@ export async function syncTrialBalance(apiData: any) {
   return true;
 }
 
+export async function syncUsers(apiData: any) {
+  console.log('Data syncUsers', apiData)
+  if (!apiData) return;
+
+ await db.users.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+   await db.table("users").bulkPut(data);
+
+  console.log('Sync syncUsers', data)
+
+  return true;
+}
+
 
 //transactions
 export async function syncLoanRelease(apiData: any) {
@@ -473,6 +493,26 @@ export async function syncEmergencyLoan(apiData: any) {
   return true;
 }
 
+export async function syncOR(apiData: any) {
+  console.log('Data syncOR', apiData)
+  if (!apiData) return;
+
+ await db.acknowledgementReceipts.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+   await db.table("acknowledgementReceipts").bulkPut(data);
+
+  console.log('Sync syncOR', data)
+
+  return true;
+}
+
 
 
 
@@ -526,17 +566,6 @@ export async function syncLoanReleaseDueDates(apiData: any) {
   return true;
 }
 
-
-export async function syncOR(apiData: any) {
-  console.log('Data', apiData)
-  if (!apiData) return;
-
-  await db.officialReceipts.clear();
-  await db.table("officialReceipts").bulkAdd(apiData);
-  console.log('Sync sucess', apiData)
-
-  return true;
-}
 
 export async function syncAR(apiData: any) {
   console.log('Data ar', apiData)

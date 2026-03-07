@@ -34,6 +34,8 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
   const [preventries, setPrevEntries] = useState<AcknowledgementEntry[]>(acknowledgement.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const online = useOnlineStore((state) => state.online);
+  const user = localStorage.getItem('user')
+
 
 
   const formattedEntries = acknowledgement.entries.map((item) => ({
@@ -43,13 +45,12 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
     clientId: item.client?._id,
     clientName: item.client?.name,
     loanReleaseId: item.loanRelease?._id,
-    week: String(item.week),
-    acctCodeDesc: item.acctCode.description,
+    acctCodeDesc: item.acctCode?.description,
     loanReleaseEntryId: item.loanRelease?._id,
     cvNo: item.loanRelease?.code,
     dueDate: item.dueDate?.split('T')[0] || '',
     noOfWeeks: '',
-    week: item.week || '0',
+    week: item.week || 0,
     name: item.client?.name,
     client: item.client?._id,
     particular: item.particular,
@@ -133,26 +134,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
 
         const prevIds = new Set(preventries.map((e) => e._id));
 
-        const formattedEntries = entries?.map((entry, index) => {
-          const isExisting = prevIds.has(entry._id);
-          return {
-              _id: isExisting ? entry._id : undefined,
-              loanReleaseEntryId: entry.loanReleaseEntryId._id,
-              cvNo: normalizeCVNumber(entry.cvNo),
-              dueDate: acknowledgement.date.split("T")[0] || '',
-              noOfWeeks: entry.loanReleaseEntryId.transaction.noOfWeeks,
-              name: entry.loanReleaseEntryId.client.name,
-              particular: entry.particular,
-              acctCodeId: entry.acctCode._id,
-              acctCode: entry.acctCode.code ?? '',
-              description: entry.acctCode.description ?? '',
-              debit: entry.debit?.toString() ?? "",
-              credit: entry.credit?.toString() ?? "",
-              line: index + 1,
-              // week: entry.week,
-            
-          };
-        });
+       
         data.amount = removeAmountComma(data.amount);
         data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
     if(online){
@@ -190,7 +172,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
       }
     } else {
       try {
-       const existing = await db.officialReceipts.get(acknowledgement.id);
+       const existing = await db.acknowledgementReceipts.get(acknowledgement.id);
         if (!existing) {
           console.log("Data not found");
           return;
@@ -199,7 +181,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
           ...data,
           entries: data.entries?.map((item) => ({
               ...item,
-              client: {
+               client: {
                 name: item.clientName,
                 _id: item.client || item.clientId
               },
@@ -215,13 +197,25 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
               action: "update",
               _synced: false
             })),
+             center: {
+              _id: data.center,
+              centerNo: data.centerName,
+              description: data.centerLabel
+            },
+            bankCode: {
+              _id: data.bankCode,
+              code: data.bankCodeLabel,
+              description: data.bankCodeLabel,
+            },
+            encodedBy:{
+              username: user
+            },
           deletedIds: finalDeletedIds,
           _synced: false,
           action: "update",
         };
 
-        console.log('Form Data',updated)
-        await db.officialReceipts.update(acknowledgement.id, updated);
+        await db.acknowledgementReceipts.update(acknowledgement.id, updated);
         getAcknowledgement(currentPage)
        
 
@@ -244,6 +238,8 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
       }
     }
   }
+
+  console.log(form.formState.errors)
 
 
 

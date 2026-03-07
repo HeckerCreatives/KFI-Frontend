@@ -29,18 +29,20 @@ export class KfiDatabase extends Dexie {
 
   //customer
   clientMasterFile!: Table<any>;
-  newclientMasterFile!: Table<any>;
+
+  //others
   centers!: Table<any>;
   financialStatements!: Table<any>
   beginningBalance!: Table<any>
   trialBalance!: Table<any>
   journalVouchers!: Table<any>;
   damayanFunds!: Table<any>;
-
-
-
-  //transactions
   loanReleases!: Table<any>;
+  releaseReceipts!: Table<any>;
+
+  //users
+  users!: Table<any>;
+
 
 
 
@@ -48,6 +50,8 @@ export class KfiDatabase extends Dexie {
     super("kfi");
 
     this.version(1).stores({
+
+      users: "++id, _id, username",
       
       clientMasterFile: "++id, _id, acctNumber, centerNo, name",
       centers: "++id, centerNo, description",
@@ -64,6 +68,9 @@ export class KfiDatabase extends Dexie {
       expenseVouchers: "++id, _id",
       journalVouchers: "++id, _id",
       damayanFunds: "++id, _id",
+      acknowledgementReceipts: "++id, _id",
+      releaseReceipts: "++id, _id",
+
 
 
 
@@ -85,7 +92,6 @@ export class KfiDatabase extends Dexie {
       expenseVoucherEntries: "++id, expenseVoucher",
       officialReceipts: "++id, code, center",
       officialReceiptEntries: "++id, acknowledgement",
-      acknowledgementReceipts: "++id, code, center",
       acknowledgementReceiptEntries: "++id, release",
       emergencyLoans: "++id, code, center",
       emergencyLoanEntries: "++id, emergencyLoan",

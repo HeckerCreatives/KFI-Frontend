@@ -19,6 +19,8 @@ import { arrangedResource } from '../../../utils/constants';
 import { UserIcon, LogoutSquare01Icon, CircleIcon  } from 'hugeicons-react';
 import { useRouter } from 'next/navigation';
 import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
+import bcrypt from "bcryptjs";
 
 
 const Login = () => {
@@ -71,81 +73,122 @@ const Login = () => {
       }
 
  const onSubmit = async (data: LoginFormData) => {
-  try {
-    setLoading(true)
+    if(online){
+      try {
+        setLoading(true)
 
-    const result = await kfiAxios.post('/auth/login', {
-      username: data.username,
-      password: data.password,
-      deviceName: 'My PC Name',
-      deviceType: 'desktop'
-    })
+        const result = await kfiAxios.post('/auth/login', {
+          username: data.username,
+          password: data.password,
+          deviceName: 'My PC Name',
+          deviceType: 'desktop'
+        })
 
-    const { success, access } = result.data
+        const { success, access } = result.data
 
-    if (!success) return
+        if (!success) return
 
-    const token = jwtDecode(access) as AccessToken
+        const token = jwtDecode(access) as AccessToken
 
-  
-    localStorage.setItem('auth', access)
-    localStorage.setItem('user', token.username)
-    localStorage.setItem('role', token.role)
-    console.log(token)
+      
+        localStorage.setItem('auth', access)
+        localStorage.setItem('user', token.username)
+        localStorage.setItem('role', token.role)
+        console.log(token)
 
 
-    if (token.role === 'superadmin' || token.role === 'user') {
-      const permRes = await kfiAxios.get('/auth/permissions')
-      const { permissions } = permRes.data
+        if (token.role === 'superadmin' || token.role === 'user') {
+          const permRes = await kfiAxios.get('/auth/permissions')
+          const { permissions } = permRes.data
 
-      if (permissions?.length !== 0) {
-        localStorage.setItem(
-          'permissions',
-          JSON.stringify(permissions)
+          if (permissions?.length !== 0) {
+            localStorage.setItem(
+              'permissions',
+              JSON.stringify(permissions)
+            )
+
+            const hasDashboard = permissions.find(
+              (item: any) => item.resource === 'dashboard'
+            )?.actions?.visible
+
+            if (!hasDashboard) {
+              console.log('jwuerhgt')
+              router.push('/dashboard/kfi')
+            }else{
+              console.log('ccccc')
+
+              router.push('/dashboard/home')
+            }
+          }
+        }
+
+        setLoading(false)
+
+      
+        // Reload only if really required by your platform
+        if (isPlatform('capacitor')) {
+          window.location.reload()
+        } else if (isPlatform('electron')) {
+          (window as any).ipcRenderer.send('reload-window')
+        }
+
+      } catch (error: any) {
+        const errs: TErrorData | string =
+          error?.response?.data?.error ||
+          error?.response?.data?.msg ||
+          error.message
+
+        const errors: TFormError[] | string = checkError(errs)
+
+        const fields: string[] = Object.keys(
+          form.formState.defaultValues as Object
         )
 
-        const hasDashboard = permissions.find(
-          (item: any) => item.resource === 'dashboard'
-        )?.actions?.visible
+        formErrorHandler(errors, form.setError, fields)
 
-        if (!hasDashboard) {
-          console.log('jwuerhgt')
-          router.push('/dashboard/kfi')
-        }else{
-          console.log('ccccc')
-
-          router.push('/dashboard/home')
-        }
+        setLoading(false)
       }
+    } else {
+      const user = await db.users
+      .where("username")
+      .equals(data.username)
+      .first();
+
+      if(!user){
+        console.log('user not exist')
+        return
+      }
+
+      const isMatch = await bcrypt.compare(data.password, user.password);
+
+      // console.log(data.password, user.password, isMatch )
+
+      if (isMatch) {
+        if (user.role === "superadmin" || user.role === "user") {
+          if (user.permissions?.length !== 0) {
+            localStorage.setItem(
+              "permissions",
+              JSON.stringify(user.permissions)
+            );
+
+            const hasDashboard = user.permissions.find(
+              (item: any) => item.resource === "dashboard"
+            )?.actions?.visible;
+
+            if (!hasDashboard) {
+              router.push("/dashboard/kfi");
+            } else {
+              router.push("/dashboard/home");
+            }
+          }
+        }
+      } else {
+        console.log("password is incorrect");
+      }
+
+    
     }
-
-    setLoading(false)
-
-   
-    // Reload only if really required by your platform
-    if (isPlatform('capacitor')) {
-      window.location.reload()
-    } else if (isPlatform('electron')) {
-      (window as any).ipcRenderer.send('reload-window')
-    }
-
-  } catch (error: any) {
-    const errs: TErrorData | string =
-      error?.response?.data?.error ||
-      error?.response?.data?.msg ||
-      error.message
-
-    const errors: TFormError[] | string = checkError(errs)
-
-    const fields: string[] = Object.keys(
-      form.formState.defaultValues as Object
-    )
-
-    formErrorHandler(errors, form.setError, fields)
-
-    setLoading(false)
   }
-}
 
   return (
     <IonPage>
@@ -203,10 +246,10 @@ const Login = () => {
                       <p className="text-slate-500 text-sm ">Login to your account</p>
                     </div>
 
-                    {/* <div className=' flex items-center w-full'>
+                    <div className=' flex items-center w-full'>
                       <button onClick={() => setOnline(false)} className={`py-2 text-sm w-full rounded-md ${!online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Offline</button>
                       <button onClick={() => setOnline(true)} className={`py-2 text-sm w-full rounded-md ${online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Online</button>
-                    </div> */}
+                    </div>
                   </div>
                   <div>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1 ">

@@ -19,6 +19,8 @@ import DashboardCard from '../home/components/DashboardCard';
 import { UserMultiple02Icon, UserBlock01Icon, UserMinus01Icon } from 'hugeicons-react';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../utils/permissions';
+import { useOnlineStore } from '../../../../store/onlineStore';
+import { db } from '../../../../database/db';
 
 export type TUser = {
   users: User[];
@@ -32,6 +34,8 @@ const Admin = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
     const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
   const [present] = useIonToast();
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
@@ -55,7 +59,8 @@ const Admin = () => {
 
   const getUsers = async (page: number, keyword: string = '', sort: string = '') => {
     setData(prev => ({ ...prev, loading: true }));
-    try {
+   if(online){
+     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
       if (keyword) filter.search = keyword;
       if (sort) filter.sort = sort;
@@ -83,6 +88,49 @@ const Admin = () => {
     } finally {
       setData(prev => ({ ...prev, loading: false }));
     }
+   } else {
+     setData(prev => ({ ...prev, loading: true }));
+              
+                  try {
+                    const limit = TABLE_LIMIT;
+              
+                    let data = await db.users.toArray();
+                    console.log(data)
+                    const filteredData = data.filter(e => !e.deletedAt);
+                    let allData =  filteredData
+              
+                    const totalItems = allData.length;
+                    const totalPages = Math.ceil(totalItems / limit);
+              
+                    const start = (page - 1) * limit;
+                    const end = start + limit;
+              
+                    const finalData = allData.slice(start, end);
+              
+                    const hasPrevPage = page > 1;
+                    const hasNextPage = page < totalPages;
+              
+                    setData(prev => ({
+                      ...prev,
+                      users: finalData,
+                      totalPages,
+                      prevPage: hasPrevPage,
+                      nextPage: hasNextPage,
+                    }));
+      
+              
+                    setCurrentPage(page);
+                    setSearchKey(keyword);
+                    setSortKey(sort);
+                  } catch (error) {
+                    present({
+                      message: 'Failed to load records.',
+                      duration: 1000,
+                    });
+                  } finally {
+                    setData(prev => ({ ...prev, loading: false }));
+                  }
+   }
   };
 
   const getStatistics = async () => {
