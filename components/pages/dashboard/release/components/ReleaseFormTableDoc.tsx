@@ -55,7 +55,7 @@ const ReleaseFormTableDoc = ({ entry, remove, form, index, sticky }: ReleaseForm
       </TableCell>
       <TableCell className="min-w-20 max-w-20 hidden lg:table-cell">
         <FormIonItem className="">
-          <InputText readOnly control={form.control} name={`entries.${index}.noOfWeeks`} clearErrors={form.clearErrors} className="!px-2 min-w-full rounded-sm" />
+          <InputText readOnly control={form.control} name={`entries.${index}.week`} clearErrors={form.clearErrors} className="!px-2 min-w-full rounded-sm" />
         </FormIonItem>
       </TableCell>
       <TableCell className="min-w-60 max-w-60 hidden lg:table-cell">

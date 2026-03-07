@@ -17,9 +17,10 @@ import { tbchema, TBFormData } from '../../../../../validations/trial-balance-sc
 
 type CreateProps = {
   getList: (page: number) => void;
+  currentPage: number
 };
 
-const CreateTB = ({ getList }: CreateProps) => {
+const CreateTB = ({ getList, currentPage }: CreateProps) => {
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
@@ -67,14 +68,15 @@ const CreateTB = ({ getList }: CreateProps) => {
                     {
                     ...data, 
                     _synced: false,
+                    entries: [],
                     action: "create",
                     isOldData: false
                   }
                   );
-                  getList(0);
+                  getList(currentPage);
                   dismiss()
                   present({
-                        message: 'Group of account successfully created!.',
+                        message: 'Data successfully created!.',
                         duration: 1000,
                       });
                   return;

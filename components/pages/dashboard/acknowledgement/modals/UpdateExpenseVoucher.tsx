@@ -17,6 +17,7 @@ import { formatAmount, formatNumber, removeAmountComma } from '../../../../ui/ut
 import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import AcknowledgementFormTable from '../components/AcknowledgementFormTable';
 
 type UpdateAcknowledgementProps = {
   acknowledgement: Acknowledgement;
@@ -33,6 +34,31 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
   const [preventries, setPrevEntries] = useState<AcknowledgementEntry[]>(acknowledgement.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const online = useOnlineStore((state) => state.online);
+
+
+  const formattedEntries = acknowledgement.entries.map((item) => ({
+    ...item,
+    line: item.line,
+    _id: item._id,
+    clientId: item.client,
+    clientName: item.client,
+    loanReleaseId: item.loanRelease,
+    week: String(item.week),
+    acctCodeDesc: '',
+    loanReleaseEntryId: item.loanRelease,
+    cvNo: '',
+    dueDate: item.dueDate?.split('T')[0] || '',
+    noOfWeeks: '',
+    name: '',
+    client: '',
+    particular: item.particular,
+    acctCodeId: item.acctCode,
+    acctCode: item.acctCode,
+    description: '',
+    debit: String(item.debit),
+    credit: String(item.credit),
+
+  }))
   
   
 
@@ -57,6 +83,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
       amount: '',
       cashCollection: '',
       mode: 'update',
+      entries: formattedEntries
     },
   });
 
@@ -81,6 +108,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
         amount: `${formatAmount(acknowledgement.amount)}`,
         cashCollection: `${acknowledgement.cashCollectionAmount || 0}`,
         mode: 'update',
+        entries: formattedEntries
       });
     }
   }, [acknowledgement, form]);
@@ -96,14 +124,6 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
 
   return cv.replace(/^(CV#)+/, "CV#");
 }
-
-function removeCVTag(cv: string): string {
-  if (!cv) return "";
-  return cv.replace(/CV#/g, "");
-}
-
-
-
 
   async function onSubmit(data: AcknowledgementFormData) {
      const finalDeletedIds = deletedIds.filter((id) =>
@@ -206,7 +226,6 @@ function removeCVTag(cv: string): string {
     }
   }
 
-  console.log(form.formState.errors)
 
   return (
     <>
@@ -254,6 +273,8 @@ function removeCVTag(cv: string): string {
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
           <div className="border-t border-t-slate-400 mx-2 pt-5 flex-1">
+            {/* <AcknowledgementFormTable form={form} /> */}
+            
             <UpdateAcknowledgementEntries isOpen={isOpen} acknowledgement={acknowledgement} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} />
           </div>
 

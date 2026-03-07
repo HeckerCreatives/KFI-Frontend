@@ -23,7 +23,7 @@ import { db } from '../../../../database/db';
 import { filterAndSortGOA } from '../../../ui/utils/sort';
 
 export type TBS = {
-  trialBalances: FinancialStatements[];
+  trialBalances: any[];
   totalPages: number;
   nextPage: boolean;
   prevPage: boolean;
@@ -117,8 +117,7 @@ const TrialBalance = () => {
 
             <div className="flex items-center gap-2 flex-wrap">
               {canDoAction(token.role, permissions, 'trial balance', 'create') && (
-              <CreateTB getList={getList} />
-
+              <CreateTB getList={getList} currentPage={currentPage} />
               )}
             <TBReport/>
 

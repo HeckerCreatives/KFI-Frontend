@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IonButton, IonModal, IonHeader, IonToolbar, useIonToast, IonIcon } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,9 +35,20 @@ const UpdateTB = ({ getList, item, currentPage }: UpdateProps) => {
     defaultValues: {
  
     reportCode: item.reportCode,
-    reportName: item.reportName
+    reportName: item.reportName,
+    title: item.title,
+    subTitle: item.subTitle,
     },
   });
+
+  useEffect(() => {
+  form.reset({
+     reportCode: item.reportCode,
+    reportName: item.reportName,
+    title: item.title,
+    subTitle: item.subTitle,
+  })
+  },[item, form.reset])
 
   function dismiss() {
     form.reset();

@@ -12,8 +12,11 @@ export const fschema = z.object({
 
 export const entries = z.object({
   _id: z.string().optional(),
+  id: z.string().optional(),
+  action: z.string().optional(),
+  _synced: z.any().optional(),
+  line: z.any().optional(),
   financialStatement: z.string().optional(),
-  line: z.number().optional(),
   acctCode: z.string().min(1, 'Account code is required'),
   acctCodeName: z.string().optional(),
   acctCodeDescription: z.string().optional(),

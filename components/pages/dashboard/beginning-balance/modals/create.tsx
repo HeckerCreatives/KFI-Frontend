@@ -10,10 +10,6 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
-import FinancialStatementForm from './begbalance-form';
-import { fschema, FSFormData } from '../../../../../validations/financialstatement.schema';
-import TBForm from './begbalance-form';
-import { tbchema, TBFormData } from '../../../../../validations/trial-balance-schema';
 import BegBalanceForm from './begbalance-form';
 import { begbalancechema, BegBalanceFormData } from '../../../../../validations/beginningbalance.schema';
 import FormTable from '../components/entry-table';
@@ -21,9 +17,10 @@ import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 
 type CreateProps = {
   getList: (page: number) => void;
+  currentPage: number
 };
 
-const Create = ({ getList }: CreateProps) => {
+const Create = ({ getList, currentPage }: CreateProps) => {
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
@@ -54,7 +51,8 @@ const Create = ({ getList }: CreateProps) => {
             credit: removeAmountComma(entry.credit),
         };
         });
-      try {
+      if(online){
+        try {
         const result = await kfiAxios.post('/beginning-balance', {...data, entries: formattedEntries,});
         const { success } = result.data;
         if (success) {
@@ -79,6 +77,36 @@ const Create = ({ getList }: CreateProps) => {
         console.log(error)
       } finally {
         setLoading(false);
+      }
+      } else {
+        await db.beginningBalance.add(
+                      {
+                      ...data, 
+                      entries: data.entries.map((item) => ({
+                        ...item,
+                        acctCode: {
+                          _id: item.acctCodeId,
+                          code: item.acctCodeName,
+                          description: item.acctCodeDescription
+                        },
+                        _synced: false,
+                        action: 'create'
+                      })),
+                      debit: data.entries.reduce((total, item) => total + Number(removeAmountComma(item.debit)), 0),
+                      credit: data.entries.reduce((total, item) => total + Number(removeAmountComma(item.credit)), 0),
+                      entryCount: data.entries.length,
+                      _synced: false,
+                      action: "create",
+                      isOldData: false
+                    }
+                    );
+                    getList(currentPage);
+                    dismiss()
+                    present({
+                          message: 'Group of account successfully created!.',
+                          duration: 1000,
+                        });
+                    return;
       }
     
   }

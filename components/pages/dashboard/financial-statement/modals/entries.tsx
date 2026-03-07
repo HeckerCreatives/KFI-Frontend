@@ -40,18 +40,32 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
   const form = useForm<FSEntriesFormData>({
     resolver: zodResolver(fsentriesschema),
     defaultValues: {
-        primaryYear: String(item.primary.year),
+       primaryYear: String(item.primary.year),
         primaryMonth: String(item.primary.month),
         type: item.type,
-        secondaryMonth: String(item.secondary?.year ?? ''),
+        secondaryMonth: String(item.secondary?.month ?? ''),
         secondaryYear: String(item.secondary?.year ?? ''),
         reportCode: item.reportCode,
-        reportName: item.reportName,
+        reportName: item.reportName, 
         title: item.title,
         subTitle: item.subTitle
     },
   });
 
+
+  useEffect(() => {
+    form.reset({
+       primaryYear: String(item.primary.year),
+        primaryMonth: String(item.primary.month),
+        type: item.type,
+        secondaryMonth: String(item.secondary?.month ?? ''),
+        secondaryYear: String(item.secondary?.year ?? ''),
+        reportCode: item.reportCode,
+        reportName: item.reportName, 
+        title: item.title,
+        subTitle: item.subTitle
+    })
+  },[item])
  
 
   async function onSubmit(data: FSEntriesFormData) {
@@ -125,7 +139,7 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
                   code: item.acctCodeName,
                   description: item.acctCodeDescription,
                 },
-                action: item._id ? 'update' : 'create',
+               action: item.action === "delete" ? item.action : item._id ? "update" : "create",
                 _synced: false,
               })),
               action: existing.isOldData ? 'update' : 'create',
@@ -165,6 +179,7 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
                     financialStatement: entry.financialStatement,
                     acctCode: entry.acctCode,
                     acctCodeName: entry.accCodeName,
+                    acctCodeDescription: entry.remarks,
                     remarks: entry.remarks,
                     amountType: entry.amountType
                 };
@@ -177,10 +192,12 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
           }
     } else {
       const data = await db.financialStatements.get(item.id)
+
+      console.log(data.entries)
       const entries = data.entries.map((item: any) => ({
         ...item,
         acctCode: item.acctCode._id,
-        acctCodeLabel: item.acctCode.code,
+        acctCodeName: item.acctCode.code,
         acctCodeDescription: item.acctCode.description,
       }))
 
@@ -195,7 +212,6 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
         modal.current?.dismiss();
     }
 
-    console.log(form.formState.errors)
 
 
 
@@ -216,14 +232,14 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
         trigger={`update-fs-entries-${item._id}`}
         backdropDismiss={false}
         onWillPresent={getEntries}
-        className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:64rem]"
+        className=" [--border-radius:0.35rem] [--width:95%] [--max-width:64rem] [--max-height:95%]  !overflow-y-auto "
       >
         {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-20">
             <ModalHeader disabled={loading} title="Nature - Add Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader> */}
-        <div className="p-6 flex flex-col gap-6">
+        <div className="p-6 flex flex-col gap-6 overflow-y-auto">
            <ModalHeader disabled={loading} title="Financial Statement - Entries" sub="Manage financial data." dismiss={dismiss} />
           <div>
             <form onSubmit={form.handleSubmit(onSubmit)}>

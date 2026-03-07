@@ -5,7 +5,7 @@ import { db } from "../../../../database/db";
 import { business, key } from "ionicons/icons";
 import { removeAmountComma } from "../../../ui/utils/formatNumber";
 
-type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans" | "financialStatements";
+type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans" | "financialStatements" | "trialBalance" | "beginningBalance";
 
 export default function UploadChanges() {
   const [changes, setChanges] = useState<Record<SyncKey, number>>({
@@ -26,6 +26,8 @@ export default function UploadChanges() {
     damayanFunds: 0,
     emergencyLoans: 0,
     financialStatements: 0,
+    trialBalance: 0,
+    beginningBalance: 0,
   });
     const [present] = useIonToast();
   const user = localStorage.getItem('user')
@@ -147,6 +149,18 @@ export default function UploadChanges() {
       endpoint: "/sync//financial-statements",
       field:'financialStatements'
     },
+    {
+      key: "trialBalance",
+      label: "Trial Balance",
+      endpoint: "/sync/trial-balances",
+      field:'trialBalances'
+    },
+    {
+      key: "beginningBalance",
+      label: "Beginning Balance",
+      endpoint: "/sync/beginning-balances",
+      field:'beginningBalances'
+    },
   ];
 
   const loadChanges = useCallback(async () => {
@@ -167,6 +181,8 @@ export default function UploadChanges() {
     const damayan = await db.damayanFunds.toArray();
     const emergencyl = await db.emergencyLoans.toArray();
     const fs = await db.financialStatements.toArray();
+    const trialb = await db.trialBalance.toArray();
+    const beginningb = await db.beginningBalance.toArray();
 
     setChanges({
       clientMasterFile: cmf.filter((e) => e._synced === false).length,
@@ -186,6 +202,8 @@ export default function UploadChanges() {
       productLoans: loans.filter((e) => e._synced === false).length,
       emergencyLoans: emergencyl.filter((e) => e._synced === false).length,
       financialStatements: fs.filter((e) => e._synced === false).length,
+      trialBalance: trialb.filter((e) => e._synced === false).length,
+      beginningBalance: beginningb.filter((e) => e._synced === false).length,
     });
   }, []);
 
@@ -232,6 +250,8 @@ export default function UploadChanges() {
         centerLabel,
         primary,
         secondary,
+        loanCodes,
+        year,
         ...rest
       } = item;
 
@@ -256,13 +276,21 @@ export default function UploadChanges() {
         primaryMonth: Number(primary?.month),
         secondaryYear: Number(secondary?.year),
         secondaryMonth: Number(secondary?.month),
-        entries: entries.map((item: any, index: number) => ({
+        year: Number(year),
+        entries: entries?.map((item: any, index: number) => ({
             ...item,
             debit: Number(removeAmountComma(item.debit)),
             credit: Number(removeAmountComma(item.credit)),
             acctCode: item.acctCodeId || item.acctCode._id,
+            acctCodeId: item.acctCodeId || item.acctCode._id,
             client: item.clientId || item.client?._id,
+            line: Number(item.line)
 
+        })) ,
+        loanCodes: loanCodes?.map((item: any, index: number) => ({
+            ...item,
+            code: item.acctCode._id,
+            acctCode: item.acctCode._id,
         })) ,
         center:
           typeof center === "object" && center?._id
@@ -310,7 +338,7 @@ export default function UploadChanges() {
     <div className="bg-white rounded-md shadow-sm p-4 w-full max-w-[40rem]">
       <p className="text-sm !font-bold">Upload Offline Changes</p>
 
-      <div className=" w-full grid grid-cols-2 gap-1 mt-4">
+      <div className=" w-full grid grid-cols-2 gap-1 mt-4 max-h-[30rem] overflow-y-auto">
         {tables.map((table) => {
           const count = changes[table.key];
 

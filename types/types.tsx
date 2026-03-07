@@ -601,13 +601,18 @@ export type FinancialStatements = {
 };
 
 export type BegBalance = {
+   _id: string,
+  id?: string,
+  action: string,
+  _synced: boolean,
   year: number,
   memo: string,
   encodedBy: string,
   debit: number,
   credit: number,
   entryCount: number,
-  _id: string,
-  createdAt: string
+  createdAt: string,
+  entries: any[]
+
 }
 

@@ -34,6 +34,18 @@ const Update = ({ getList, item, currentPage }: UpdateProps) => {
   const online = useOnlineStore((state) => state.online);
   const [present] = useIonToast();
   const [prevEntries, setPrevEntries] = useState<any[]>([]);
+
+  const formattedEntries = item.entries?.map((item) => ({
+    ...item,
+     _id: item._id,
+      line: item.line,
+      acctCodeId: item.acctCode._id,
+      acctCodeName: item.acctCode.code,
+      acctCodeDescription: item.acctCode.description,
+      debit: String(item.debit),
+      credit: String(item.debit),
+    
+   }))
   
   
   
@@ -41,9 +53,20 @@ const Update = ({ getList, item, currentPage }: UpdateProps) => {
     resolver: zodResolver(begbalancechema),
     defaultValues: {
       memo: item.memo,
+      entries: formattedEntries
       
     },
   });
+
+
+  useEffect(() => {
+    form.reset({
+      year: String(item.year),
+      memo: item.memo,
+      entries: formattedEntries
+    })
+  },[item])
+
 
   function dismiss() {
     modal.current?.dismiss();
@@ -69,7 +92,8 @@ const Update = ({ getList, item, currentPage }: UpdateProps) => {
                     credit: removeAmountComma(entry.credit),
                 };
                 });
-      try {
+     if(online){
+       try {
         const result = await kfiAxios.put(`/beginning-balance/${item._id}`, {...data, deletedIds: finalDeletedIds, entries: formattedEntries});
         const { success } = result.data;
         if (success) {
@@ -89,41 +113,63 @@ const Update = ({ getList, item, currentPage }: UpdateProps) => {
       } finally {
         setLoading(false);
       }
+     } else {
+        try {
+                           const existing = await db.beginningBalance.get(item.id);
+      
+                           if (!existing) {
+                             console.warn("Data not found");
+                             return;
+                           }
+                           const updated = {
+                             ...existing,
+                             ...data, 
+                             entries: data.entries.map((item) => ({
+                               ...item,
+                               acctCode: {
+                                 _id: item.acctCodeId,
+                                 code: item.acctCodeName,
+                                 description: item.acctCodeDescription
+                               },
+                                action: item.action === "delete" ? item.action : item._id ? "update" : "create",
+                              _synced: false,
+                             })),
+                            debit: data.entries
+                              .filter(item => item.action !== "delete")
+                              .reduce((total, item) => total + Number(removeAmountComma(item.debit)), 0),
+
+                            credit: data.entries
+                              .filter(item => item.action !== "delete")
+                              .reduce((total, item) => total + Number(removeAmountComma(item.credit)), 0),
+                             entryCount: data.entries.filter((item) => item.action !== 'delete').length,
+                              action: existing.isOldData ? 'update' : 'create',
+                              _synced: false,
+                           };
+      
+                           await db.beginningBalance.update(item.id, updated);
+                   
+                          getList(currentPage)
+                          setLoading(false)
+                           dismiss();
+                           present({
+                             message: "Data successfully updated!",
+                             duration: 1000,
+                           });
+      
+                           setLoading(false)
+                   
+                         } catch (error) {
+                           setLoading(false)
+      
+                           console.error("Offline update failed:", error);
+                         }
+     }
     
   }
 
 
-   const getEntries = async () => {
-            try {
-              const result = await kfiAxios.get(`/beginning-balance/entries/${item._id}`);
-  
-              const { beginningBalanceEntries, success } = result.data as any
-               const formattedEntries = beginningBalanceEntries.map((entry: any, index: number) => {
-                  return {
-                      _id: entry._id,
-                      line:String(entry.line),
-                      debit: String(entry.debit),
-                      credit: String(entry.credit),
-                      acctCodeId: entry.acctCode._id,
-                      acctCodeLabel: entry.acctCode.code,
-                      acctCodeDescription: `${entry.acctCode.code} - ${entry.acctCode.description}`,
-                     
-                  };
-                  });
-  
-              form.setValue('entries',formattedEntries)
-              setPrevEntries(formattedEntries)
-            } catch (error) {
-            } finally {
-            }
-          
-      };
 
-      useEffect(() => {
-        form.setValue('year', String(item.year))
-      },[item])
 
-      console.log('from bb')
 
 
   return (
@@ -142,7 +188,6 @@ const Update = ({ getList, item, currentPage }: UpdateProps) => {
         ref={modal}
         trigger={`edit-bb-modal-${item._id}`}
         backdropDismiss={false}
-        onWillPresent={getEntries}
 
         className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:64rem]"
       >

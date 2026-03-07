@@ -50,7 +50,7 @@ const FSFormTableDoc = ({ index, entry, remove, form, loading = false }: FSFormT
       </TableCell>
       <TableCell className="sticky left-[20rem] min-w-[20rem] max-w-[20rem] z-10">
         <FormIonItem>
-          <InputText disabled={loading} control={form.control} name={`entries.${index}.remarks`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
+          <InputText disabled={loading} control={form.control} name={`entries.${index}.acctCodeDescription`} clearErrors={form.clearErrors} className="!px-2 !min-w-64 rounded-sm" />
         </FormIonItem>
       </TableCell>
 

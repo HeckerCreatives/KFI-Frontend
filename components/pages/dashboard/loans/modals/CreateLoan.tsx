@@ -73,6 +73,13 @@ const CreateLoan = ({ getLoans, currentPage }: CreateLoanProps) => {
        try {
         await db.productLoans.add({
           ...data,
+          loanCodes: data.loanCodes.map((item) => ({
+            ...item,
+            acctCode: {
+              _id: item.acctCode,
+              description: item.acctCodeLabel
+            }
+          })) ,
           isOldData: false,
           _synced: false,  
           action: "create",

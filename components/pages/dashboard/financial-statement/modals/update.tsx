@@ -74,6 +74,7 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
        try {
                      const existing = await db.financialStatements.get(item.id);
 
+
                      if (!existing) {
                        console.warn("Data not found");
                        return;
@@ -99,6 +100,8 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
                      await db.financialStatements.update(item.id, updated);
              
                     getList(currentPage)
+                          setLoading(false)
+
                      dismiss();
                      present({
                        message: "Data successfully updated!",

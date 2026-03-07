@@ -31,7 +31,18 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
   const [present] = useIonToast();
    const [prevEntries, setPrevEntries] = useState<any[]>([]);
    const [deletedIds, setDeletedIds] = useState<string[]>([]);
-  
+
+   const formattedEntries = item.entries?.map((item) => ({
+    ...item,
+     _id: item._id,
+      line: item.line,
+      acctCode: item.acctCode._id,
+      acctCodeName: item.acctCode.code,
+      acctCodeDescription: item.acctCode.description,
+      remarks: item.remarks,
+    
+   }))
+
   
   const form = useForm<TBEntriesFormData>({
     resolver: zodResolver(tbentriesschema),
@@ -40,9 +51,20 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
         reportCode: item.reportCode,
         reportName: item.reportName,
         title: item.title,
-        subTitle: item.subTitle
+        subTitle: item.subTitle,
+        entries: formattedEntries
     },
   });
+
+  useEffect(() => {
+    form.reset({
+       reportCode: item.reportCode,
+        reportName: item.reportName,
+        title: item.title,
+        subTitle: item.subTitle,
+        entries: formattedEntries
+    })
+  },[item])
 
   
 
@@ -111,14 +133,14 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
                         code: item.acctCodeName,
                         description: item.acctCodeDescription,
                       },
-                      action: item._id ? 'update' : 'create',
+                      action: item.action === "delete" ? item.action : item._id ? "update" : "create",
                       _synced: false,
                     })),
                     action: existing.isOldData ? 'update' : 'create',
                     _synced: false,
                  };
           
-                 await db.financialStatements.update(item.id, updated);
+                 await db.trialBalance.update(item.id, updated);
           
                 getList(currentPage)
                  dismiss();
@@ -138,42 +160,6 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
   }
 
 
-  const getEntries = async () => {
-         if(online){
-           try {
-            const result = await kfiAxios.get(`/trial-balance/entry/${item._id}`);
-
-            const { trialBalanceEntries, success } = result.data as any
-             const formattedEntries = trialBalanceEntries.map((entry: any, index: number) => {
-                return {
-                    _id: entry._id,
-                    line: Number(index + 1),
-                    financialStatement: entry.financialStatement,
-                    acctCode: entry.acctCode._id,
-                    acctCodeName: entry.acctCode.code,
-                    remarks: entry.remarks,
-                    amountType: entry.amountType
-                };
-                });
-
-            form.setValue('entries',formattedEntries)
-            setPrevEntries(formattedEntries)
-          } catch (error) {
-          } finally {
-          }
-         } else {
-            const data = await db.trialBalance.get(item.id)
-                const entries = data.entries.map((item: any) => ({
-                  ...item,
-                  acctCode: item.acctCode._id,
-                  acctCodeLabel: item.acctCode.code,
-                  acctCodeDescription: item.acctCode.description,
-                }))
-          
-                form.setValue('entries', entries)
-         }
-        
-    };
 
     function dismiss() {
         form.reset();
@@ -198,7 +184,6 @@ const UpdateFSEntries = ({ getList, item, currentPage }: UpdateProps) => {
         ref={modal}
         trigger={`edit-tbentries-${item._id}`}
         backdropDismiss={false}
-        onWillPresent={getEntries}
         className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:64rem]"
       >
         {/* <IonHeader>

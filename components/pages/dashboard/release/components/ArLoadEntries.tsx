@@ -190,23 +190,24 @@ const ARLoadEntries = ({center, form}: Props) => {
                    <FormIonItem>
 
                   <IonSelect
-                  placeholder='Due dates'
-                  labelPlacement="stacked"
-                   interface="popover"
-                  value={dueDateId}
-                  onIonChange={e => {
-                      setDueDateId(e.target.value);
-                    }}
-                   className={classNames(
-                      '!border border-zinc-300 [--highlight-color-focused:none] !px-2 !py-1 text-xs !overflow-y-auto !min-w-[12rem] !max-h-[5rem] !min-h-[0.5rem] ',
-                    )}
-                    >
-                      {duedates.map((item, index) => (
-                        <IonSelectOption key={index}  value={item._id} className="text-xs [--min-height:0.5rem]">
-                          {item.transaction?.code}
-                        </IonSelectOption>
-                      ))}
-                    </IonSelect>
+                                    placeholder='Due dates'
+                                    labelPlacement="stacked"
+                                     interface="popover"
+                                    value={dueDateId}
+                                    
+                                    onIonChange={e => {
+                                        setDueDateId(e.target.value);
+                                      }}
+                                     className={classNames(
+                                        '!border border-zinc-300 [--highlight-color-focused:none] !px-2 !py-1 text-xs !overflow-y-auto w-[18rem] !max-w-[24rem] !max-h-[18rem] !min-h-[0.5rem] ',
+                                      )}
+                                      >
+                                        {duedates.map((item, index) => (
+                                          <IonSelectOption key={index}  value={item._id} className="text-xs">
+                                            {item.transaction?.code}, Week:{item.week}, Date:{item.date.split("T")[0]}
+                                          </IonSelectOption>
+                                        ))}
+                                      </IonSelect>
 
                     
                   

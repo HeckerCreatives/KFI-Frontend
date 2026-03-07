@@ -21,12 +21,24 @@ const FSFormTable = ({ form, loading = false }: ExpenseVoucherFormTableProps) =>
 
   const addEntry = () => {
     form.clearErrors('entries');
-    append({line: fields.length + 1,acctCode: '', remarks : '', amountType: ''});
+    append({line: fields.length + 1,acctCode: '', remarks : '', amountType: '', _synced: false, action: 'create'});
   };
 
   const deleteEntry = (index: number) => {
+  const entry = form.getValues(`entries.${index}`);
+
+  console.log(entry)
+
+  if (entry._id) {
+    form.setValue(`entries.${index}.action`, "delete");
+    form.setValue(`entries.${index}._synced`, false);
+  } else {
+    // remove if not yet saved in DB
     remove(index);
-  };
+  }
+};
+
+const watchedEntries = form.watch("entries");
 
   return (
     <div className="px-2">
@@ -47,11 +59,26 @@ const FSFormTable = ({ form, loading = false }: ExpenseVoucherFormTableProps) =>
             </TableHeadRow>
           </TableHeader>
           <TableBody>
-            {fields.length < 1 && <TableNoRows label="No Entry Added Yet" colspan={7} />}
-            {fields.length > 0 &&
-              fields.map((field: EntryFormData & { id: string }, index: number) => (
-                <EVFormTableDoc key={field.id} index={index} entry={field} remove={deleteEntry} form={form} loading={loading} />
-              ))}
+            {watchedEntries?.filter((entry) => entry.action !== "delete").length < 1 && (
+              <TableNoRows label="No Entry Added Yet" colspan={7} />
+            )}
+
+            {fields.map((field: EntryFormData & { id: string }, index: number) => {
+              const entry = watchedEntries?.[index];
+
+              if (entry?.action === "delete") return null;
+
+              return (
+                <EVFormTableDoc
+                  key={field.id}
+                  index={index}
+                  entry={field}
+                  remove={deleteEntry}
+                  form={form}
+                  loading={loading}
+                />
+              );
+            })}
           </TableBody>
         </Table>
       </div>

@@ -1,8 +1,11 @@
 import z, { string } from 'zod';
 
 export const entries = z.object({
-  _id: z.string().optional(),
-  line: z.string().optional(),
+   _id: z.string().optional(),
+    id: z.string().optional(),
+    action: z.string().optional(),
+    _synced: z.any().optional(),
+    line: z.any().optional(),
   acctCodeId: z.string().min(1, 'Account code is required'),
    acctCodeName: z.string().optional(),
     acctCodeDescription: z.string().optional(),

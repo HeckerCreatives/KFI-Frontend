@@ -26,7 +26,8 @@ const Delete = ({item,getList,currentPage }: DeleteNatureProps) => {
 
   async function handleDelete() {
       setLoading(true);
-      try {
+     if(online){
+       try {
         const result = await kfiAxios.delete(`/beginning-balance/${item._id}`);
         const { success } = result.data;
         if (success) {
@@ -46,6 +47,32 @@ const Delete = ({item,getList,currentPage }: DeleteNatureProps) => {
       } finally {
         setLoading(false);
       }
+     } else {
+       if (item._id) {
+                      const existing = await db.beginningBalance.get(item.id);
+              
+                       await db.beginningBalance.update(item.id, {
+                                   deletedAt: new Date().toISOString(),
+                                   entries: existing.entries.map((item: any) => ({
+                                     ...item,
+                                     action: 'delete',
+                                     _synced: false,
+                                   })),
+                                   _synced: false,
+                                   action: "delete",
+                                 });
+                    } else {
+                      await db.beginningBalance.delete(item.id);
+                    }
+                  getList(currentPage);
+                  dismiss()
+                   present({
+                        message: 'Data successfully deleted!.',
+                        duration: 1000,
+                      });
+                   
+                    
+     }
    
   }
 
