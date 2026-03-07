@@ -166,6 +166,10 @@ const Login = () => {
       // console.log(data.password, user.password, isMatch )
 
       if (isMatch) {
+        console.log('logged in', user)
+        localStorage.setItem('auth', user.webtoken)
+        localStorage.setItem('user', user.username)
+        localStorage.setItem('role', user.role)
         if (user.role === "superadmin" || user.role === "user") {
           if (user.permissions?.length !== 0) {
             localStorage.setItem(
@@ -185,6 +189,7 @@ const Login = () => {
           }
         }
       } else {
+        console.log('password incorect')
           present({
              message: 'Incorrect password.',
              duration: 1000,
@@ -251,10 +256,10 @@ const Login = () => {
                       <p className="text-slate-500 text-sm ">Login to your account</p>
                     </div>
 
-                    {/* <div className=' flex items-center w-full'>
+                    <div className=' flex items-center w-full'>
                       <button onClick={() => setOnline(false)} className={`py-2 text-sm w-full rounded-md ${!online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Offline</button>
                       <button onClick={() => setOnline(true)} className={`py-2 text-sm w-full rounded-md ${online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Online</button>
-                    </div> */}
+                    </div>
                   </div>
                   <div>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1 ">

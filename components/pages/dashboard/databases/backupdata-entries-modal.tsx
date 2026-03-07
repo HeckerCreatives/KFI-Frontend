@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload } from "lucide-react"
+import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload, TriangleAlert } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
 import { syncAR, syncBanks, syncBeginningBalance, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDamayanFund, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncTrialBalance, syncUsers, syncWeeklySavings } from "../../../../database/sync"
@@ -246,6 +246,8 @@ export function BackupEntriesModalContent({
           <p className="text-sm text-muted-foreground">Sync entries based on your date range.</p>
         </div>
       </div>
+
+      
 
       <div className="mb-4">
         <div className="flex justify-between text-sm mb-2">

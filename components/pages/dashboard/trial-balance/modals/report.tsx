@@ -19,7 +19,11 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import classNames from 'classnames';
 import { TBS } from '../TrialBalance';
 
-export default function TBReport() {
+type Props = {
+  trialBalances: any[]
+}
+
+export default function TBReport({ trialBalances }: Props) {
      const [present] = useIonToast();
       const [loading, setLoading] = useState(false);
         const modal = useRef<HTMLIonModalElement>(null);
@@ -54,12 +58,12 @@ export default function TBReport() {
                   try {
                     const result = await kfiAxios.get('/trial-balance');
         
-                    const { trialBalances, success,hasPrevPage, hasNextPage, totalPages } = result.data
+                    const { data, success,hasPrevPage, hasNextPage, totalPages } = result.data
         
                     if(success){
                        setData(prev => ({
                       ...prev,
-                      trialBalances: trialBalances,
+                      trialBalances: data.items,
                       totalPages: totalPages,
                       nextPage: hasNextPage,
                       prevPage: hasPrevPage,
@@ -126,6 +130,8 @@ export default function TBReport() {
           useIonViewWillEnter(() => {
               getList();
             });
+
+            console.log()
 
 
   return (

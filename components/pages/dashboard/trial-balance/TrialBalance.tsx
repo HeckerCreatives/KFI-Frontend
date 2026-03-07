@@ -108,6 +108,8 @@ const TrialBalance = () => {
   useIonViewWillEnter(() => {
     getList(currentPage);
   });
+
+  console.log(data.trialBalances)
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
@@ -119,7 +121,7 @@ const TrialBalance = () => {
               {canDoAction(token.role, permissions, 'trial balance', 'create') && (
               <CreateTB getList={getList} currentPage={currentPage} />
               )}
-            <TBReport/>
+            <TBReport trialBalances={data.trialBalances}/>
 
               
             </div>

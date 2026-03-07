@@ -4,6 +4,7 @@ import kfiAxios from "../../../utils/axios";
 import { db } from "../../../../database/db";
 import { business, key } from "ionicons/icons";
 import { removeAmountComma } from "../../../ui/utils/formatNumber";
+import { TriangleAlert } from "lucide-react";
 
 type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans" | "financialStatements" | "trialBalance" | "beginningBalance" | "acknowledgementReceipts";
 
@@ -351,6 +352,11 @@ export default function UploadChanges() {
   return (
     <div className="bg-white rounded-md shadow-sm p-4 w-full max-w-[40rem]">
       <p className="text-sm !font-bold">Upload Offline Changes</p>
+
+      {/* <div className=' bg-red-50 p-4 rounded-md text-xs flex flex-col gap-2 item-start'>
+        <TriangleAlert size={20} className=' text-red-500'/>
+        <p className=' text-red-500'>Warning, do not sync data if there is an offline changes, data will be lost</p>
+      </div> */}
 
       <div className=" w-full grid grid-cols-2 gap-1 mt-4 max-h-[30rem] overflow-y-auto">
         {tables.map((table) => {

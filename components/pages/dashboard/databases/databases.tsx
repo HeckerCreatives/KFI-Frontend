@@ -13,6 +13,7 @@ import ModalHeader from '../../../ui/page/ModalHeader';
 import { BackupModalContent } from './backupdata-modal';
 import { BackupEntriesModalContent } from './backupdata-entries-modal';
 import UploadChanges from './uploadchanges';
+import { TriangleAlert } from 'lucide-react';
 
 
 const Databases = () => {
@@ -51,36 +52,14 @@ const Databases = () => {
 
             <div className=' flex flex-wrap gap-6'>
               
-               {/* <div className=' bg-white rounded-md p-4 flex flex-col gap-4 h-fit w-full'>
-          <p className=' text-sm !font-bold'>Sync Database</p>
-          <IonButton onClick={() => setBackupData(true)} fill="clear" id="export_all_client" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-            <RefreshIcon stroke='.8' size={15} className=' mr-2'/>
-            Sync
-          </IonButton>
-
-           <IonButton onClick={dropDatabase} fill="clear" id="export_all_client" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-            <RefreshIcon stroke='.8' size={15} className=' mr-2'/>
-            Drop
-          </IonButton>
-
-          <IonModal
-          isOpen={backupData}
-          id='backup-modal'
-           onDidDismiss={() => setBackupData(false)}
-          className=" [--border-radius:0.7rem] auto-height [--max-width:34rem] [--width:95%]"
-          >
-            <div className=' p-6'>
-             <BackupModalContent
-              onClose={() => setBackupData(false)}
-            />
-            </div>
-
-          </IonModal>
-
-        </div> */}
-
+          
           <div className=' bg-white rounded-md p-4 flex flex-col gap-4 w-full h-fit max-w-[25rem]'>
             <p className=' text-sm !font-bold'>Sync Database</p>
+
+            <div className=' bg-red-50 p-4 rounded-md text-xs flex flex-col gap-2 item-start'>
+              <TriangleAlert size={20} className=' text-red-500'/>
+              <p className=' text-red-500'>Note, please make sure offline changes is saved, or data will be lost.</p>
+            </div>
             <div className=' w-full flex gap-2'>
               <div className=' flex flex-col gap-1 w-full'>
                 <p className=' text-xs'>From</p>
