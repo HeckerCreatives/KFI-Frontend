@@ -54,15 +54,28 @@ const DeleteRelease = ({ release, getRelease, searchkey, sortKey, rowLength, cur
       }
     } else {
       try{
-      if (release._id) {
-          await db.acknowledgementReceipts.update(release.id, {
-            deletedAt: new Date().toISOString(),
-            _synced: false,
-            action: "delete",
-          });
-        } else {
-          await db.acknowledgementReceipts.delete(release.id);
-        }
+      try{
+           if (release._id) {
+               await db.releaseReceipts.update(release.id, {
+                 deletedAt: new Date().toISOString(),
+                 _synced: false,
+                 action: "delete",
+               });
+             } else {
+               await db.releaseReceipts.delete(release.id);
+             }
+           getRelease(currentPage);
+           dismiss()
+            present({
+                 message: 'Data successfully deleted!.',
+                 duration: 1000,
+               });
+             } catch (error: any) {
+               present({
+                 message: `${error.response.data.error.message}`,
+                 duration: 1000,
+               });
+             }
       getRelease(currentPage);
       dismiss()
        present({

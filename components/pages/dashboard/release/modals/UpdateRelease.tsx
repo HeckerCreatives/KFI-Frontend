@@ -33,6 +33,32 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
   const [preventries, setPrevEntries] = useState<ReleaseEntry[]>(release.entries || []);
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const online = useOnlineStore((state) => state.online);
+  const user = localStorage.getItem('user')
+
+
+  const formattedEntries = release.entries.map((item) => ({
+    ...item,
+    line: item.line,
+    _id: item._id,
+    clientId: item.client?._id,
+    clientName: item.client?.name,
+    loanReleaseId: item.loanRelease?._id,
+    acctCodeDesc: item.acctCode?.description,
+    loanReleaseEntryId: item.loanRelease?._id,
+    cvNo: item.loanRelease?.code,
+    dueDate: item.dueDate?.split('T')[0] || '',
+    noOfWeeks: '',
+    week: item.week || 0,
+    name: item.client?.name,
+    client: item.client?._id,
+    particular: item.particular,
+    acctCodeId: item.acctCode?._id,
+    acctCode: item.acctCode?.code,
+    description: item.acctCode?.description,
+    debit: String(item.debit),
+    credit: String(item.credit),
+
+  }))
     
 
   const form = useForm<ReleaseFormData>({
@@ -56,6 +82,7 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
       amount: '',
       cashCollection: '',
       mode: 'update',
+      entries: formattedEntries
     },
   });
 
@@ -80,6 +107,7 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
         amount: `${formatAmount(release.amount)}`,
         cashCollection: `${formatAmount(release.cashCollectionAmount || 0)}`,
         mode: 'update',
+        entries: formattedEntries
       });
     }
   }, [release, form]);
@@ -135,7 +163,7 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
       setLoading(true);
       try {
        
-        const result = await kfiAxios.put(`/release/${release._id}`, {...data, entries: formattedEntries , deletedIds: finalDeletedIds});
+        const result = await kfiAxios.put(`/release/${release._id}`, {...data, entries: data.entries , deletedIds: finalDeletedIds});
         const { success, release: updatedRelease } = result.data;
         if (success) {
           setData(prev => {
@@ -165,21 +193,51 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
       }
     } else {
        try {
-         const existing = await db.acknowledgementReceipts.get(release.id);
+         const existing = await db.releaseReceipts.get(release.id);
           if (!existing) {
             console.log("Data not found");
             return;
           }
           const updated = {
-            ...data,
-            entries: entries, 
-            deletedIds: finalDeletedIds,
-            _synced: false,
-            action: "update",
+          ...data,
+          entries: data.entries?.map((item) => ({
+              ...item,
+               client: {
+                name: item.clientName,
+                _id: item.client || item.clientId
+              },
+              acctCode: {
+                code: item.acctCode,
+                description: item.acctCodeDesc,
+                _id: item.acctCodeId
+              },
+              loanRelease:{
+                code: item.cvNo,
+                _id: item.loanReleaseId || item.loanReleaseEntryId
+              },
+              action: "update",
+              _synced: false
+            })),
+             center: {
+              _id: data.center,
+              centerNo: data.centerName,
+              description: data.centerLabel
+            },
+            bankCode: {
+              _id: data.bankCode,
+              code: data.bankCodeLabel,
+              description: data.bankCodeLabel,
+            },
+            encodedBy:{
+              username: user
+            },
+          deletedIds: finalDeletedIds,
+          _synced: false,
+          action: "update",
           };
   
           console.log('Form Data',updated)
-          await db.acknowledgementReceipts.update(release.id, updated);
+          await db.releaseReceipts.update(release.id, updated);
           getReleases(currentPage)
   
           dismiss();

@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonIcon, IonPage, IonSpinner, isPlatform, useIonRouter } from '@ionic/react';
+import { IonButton, IonContent, IonIcon, IonPage, IonSpinner, isPlatform, useIonRouter, useIonToast } from '@ionic/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../ui/utils/FormIonItem';
@@ -28,6 +28,8 @@ const Login = () => {
   const router = useRouter();
   const online = useOnlineStore((state) => state.online);
   const setOnline = useOnlineStore((state) => state.setOnline);
+    const [present] = useIonToast();
+  
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -183,7 +185,10 @@ const Login = () => {
           }
         }
       } else {
-        console.log("password is incorrect");
+          present({
+             message: 'Incorrect password.',
+             duration: 1000,
+           });
       }
 
     
@@ -246,10 +251,10 @@ const Login = () => {
                       <p className="text-slate-500 text-sm ">Login to your account</p>
                     </div>
 
-                    <div className=' flex items-center w-full'>
+                    {/* <div className=' flex items-center w-full'>
                       <button onClick={() => setOnline(false)} className={`py-2 text-sm w-full rounded-md ${!online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Offline</button>
                       <button onClick={() => setOnline(true)} className={`py-2 text-sm w-full rounded-md ${online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Online</button>
-                    </div>
+                    </div> */}
                   </div>
                   <div>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1 ">
