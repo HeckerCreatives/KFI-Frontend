@@ -40,21 +40,22 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
     ...item,
     line: item.line,
     _id: item._id,
-    clientId: item.client._id,
-    clientName: item.client.name,
-    loanReleaseId: item.loanRelease._id,
+    clientId: item.client?._id,
+    clientName: item.client?.name,
+    loanReleaseId: item.loanRelease?._id,
     week: String(item.week),
     acctCodeDesc: item.acctCode.description,
-    loanReleaseEntryId: item.loanRelease._id,
-    cvNo: item.loanRelease.code,
+    loanReleaseEntryId: item.loanRelease?._id,
+    cvNo: item.loanRelease?.code,
     dueDate: item.dueDate?.split('T')[0] || '',
     noOfWeeks: '',
-    name: item.client.name,
-    client: item.client._id,
+    week: item.week || '0',
+    name: item.client?.name,
+    client: item.client?._id,
     particular: item.particular,
-    acctCodeId: item.acctCode._id,
-    acctCode: item.acctCode.code,
-    description: item.acctCode.description,
+    acctCodeId: item.acctCode?._id,
+    acctCode: item.acctCode?.code,
+    description: item.acctCode?.description,
     debit: String(item.debit),
     credit: String(item.credit),
 
@@ -196,7 +197,24 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
         }
         const updated = {
           ...data,
-          entries: entries, 
+          entries: data.entries?.map((item) => ({
+              ...item,
+              client: {
+                name: item.clientName,
+                _id: item.client || item.clientId
+              },
+              acctCode: {
+                code: item.acctCode,
+                description: item.acctCodeDesc,
+                _id: item.acctCodeId
+              },
+              loanRelease:{
+                code: item.cvNo,
+                _id: item.loanReleaseId || item.loanReleaseEntryId
+              },
+              action: "update",
+              _synced: false
+            })),
           deletedIds: finalDeletedIds,
           _synced: false,
           action: "update",
