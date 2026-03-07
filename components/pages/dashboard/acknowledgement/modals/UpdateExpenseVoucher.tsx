@@ -40,21 +40,21 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
     ...item,
     line: item.line,
     _id: item._id,
-    clientId: item.client,
-    clientName: item.client,
-    loanReleaseId: item.loanRelease,
+    clientId: item.client._id,
+    clientName: item.client.name,
+    loanReleaseId: item.loanRelease._id,
     week: String(item.week),
-    acctCodeDesc: '',
-    loanReleaseEntryId: item.loanRelease,
-    cvNo: '',
+    acctCodeDesc: item.acctCode.description,
+    loanReleaseEntryId: item.loanRelease._id,
+    cvNo: item.loanRelease.code,
     dueDate: item.dueDate?.split('T')[0] || '',
     noOfWeeks: '',
-    name: '',
-    client: '',
+    name: item.client.name,
+    client: item.client._id,
     particular: item.particular,
-    acctCodeId: item.acctCode,
-    acctCode: item.acctCode,
-    description: '',
+    acctCodeId: item.acctCode._id,
+    acctCode: item.acctCode.code,
+    description: item.acctCode.description,
     debit: String(item.debit),
     credit: String(item.credit),
 
@@ -132,13 +132,13 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
 
         const prevIds = new Set(preventries.map((e) => e._id));
 
-        const formattedEntries = entries.map((entry, index) => {
+        const formattedEntries = entries?.map((entry, index) => {
           const isExisting = prevIds.has(entry._id);
           return {
               _id: isExisting ? entry._id : undefined,
               loanReleaseEntryId: entry.loanReleaseEntryId._id,
               cvNo: normalizeCVNumber(entry.cvNo),
-              dueDate: acknowledgement.date,
+              dueDate: acknowledgement.date.split("T")[0] || '',
               noOfWeeks: entry.loanReleaseEntryId.transaction.noOfWeeks,
               name: entry.loanReleaseEntryId.client.name,
               particular: entry.particular,
@@ -148,6 +148,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
               debit: entry.debit?.toString() ?? "",
               credit: entry.credit?.toString() ?? "",
               line: index + 1,
+              // week: entry.week,
             
           };
         });
@@ -158,7 +159,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
       try {
 
        
-        const result = await kfiAxios.put(`/acknowledgement/${acknowledgement._id}`, {...data, entries: formattedEntries, deletedIds: finalDeletedIds});
+        const result = await kfiAxios.put(`/acknowledgement/${acknowledgement._id}`, {...data, entries: data.entries, deletedIds: finalDeletedIds});
         const { success, acknowledgement: updatedAcknowledgement } = result.data;
         if (success) {
           setData(prev => {
@@ -227,6 +228,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
   }
 
 
+
   return (
     <>
       {/* <div className="text-end">
@@ -273,9 +275,9 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
           <div className="border-t border-t-slate-400 mx-2 pt-5 flex-1">
-            {/* <AcknowledgementFormTable form={form} /> */}
+            <AcknowledgementFormTable form={form} />
             
-            <UpdateAcknowledgementEntries isOpen={isOpen} acknowledgement={acknowledgement} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} />
+            {/* <UpdateAcknowledgementEntries isOpen={isOpen} acknowledgement={acknowledgement} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} /> */}
           </div>
 
           <div className="px-3">

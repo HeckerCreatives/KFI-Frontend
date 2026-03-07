@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
 export const acknowledgementEntrySchema = z.object({
+  _id: z.string().optional(),
+    id: z.string().optional(),
+    action: z.string().optional(),
+    _synced: z.any().optional(),
+    line: z.any().optional(),
   clientId: z.string().optional(),
   clientName: z.string().optional(),
   loanReleaseId: z.string().optional(),

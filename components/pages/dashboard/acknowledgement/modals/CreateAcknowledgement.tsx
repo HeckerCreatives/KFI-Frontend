@@ -59,6 +59,8 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
     setIsOpen(false);
   }
 
+  console.log(form.formState.errors)
+
   async function onSubmit(data: any) {
     if(online){
       setLoading(true);
@@ -76,12 +78,11 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
               cctCodeDesc: entry.description,
               debit: Number(removeAmountComma(entry.debit)),
               credit: Number(removeAmountComma(entry.credit)),
-              dueDate: formatDateInput(entry.dueDate ?? ''),
+              dueDate: entry.dueDate.split("T")[0] || '',
               line: index + 1,
             }))
           : [];
 
-          console.log(data)
           
          const result = await kfiAxios.post('acknowledgement', data);
          const { success } = result.data;
@@ -99,10 +100,10 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
            duration: 1000,
          });
       } catch (error: any) {
-        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-        const errors: TFormError[] | string = checkError(errs);
-        const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-        formErrorHandler(errors, form.setError, fields);
+         const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+         const errors: TFormError[] | string = checkError(errs);
+         const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+         formErrorHandler(errors, form.setError, fields);
       } finally {
         setLoading(false);
       }
