@@ -61,11 +61,11 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
 
   console.log(form.formState.errors)
 
-  async function onSubmit(data: any) {
+  async function onSubmit(data: AcknowledgementFormData) {
     if(online){
       setLoading(true);
       try {
-        data.amount = Number(removeAmountComma(data.amount));
+        data.amount = (removeAmountComma(data.amount));
         data.cashCollection = data.cashCollection !== '' ? removeAmountComma(data.cashCollection as string) : data.cashCollection;
         data.entries = data.entries
           ? data.entries.map((entry: any, index: number) => ({
@@ -74,7 +74,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
               clientName: entry.name,
               loanReleaseEntryId: entry.loanReleaseEntryId || entry.loanReleaseId || '',
               loanReleaseId: entry.loanReleaseId || '',
-              week: entry.noOfWeeks,
+              week: entry.week,
               cctCodeDesc: entry.description,
               debit: Number(removeAmountComma(entry.debit)),
               credit: Number(removeAmountComma(entry.credit)),
@@ -109,12 +109,38 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
       }
     } else {
        try {
-         const entries = data.entries
          // const entries = data.entries
          await db.officialReceipts.add({
            ...data,
-           entries: entries,
            encodedBy: '',
+          entries: data.entries?.map((item) => ({
+              ...item,
+              client: {
+                name: item.clientName,
+                _id: item.client || item.clientId
+              },
+              acctCode: {
+                code: item.acctCode,
+                description: item.acctCodeDesc,
+                _id: item.acctCodeId
+              },
+              loanRelease:{
+                code: item.cvNo,
+                _id: item.loanReleaseId || item.loanReleaseEntryId
+              },
+              action: 'create',
+              _synced: false,
+              week: item.week
+            })),
+            center: {
+              _id: data.center,
+              centerNo: data.centerName,
+              description: data.centerLabel
+            },
+            bank: {
+              _id: data.bankCode,
+              code: data.bankCodeLabel
+            },
            _synced: false,  
            action: "create",
          });
