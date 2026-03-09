@@ -10,8 +10,6 @@ const SystemNav = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
 
-  console.log(token)
-
   const fileLinks: NavLink[] = [
     {
       path: '',

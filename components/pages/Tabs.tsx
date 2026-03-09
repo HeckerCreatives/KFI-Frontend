@@ -101,7 +101,6 @@ type NavLink = {
 const navLinks: NavLink[] = [
   { path: "/dashboard/home", label: "Dashboard", resource: "home", icon: <DashboardSquare01Icon size={18} /> },
   { path: "/dashboard/admin", label: "Manage Account", resource: "manage account", icon: <UserMultiple02Icon size={18} /> },
-
   {
     label: "Transaction",
     resource: ["loan release", "expense voucher", "journal voucher", "acknowledgement", "release"],
@@ -216,17 +215,6 @@ const Tabs = () => {
     await menuController.open("main-menu");
   };
 
-  // useEffect(() => {
-  //   if(token.role !== 'superadmin'){
-  //     const hasDashboard = permissions.find((item) => item.resource === 'dashboard')?.actions.visible
-
-  //     console.log(hasDashboard)
-
-  //     if(!hasDashboard){
-  //       router.push('/dashboard/kfi')
-  //     }
-  //   }
-  // },[permissions])
 
   return (
     <>
@@ -379,11 +367,12 @@ const Tabs = () => {
                   <Image alt="logo" src={logoNoBg} className="h-6 w-auto" />
                 </div>
               </div>
-              <TopNavigation />
             </div>
+              <TopNavigation />
+
 
             <div className="flex items-center justify-center py-1 rounded-md">
-              <div className="flex items-center justify-center gap-2 capitalize ">
+              <div className="flex items-center justify-center capitalize ">
                 <span className="hidden lg:flex text-[0.8rem] font-semibold">{token.username}</span>
                 <IonButton
                   fill="clear"

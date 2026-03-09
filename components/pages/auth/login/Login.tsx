@@ -114,10 +114,9 @@ const Login = () => {
             )?.actions?.visible
 
             if (!hasDashboard) {
-              console.log('jwuerhgt')
               router.push('/dashboard/kfi')
             }else{
-              console.log('ccccc')
+           
 
               router.push('/dashboard/home')
             }
@@ -135,18 +134,16 @@ const Login = () => {
         }
 
       } catch (error: any) {
-        const errs: TErrorData | string =
+        const errs =
           error?.response?.data?.error ||
           error?.response?.data?.msg ||
           error.message
 
-        const errors: TFormError[] | string = checkError(errs)
+          present({
+             message: errs,
+             duration: 1000,
+           });
 
-        const fields: string[] = Object.keys(
-          form.formState.defaultValues as Object
-        )
-
-        formErrorHandler(errors, form.setError, fields)
 
         setLoading(false)
       }
@@ -163,11 +160,9 @@ const Login = () => {
 
       const isMatch = await bcrypt.compare(data.password, user.password);
 
-      // console.log(data.password, user.password, isMatch )
-
       if (isMatch) {
         console.log('logged in', user)
-        localStorage.setItem('auth', user.webtoken)
+        localStorage.setItem('auth', user.access)
         localStorage.setItem('user', user.username)
         localStorage.setItem('role', user.role)
         if (user.role === "superadmin" || user.role === "user") {
@@ -206,8 +201,8 @@ const Login = () => {
         <div className="w-full h-full bg-[#FFF0E3] bg-desktop bg-no-repeat bg-bottom bg-contain">
           <div className="h-full flex">
             
-            <div className=" bg-white shadow-lg w-full grid grid-cols-1 md:grid-cols-[40%_1fr] h-full rounded-xl mx-auto">
-              <div className=" relative w-full space-y-8 flex flex-col items-start justify-center rounded-r-2xl bg-orange-700 p-16 bg-gradient-to-tr from-orange-500 to-orange-600">
+            <div className=" bg-white shadow-lg w-full grid grid-cols-1 lg:grid-cols-[40%_1fr] h-full rounded-xl mx-auto">
+              <div className=" relative w-full space-y-8 hidden lg:flex flex-col items-start justify-center rounded-r-2xl bg-orange-700 p-16 bg-gradient-to-tr from-orange-500 to-orange-600">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className=' absolute w-full top-0 left-0  '>
                  <path fill="#f97316" fill-opacity="1" d="M0,64L0,192L180,192L180,64L360,64L360,192L540,192L540,64L720,64L720,320L900,320L900,160L1080,160L1080,256L1260,256L1260,64L1440,64L1440,0L1260,0L1260,0L1080,0L1080,0L900,0L900,0L720,0L720,0L540,0L540,0L360,0L360,0L180,0L180,0L0,0L0,0Z"></path>
                 </svg>
@@ -247,19 +242,20 @@ const Login = () => {
 
                 <svg className=' absolute bottom-0 left-0' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ffffff" fill-opacity="1" d="M0,64L0,64L180,64L180,192L360,192L360,320L540,320L540,96L720,96L720,160L900,160L900,288L1080,288L1080,128L1260,128L1260,0L1440,0L1440,320L1260,320L1260,320L1080,320L1080,320L900,320L900,320L720,320L720,320L540,320L540,320L360,320L360,320L180,320L180,320L0,320L0,320Z"></path></svg>
                  <div className=" flex flex-col items-center justify-center space-y-8 bg-white w-fit p-16 rounded-xl shadow-lg relative z-50">
-                  <div className="text-center">
-                    {/* <div className="mb-5 w-fit mx-auto p-2 rounded-lg bg-[FFF0E3]">
+                  <div className="text-center flex flex-col items-center justify-center">
+                    
+                    <div className="mb-3 w-fit p-2 rounded-lg bg-[FFF0E3] bg-orange-50 lg:hidden flex">
                       <Image alt="logo" src={logo} className="h-20 w-auto mx-auto filter drop-shadow-[1px_1px_0px_white]" />
-                    </div> */}
+                    </div>
                     <div className="space-y-2">
                       <h6 className="text-orange-600 text-[1.7rem] !font-[600] m-0">Welcome Back!</h6>
                       <p className="text-slate-500 text-sm ">Login to your account</p>
                     </div>
 
-                    <div className=' flex items-center w-full'>
+                    {/* <div className=' flex items-center w-full'>
                       <button onClick={() => setOnline(false)} className={`py-2 text-sm w-full rounded-md ${!online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Offline</button>
                       <button onClick={() => setOnline(true)} className={`py-2 text-sm w-full rounded-md ${online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Online</button>
-                    </div>
+                    </div> */}
                   </div>
                   <div>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1 ">

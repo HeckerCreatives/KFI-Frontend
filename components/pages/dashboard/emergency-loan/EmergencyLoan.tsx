@@ -179,11 +179,7 @@ const EmergencyLoan = () => {
                   <div>{canDoAction(token.role, permissions, 'emergency loan', 'create') && <CreateEmergencyLoan getEmergencyLoans={getEmergencyLoans} />}</div>
                   <div>{canDoAction(token.role, permissions, 'emergency loan', 'print') && <PrintAllEmergencyLoan />}</div>
                   <div>{canDoAction(token.role, permissions, 'emergency loan', 'export') && <ExportAllEmergencyLoan />}</div>
-                  {online && (
-                    <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                      <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                    </IonButton>
-                  )}
+                 
                 </div>
 
                  <div className="w-full flex-1 flex">

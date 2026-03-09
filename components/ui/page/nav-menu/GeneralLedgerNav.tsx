@@ -47,7 +47,7 @@ const GeneralLedgerNav = () => {
         General Ledgers&nbsp;
         <IonIcon icon={chevronDownOutline} className="text-xs" />
       </IonButton>
-      <IonPopover onDidDismiss={() => setIsOpen(false)} showBackdrop={false} trigger="general-ledgers" triggerAction="click" className="[--max-width:14rem]">
+      <IonPopover onDidDismiss={() => setIsOpen(false)} showBackdrop={false} trigger="general-ledgers" triggerAction="hover" className="[--max-width:14rem]">
         <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
           {fileLinks.map(
             link =>

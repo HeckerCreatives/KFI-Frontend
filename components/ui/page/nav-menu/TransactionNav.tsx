@@ -1,6 +1,6 @@
 import { IonButton, IonContent, IonIcon, IonPopover, useIonViewWillEnter } from '@ionic/react';
 import { chevronDownOutline } from 'ionicons/icons';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import NoChildNav from './NoChildNav';
 import { AccessToken, NavLink, Permission } from '../../../../types/types';
 import WithChildNav from './WithChildNav';
@@ -16,6 +16,7 @@ const TransactionNav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+  const popover = useRef<HTMLIonPopoverElement>(null);
    
 
   const fileLinks: NavLink[] = [
@@ -45,6 +46,8 @@ const TransactionNav = () => {
 
   return (
     <div>
+       
+
       <IonButton
         fill="clear"
         className={classNames(
@@ -59,13 +62,20 @@ const TransactionNav = () => {
         )}
         id="transactions"
         onClick={() => setIsOpen(true)}
+        
       >
         <Task02Icon size={15} stroke='.8' className=' mr-1 mb-1' />
         Transactions&nbsp;
         <IonIcon icon={chevronDownOutline} className="text-xs" />
       </IonButton>
-      <IonPopover onDidDismiss={() => setIsOpen(false)} showBackdrop={false} trigger="transactions" triggerAction="click" className="[--max-width:12rem]">
-        <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
+      <IonPopover ref={popover} onDidDismiss={() => setIsOpen(false)} 
+     onPointerLeave={ () => setIsOpen(false)}
+      showBackdrop={false} trigger="transactions" triggerAction="hover" className="[--max-width:12rem]">
+        <IonContent
+        onPointerLeave={() => {
+          setIsOpen(false)
+        }}
+        class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
           {fileLinks.map(
             link =>
               (token.role === 'superadmin' || permissions?.find((e: Permission) => link.resource.includes(e.resource) && e.actions.visible)) &&

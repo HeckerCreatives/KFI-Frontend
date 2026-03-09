@@ -70,7 +70,7 @@ const SystemNav = () => {
         System&nbsp;
         <IonIcon icon={chevronDownOutline} className="text-xs" />
       </IonButton>
-      <IonPopover onDidDismiss={() => setIsOpen(false)} showBackdrop={false} trigger="systems" triggerAction="click" className="[--max-width:16rem]">
+      <IonPopover onDidDismiss={() => setIsOpen(false)} showBackdrop={false} trigger="systems" triggerAction="hover" className="[--max-width:16rem]">
         <IonContent class="[--padding-top:0.5rem] [--padding-bottom:0.5rem]">
           {fileLinks.map(
             link =>
