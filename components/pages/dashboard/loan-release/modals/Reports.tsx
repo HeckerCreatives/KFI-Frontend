@@ -10,6 +10,7 @@ import { PrinterIcon } from 'hugeicons-react';
 import { PrintExportFilterFormData, printExportFilterSchema } from '../../../../../validations/print-export-schema';
 import { loanReleaseReports, loanReleaseReportTab, printExportTab } from '../../../../../store/data';
 import InputSelect from '../../../../ui/forms/InputSelect';
+import WeeklyCollections from './WeeklyCollections';
 
 
 const Reports = () => {
@@ -94,8 +95,14 @@ const Reports = () => {
             response = await kfiAxios.post(
             `/transaction/print/weekly-collections`,
             {
-                loanReleaseDateFrom: data.loanReleaseDateFrom,
-                loanReleaseDateTo: data.loanReleaseDateTo,
+               center: data.center,
+               loanReleaseDate: data.loanReleaseDate,
+               loanReleaseDueDate: data.loanReleaseDueDate,
+               multi: data.multi,
+               type: data.type,
+               balance: data.balance,
+               format: data.format,
+               weekNo: Number(data.weekNo)
             },
             { responseType: "blob" }
             );
@@ -226,10 +233,10 @@ const Reports = () => {
         ref={modal}
         trigger={`reports`}
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height [--max-width:30rem] [--width:95%]"
+        className=" [--border-radius:0.35rem] auto-height [--max-height:90%] [--max-width:30rem] [--width:95%] "
       >
          
-        <div className="inner-content !p-6">
+        <div className="inner-content !p-6 overflow-y-auto">
             <ModalHeader disabled={loading} title="Reports" sub="Manage report documents." dismiss={dismiss} />
 
           {/* <div className=' flex items-center w-fit mt-2 bg-zinc-50 !rounded-sm'>
@@ -252,7 +259,12 @@ const Reports = () => {
                 options={loanReleaseReports}
                 
               />
+              {type === 'weekly-collections' ? (
+                <WeeklyCollections form={form}/>
+              ) : (
              <PrintExportFilterForm form={form} loading={loading} type={form.watch('reportType')} />
+
+              )}
             <div className="mt-3">
               <IonButton disabled={loading} type="submit" fill="clear" className="w-full capitalize! bg-[#FA6C2F] text-white rounded-md font-semibold">
                 <PrinterIcon size={20} stroke='.8' className=' mr-2'/>

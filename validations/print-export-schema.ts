@@ -21,7 +21,20 @@ export const printExportFilterSchema = z.object({
   loanReleaseDateTo: z.string().optional(),
   paymentDateFrom: z.string().optional(),
   paymentDateTo: z.string().optional(),
-  reportFormat: z.string().optional().or(z.literal(""))
+  reportFormat: z.string().optional().or(z.literal("")),
+
+  //weekly collection
+  center: z.string(z.string()).optional(),
+  centerLabel: z.string(z.string()).optional(),
+  loanReleaseDate: z.string(z.string()).optional(),
+  loanReleaseDueDate: z.string(z.string()).optional(),
+  weekNo: z.string(z.string()).optional(),
+  format: z.string(z.string()).optional(),
+  multi: z.boolean(z.string()).optional(),
+  type: z.string(z.string()).optional(),
+  balance: z.string(z.string()).optional(),
+  
+
 });
 
 
