@@ -74,7 +74,7 @@ const LoanReleaseDueDatesSelections = <T extends FieldValues>({
   };
 
   const fetchEntries = async () => {
-  if (!centerId) return;
+//   if (!centerId) return;
 
   setLoading(true);
 
@@ -150,7 +150,7 @@ const LoanReleaseDueDatesSelections = <T extends FieldValues>({
       >
        
         <div className="inner-content !p-6  border-2 !border-slate-200">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Release Entry Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Release Selection" />
 
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">
