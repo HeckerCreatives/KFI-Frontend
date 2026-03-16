@@ -246,10 +246,7 @@ const ClientMasterFile = () => {
                 <div className="flex flex-wrap">
                   {canDoAction(token.role, permissions, 'clients', 'create') && <CreateClientMasterFile getClientsOffline={getClientsOffline} getClients={getClients} />}
                   {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient />}
-                  {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient />}
-                
-                   
-                    
+                  {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient />} 
                 </div>
                 <ClientMasterFileFilter getClientsOffline={getClientsOffline} getClients={getClients} />
               </div>
@@ -261,7 +258,6 @@ const ClientMasterFile = () => {
                       <TableHead className=" hidden md:table-cell min-w-[10rem] max-w-[10rem] py-4">Name</TableHead>
                       <TableHead className="hidden lg:table-cell min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
                       <TableHead className="hidden lg:table-cell min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
-                    
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -279,6 +275,8 @@ const ClientMasterFile = () => {
                       ))}
                   </TableBody>
                 </Table>
+
+               
                
                 <Table className=' '>
                   <TableHeader>
@@ -294,7 +292,7 @@ const ClientMasterFile = () => {
                       <TableHead className=' whitespace-nowrap'>Mobile No.</TableHead>
                       <TableHead className=' whitespace-nowrap'>Date Release</TableHead>
                       <TableHead className=' whitespace-nowrap'>Date Resigned</TableHead>
-                      {haveActions(token.role, 'clients', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
+                      {/* {haveActions(token.role, 'clients', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>} */}
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -315,8 +313,42 @@ const ClientMasterFile = () => {
                           <TableCell>{client.mobileNo}</TableCell>
                           <TableCell>{client.dateRelease?.split('T')[0] || ''}</TableCell>
                           <TableCell>{client.dateResigned?.split('T')[0] || ''}</TableCell>
-                          {haveActions(token.role, 'clients', permissions, ['update', 'delete', 'visible']) && (
+                          {/* {haveActions(token.role, 'clients', permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
+                              <ClientMasterFileActions
+                              getClientsOffline={getClientsOffline}
+                                client={client}
+                                getClients={getClients}
+                                setData={setData}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                searchKey={searchKey}
+                                sortKey={sortKey}
+                                rowLength={data.clients.length}
+                              />
+                            </TableCell>
+                          )} */}
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+
+                 <Table className=' sticky z-50 top-0 right-0 md:table hidden'>
+                  <TableHeader className=''>
+                    <TableHeadRow className=''>
+                      <TableHead className="hidden lg:table-cell ">Action</TableHead>
+                    
+                    </TableHeadRow>
+                  </TableHeader>
+                  <TableBody>
+                    {/* {data.loading && <TableLoadingRow colspan={25} />} */}
+                    {/* {!data.loading && data.clients.length < 1 && <TableNoRows label="No Client Record Found" colspan={25} />} */}
+                    {!data.loading &&
+                      data.clients.length > 0 &&
+                      data.clients.map((client: ClientMasterFileType) => (
+                        <TableRow key={client._id} className="[&>td]:bg-white">
+                            {haveActions(token.role, 'clients', permissions, ['update', 'delete', 'visible']) && (
+                            <TableCell className=' hidden lg:table-cell '>
                               <ClientMasterFileActions
                               getClientsOffline={getClientsOffline}
                                 client={client}
