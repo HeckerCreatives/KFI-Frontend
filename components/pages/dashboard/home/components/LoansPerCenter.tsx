@@ -115,7 +115,7 @@ const LoansPerCenter = () => {
                   <TableHead className=" !font-[400] text-start">Center</TableHead>
                   <TableHead className=" !font-[400]">Total Members</TableHead>
                   <TableHead className=" !font-[400]">Total Loan Amount</TableHead>
-                  <TableHead className=" !font-[400]">Date</TableHead>
+                  {/* <TableHead className=" !font-[400]">Date</TableHead> */}
                   
                 </TableHeadRow>
               </TableHeader>
@@ -133,7 +133,7 @@ const LoansPerCenter = () => {
                       <TableCell className="">{loan.description}</TableCell>
                       <TableCell className="">{loan.members}</TableCell>
                       <TableCell className="">{formatNumber(loan.loans)}</TableCell>
-                     <TableCell>{loan.createdAt?.split('T')[0] || ''}</TableCell>
+                     {/* <TableCell>{loan.createdAt?.split('T')[0] || ''}</TableCell> */}
 
                     </TableRow>
                   ))}
@@ -152,7 +152,7 @@ const LoansPerCenter = () => {
                   <TableHead className=" !font-[400] text-start">Center</TableHead>
                   <TableHead className=" !font-[400]">Total Members</TableHead>
                   <TableHead className=" !font-[400]">Total Loan Amount</TableHead>
-                  <TableHead className=" !font-[400]">Date</TableHead>
+                  {/* <TableHead className=" !font-[400]">Date</TableHead> */}
 
                 </TableHeadRow>
               </TableHeader>
@@ -167,7 +167,7 @@ const LoansPerCenter = () => {
                       <TableCell className="">{loan.description}</TableCell>
                       <TableCell className="">{loan.members}</TableCell>
                       <TableCell className="">{formatNumber(loan.loans)}</TableCell>
-                     <TableCell>{loan.createdAt?.split('T')[0] || ''}</TableCell>
+                     {/* <TableCell>{loan.createdAt?.split('T')[0] || ''}</TableCell> */}
 
                     </TableRow>
                   ))}
