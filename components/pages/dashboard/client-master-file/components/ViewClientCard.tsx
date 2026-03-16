@@ -26,7 +26,7 @@ const ViewClientCard = ({
       </span>
       <div
         className={classNames(
-          'border border-zinc-200 bg-zinc-50 rounded-lg px-3 py-2 text-sm text-slate-700 shadow-sm hover:shadow transition w-full',
+          'border border-zinc-200 bg-zinc-50 rounded-lg px-3 py-2 text-sm flex whitespace-pre-wrap text-slate-700 shadow-sm hover:shadow transition w-full',
           containerClassName
         )}
       >
