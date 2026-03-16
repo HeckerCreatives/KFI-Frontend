@@ -103,7 +103,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
                 control={form.control}
                 clearErrors={form.clearErrors}
                 options={[
-                  { label: 'Sort By', value: '' },
+                  { label: 'All', value: '' },
                   { label: 'Code A - Z', value: 'code-asc' },
                   { label: 'Code Z - A', value: 'code-desc' },
                 ]}

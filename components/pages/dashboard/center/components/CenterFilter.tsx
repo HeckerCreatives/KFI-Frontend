@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import InputText from '../../../../ui/forms/InputText';
 import { IonButton } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import { Search01Icon } from 'hugeicons-react';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 type TCenterSearch = {
   code: string;
@@ -31,11 +32,30 @@ const CenterFilter = ({ getCenters }: CenterFilterProps) => {
     }
   };
 
+
+  const online = useOnlineStore((state) => state.online);
+            
+            const code = form.watch('code');
+            const sort = form.watch('sort');
+  
+              useEffect(() => {
+                const fetchData = () => {
+                  if (online) {
+                    getCenters(1, code, sort);
+                  } else {
+                    getCenters(1, code, sort);
+                  }
+                };
+                fetchData();
+              }, [sort, online]);
+
   return (
     <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center justify-between ">
       <div className="w-full flex-1 md:flex-none">
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
           <FormIonItem className="">
+            <p className=" text-xs whitespace-nowrap mr-1">Sort By</p>
+
             <InputSelect
               // label="Sort By"
               name="sort"
@@ -44,7 +64,7 @@ const CenterFilter = ({ getCenters }: CenterFilterProps) => {
               control={form.control}
               clearErrors={form.clearErrors}
               options={[
-                { label: 'Sort By', value: '' },
+                { label: 'All', value: '' },
                 { label: 'Center No. A - Z', value: 'centerno-asc' },
                 { label: 'Center No. Z - A', value: 'centerno-desc' },
                 { label: 'Description A - Z', value: 'description-asc' },

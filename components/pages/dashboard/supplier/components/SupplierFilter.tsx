@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import InputText from '../../../../ui/forms/InputText';
 import { IonButton } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import { Search01Icon } from 'hugeicons-react';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 type TSearchProps = {
   code: string;
@@ -31,11 +32,26 @@ const SupplierFilter = ({ getSuppliers }: SupplierFilterProps) => {
     }
   };
 
+
+  const online = useOnlineStore((state) => state.online);
+              const sort = form.watch('sort');
+                useEffect(() => {
+                  const fetchData = () => {
+                    if (online) {
+                      getSuppliers(1, sort);
+                    } else {
+                      getSuppliers(1, sort);
+                    }
+                  };
+                  fetchData();
+                }, [sort, online]);
+
   return (
     <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center justify-between ">
       <div className="w-full flex-1 md:flex-none">
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
           <FormIonItem className="">
+            <p className=" text-xs whitespace-nowrap mr-1">Sort By</p>
             <InputSelect
               // label="Sort By"
               name="sort"
@@ -44,7 +60,7 @@ const SupplierFilter = ({ getSuppliers }: SupplierFilterProps) => {
               control={form.control}
               clearErrors={form.clearErrors}
               options={[
-                { label: 'Sort By', value: '' },
+                { label: 'All', value: '' },
                 { label: 'Code A - Z', value: 'code-asc' },
                 { label: 'Code Z - A', value: 'code-desc' },
                 { label: 'Description A - Z', value: 'description-asc' },

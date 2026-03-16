@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import { IonButton } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import { Search01Icon, Sorting01Icon } from 'hugeicons-react';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 type TWeeklySavingTableSearch = {
   sort: string;
@@ -28,11 +29,26 @@ const WeeklySavingTableFilter = ({ getWeeklySavings }: WeeklySavingFilterProps) 
     }
   };
 
+  const online = useOnlineStore((state) => state.online);
+          const sort = form.watch('sort');
+            useEffect(() => {
+              const fetchData = () => {
+                if (online) {
+                  getWeeklySavings(1, sort);
+                } else {
+                  getWeeklySavings(1, sort);
+                }
+              };
+              fetchData();
+            }, [sort, online]);
+
   return (
     <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center justify-between ">
       <div className="w-full flex-1 md:flex-none">
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
           <FormIonItem className="">
+            <p className=" text-xs whitespace-nowrap mr-1">Sort By</p>
+
             <InputSelect
               // label="Sort By"
               name="sort"
@@ -41,7 +57,7 @@ const WeeklySavingTableFilter = ({ getWeeklySavings }: WeeklySavingFilterProps) 
               control={form.control}
               clearErrors={form.clearErrors}
               options={[
-                { label: 'Sort By', value: '' },
+                { label: 'All', value: '' },
                 { label: 'Range Amount From A - Z', value: 'from-asc' },
                 { label: 'Range Amount From Z - A', value: 'from-desc' },
                 { label: 'Range Amount To A - Z', value: 'to-asc' },
