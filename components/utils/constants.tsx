@@ -1,6 +1,6 @@
 export const TABLE_LIMIT = 10;
 
-export const manageAccountResource: string[] = ['admin'];
+export const manageAccountResource: string[] = ['admin', 'clients'];
 
 export const dashboardResource: string[] = ['dashboard'];
 

@@ -202,7 +202,7 @@ const ClientMasterFile = () => {
       }
     } catch (error) {
       present({
-        message: 'Failed to get client records. Please try again',
+        message: 'Failed to get records. Please try again',
         duration: 1000,
       });
     } finally {
@@ -279,6 +279,7 @@ const ClientMasterFile = () => {
                       ))}
                   </TableBody>
                 </Table>
+               
                 <Table className=' '>
                   <TableHeader>
                     <TableHeadRow>
@@ -291,6 +292,8 @@ const ClientMasterFile = () => {
                       <TableHead className=' whitespace-nowrap'>City</TableHead>
                       <TableHead className=' whitespace-nowrap'>Zip Code</TableHead>
                       <TableHead className=' whitespace-nowrap'>Mobile No.</TableHead>
+                      <TableHead className=' whitespace-nowrap'>Date Release</TableHead>
+                      <TableHead className=' whitespace-nowrap'>Date Resigned</TableHead>
                       {haveActions(token.role, 'clients', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
@@ -310,6 +313,8 @@ const ClientMasterFile = () => {
                           <TableCell>{client.city}</TableCell>
                           <TableCell>{client.zipCode}</TableCell>
                           <TableCell>{client.mobileNo}</TableCell>
+                          <TableCell>{client.dateRelease?.split('T')[0] || ''}</TableCell>
+                          <TableCell>{client.dateResigned?.split('T')[0] || ''}</TableCell>
                           {haveActions(token.role, 'clients', permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <ClientMasterFileActions

@@ -95,8 +95,9 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
         <div className="inner-content space-y-4 !p-6">
             <ModalHeader disabled={loading} title="Admin - Manage Permissions" sub="Manage admin permissions." dismiss={dismiss} />
 
-          {/* <ManageAccountPermission permissions={permissions} setPermissions={setPermissions} /> */}
           <DashboardPermission permissions={permissions} setPermissions={setPermissions} />
+          <ManageAccountPermission permissions={permissions} setPermissions={setPermissions} />
+
           <TransactionPermission permissions={permissions} setPermissions={setPermissions} />
           <GeneralLedgerPermission permissions={permissions} setPermissions={setPermissions} />
           <SystemPermission permissions={permissions} setPermissions={setPermissions} />

@@ -7,6 +7,7 @@ import TableNoRows from '../../../../ui/forms/TableNoRows';
 import ViewRecentMember from '../modals/ViewRecentMember';
 
 export type Member = {
+  createdAt: string
   name: string;
   address: string;
   city: string;
@@ -85,6 +86,7 @@ const RecentMembers = () => {
             <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
               <TableHead className="  !font-[600] bg-zinc-100">Name</TableHead>
               <TableHead className="  !font-[600] bg-zinc-100">Center</TableHead>
+              <TableHead className="  !font-[600] bg-zinc-100">Date</TableHead>
               <TableHead className="   !font-[600] bg-zinc-100">Actions</TableHead>
             </TableHeadRow>
            
@@ -103,6 +105,7 @@ const RecentMembers = () => {
                   <TableCell className="">
                     {client.center.centerNo} - {client.center.description}
                   </TableCell>
+                  <TableCell>{client.createdAt?.split('T')[0] || ''}</TableCell>
                   <TableCell className="">
                     <ViewRecentMember member={client} />
                   </TableCell>
@@ -119,6 +122,8 @@ const RecentMembers = () => {
             <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
               <TableHead className=" text-orange-700 !font-[600]">Name</TableHead>
               <TableHead className="text-center  text-orange-700 !font-[600]">Center</TableHead>
+              <TableHead className="  !font-[600] bg-zinc-100">Date</TableHead>
+
               <TableHead className="text-center  text-orange-700 !font-[600]">Actions</TableHead>
             </TableHeadRow>
           </TableHeader>
@@ -133,6 +138,7 @@ const RecentMembers = () => {
                   <TableCell className="">
                     {client.center.centerNo} - {client.center.description}
                   </TableCell>
+                  <TableCell>{client.createdAt?.split('T')[0] || ''}</TableCell>
                   <TableCell className="">
                     <ViewRecentMember member={client} />
                   </TableCell>

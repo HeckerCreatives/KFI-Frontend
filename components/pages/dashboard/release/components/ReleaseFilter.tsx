@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import InputText from '../../../../ui/forms/InputText';
 import { IonButton } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import { Search01Icon } from 'hugeicons-react';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 type TSearch = {
   code: string;
@@ -31,9 +32,27 @@ const ReleaseFilter = ({ getReleases }: ReleaseFilterProps) => {
     if (data.code !== '' || data.sort !== '' || data.dateFrom !== '' || data.dateTo !== '') {
       getReleases(1, data.code, data.sort, data.dateTo, data.dateFrom);
     } else {
-      getReleases(1);
+      getReleases(1, data.code, data.sort, data.dateTo, data.dateFrom);
     }
   };
+
+  const online = useOnlineStore((state) => state.online);
+      
+      const code = form.watch('code');
+      const sort = form.watch('sort');
+      const dateTo = form.watch('dateTo');
+      const dateFrom = form.watch('dateFrom');
+      
+        useEffect(() => {
+          const fetchData = () => {
+            if (online) {
+              getReleases(1, code, sort, dateTo, dateFrom);
+            } else {
+              getReleases(1, code, sort, dateTo, dateFrom);
+            }
+          };
+          fetchData();
+        }, [sort, online, dateTo, dateFrom]);
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit">

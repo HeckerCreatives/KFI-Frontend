@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import InputText from '../../../../ui/forms/InputText';
 import { IonButton } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import { Search01Icon } from 'hugeicons-react';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 type TSearch = {
   code: string;
@@ -34,6 +35,26 @@ const JournalVoucherFilter = ({ getJournalVouchers }: JournalVoucherFilterProps)
       getJournalVouchers(1);
     }
   };
+
+  const online = useOnlineStore((state) => state.online);
+      
+      const code = form.watch('code');
+      const sort = form.watch('sort');
+      const dateTo = form.watch('dateTo');
+      const dateFrom = form.watch('dateFrom');
+      
+        useEffect(() => {
+          const fetchData = () => {
+            if (online) {
+              getJournalVouchers(1, code, sort, dateTo, dateFrom);
+            } else {
+              getJournalVouchers(1, code, sort, dateTo, dateFrom);
+            }
+          };
+          fetchData();
+        }, [sort, online, dateTo, dateFrom]);
+
+  
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit">

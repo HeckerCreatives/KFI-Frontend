@@ -24,13 +24,7 @@ const DashboardCard = ({ title, icon, value, loading = false }: DashboardCardPro
        {icon}
       </div>
 
-      {/* <div className=' flex items-center justify-center  absolute z-0 h-[80%] aspect-square rounded-full bg-orange-50 left-0 top-0 -translate-y-8 -translate-x-8'>
-      
-      </div> */}
-
-      <div className=' flex items-center justify-center  absolute z-0 h-[80%] aspect-square rounded-full bg-gray-50 right-0 translate-y-8 translate-x-8'>
-      
-      </div>
+     
     </div>
   );
 };

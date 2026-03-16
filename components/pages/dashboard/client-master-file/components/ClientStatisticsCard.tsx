@@ -23,9 +23,9 @@ const ClientStatisticsCard = ({ title, icon, value, loading = false }: ClientSta
        {icon}
       </div>
 
-      <div className=' flex items-center justify-center  absolute z-0 h-[80%] aspect-square rounded-full bg-gray-50 right-0 translate-y-8 translate-x-8'>
+      {/* <div className=' flex items-center justify-center  absolute z-0 h-[80%] aspect-square rounded-full bg-gray-50 right-0 translate-y-8 translate-x-8'>
       
-      </div>
+      </div> */}
     </div>
   );
 };

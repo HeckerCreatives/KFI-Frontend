@@ -355,7 +355,7 @@ const UpdateLoanRelease = ({ transaction, setData, currentPage, getTransactions 
                 </div>
               </div>
 
-          <Signatures open={isOpen} type={'loan release'} preparedBy={transaction.encodedBy.username} recieveByorDate={transaction.createdAt?.split('T')[0] || ''}/>
+          <Signatures open={isOpen} type={'loan release'} preparedBy={transaction.encodedBy?.username || ''} recieveByorDate={transaction.createdAt?.split('T')[0] || ''}/>
           
 
         </div>

@@ -68,16 +68,18 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline }: ClientMasterF
     <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center justify-between ">
       <div className="w-full flex-1 md:flex-none">
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
-          <FormIonItem className=" min-w-44 ">
+          <FormIonItem className=" min-w-56">
+            <p className=' text-xs flex whitespace-nowrap'>Sort By</p>
             <InputSelect
               // label="Sort By"
               name="sort"
               showLabel={false}
               placeholder="Sort By"
+              labelClassName=''
               control={form.control}
               clearErrors={form.clearErrors}
               options={[
-                { label: 'Sort By', value: '' },
+                { label: 'All', value: '' },
                 { label: 'Account No. A - Z', value: 'acctno-asc' },
                 { label: 'Account No. Z - A', value: 'acctno-desc' },
                 { label: 'Name A - Z', value: 'name-asc' },

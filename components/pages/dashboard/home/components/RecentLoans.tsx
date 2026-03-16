@@ -10,6 +10,7 @@ import { formatNumber } from "../../../../ui/utils/formatNumber"
 import ViewLoanDetails from "../modals/ViewLoanDetails"
 
 export type Member = {
+  createdAt: string
   _id: string
   debit: number
   client: { name: string }
@@ -77,6 +78,7 @@ const RecentLoans = () => {
             >
               <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">Name</TableHead>
               <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">Amount</TableHead>
+              <TableHead className="  !font-[600] bg-zinc-100">Date</TableHead>
               <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">Actions</TableHead>
             </TableHeadRow>
            
@@ -98,6 +100,8 @@ const RecentLoans = () => {
               >
                 <TableCell>{entry.client.name}</TableCell>
                 <TableCell>{formatNumber(entry.debit)}</TableCell>
+                <TableCell>{entry.createdAt?.split('T')[0] || ''}</TableCell>
+                
                 <TableCell>
                   <ViewLoanDetails loan={entry} />
                 </TableCell>
@@ -114,6 +118,7 @@ const RecentLoans = () => {
           <TableHeadRow>
             <TableHead className="!font-[400] border-b border-gray-200">Name</TableHead>
             <TableHead className="!font-[400] border-b border-gray-200">Amount</TableHead>
+            <TableHead className="  !font-[600] bg-zinc-100">Date</TableHead>
             <TableHead className="!font-[400] border-b border-gray-200">Actions</TableHead>
           </TableHeadRow>
         </TableHeader>
@@ -132,6 +137,8 @@ const RecentLoans = () => {
               >
                 <TableCell>{entry.client.name}</TableCell>
                 <TableCell>{formatNumber(entry.debit)}</TableCell>
+                <TableCell>{entry.createdAt?.split('T')[0] || ''}</TableCell>
+
                 <TableCell>
                   <ViewLoanDetails loan={entry} />
                 </TableCell>

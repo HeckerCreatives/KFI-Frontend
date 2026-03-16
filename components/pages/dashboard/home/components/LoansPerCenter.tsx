@@ -11,6 +11,7 @@ import TableNoRows from '../../../../ui/forms/TableNoRows';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
 
 export type Loan = {
+  createdAt: string
   _id: string;
   description: string;
   location: string;
@@ -114,6 +115,8 @@ const LoansPerCenter = () => {
                   <TableHead className=" !font-[400] text-start">Center</TableHead>
                   <TableHead className=" !font-[400]">Total Members</TableHead>
                   <TableHead className=" !font-[400]">Total Loan Amount</TableHead>
+                  <TableHead className=" !font-[400]">Date</TableHead>
+                  
                 </TableHeadRow>
               </TableHeader>
               <TableBody
@@ -130,6 +133,8 @@ const LoansPerCenter = () => {
                       <TableCell className="">{loan.description}</TableCell>
                       <TableCell className="">{loan.members}</TableCell>
                       <TableCell className="">{formatNumber(loan.loans)}</TableCell>
+                     <TableCell>{loan.createdAt?.split('T')[0] || ''}</TableCell>
+
                     </TableRow>
                   ))}
               </TableBody>
@@ -147,6 +152,8 @@ const LoansPerCenter = () => {
                   <TableHead className=" !font-[400] text-start">Center</TableHead>
                   <TableHead className=" !font-[400]">Total Members</TableHead>
                   <TableHead className=" !font-[400]">Total Loan Amount</TableHead>
+                  <TableHead className=" !font-[400]">Date</TableHead>
+
                 </TableHeadRow>
               </TableHeader>
               <TableBody>
@@ -160,6 +167,8 @@ const LoansPerCenter = () => {
                       <TableCell className="">{loan.description}</TableCell>
                       <TableCell className="">{loan.members}</TableCell>
                       <TableCell className="">{formatNumber(loan.loans)}</TableCell>
+                     <TableCell>{loan.createdAt?.split('T')[0] || ''}</TableCell>
+
                     </TableRow>
                   ))}
               </TableBody>
