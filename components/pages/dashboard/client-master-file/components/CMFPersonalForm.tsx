@@ -447,7 +447,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     name={`children.${index}.name`}
                     control={form.control}
                     clearErrors={form.clearErrors}
-                    label="Children"
+                    label={`${index + 1}. Children`}
                     placeholder="Type here"
                     className="!px-2 !py-2 rounded-md"
                     labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
@@ -476,7 +476,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     name={`beneficiary.${index}.name`}
                     control={form.control}
                     clearErrors={form.clearErrors}
-                    label="Beneficiary"
+                   label={`${index + 1}. Beneficiary`}
                     placeholder="Type here"
                     className="!px-2 !py-2 rounded-md"
                     labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"

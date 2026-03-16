@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon, useIonToast } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon, useIonToast, IonItem } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import CMFPersonalForm from '../components/CMFPersonalForm';
@@ -85,6 +85,7 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
       civilStatus: client.civilStatus,
       parent: client.parent,
       memberStatus: client.memberStatus,
+      memberStatusLabel: client.memberStatus,
       center: client.center._id,
       centerLabel: client.center.centerNo,
       acctOfficer: client.acctOfficer,
@@ -95,10 +96,12 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
       acctNumber: client.acctNumber,
       dateResigned: client.dateResigned ? formatDateInput(client.dateResigned) : '',
       reason: client.reason,
-      beneficiary: [{ name: '' }],
-      children: [{ name: '' }],
       clientImage: client.image?.path,
-      bankAccountNo: client.bankAccountNo
+      bankAccountNo: client.bankAccountNo,
+      children: client.children,
+      beneficiary: client.beneficiaries,
+
+
 
 
       });
