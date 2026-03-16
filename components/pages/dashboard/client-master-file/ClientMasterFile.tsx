@@ -255,7 +255,7 @@ const ClientMasterFile = () => {
                   <TableHeader className=''>
                     <TableHeadRow className=''>
                       <TableHead className=" hidden lg:table-cell min-w-[10rem] max-w-[10rem] py-4">Account No.</TableHead>
-                      <TableHead className=" hidden md:table-cell min-w-[10rem] max-w-[10rem] py-4">Name</TableHead>
+                      <TableHead className=" hidden lg:table-cell min-w-[10rem] max-w-[10rem] py-4">Name</TableHead>
                       <TableHead className="hidden lg:table-cell min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
                       <TableHead className="hidden lg:table-cell min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
                     </TableHeadRow>
@@ -268,7 +268,7 @@ const ClientMasterFile = () => {
                       data.clients.map((client: ClientMasterFileType) => (
                         <TableRow key={client._id} className="[&>td]:bg-white">
                           <TableCell className="hidden lg:table-cell min-w-[10rem] max-w-[10rem]">{client.acctNumber}</TableCell>
-                          <TableCell className=" min-w-[10rem] max-w-[10rem]">{client.name}</TableCell>
+                          <TableCell className=" hidden lg:table-cell min-w-[10rem] max-w-[10rem]">{client.name}</TableCell>
                           <TableCell className="hidden lg:table-cell min-w-[5rem] max-w-[5rem]">{client.center.centerNo}</TableCell>
                           <TableCell className="hidden lg:table-cell min-w-[12rem] max-w-[12rem]">{client.acctOfficer}</TableCell>
                         </TableRow>
@@ -282,7 +282,7 @@ const ClientMasterFile = () => {
                   <TableHeader>
                     <TableHeadRow>
                       <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">Account No.</TableHead>
-                      <TableHead className=" md:hidden min-w-[10rem] max-w-[10rem]">Name</TableHead>
+                      <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">Name</TableHead>
                       <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
                       <TableHead className=" lg:hidden min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
                       <TableHead className=" min-w-[10rem] max-w-[10rem]">Member Status</TableHead>
@@ -335,10 +335,10 @@ const ClientMasterFile = () => {
                   </TableBody>
                 </Table>
 
-                 <Table className=' sticky z-50 top-0 right-0 md:table hidden'>
+                 <Table className=' sticky z-50 top-0 right-0 '>
                   <TableHeader className=''>
                     <TableHeadRow className=''>
-                      <TableHead className="hidden lg:table-cell ">Action</TableHead>
+                      <TableHead className="">Action</TableHead>
                     
                     </TableHeadRow>
                   </TableHeader>
@@ -350,7 +350,7 @@ const ClientMasterFile = () => {
                       data.clients.map((client: ClientMasterFileType) => (
                         <TableRow key={client._id} className="[&>td]:bg-white">
                             {haveActions(token.role, 'clients', permissions, ['update', 'delete', 'visible']) && (
-                            <TableCell className=' hidden lg:table-cell '>
+                            <TableCell className='  '>
                               <ClientMasterFileActions
                               getClientsOffline={getClientsOffline}
                                 client={client}

@@ -86,8 +86,8 @@ const ViewClientMasterFile = ({ member }: { member: ClientMasterFile }) => {
                Additional Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 <ViewClientCard label="Reason" value={member?.reason || ''} />
-                <ViewClientCard label="Children" value={member?.children.map(c => c.name).join(', ') || ''} />
-                <ViewClientCard label="Beneficiary" value={member?.beneficiaries?.map(b => b.name).join(', ') || ''} />
+                <ViewClientCard label="Children" value={member?.children.map((c, i) => `${i + 1}.${c.name}`).join(', ') || ''} />
+                <ViewClientCard label="Beneficiary" value={member?.beneficiaries?.map((b, i) => `${i + 1}.${b.name}`).join(', ') || ''} />
               </div>
             </div>
 
