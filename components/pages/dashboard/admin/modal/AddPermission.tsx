@@ -17,16 +17,25 @@ type AddPermissionProps = {
   setData: React.Dispatch<React.SetStateAction<TUser>>;
 };
 
+const clonePermissions = (permissions: Permission[]) =>
+  permissions.map(p => ({
+    ...p,
+    actions: { ...p.actions }
+  }));
+
 const AddPermission = ({ user, setData }: AddPermissionProps) => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
-  const [permissions, setPermissions] = useState<Permission[]>(user.permissions);
+  const [permissions, setPermissions] = useState<Permission[]>(
+    clonePermissions(user.permissions)
+  );
+  const modal = useRef<HTMLIonModalElement>(null);
+
 
   useEffect(() => {
-    if (user) setPermissions(user.permissions);
-  }, [user]);
+  if (user) setPermissions(clonePermissions(user.permissions));
+}, [user]);
 
-  const modal = useRef<HTMLIonModalElement>(null);
 
   function dismiss() {
     modal.current?.dismiss();
@@ -61,16 +70,11 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
     }
   }
 
+
+
   return (
     <>
-      {/* <div className="text-end">
-        <div
-          id={`update-permissions-modal-${user._id}`}
-          className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
-        >
-          <IonIcon icon={shieldCheckmarkSharp} className="text-[1rem]" /> Manage Permissions
-        </div>
-      </div> */}
+      
       <IonButton
         id={`update-permissions-modal-${user._id}`}
         type="button"
@@ -84,13 +88,10 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
         ref={modal}
         trigger={`update-permissions-modal-${user._id}`}
         backdropDismiss={false}
+        onDidDismiss={() => setPermissions(clonePermissions(user.permissions))}
         className=" [--border-radius:0.7rem] auto-height [--max-width:58rem] [--width:95%]"
       >
-        {/* <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Admin - Manage Permissions" sub="Manage Account" dismiss={dismiss} />
-          </IonToolbar>
-        </IonHeader> */}
+       
         <div className="inner-content space-y-4 !p-6">
             <ModalHeader disabled={loading} title="Admin - Manage Permissions" sub="Manage admin permissions." dismiss={dismiss} />
 

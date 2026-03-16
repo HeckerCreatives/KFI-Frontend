@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import InputText from '../../../../ui/forms/InputText';
 import { IonButton } from '@ionic/react';
@@ -46,6 +46,23 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline }: ClientMasterF
       }
     }
   };
+
+  const code = form.watch('code');
+  const sort = form.watch('sort');
+
+  useEffect(() => {
+    const fetchData = () => {
+      if (online) {
+        getClients(1, code, sort);
+      } else {
+        getClientsOffline(1, code, sort);
+      }
+    };
+
+    fetchData();
+  }, [sort, online]);
+
+
 
   return (
     <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center justify-between ">

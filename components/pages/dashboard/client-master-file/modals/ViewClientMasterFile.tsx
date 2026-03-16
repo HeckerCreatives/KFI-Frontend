@@ -74,7 +74,7 @@ const ViewClientMasterFile = ({ member }: { member: ClientMasterFile }) => {
                 <ViewClientCard label="Center" value={`${member?.center.centerNo}` || ''} />
                 <ViewClientCard label="Account Officer" value={member?.acctOfficer || ''} />
                 <ViewClientCard label="Date Release" value={formatDateTable(member?.dateRelease) || ''} />
-                <ViewClientCard label="Business" value={`${member?.business.type}` || ''} />
+                <ViewClientCard label="Business" value={`${member?.business?.type}` || ''} />
                 <ViewClientCard label="Account Number" value={member?.acctNumber || ''} />
               </div>
             </div>
