@@ -56,7 +56,7 @@ const LoginLogs = () => {
       }
     } catch (error) {
       present({
-        message: 'Failed to get bank records. Please try again',
+        message: 'Failed to get records. Please try again',
         duration: 1000,
       });
     } finally {
