@@ -95,7 +95,6 @@ const LoanRelease = () => {
          const limit = TABLE_LIMIT;
          let data = await db.loanReleases.toArray();
 
-         console.log(data)
          const filteredData = data.filter(e => e.action !== 'delete');
          let allData = filterAndSortLoanRelease(filteredData, keyword, sort, from, to);
          const totalItems = allData.length;

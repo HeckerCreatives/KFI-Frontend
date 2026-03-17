@@ -228,6 +228,7 @@ const ClientMasterFile = () => {
   });
 
 
+
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px]" fullscreen>
@@ -248,7 +249,7 @@ const ClientMasterFile = () => {
                   {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient />}
                   {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient />} 
                 </div>
-                <ClientMasterFileFilter getClientsOffline={getClientsOffline} getClients={getClients} />
+                <ClientMasterFileFilter getClientsOffline={getClientsOffline} getClients={getClients} clients={data.clients.map(item => item.name)} />
               </div>
               <div className="relative flex overflow-auto rounded-xl">
                 <Table className=' sticky z-50 top-0 left-0 md:table hidden'>

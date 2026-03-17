@@ -11,7 +11,7 @@ const FormIonItem = ({ children, className = '' }: TProps) => {
   return (
     <IonItem
       className={classNames(
-        '[--border-style:none]  [--background-hover:none] [--ripple-color:transparent] [--padding-start:0] [--inner-padding-end:0] [--background:transparent]',
+        '[--border-style:none]  [--background-hover:none] [--ripple-color:transparent] [--padding-start:0] [--inner-padding-end:0] [--background:transparent] overflow-visible! relative!',
         className,
       )}
     >

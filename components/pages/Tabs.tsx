@@ -356,11 +356,16 @@ const Tabs = () => {
     </IonMenu>
 
     
-      {/* ✅ Main Page */}
       <IonPage id="main-content">
-        <IonHeader class="ion-no-border border-b flex items-center justify-center">
+        <IonHeader class=" ion-header ion-no-border border-b flex items-center justify-center"
+       
+        >
            
-          <div className='flex items-center justify-between max-w-[1920px] w-full gap-4 py-2 lg:py-6 px-2'>
+          <div className='flex items-center justify-between max-w-[1920px] w-full gap-4 py-2 lg:py-6 px-2'
+          style={{
+            zIndex: '99999 !important'
+          }}
+          >
             <div className='flex items-center gap-2'>
               <div className="h-6 border-b bg-cover ps-2 flex items-center">
                 <div className="w-full bg-orange-50 p-3 rounded-md">

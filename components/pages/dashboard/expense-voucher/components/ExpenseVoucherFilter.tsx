@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import InputText from '../../../../ui/forms/InputText';
 import { IonButton } from '@ionic/react';
@@ -6,6 +6,9 @@ import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import { Search01Icon } from 'hugeicons-react';
 import { useOnlineStore } from '../../../../../store/onlineStore';
+import { TData } from '../ExpenseVoucher';
+import kfiAxios from '../../../../utils/axios';
+import SearchInput from '../../../../ui/forms/InputSearch';
 
 type TSearch = {
   code: string;
@@ -27,6 +30,8 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
       dateFrom: '',
     },
   });
+
+ 
 
   const onSubmit = (data: TSearch) => {
     if (data.code !== '' || data.sort !== '' || data.dateFrom !== '' || data.dateTo !== '') {
@@ -53,6 +58,45 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
         };
         fetchData();
       }, [sort, online, dateTo, dateFrom]);
+
+ const [data, setData] = useState<TData>({
+        expenseVouchers: [],
+        loading: false,
+        totalPages: 0,
+        nextPage: false,
+        prevPage: false,
+      });
+      
+    useEffect(() => {
+       const getData = async () => {
+      setData(prev => ({ ...prev, loading: true }));
+
+      try {
+        const result = await kfiAxios.get('/expense-voucher', { params: { limit: 5, search: code, page: 1 } });
+         const { success, expenseVouchers, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            expenseVouchers: expenseVouchers,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+        }
+      } catch (error) {
+        // handle error
+      } finally {
+        setData(prev => ({ ...prev, loading: false }));
+      }
+    };
+
+    const timer = setTimeout(() => {
+      getData();
+    }, 800);
+
+    return () => clearTimeout(timer);
+   
+  }, [code]);
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit">
@@ -117,16 +161,15 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
 
           <div className=' flex flex-col gap-1'>
             <label htmlFor="search" className=' text-xs'>Search</label>
-             <InputText
-            name="code"
-            // label="Search"
-            placeholder="Type here"
-            type="search"
-            control={form.control}
-            clearErrors={form.clearErrors}
-            className="!px-3 !min-h-[1rem] rounded-md !border-orange-500 max-w-36 text-xs"
-            labelClassName="truncate !text-xs pt-1.5"
-          />
+              <SearchInput
+                  name="code"
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  // label="Code"
+                  placeholder="Search ..."
+                  className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
+                  suggestions={data.expenseVouchers.map((item) => item.code || '')}
+                />
           </div>
           
         </FormIonItem>

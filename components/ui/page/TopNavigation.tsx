@@ -46,7 +46,7 @@ const TopNavigation = () => {
 
 
   return (
-    <div className=" hidden lg:flex p-1 font-semibold text-sm h-12 bg-orange-50 rounded-md">
+    <div className=" hidden lg:flex p-1 font-semibold text-sm h-12 bg-orange-50 rounded-md relative">
       <div className="flex items-center justify-start gap-4 h-full">
         {isVisible(token.role, permissions, dashboardResource) && (
           <div>

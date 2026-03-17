@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
 import { IonButton, IonIcon, IonInput, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import { search } from 'ionicons/icons';
@@ -9,6 +9,13 @@ import TablePagination from '../../../../ui/forms/TablePagination';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
+import { useForm } from 'react-hook-form';
+import FormIonItem from '../../../../ui/utils/FormIonItem';
+import SearchInput from '../../../../ui/forms/InputSearch';
+
+type TSearch = {
+  keyword: string;
+};
 
 export type Loan = {
   createdAt: string
@@ -32,6 +39,16 @@ const LoansPerCenter = () => {
   const ionInputRef = useRef<HTMLIonInputElement>(null);
 
   const [present] = useIonToast();
+  
+
+  const form = useForm<TSearch>({
+      defaultValues: {
+        keyword: '',
+      },
+    });
+
+  const code = form.watch('keyword')
+
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -42,13 +59,13 @@ const LoansPerCenter = () => {
     nextPage: false,
     prevPage: false,
   });
+  const [items, setItems] = useState<string[]>([])
 
   const getRecentLoans = async (page: number) => {
     setData(prev => ({ ...prev, loading: true }));
     try {
-      const value = ionInputRef.current?.value;
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-      const result = await kfiAxios.get('/statistics/loans-per-center', { params: { ...filter, keyword: value } });
+      const result = await kfiAxios.get('/statistics/loans-per-center', { params: { ...filter, keyword: code } });
       const { success, loans, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({
@@ -73,41 +90,74 @@ const LoansPerCenter = () => {
 
   const handlePagination = (page: number) => getRecentLoans(page);
 
+  const onSubmit = (data: TSearch) => {
+    getRecentLoans(currentPage)
+  };
+
   useIonViewWillEnter(() => {
     getRecentLoans(currentPage);
   });
+
+
+    useEffect(() => {
+       const getData = async () => {
+
+      try {
+        const result = await kfiAxios.get('/statistics/loans-per-center', { params: { limit: 5, keyword: code, page: 1 } });
+        const { success, loans, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setItems(loans.map((item: any) => item.acctOfficer));
+        }
+      } catch (error) {
+        // handle error
+      } finally {
+      }
+    };
+
+    const timer = setTimeout(() => {
+      getData();
+    }, 800);
+
+    return () => clearTimeout(timer);
+   
+  }, [code]);
+
+
 
   return (
     <div className=" relative h-fit flex-1 flex flex-col bg-white shadow-lg rounded-xl">
       <div className=" pb-2 flex-1 flex flex-col">
         <div className="flex items-center justify-between w-full py-2 bg-orange-50 p-4 px-8 rounded-t-xl">
           <h3 className="text-[0.9rem] pb-2 text-black !font-medium">Loans per Account Officer</h3>
-          <div className="flex items-center gap-2">
-            <IonInput
-              ref={ionInputRef}
-              aria-label={'no label'}
-              placeholder="Search"
-              labelPlacement="stacked"
-              className={'!border text-[0.9rem] border-orange-400 !bg-orange-50 ![--background:transparent] [--highlight-color-focused:none] rounded-md !px-2 !py-1 text-sm !min-h-[1.2rem]'}
-            ></IonInput>
-            <div>
-              <IonButton
-                onClick={() => getRecentLoans(1)}
-                fill="clear"
-                className="max-h-10 min-h-[1.8rem] ![--padding-top:0] ![--padding-bottom:0] ![--padding-end:0.4rem] ![--padding-start:0.45rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
-                strong
-              >
+           <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
+          
+            <div className="flex items-center min-w-20 overflow-visible!">
+              <FormIonItem className="flex-1 overflow-visible!">
+               
+
+                <SearchInput
+                  name="keyword"
+                  control={form.control}
+                  clearErrors={form.clearErrors}
+                  // label="Code"
+                  placeholder="Search acct. officer..."
+                  className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
+                  suggestions={items}
+                />
+              </FormIonItem>
+              <IonButton type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                 <IonIcon icon={search} />
               </IonButton>
             </div>
-          </div>
+          </form>
+         
         </div>
 
        
           
           <div className=" flex-1 p-4 ">
             <div className='relative overflow-auto max-h-[500px] '>
-               <div className=' w-full sticky top-0 z-[999] bg-white'>
+               <div className=' w-full sticky top-0 z-[9] bg-white'>
               <Table>
               <TableHeader>
                 <TableHeadRow className="!bg-white !border-0">

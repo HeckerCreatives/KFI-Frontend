@@ -21,61 +21,14 @@ const Dashboard = () => {
                 <div className=' w-full grid grid-cols-1 lg:grid-cols-[60%_1fr] gap-4'>
                   <LoansPerCenter />
 
-                  <div className=" flex flex-col space-y-2 bg-white rounded-xl shadow-lg">
-                    <div className="flex items-center justify-between bg-orange-50 p-4 rounded-t-xl">
-                      <div className="min-w-44">
-                        <IonSelect
-                          aria-label={'no label'}
-                          interface="popover"
-                          placeholder="Recent Loan"
-                          labelPlacement="stacked"
-                          className={'!border border-orange-400 [--highlight-color-focused:none] rounded-md bg-orange-50 !px-2 !py-2 !text-[0.8rem] !min-h-[1.2rem] min-w-full '}
-                          onIonChange={e => setSelected(e.detail.value)}
-                          value={selected}
-                        >
-                          <IonSelectOption value="recent loan" className="h-10 text-xs ![--min-height:1rem] [&>ion-radio]:checked:bg-red-600">
-                            Recent Loan
-                          </IonSelectOption>
-                          <IonSelectOption value="recent member" className="h-18 text-xs ![--min-height:1rem]">
-                            Recent Member
-                          </IonSelectOption>
-                        </IonSelect>
-                      </div>
-                    </div>
-                    <div className="bg-white w-full flex-1 p-2 rpunded rounded-xl">
-                      {selected === 'recent loan' && <RecentLoans />}
-                      {selected === 'recent member' && <RecentMembers />}
-                    </div>
-                  </div>
+                  {selected === 'recent loan' && <RecentLoans selected={selected} setSelected={setSelected} />}
+                  {selected === 'recent member' && <RecentMembers selected={selected} setSelected={setSelected} />}
+
+                
 
                 </div>
               </div>
-              {/* <div className="flex flex-col space-y-4 bg-white p-4 rounded-xl">
-                <div className="flex items-center justify-between ">
-                  <div className="min-w-64">
-                    <IonSelect
-                      aria-label={'no label'}
-                      interface="popover"
-                      placeholder="Recent Loan"
-                      labelPlacement="stacked"
-                      className={'!border border-orange-400 [--highlight-color-focused:none] rounded-md bg-orange-50 !px-2 !py-2 !text-[0.8rem] !min-h-[1.2rem] min-w-full '}
-                      onIonChange={e => setSelected(e.detail.value)}
-                      value={selected}
-                    >
-                      <IonSelectOption value="recent loan" className="h-10 text-sm ![--min-height:1rem] [&>ion-radio]:checked:bg-red-600">
-                        Recent Loan
-                      </IonSelectOption>
-                      <IonSelectOption value="recent member" className="h-18 text-sm ![--min-height:1rem]">
-                        Recent Member
-                      </IonSelectOption>
-                    </IonSelect>
-                  </div>
-                </div>
-                <div className="bg-white w-full flex-1">
-                  {selected === 'recent loan' && <RecentLoans />}
-                  {selected === 'recent member' && <RecentMembers />}
-                </div>
-              </div> */}
+             
             </div>
           </div>
         </div>
