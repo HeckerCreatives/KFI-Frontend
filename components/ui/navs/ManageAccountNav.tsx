@@ -12,11 +12,12 @@ import { UserShield01Icon, UserGroupIcon } from 'hugeicons-react';
 const ManageAccountNav = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const pathname = usePathname();
+  const permissions: Permission[] = JSON.parse(localStorage.getItem('permissions') || '[]')
 
   return (
-    isVisible(token.role, token.permissions, manageAccountResource) && (
+    isVisible(token.role, permissions, manageAccountResource) && (
       <div className="flex items-center w-fit p-1 bg-white rounded-md">
-        {(token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === 'admin' && e.actions.visible)) && (
+        {(permissions.find((e: Permission) => e.resource === 'admin' && e.actions.visible)) && (
           <IonButton
             routerLink="/dashboard/admin"
             fill="clear"
@@ -31,7 +32,7 @@ const ManageAccountNav = () => {
           </IonButton>
         )}
 
-        {(token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === 'clients' && e.actions.visible)) && (
+        {(permissions.find((e: Permission) => e.resource === 'clients' && e.actions.visible)) && (
           <IonButton
             routerLink="/dashboard/client"
             fill="clear"

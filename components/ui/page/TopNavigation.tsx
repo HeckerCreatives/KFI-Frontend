@@ -64,12 +64,12 @@ const TopNavigation = () => {
           </div>
         )}
 
-        {suAdminOnly(token.role) && (
+        {isVisible(token.role, permissions, manageAccountResource) && (
           <div>
             <IonButton
               fill="clear"
               routerLink={
-                token.role === 'superadmin' || token.permissions.find((e: Permission) => e.resource === 'admin' && e.actions.visible) ? '/dashboard/admin' : '/dashboard/client'
+                permissions.find((e: Permission) => e.resource === 'admin' && e.actions.visible) ? '/dashboard/admin' : '/dashboard/client'
               }
               className={classNames(
                 'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1 [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
