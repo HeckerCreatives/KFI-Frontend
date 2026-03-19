@@ -17,10 +17,12 @@ type TSearch = {
 type ClientMasterFileFilterProps = {
   getClients: (page: number, keyword?: string, sort?: string) => void;
   getClientsOffline: (page: number, keyword?: string, sort?: string) => void;
-  clients: string[]
+  clients: string[],
+  setSearchKey: React.Dispatch<React.SetStateAction<string>>
+  setSorthKey: React.Dispatch<React.SetStateAction<string>>
 };
 
-const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients }: ClientMasterFileFilterProps) => {
+const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSearchKey, setSorthKey }: ClientMasterFileFilterProps) => {
   const form = useForm<TSearch>({
     defaultValues: {
       code: '',
@@ -40,6 +42,8 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients }: Clie
   
 
   const onSubmit = (data: TSearch) => {
+    setSearchKey(data.code)
+    setSorthKey(data.sort)
     
     if (data.code !== '' || data.sort !== '') {
       if(online){

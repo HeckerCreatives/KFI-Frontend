@@ -246,10 +246,10 @@ const ClientMasterFile = () => {
                <div className="flex items-start lg:items-center lg:flex-row flex-col flex-wrap gap-2 my-2">
                 <div className="flex flex-wrap">
                   {canDoAction(token.role, permissions, 'clients', 'create') && <CreateClientMasterFile getClientsOffline={getClientsOffline} getClients={getClients} />}
-                  {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient />}
-                  {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient />} 
+                  {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient search={searchKey} sort={sortKey} />}
+                  {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient search={searchKey} sort={sortKey} />} 
                 </div>
-                <ClientMasterFileFilter getClientsOffline={getClientsOffline} getClients={getClients} clients={data.clients.map(item => item.name)} />
+                <ClientMasterFileFilter setSearchKey={setSearchKey} setSorthKey={setSortKey} getClientsOffline={getClientsOffline} getClients={getClients} clients={data.clients.map(item => item.name)} />
               </div>
               <div className="relative flex overflow-auto rounded-xl">
                 <Table className=' sticky z-50 top-0 left-0 md:table hidden'>

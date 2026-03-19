@@ -3,9 +3,14 @@ import React, { useRef, useState } from 'react';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { PrinterIcon } from 'hugeicons-react';
+import { string } from 'zod';
 
+type Props = {
+  sort: string,
+  search: string
+}
 
-const PrintAllClient = () => {
+const PrintAllClient = ({sort, search}: Props) => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +23,7 @@ const PrintAllClient = () => {
   async function handlePrintClientProfile() {
     setLoading(true);
     try {
-      const result = await kfiAxios.get(`/customer/print-all`, { responseType: 'blob' });
+      const result = await kfiAxios.get(`/customer/print-all`, { responseType: 'blob', params: {search: search, sort: sort}});
       const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       window.open(pdfUrl, '_blank');

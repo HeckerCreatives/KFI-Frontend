@@ -4,8 +4,12 @@ import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { FileExportIcon, PrinterIcon } from 'hugeicons-react';
 
+type Props = {
+  sort: string,
+  search: string
+}
 
-const ExportAllClient = () => {
+const ExportAllClient = ({sort, search}:Props) => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +22,7 @@ const ExportAllClient = () => {
   async function handlePrint() {
     setLoading(true);
     try {
-      const result = await kfiAxios.get(`/customer/export-all`, { responseType: 'blob' });
+      const result = await kfiAxios.get(`/customer/export-all`, { responseType: 'blob',params: {search: search, sort: sort} });
       const url = window.URL.createObjectURL(new Blob([result.data]));
       const a = document.createElement('a');
       a.href = url;
