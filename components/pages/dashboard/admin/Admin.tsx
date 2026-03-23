@@ -167,6 +167,8 @@ const Admin = () => {
 
   const refetch = () => getUsers(currentPage, searchKey, sortKey);
 
+  console.log(data.users)
+
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100 ">
       <IonContent className="[--background:#f4f4f5] max-w-[1920px] h-full" fullscreen>

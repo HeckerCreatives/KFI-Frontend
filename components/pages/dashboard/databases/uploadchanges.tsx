@@ -6,7 +6,7 @@ import { business, key } from "ionicons/icons";
 import { removeAmountComma } from "../../../ui/utils/formatNumber";
 import { TriangleAlert } from "lucide-react";
 
-type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans" | "financialStatements" | "trialBalance" | "beginningBalance" | "acknowledgementReceipts";
+type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans" | "financialStatements" | "trialBalance" | "beginningBalance" | "acknowledgementReceipts" | 'releaseReceipts';
 
 export default function UploadChanges() {
   const [changes, setChanges] = useState<Record<SyncKey, number>>({
@@ -30,6 +30,7 @@ export default function UploadChanges() {
     trialBalance: 0,
     beginningBalance: 0,
     acknowledgementReceipts: 0,
+    releaseReceipts: 0
   });
     const [present] = useIonToast();
   const user = localStorage.getItem('user')
@@ -76,6 +77,12 @@ export default function UploadChanges() {
       label: "Official Receipts",
       endpoint: "/sync/official-receipts",
       field:'acknowledgementReceipts'
+    },
+     {
+      key: "releaseReceipts",
+      label: "Acknowledgement Receipts",
+      endpoint: "/sync/release",
+      field:'officialReceipts'
     },
     {
       key: "damayanFunds",
@@ -193,6 +200,7 @@ export default function UploadChanges() {
     const trialb = await db.trialBalance.toArray();
     const beginningb = await db.beginningBalance.toArray();
     const or = await db.acknowledgementReceipts.toArray();
+    const ar = await db.releaseReceipts.toArray();
 
     setChanges({
       clientMasterFile: cmf.filter((e) => e._synced === false).length,
@@ -215,6 +223,7 @@ export default function UploadChanges() {
       trialBalance: trialb.filter((e) => e._synced === false).length,
       beginningBalance: beginningb.filter((e) => e._synced === false).length,
       acknowledgementReceipts: or.filter((e) => e._synced === false).length,
+      releaseReceipts: ar.filter((e) => e._synced === false).length,
     });
   }, []);
 
@@ -265,6 +274,7 @@ export default function UploadChanges() {
         year,
         bankCode,
         cashCollection,
+        loanRelease,
         ...rest
       } = item;
 
@@ -300,6 +310,8 @@ export default function UploadChanges() {
             acctCodeId: item.acctCodeId || item.acctCode._id,
             client: item.clientId || item.client?._id,
             line: Number(item.line),
+            loanRelease: item.loanRelease?._id || '',
+
 
         })) ,
         loanCodes: loanCodes?.map((item: any, index: number) => ({

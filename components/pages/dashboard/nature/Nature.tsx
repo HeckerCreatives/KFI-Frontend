@@ -160,11 +160,7 @@ const Nature = () => {
                 {canDoAction(token.role, permissions, 'nature', 'create') && (
                   <CreateNature getNatures={getNatures} />
                 )}
-              {!online && (
-                 <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                   <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                 </IonButton>
-               )}
+              
               <NatureFilter getNatures={getNatures} />
             </div>
               <Table>

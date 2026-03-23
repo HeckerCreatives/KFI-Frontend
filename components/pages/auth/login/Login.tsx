@@ -113,12 +113,20 @@ const Login = () => {
               (item: any) => item.resource === 'dashboard'
             )?.actions?.visible
 
+        //     if (isPlatform('capacitor')) {
+        //   (window as any).location.reload(true);
+        // } else if (isPlatform('electron')) {
+        //   (window as any).ipcRenderer.send('reload-window');
+        // } else {
+        //   (window as any).location.reload();
+        // }
+
             if (!hasDashboard) {
               router.push('/dashboard/kfi')
+             window.location.reload()
             }else{
-           
-
               router.push('/dashboard/home')
+              window.location.reload()
             }
           }
         }
@@ -153,6 +161,8 @@ const Login = () => {
       .equals(data.username)
       .first();
 
+      console.log(user)
+
       if(!user){
         console.log('user not exist')
         return
@@ -178,8 +188,12 @@ const Login = () => {
 
             if (!hasDashboard) {
               router.push("/dashboard/kfi");
+             window.location.reload()
+
             } else {
               router.push("/dashboard/home");
+             window.location.reload()
+
             }
           }
         }
@@ -259,7 +273,7 @@ const Login = () => {
                   </div>
                   <div>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1 ">
-                    <p  className=' text-xs'>User Code</p>
+                    <p  className=' text-xs'>Username</p>
                     <FormIonItem >
                       <InputText
                         disabled={loading}

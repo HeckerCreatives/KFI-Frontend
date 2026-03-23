@@ -111,6 +111,7 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
   function dismiss() {
     form.reset();
     modal.current?.dismiss();
+    form.setValue('clientImage', '')
   }
 
   async function onSubmit(data: ClientMasterFileFormData) {

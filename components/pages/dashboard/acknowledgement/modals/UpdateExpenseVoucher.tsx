@@ -194,7 +194,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
                 code: item.cvNo,
                 _id: item.loanReleaseId || item.loanReleaseEntryId
               },
-              action: "update",
+               action: item._id ? 'update' : 'create',
               _synced: false
             })),
              center: {
@@ -212,7 +212,8 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
             },
           deletedIds: finalDeletedIds,
           _synced: false,
-          action: "update",
+          action: existing._id ? 'update' : 'create',
+
         };
 
         await db.acknowledgementReceipts.update(acknowledgement.id, updated);

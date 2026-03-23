@@ -15,6 +15,7 @@ import { fschema, FSFormData } from '../../../../../validations/financialstateme
 import { createSharp } from 'ionicons/icons';
 import { tbchema, TBFormData } from '../../../../../validations/trial-balance-schema';
 import TBForm from './tb-form';
+import { entries } from '../../../../../validations/beginningbalance.schema';
 
 type UpdateProps = {
     item: FinancialStatements
@@ -89,6 +90,12 @@ const UpdateTB = ({ getList, item, currentPage }: UpdateProps) => {
                              const updated = {
                                ...existing,
                                ...data, 
+                               entries: existing.entries.map((item: any) => ({
+                                  ...item,
+                                  
+                                  action: item.action === "delete" ? item.action : item._id ? "update" : "create",
+                                  _synced: false,
+                                })),
                              
                                 action: existing.isOldData ? 'update' : 'create',
                                 _synced: false,
