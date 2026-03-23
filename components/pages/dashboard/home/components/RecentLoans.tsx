@@ -12,6 +12,7 @@ import FormIonItem from "../../../../ui/utils/FormIonItem"
 import SearchInput from "../../../../ui/forms/InputSearch"
 import { useForm } from "react-hook-form"
 import { search } from "ionicons/icons"
+import ViewLoanRelease from "../modals/ViewLoanRelease"
 
 type TSearch = {
   code: string;
@@ -241,7 +242,8 @@ const RecentLoans = ({setSelected, selected} : Props) => {
                 <TableCell>{entry.createdAt?.split('T')[0] || ''}</TableCell>
 
                 <TableCell>
-                  <ViewLoanDetails loan={entry} />
+                  {/* <ViewLoanDetails loan={entry} /> */}
+                  <ViewLoanRelease loan={entry}/>
                 </TableCell>
               </TableRow>
             ))}
