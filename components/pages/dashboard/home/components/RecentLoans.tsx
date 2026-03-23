@@ -13,11 +13,20 @@ import SearchInput from "../../../../ui/forms/InputSearch"
 import { useForm } from "react-hook-form"
 import { search } from "ionicons/icons"
 import ViewLoanRelease from "../modals/ViewLoanRelease"
+import { Transaction } from "../../../../../types/types"
 
 type TSearch = {
   code: string;
 };
 
+
+export type TData = {
+  transactions: Transaction[];
+  totalPages: number;
+  nextPage: boolean;
+  prevPage: boolean;
+  loading: boolean;
+};
 
 export type Member = {
   createdAt: string
@@ -50,13 +59,13 @@ const RecentLoans = ({setSelected, selected} : Props) => {
 
   const [currentPage, setCurrentPage] = useState<number>(1)
 
-  const [data, setData] = useState<TRecentMember>({
-    entries: [],
-    loading: false,
-    totalPages: 0,
-    nextPage: false,
-    prevPage: false,
-  })
+   const [data, setData] = useState<TData>({
+      transactions: [],
+      loading: false,
+      totalPages: 0,
+      nextPage: false,
+      prevPage: false,
+    });
   const [items, setItems] = useState<string[]>([])
   
 
@@ -71,13 +80,20 @@ const RecentLoans = ({setSelected, selected} : Props) => {
   const getRecentLoans = async (page: number) => {
     setData((prev) => ({ ...prev, loading: true }))
     try {
-      const result = await kfiAxios.get("/statistics/recent-loans",{params: {code: code}})
-      const { success, entries } = result.data
-      if (success) {
-        setData((prev) => ({ ...prev, entries: entries }))
-        setCurrentPage(page)
-        return
-      }
+      const result = await kfiAxios.get("/transaction/loan-release",{params: {keyword: code, page: 1, limit: 10}})
+        const { success, transactions, hasPrevPage, hasNextPage, totalPages } = result.data;
+        if (success) {
+          setData(prev => ({
+            ...prev,
+            transactions: transactions,
+            totalPages: totalPages,
+            nextPage: hasNextPage,
+            prevPage: hasPrevPage,
+          }));
+          setCurrentPage(page);
+         
+          return;
+        }
     } catch (error) {
       present({
         message: "Failed to get records. Please try again",
@@ -99,28 +115,27 @@ const RecentLoans = ({setSelected, selected} : Props) => {
   const onSubmit = (data: TSearch) => {
       getRecentLoans(currentPage)
   };
-      useEffect(() => {
-         const getData = async () => {
+    //   useEffect(() => {
+    //      const getData = async () => {
   
-        try {
-          const result = await kfiAxios.get('/statistics/recent-loans', {params: {search: code}});
-           const { success, entries } = result.data
-          if (success) {
-            setItems(entries.map((item: any) => item.client.name));
-          }
-        } catch (error) {
-          // handle error
-        } finally {
-        }
-      };
+    //     try {
+    //       const result = await kfiAxios.get('/statistics/recent-loans', {params: {search: code}});
+    //        const { success, entries } = result.data
+    //       if (success) {
+    //         setItems(entries.map((item: any) => item.client.name));
+    //       }
+    //     } catch (error) {
+    //     } finally {
+    //     }
+    //   };
   
-      const timer = setTimeout(() => {
-        getData();
-      }, 800);
+    //   const timer = setTimeout(() => {
+    //     getData();
+    //   }, 800);
   
-      return () => clearTimeout(timer);
+    //   return () => clearTimeout(timer);
      
-    }, [code]);
+    // }, [code]);
   
 
   return (
@@ -178,38 +193,14 @@ const RecentLoans = ({setSelected, selected} : Props) => {
             <TableHeadRow className=" "
             
             >
-              <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">Name</TableHead>
+              <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">COde</TableHead>
               <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">Amount</TableHead>
               <TableHead className="  !font-[600] bg-zinc-100">Date</TableHead>
               <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">Actions</TableHead>
             </TableHeadRow>
            
           </TableHeader>
-            <TableBody
-                style={{ visibility: 'collapse' }}
-             
-             >
-          {data.loading && <TableLoadingRow colspan={3} />}
-          {!data.loading && data.entries.length < 1 && (
-            <TableNoRows label="No Recent Loan Found" colspan={3} />
-          )}
-          {!data.loading &&
-            data.entries.length > 0 &&
-            data.entries.map((entry: Member, i: number) => (
-              <TableRow
-                key={`${entry._id}-${i}`}
-                className="!border-1 [&>td]:text-[0.7rem]"
-              >
-                <TableCell>{entry.client.name}</TableCell>
-                <TableCell>{formatNumber(entry.debit)}</TableCell>
-                <TableCell>{entry.createdAt?.split('T')[0] || ''}</TableCell>
-                
-                <TableCell>
-                  <ViewLoanDetails loan={entry} />
-                </TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
+         
         </Table>
       </div>
      <div className="relative max-h-[500px] overflow-auto flex-1 ">
@@ -227,23 +218,23 @@ const RecentLoans = ({setSelected, selected} : Props) => {
 
         <TableBody>
           {data.loading && <TableLoadingRow colspan={3} />}
-          {!data.loading && data.entries.length < 1 && (
+          {!data.loading && data.transactions.length < 1 && (
             <TableNoRows label="No Recent Loan Found" colspan={3} />
           )}
           {!data.loading &&
-            data.entries.length > 0 &&
-            data.entries.map((entry: Member, i: number) => (
+            data.transactions.length > 0 &&
+            data.transactions.map((item) => (
               <TableRow
-                key={`${entry._id}-${i}`}
+                key={`${item._id}`}
                 className="!border-1 [&>td]:text-[0.7rem]"
               >
-                <TableCell>{entry.client.name}</TableCell>
-                <TableCell>{formatNumber(entry.debit)}</TableCell>
-                <TableCell>{entry.createdAt?.split('T')[0] || ''}</TableCell>
+                <TableCell>{item.code}</TableCell>
+                <TableCell className="">{formatNumber(item.amount)}</TableCell>
+                <TableCell>{item.createdAt?.split('T')[0] || ''}</TableCell>
 
                 <TableCell>
                   {/* <ViewLoanDetails loan={entry} /> */}
-                  <ViewLoanRelease loan={entry}/>
+                  <ViewLoanRelease transaction={item}/>
                 </TableCell>
               </TableRow>
             ))}
