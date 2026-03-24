@@ -1,13 +1,10 @@
 import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonSelect, IonSelectOption, IonToolbar } from '@ionic/react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { UserMultiple02Icon, ViewIcon} from 'hugeicons-react';
 import DashboardCard from './DashboardCard';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from "../../../../ui/table/Table"
 import TablePagination from '../../../../ui/forms/TablePagination';
-import { ClientMasterFile, TTableFilter } from '../../../../../types/types';
-import { TABLE_LIMIT } from '../../../../utils/constants';
-import kfiAxios from '../../../../utils/axios';
 
 type DashboardCardProps = {
   title: string;
@@ -16,20 +13,12 @@ type DashboardCardProps = {
   loading?: boolean;
   details?: boolean
 };
-
-export type TClientMasterFile = {
-  clients: ClientMasterFile[];
-  totalPages: number;
-  nextPage: boolean;
-  prevPage: boolean;
-  loading: boolean;
-};
-const ViewMemberListInfo = () => {
+const InactiveMemberlist = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   
-    const [data, setData] = useState<TClientMasterFile>({
-      clients: [],
+    const [data, setData] = useState<any>({
+      loans: [],
       loading: false,
       totalPages: 0,
       nextPage: false,
@@ -39,41 +28,6 @@ const ViewMemberListInfo = () => {
   const dismiss = () => {
     setIsOpen(false);
   };
-
-    const getClients = async (page: number, keyword: string = '',) => {
-      setData(prev => ({ ...prev, loading: true }));
-  
-      try {
-        const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-        if (keyword) filter.search = keyword;
-        const result = await kfiAxios.get('/customer/list-by-year-month', { params: filter });
-        const { success, customers, hasPrevPage, hasNextPage, totalPages } = result.data;
-        if (success) {
-          setData(prev => ({
-            ...prev,
-            clients: customers,
-            totalPages: totalPages,
-            nextPage: hasNextPage,
-            prevPage: hasPrevPage,
-          }));
-          setCurrentPage(page);
-          return;
-        }
-      } catch (error) {
-       
-      } finally {
-        setData(prev => ({ ...prev, loading: false }));
-      }
-    };
-
-    //  useEffect(() => {
-    //   const timer = setTimeout(() => {
-    //     getClients(currentPage);
-    //   }, 500);
-    
-    //   return () => clearTimeout(timer);
-    // }, []);
-  
 
   const handlePagination = (page: number) => (page);
 
@@ -96,7 +50,7 @@ const ViewMemberListInfo = () => {
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6">
-            <ModalHeader title="Members List" sub="" dismiss={dismiss} />
+            <ModalHeader title="Inactive Members List" sub="" dismiss={dismiss} />
 
          <div className=' w-full flex flex-col'>
            
@@ -177,4 +131,4 @@ const ViewMemberListInfo = () => {
   );
 };
 
-export default ViewMemberListInfo;
+export default InactiveMemberlist;

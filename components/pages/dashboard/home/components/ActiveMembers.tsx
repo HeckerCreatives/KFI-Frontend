@@ -1,13 +1,12 @@
 import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { UserMultiple02Icon, ViewIcon} from 'hugeicons-react';
 import DashboardCard from './DashboardCard';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from "../../../../ui/table/Table"
 import TablePagination from '../../../../ui/forms/TablePagination';
 import ViewMemberListInfo from './memberListInfo';
-import kfiAxios from '../../../../utils/axios';
-import { search } from 'ionicons/icons';
+import ActiveMemberlist from './ActiveMemberList';
 
 type DashboardCardProps = {
   title: string;
@@ -16,60 +15,21 @@ type DashboardCardProps = {
   loading?: boolean;
   details?: boolean
 };
-
-export type TData = {
-  data: any[];
-  loading: boolean;
-   totalPages: number;
-  nextPage: boolean;
-  prevPage: boolean;
-};
-const ViewMemberDetails = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
+const ActiveMembers = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [year, setYear] = useState(2026)
   
-    const [data, setData] = useState<TData>({
-      data: [],
+    const [data, setData] = useState<any>({
+      loans: [],
       loading: false,
-       totalPages: 0,
+      totalPages: 0,
       nextPage: false,
       prevPage: false,
-     
     });
 
   const dismiss = () => {
     setIsOpen(false);
   };
-
-   const getData = async () => {
-    try {
-      const result = await kfiAxios.get("/customer/by-year",{params: {year: year}})
-        const { success, data} = result.data;
-      console.log(result)
-      if(success){
-         setData((prev: any) => ({
-            ...prev,
-            data: data,
-            
-          }));
-
-          return
-      }
-    } catch (error) {
-     
-    } finally {
-    }
-  }
-
-//   useEffect(() => {
-//   const timer = setTimeout(() => {
-//     getData();
-//   }, 500);
-
-//   return () => clearTimeout(timer);
-// }, [year]);
-  
 
   const handlePagination = (page: number) => (page);
 
@@ -91,7 +51,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6">
-            <ModalHeader title="Total Members" sub="" dismiss={dismiss} />
+            <ModalHeader title="Total Active Members" sub="" dismiss={dismiss} />
 
          <div className=' w-full flex flex-col'>
             <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full max-w-64 rounded-xl flex items-start justify-between overflow-hidden">
@@ -113,13 +73,11 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                 </div>
 
                 <div className=' w-full flex items-end justify-end'>
-                    <IonInput
+                     <IonInput
                       name="year"
-                      type="number"
-                      value={year}
-                      onIonChange={(e) => setYear(Number(e.detail.value))}
+                      type='number'
                       placeholder="Search year ..."
-                      className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
+                      className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
                     />
                 </div>
 
@@ -128,33 +86,39 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                     <TableHeadRow>
                         <TableHead className="!font-[400] border-b border-gray-200">Year</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Month</TableHead>
-                        <TableHead className="  !font-[600] bg-zinc-100">No. of Members</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of Active New</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of Active Existing</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of Resigned</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of On-Leave</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of Returnee</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of Pastdue</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Action</TableHead>
                     </TableHeadRow>
                     </TableHeader>
 
                     <TableBody>
-
-                      {data.data.length !== 0 && data.data.map((item) => (
-                          <TableRow
-                        key={item.month}
+                    
+                        <TableRow
+                        
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
-                            <TableCell>{item.year}</TableCell>
-                            <TableCell>{item.month}</TableCell>
-                            <TableCell>{Number(item.count).toLocaleString()}</TableCell>
-
+                            <TableCell>2025</TableCell>
+                            <TableCell>March</TableCell>
+                            <TableCell>1,078</TableCell>
+                            <TableCell>0</TableCell>
+                            <TableCell>0</TableCell>
+                            <TableCell>0</TableCell>
+                            <TableCell>0</TableCell>
+                            <TableCell>0</TableCell>
+                           
                             <TableCell>
-                                <ViewMemberListInfo/>
+                                <ActiveMemberlist/>
                             </TableCell>
                         </TableRow>
-                      ))}
-                    
-                      
                     </TableBody>
                 </Table>
 
-                 {/* <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} /> */}
+                 <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
          </div>
         
         </div>
@@ -163,4 +127,4 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
   );
 };
 
-export default ViewMemberDetails;
+export default ActiveMembers;

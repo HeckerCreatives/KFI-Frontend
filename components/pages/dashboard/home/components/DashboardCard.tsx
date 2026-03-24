@@ -3,6 +3,8 @@ import { IonButton, IonIcon, IonSpinner } from '@ionic/react';
 import Link from 'next/link';
 import React from 'react';
 import ViewMemberDetails from './MemdersDetails';
+import InactiveMembers from './InactiveMembers';
+import ActiveMembers from './ActiveMembers';
 
 type DashboardCardProps = {
   title: string;
@@ -30,12 +32,15 @@ const DashboardCard = ({ title, icon, value, loading = false, details = false }:
         </div>
 
         {details ? (
-          <ViewMemberDetails title={title} icon={icon} value={value}/>
+          <>
+          {title === 'Total Members' && <ViewMemberDetails title={title} icon={icon} value={value}/>}
+          {title === 'Total Inactive Members' && <InactiveMembers title={title} icon={icon} value={value}/>}
+          {title === 'Total Active Members' && <ActiveMembers title={title} icon={icon} value={value}/>}
+          </>
         ): (
           <IonButton
           fill='clear'
           >
-
           </IonButton>
         )}
       </div>
