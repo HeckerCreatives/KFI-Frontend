@@ -62,13 +62,15 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
     }
   }
 
-//   useEffect(() => {
-//   const timer = setTimeout(() => {
-//     getData();
-//   }, 500);
+   useEffect(() => {
+  if(isOpen){
+     const timer = setTimeout(() => {
+     getData();
+   }, 500);
 
-//   return () => clearTimeout(timer);
-// }, [year]);
+   return () => clearTimeout(timer);
+  }
+ }, [year, isOpen]);
   
 
   const handlePagination = (page: number) => (page);
@@ -135,7 +137,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
 
                     <TableBody>
 
-                      {data.data.length !== 0 && data.data.map((item) => (
+                      {data.data.length !== 0 && data.data.map((item, index) => (
                           <TableRow
                         key={item.month}
                             className="!border-1 [&>td]:text-[0.7rem]"
@@ -145,7 +147,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                             <TableCell>{Number(item.count).toLocaleString()}</TableCell>
 
                             <TableCell>
-                                <ViewMemberListInfo/>
+                                <ViewMemberListInfo year={item.year} month={index + 1}/>
                             </TableCell>
                         </TableRow>
                       ))}

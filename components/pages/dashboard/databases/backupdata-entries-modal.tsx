@@ -286,18 +286,26 @@ export function BackupEntriesModalContent({
           {isComplete ? "Close" : "Cancel"}
         </IonButton>
 
-        <IonButton className="flex-1" onClick={syncDataEntries} disabled={isSyncing}>
-          {isSyncing ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Syncing...
-            </>
-          ) : isComplete ? (
-            "Sync Again"
-          ) : (
-            "Start Backup"
-          )}
-        </IonButton>
+        {isComplete ? (
+          <IonButton className="flex-1" onClick={onClose} disabled={isSyncing}>
+            Done
+          </IonButton>
+        ): (
+          <IonButton className="flex-1" onClick={syncDataEntries} disabled={isSyncing}>
+            {isSyncing ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Syncing...
+              </>
+            ) : isComplete ? (
+              "Sync Again"
+            ) : (
+              "Start Backup"
+            )}
+          </IonButton>
+        )}
+
+        
       </div>
     </div>
   )

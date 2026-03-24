@@ -8,6 +8,7 @@ import TablePagination from '../../../../ui/forms/TablePagination';
 import { ClientMasterFile, TTableFilter } from '../../../../../types/types';
 import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
+import TableNoRows from '../../../../ui/forms/TableNoRows';
 
 type DashboardCardProps = {
   title: string;
@@ -24,9 +25,15 @@ export type TClientMasterFile = {
   prevPage: boolean;
   loading: boolean;
 };
-const ViewMemberListInfo = () => {
+
+ type Props = {
+  year: number,
+  month: number
+ }
+const ViewMemberListInfo = ({year, month}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [search, setSearch] = useState('')
   
     const [data, setData] = useState<TClientMasterFile>({
       clients: [],
@@ -46,6 +53,9 @@ const ViewMemberListInfo = () => {
       try {
         const filter: TTableFilter = { limit: TABLE_LIMIT, page };
         if (keyword) filter.search = keyword;
+        if (year) filter.year = year;
+        if (month) filter.month = month;
+        if (search) filter.search = search
         const result = await kfiAxios.get('/customer/list-by-year-month', { params: filter });
         const { success, customers, hasPrevPage, hasNextPage, totalPages } = result.data;
         if (success) {
@@ -66,16 +76,17 @@ const ViewMemberListInfo = () => {
       }
     };
 
-    //  useEffect(() => {
-    //   const timer = setTimeout(() => {
-    //     getClients(currentPage);
-    //   }, 500);
-    
-    //   return () => clearTimeout(timer);
-    // }, []);
+      useEffect(() => {
+       if(isOpen){
+        const timer = setTimeout(() => {
+         getClients(currentPage);
+       }, 500);
+       return () => clearTimeout(timer);
+       }
+     }, [isOpen]);
   
 
-  const handlePagination = (page: number) => (page);
+  const handlePagination = (page: number) => getClients(page);
 
 
   return (
@@ -103,7 +114,7 @@ const ViewMemberListInfo = () => {
 
                 <div className=' w-full flex items-end  justify-between'>
                     <div className=' flex items-center gap-2'>
-                        <IonInput
+                        {/* <IonInput
                         name="year"
                         type='number'
                         placeholder="Year..."
@@ -128,15 +139,26 @@ const ViewMemberListInfo = () => {
                         <IonSelectOption value="October" className="text-xs">October</IonSelectOption>
                         <IonSelectOption value="November" className="text-xs">November</IonSelectOption>
                         <IonSelectOption value="December" className="text-xs">December</IonSelectOption>
-                        </IonSelect>
+                        </IonSelect> */}
+                    </div>
+
+                    <div className=' flex items-center gap-2'>
+                       <IonInput
+                        name="search"
+                        value={search}
+                        onIonChange={(e) => setSearch(e.detail.value || '')}
+                        type='text'
+                        placeholder="Search ..."
+                        className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
+                      />
+                      <IonButton 
+                      onClick={() => getClients(currentPage)}
+                      type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                        Search
+                      </IonButton>
                     </div>
                     
-                     <IonInput
-                      name="search"
-                      type='text'
-                      placeholder="Search ..."
-                      className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
-                    />
+                    
                 </div>
 
                  <Table className=" w-full border-collapse mt-4">
@@ -152,19 +174,24 @@ const ViewMemberListInfo = () => {
                     </TableHeader>
 
                     <TableBody>
-                    
-                        <TableRow
-                        
+                       {!data.loading && data.clients.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
+
+                      {data.clients.length !== 0 && data.clients.map((item) => (
+                         <TableRow
+                        key={item._id}
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
-                            <TableCell>Grace</TableCell>
-                            <TableCell>Female</TableCell>
-                            <TableCell>3948569458</TableCell>
-                            <TableCell>3/15/26</TableCell>
-                            <TableCell>Timugan</TableCell>
-                            <TableCell>RCL</TableCell>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.sex}</TableCell>
+                            <TableCell>{item.acctNumber}</TableCell>
+                            <TableCell>{item.dateRelease}</TableCell>
+                            <TableCell>{item.center.centerNo}</TableCell>
+                            <TableCell>{item.acctOfficer}</TableCell>
                          
                         </TableRow>
+                      )) }
+                    
+                      
                     </TableBody>
                 </Table>
 

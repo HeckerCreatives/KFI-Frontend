@@ -76,7 +76,7 @@ const ChartOfAccountSelection = <T extends FieldValues>({
   };
 
   const handleSearch = async (page: number) => {
-    const value = ionInputRef.current?.value || '';
+    const value = ionInputRef.current?.value;
     if(online){
       setLoading(true);
       try {
@@ -111,7 +111,15 @@ const ChartOfAccountSelection = <T extends FieldValues>({
                 deptStatus: item.deptStatus,
               }));
       
-              console.log(allData)
+
+               if (value) {
+                  allOptions = allOptions.filter(
+                    opt =>
+                      opt.code.toLowerCase().includes(String(value)) ||
+                      opt.description.includes(String(value))
+                  );
+                }
+
               
              const totalItems = allOptions.length;
               const totalPages = Math.ceil(totalItems / limit);

@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { UserMultiple02Icon, ViewIcon} from 'hugeicons-react';
 import DashboardCard from './DashboardCard';
@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, Tabl
 import TablePagination from '../../../../ui/forms/TablePagination';
 import ViewMemberListInfo from './memberListInfo';
 import ActiveMemberlist from './ActiveMemberList';
+import kfiAxios from '../../../../utils/axios';
 
 type DashboardCardProps = {
   title: string;
@@ -15,21 +16,62 @@ type DashboardCardProps = {
   loading?: boolean;
   details?: boolean
 };
+
+export type TData = {
+  data: any[];
+  loading: boolean;
+   totalPages: number;
+  nextPage: boolean;
+  prevPage: boolean;
+};
 const ActiveMembers = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+    const [year, setYear] = useState(2026)
   
-    const [data, setData] = useState<any>({
-      loans: [],
-      loading: false,
-      totalPages: 0,
-      nextPage: false,
-      prevPage: false,
-    });
+  
+    const [data, setData] = useState<TData>({
+          data: [],
+          loading: false,
+           totalPages: 0,
+          nextPage: false,
+          prevPage: false,
+         
+        });
 
   const dismiss = () => {
     setIsOpen(false);
   };
+
+   const getData = async () => {
+    try {
+      const result = await kfiAxios.get("/customer/active-by-year",{params: {year: year}})
+        const { success, data} = result.data;
+      console.log(result)
+      if(success){
+         setData((prev: any) => ({
+            ...prev,
+            data: data,
+            
+          }));
+
+          return
+      }
+    } catch (error) {
+     
+    } finally {
+    }
+  }
+
+   useEffect(() => {
+  if(isOpen){
+     const timer = setTimeout(() => {
+     getData();
+   }, 500);
+
+   return () => clearTimeout(timer);
+  }
+ }, [year, isOpen]);
 
   const handlePagination = (page: number) => (page);
 
@@ -73,12 +115,14 @@ const ActiveMembers = ({ title, icon, value, loading = false, details = false }:
                 </div>
 
                 <div className=' w-full flex items-end justify-end'>
-                     <IonInput
-                      name="year"
-                      type='number'
-                      placeholder="Search year ..."
-                      className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
-                    />
+                  <IonInput
+                    name="year"
+                    type="number"
+                    value={year}
+                    onIonChange={(e) => setYear(Number(e.detail.value))}
+                    placeholder="Search year ..."
+                    className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
+                  />
                 </div>
 
                  <Table className=" w-full border-collapse mt-4">
@@ -98,23 +142,25 @@ const ActiveMembers = ({ title, icon, value, loading = false, details = false }:
 
                     <TableBody>
                     
-                        <TableRow
-                        
+                  {data.data.length !== 0 && data.data.map((item, index) => (
+                          <TableRow
+                        key={item.month}
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
-                            <TableCell>2025</TableCell>
-                            <TableCell>March</TableCell>
-                            <TableCell>1,078</TableCell>
-                            <TableCell>0</TableCell>
-                            <TableCell>0</TableCell>
-                            <TableCell>0</TableCell>
-                            <TableCell>0</TableCell>
-                            <TableCell>0</TableCell>
-                           
+                            <TableCell>{item.year}</TableCell>
+                            <TableCell>{item.month}</TableCell>
+                            <TableCell>{Number(item.activenew).toLocaleString()}</TableCell>
+                            <TableCell>{Number(item.activeexisting).toLocaleString()}</TableCell>
+                            <TableCell>{Number(item.resigned).toLocaleString()}</TableCell>
+                            <TableCell>{Number(item.activeonleave).toLocaleString()}</TableCell>
+                            <TableCell>{Number(item.activereturnee).toLocaleString()}</TableCell>
+                            <TableCell>{Number(item.activepastdue).toLocaleString()}</TableCell>
+
                             <TableCell>
-                                <ActiveMemberlist/>
+                                <ViewMemberListInfo year={item.year} month={index + 1}/>
                             </TableCell>
                         </TableRow>
+                      ))}
                     </TableBody>
                 </Table>
 
