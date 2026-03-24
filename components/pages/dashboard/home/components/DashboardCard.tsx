@@ -5,6 +5,7 @@ import React from 'react';
 import ViewMemberDetails from './MemdersDetails';
 import InactiveMembers from './InactiveMembers';
 import ActiveMembers from './ActiveMembers';
+import LoanDetails from './LoanDetails';
 
 type DashboardCardProps = {
   title: string;
@@ -36,6 +37,7 @@ const DashboardCard = ({ title, icon, value, loading = false, details = false }:
           {title === 'Total Members' && <ViewMemberDetails title={title} icon={icon} value={value}/>}
           {title === 'Total Inactive Members' && <InactiveMembers title={title} icon={icon} value={value}/>}
           {title === 'Total Active Members' && <ActiveMembers title={title} icon={icon} value={value}/>}
+          {title === 'Total Loan Amount' && <LoanDetails title={title} icon={icon} value={value}/>}
           </>
         ): (
           <IonButton

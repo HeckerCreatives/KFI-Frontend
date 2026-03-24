@@ -13,7 +13,7 @@ type DashboardCardProps = {
   loading?: boolean;
   details?: boolean
 };
-const InactiveMemberlist = () => {
+const Loanlist = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   
@@ -50,12 +50,29 @@ const InactiveMemberlist = () => {
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6">
-            <ModalHeader title="Inactive Members List" sub="" dismiss={dismiss} />
+            <ModalHeader title="Loan List" sub="" dismiss={dismiss} />
 
          <div className=' w-full flex flex-col'>
+              <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full max-w-64 rounded-xl flex items-start justify-between overflow-hidden">
+                  <div className=" relative z-10 space-y-2">
+                    <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total Loans</div>
+                    <div className="text-3xl text-orange-600 !font-bold">0</div>
+                  </div>
+                 
+                  <div className=' flex flex-col items-end justify-between'>
+                    <div className=" relative z-10 bg-orange-50 w-10 h-10 rounded-full flex items-center justify-center text-orange-500">
+                   <UserMultiple02Icon stroke='.8' size={20}/>
+                    </div>
+            
+                 
+                  </div>
+                  
+            
+                 
+                </div>
            
 
-                <div className=' w-full flex items-end  justify-between'>
+                <div className=' w-full flex items-end  justify-between mt-4'>
                     <div className=' flex items-center gap-2'>
                         <IonInput
                         name="year"
@@ -64,7 +81,7 @@ const InactiveMemberlist = () => {
                         className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
                         />
 
-                       {/* <IonSelect
+                       <IonSelect
                         placeholder="Month"
                         labelPlacement="stacked"
                         interface="popover"
@@ -82,7 +99,7 @@ const InactiveMemberlist = () => {
                         <IonSelectOption value="October" className="text-xs">October</IonSelectOption>
                         <IonSelectOption value="November" className="text-xs">November</IonSelectOption>
                         <IonSelectOption value="December" className="text-xs">December</IonSelectOption>
-                        </IonSelect> */}
+                        </IonSelect>
                     </div>
                     
                      <IonInput
@@ -97,11 +114,9 @@ const InactiveMemberlist = () => {
                     <TableHeader className=" bg-white backdrop-blur-sm shadow-sm">
                     <TableHeadRow>
                         <TableHead className="!font-[400] border-b border-gray-200">Name</TableHead>
-                        <TableHead className="!font-[400] border-b border-gray-200">Sex</TableHead>
-                        <TableHead className="  !font-[600] bg-zinc-100">Acct. No.</TableHead>
-                        <TableHead className="  !font-[600] bg-zinc-100">Date Release</TableHead>
-                        <TableHead className="  !font-[600] bg-zinc-100">Center</TableHead>
-                        <TableHead className="  !font-[600] bg-zinc-100">Acct. Officer</TableHead>
+                        <TableHead className="!font-[400] border-b border-gray-200">Date</TableHead>
+                        <TableHead className="!font-[400] border-b border-gray-200">Amount</TableHead>
+                       
                     </TableHeadRow>
                     </TableHeader>
 
@@ -112,11 +127,8 @@ const InactiveMemberlist = () => {
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
                             <TableCell>Grace</TableCell>
-                            <TableCell>Female</TableCell>
-                            <TableCell>3948569458</TableCell>
                             <TableCell>3/15/26</TableCell>
-                            <TableCell>Timugan</TableCell>
-                            <TableCell>RCL</TableCell>
+                            <TableCell>15,000</TableCell>
                          
                         </TableRow>
                     </TableBody>
@@ -131,4 +143,4 @@ const InactiveMemberlist = () => {
   );
 };
 
-export default InactiveMemberlist;
+export default Loanlist;
