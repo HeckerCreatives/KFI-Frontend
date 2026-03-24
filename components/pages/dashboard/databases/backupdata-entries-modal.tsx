@@ -174,6 +174,11 @@ export function BackupEntriesModalContent({
       await syncExpenseVoucher(res.data?.expenseVouchers || [])
     })
 
+     await syncStep("loanrelease", async () => {
+      const res = await kfiAxios.get(`/sync/loan-releases?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      await syncLoanRelease(res.data?.transactions || [])
+    })
+
     await syncStep("journalVouchers", async () => {
       const res = await kfiAxios.get(`/sync/journal-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
       await syncJournalVoucher(res.data?.journalVouchers || [])
