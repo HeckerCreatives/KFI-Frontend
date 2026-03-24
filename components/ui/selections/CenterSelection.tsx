@@ -18,6 +18,7 @@ type Option = {
   _id: string;
   code: any;
   description: any;
+  acctOfficer: string
 };
 
 type CenterSelectionProps<T extends FieldValues> = {
@@ -92,10 +93,13 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
       
             let allData = await db.centers.toArray();
 
+            console.log(allData)
+
             let allOptions: Option[] = allData.map(center => ({
               _id: center._id,
               code: center.centerNo || '',       
               description: center.description || '',
+              acctOfficer: center.acctOfficer
             }));
 
              if (value) {
@@ -141,17 +145,15 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
 
 
   const handleSelectCenter = async (center: Option) => {
-     const result = await kfiAxios.get(`/center/officer/${center._id}`);
-      const { officer } = result.data;
+    
 
     const codeValue = center.code as PathValue<T, Path<T>>;
     const idValue = center._id as PathValue<T, Path<T>>;
+    const officer = center.acctOfficer as PathValue<T, Path<T>>;
 
     setValue(centerLabel as Path<T>, codeValue as any);
     setValue(centerValue as Path<T>, idValue as any);
-    if (acctOfficer) {
-      setValue(acctOfficer as Path<T>, officer as any);
-    }
+    acctOfficer && setValue(acctOfficer as Path<T>, officer as any);
 
 
     clearErrors(centerLabel);

@@ -177,13 +177,16 @@ const ClientMasterFile = () => {
 
 
 
-  const getClients = async (page: number, keyword: string = '', sort: string = '') => {
+  const getClients = async (page: number, keyword: string = '', sort: string = '', status: string = '', dateReleased: string = '', dateResigned: string = '') => {
     setData(prev => ({ ...prev, loading: true }));
 
     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
       if (keyword) filter.search = keyword;
       if (sort) filter.sort = sort;
+      if (status) filter.status = status;
+      if (dateReleased) filter.dateReleased = dateReleased;
+      if (dateResigned) filter.dateResigned = dateResigned;
       const result = await kfiAxios.get('/customer', { params: filter });
       const { success, customers, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {

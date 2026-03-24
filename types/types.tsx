@@ -564,6 +564,9 @@ export type TTableFilter = {
   page: number;
   search?: string;
   sort?: string;
+  status?: string
+  dateReleased?: string
+  dateResigned?: string
 };
 
 

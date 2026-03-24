@@ -333,7 +333,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     />
                   </FormIonItem>
                   <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : '')}>
-                    <CenterSelection centerLabel="centerLabel" centerValue="center" setValue={form.setValue} clearErrors={form.clearErrors} />
+                    <CenterSelection centerLabel="centerLabel" centerValue="center" acctOfficer='acctOfficer' setValue={form.setValue} clearErrors={form.clearErrors} />
                   </div>
                 </div>
               </div>
