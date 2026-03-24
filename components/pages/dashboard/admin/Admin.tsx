@@ -182,7 +182,7 @@ const Admin = () => {
            <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(clamp(250px,30vw,280px),1fr))]">
             <DashboardCard title="Active" value={`${statistics.active}`} icon={<UserMultiple02Icon stroke='.8' size={20}/>} />
             <DashboardCard title="Banned" value={`${statistics.banned}`} icon={<UserBlock01Icon stroke='.8' size={20}/>} />
-            <DashboardCard title="Inactive" value={`${statistics.inactive}`} icon={<UserMinus01Icon stroke='.8' size={20}/>} />
+            {/* <DashboardCard title="Inactive" value={`${statistics.inactive}`} icon={<UserMinus01Icon stroke='.8' size={20}/>} /> */}
 
            </div>
           <div className=" flex-1 flex flex-col gap-4">

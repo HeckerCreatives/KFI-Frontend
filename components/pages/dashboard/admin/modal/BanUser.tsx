@@ -114,6 +114,7 @@ const BanUser = ({ selected, setSelected, refetch, banned, active }: BanUserProp
                   options={[
                     { label: 'Ban Users', value: 'ban' },
                     { label: 'Activate Users', value: 'unban' },
+                    // { label: 'Inactivate Users', value: 'inactive' },
                   ]}
                   className="!border-orange-500 rounded-md !w-full !py-1.5"
                   disabled={loading}
