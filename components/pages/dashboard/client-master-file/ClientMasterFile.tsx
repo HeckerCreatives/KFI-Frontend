@@ -45,9 +45,6 @@ const ClientMasterFile = () => {
   //online status
   const online = useOnlineStore((state) => state.online);
 
-
-  
-
   const [data, setData] = useState<TClientMasterFile>({
     clients: [],
     loading: false,

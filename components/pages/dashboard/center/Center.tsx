@@ -149,7 +149,7 @@ const Center = () => {
                   {canDoAction(token.role, permissions, 'center', 'export') && <ExportAllCenter />}
                  
                 </div>
-                <CenterFilter getCenters={getCenters} />
+                <CenterFilter getCenters={getCenters} data={data.centers} />
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>

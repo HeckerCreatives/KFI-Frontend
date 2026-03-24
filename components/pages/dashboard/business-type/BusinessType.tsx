@@ -18,6 +18,7 @@ import { db } from '../../../../database/db';
 import { filterAndSortBusinessTypes } from '../../../ui/utils/sort';
 import { Upload } from 'lucide-react';
 import { AxiosError } from 'axios';
+import { search } from 'ionicons/icons';
 
 export type TBusinessType = {
   businessTypes: BusinessTypeInt[];
@@ -57,7 +58,7 @@ const BusinessType = () => {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
       if (keyword) filter.search = keyword;
       if (sort) filter.sort = sort;
-      const result = await kfiAxios.get('/business-type', { params: filter });
+      const result = await kfiAxios.get('/business-type', { params: {...filter, search: keyword} });
       const { success, businessTypes, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({
@@ -144,7 +145,7 @@ const BusinessType = () => {
                 <div className=' flex flex-wrap gap-2'>{canDoAction(token.role, permissions, 'business type', 'create') && <CreateBusinessType getBusinessTypes={getBusinessTypes} />}
                 
                 </div>
-                <BusinessTypeFilter getBusinessTypes={getBusinessTypes} />
+                <BusinessTypeFilter getBusinessTypes={getBusinessTypes} data={data.businessTypes} />
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>

@@ -176,7 +176,7 @@ const Bank = () => {
                     )}
                       
                 </div>
-                <BankFilter getBanks={getBanks} />
+                <BankFilter getBanks={getBanks} data={data.banks} />
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>
