@@ -33,6 +33,56 @@ export type TClientMasterFile = {
   loading: boolean;
 };
 
+// StatusBadge.tsx
+type Status =
+  | 'Active On-Leave'
+  | 'Active-Existing'
+  | 'Active-New'
+  | 'Active-PastDue'
+  | 'Active-Returnee'
+  | 'Resigned';
+
+type Variant = 'filled' | 'outlined' | 'solid';
+
+const statusConfig: Record<Status, { bg: string; border: string; text: string; dot: string }> = {
+  'Active On-Leave': {
+    bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-900', dot: 'bg-amber-500',
+  },
+  'Active-Existing': {
+    bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-900', dot: 'bg-teal-500',
+  },
+  'Active-New': {
+    bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-900', dot: 'bg-blue-400',
+  },
+  'Active-PastDue': {
+    bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900', dot: 'bg-red-400',
+  },
+  'Active-Returnee': {
+    bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-900', dot: 'bg-purple-400',
+  },
+  Resigned: {
+    bg: 'bg-stone-100', border: 'border-stone-300', text: 'text-stone-600', dot: 'bg-stone-400',
+  },
+};
+
+export const StatusBadge = ({ status, variant = 'filled' }: { status: Status; variant?: Variant }) => {
+  const c = statusConfig[status];
+  const base = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border select-none';
+  const cls =
+    variant === 'filled'
+      ? `${base} ${c?.bg} ${c?.border} ${c?.text}`
+      : variant === 'outlined'
+      ? `${base} bg-transparent ${c?.border} ${c?.text}`
+      : `${base} bg-current border-transparent text-white`; // solid handled inline
+
+  return (
+    <span className={cls}>
+      <span className={`w-1.5 h-1.5 rounded-full ${c?.dot}`} />
+      {status}
+    </span>
+  );
+};
+
 const ClientMasterFile = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
@@ -310,7 +360,9 @@ const ClientMasterFile = () => {
                           <TableCell className=" md:hidden min-w-[10rem] max-w-[10rem]">{client.name}</TableCell>
                           <TableCell className=" lg:hidden min-w-[5rem] max-w-[5rem]">{client.center?.centerNo}</TableCell>
                           <TableCell className=" lg:hidden min-w-[12rem] max-w-[12rem]">{client.acctOfficer}</TableCell>
-                          <TableCell className=" min-w-[10rem] max-w-[10rem]">{client.memberStatus}</TableCell>
+                         <TableCell className="min-w-[10rem] max-w-[10rem]">
+                            <StatusBadge status={(client?.memberStatus as Status)} />
+                          </TableCell>
                           <TableCell>{client.address}</TableCell>
                           <TableCell>{client.city}</TableCell>
                           <TableCell>{client.zipCode}</TableCell>

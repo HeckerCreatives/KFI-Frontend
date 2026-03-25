@@ -40,7 +40,7 @@ const PrintAllClient = ({sort, search}: Props) => {
 
   return (
     <>
-      <IonButton fill="clear" id="print_all_client" className="h-10 bg-orange-50 text-orange-500 border border-orange-200 capitalize font-semibold rounded-md" strong>
+      <IonButton fill="clear" id="print_all_client" className="h-10 bg-orange-50 text-orange-500 border border-orange-200 capitalize font-semibold rounded-xl" strong>
        <PrinterIcon stroke='.8' size={15} className=' mr-2'/> Print
       </IonButton>
       <IonModal

@@ -126,7 +126,7 @@ const CreateClientMasterFile = ({ getClients, getClientsOffline }: CreateClientM
   return (
     <>
       <div className="text-end">
-        <IonButton fill="clear" id="create-cmf-modal" className="h-10 btn-color text-white capitalize font-semibold rounded-md" strong>
+        <IonButton fill="clear" id="create-cmf-modal" className="h-10 btn-color text-white capitalize font-semibold rounded-xl" strong>
           + Add
         </IonButton>
       </div>

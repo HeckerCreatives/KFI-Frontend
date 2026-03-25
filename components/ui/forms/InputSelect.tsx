@@ -66,7 +66,7 @@ const InputSelect = <T extends FieldValues>({
               labelPlacement="stacked"
               onIonBlur={field.onBlur}
               className={classNames(
-                '!border border-zinc-300 [--highlight-color-focused:none] !px-2 !py-1 text-xs !min-h-[0.5rem] !min-w-full',
+                '!border border-zinc-300 [--highlight-color-focused:none] !px-3 !py-2 text-xs !min-h-[0.5rem] !min-w-full',
                 error && '![--border-color:red] !border-red-600 !text-black',
                 className,
               )}

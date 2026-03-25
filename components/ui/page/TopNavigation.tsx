@@ -54,7 +54,7 @@ const TopNavigation = () => {
               fill="clear"
               routerLink="/dashboard/home"
               className={classNames(
-                'min-h-6 text-[1rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1  [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+                '!h-10 text-[1rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-xl py-1  [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent] flex items-center justify-center',
                 pathname === '/dashboard/home' ? 'bg-orange-600 text-white' : 'bg-transparent hover:bg-orange-50',
               )}
             >
@@ -72,7 +72,7 @@ const TopNavigation = () => {
                 permissions.find((e: Permission) => e.resource === 'admin' && e.actions.visible) ? '/dashboard/admin' : '/dashboard/client'
               }
               className={classNames(
-                'min-h-6 text-[1rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1 [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+                '!h-10 text-[1rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1 [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
                 ['/dashboard/admin', '/dashboard/client'].includes(pathname) ? 'bg-orange-600 text-white' : 'bg-transparent hover:bg-orange-50',
               )}
             >

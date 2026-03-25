@@ -16,13 +16,13 @@ const ManageAccountNav = () => {
 
   return (
     isVisible(token.role, permissions, manageAccountResource) && (
-      <div className="flex items-center w-fit p-1 bg-white rounded-md">
+      <div className="flex items-center w-fit p-1 bg-white rounded-xl">
         {(permissions.find((e: Permission) => e.resource === 'admin' && e.actions.visible)) && (
           <IonButton
             routerLink="/dashboard/admin"
             fill="clear"
             className={classNames(
-              'h-10 text-sm capitalize font-medium rounded-md ',
+              'h-10 text-sm capitalize font-medium rounded-xl ',
               pathname === '/dashboard/admin' ? 'bg-[#FA6C2F] !border-orange-900 text-white hover:bg-[#FA6C2F] hover:border-[#FA6C2F]' : ' bg-orange-50 text-black',
             )}
             strong
@@ -37,7 +37,7 @@ const ManageAccountNav = () => {
             routerLink="/dashboard/client"
             fill="clear"
             className={classNames(
-              'h-10 text-sm capitalize font-medium rounded-md',
+              'h-10 text-sm capitalize font-medium rounded-xl',
               pathname === '/dashboard/client' ? 'bg-[#FA6C2F] !border-orange-900 text-white hover:bg-[#FA6C2F] hover:border-[#FA6C2F]' : ' bg-orange-50 text-black',
             )}
             strong

@@ -307,6 +307,21 @@ ion-input {
   --background: white !important;
 }
 
+ion-popover::part(content) {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+ion-accordion::part(icon-inner) {
+  display: none !important;
+}
+
+
+.icon-inner {
+    display: none !important;
+    height: 100%;
+    width: 100%;
+}
 .ion-header {
   z-index: 999 !important;
 }

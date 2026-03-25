@@ -84,7 +84,7 @@ const ExportClient = ({ client }: { client: ClientMasterFile }) => {
         type="button"
         fill="clear"
         id={`export_client_${client._id}`}
-        className="space-x-1 w-20 h-7 rounded-md ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-pink-50 text-pink-900 capitalize min-h-4 text-xs"
+        className="space-x-1 w-20 h-7 rounded-xl ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-pink-50 text-pink-900 capitalize min-h-4 text-xs"
       >
         <IonIcon icon={download} className="text-xs" />
         <span>Soa</span>

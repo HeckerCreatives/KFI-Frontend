@@ -68,7 +68,7 @@ const ChangeOwnPassword = () => {
       <div
         role="button"
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 text-[0.8rem] text-slate-700 font-semibold hover:bg-slate-100 py-1 px-3 cursor-pointer active:bg-slate-200"
+        className="flex items-center gap-2 text-[1rem] text-slate-700 font-semibold hover:bg-slate-100 py-1 px-3 cursor-pointer active:bg-slate-200"
       >
         <IonIcon icon={settingsOutline} /> Settings
       </div>

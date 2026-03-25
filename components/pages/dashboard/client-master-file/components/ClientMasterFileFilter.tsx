@@ -8,6 +8,7 @@ import { useOnlineStore } from '../../../../../store/onlineStore';
 import SearchInput from '../../../../ui/forms/InputSearch';
 import kfiAxios from '../../../../utils/axios';
 import { TClientMasterFile } from '../ClientMasterFile';
+import { Search } from 'lucide-react';
 
 type TSearch = {
   code: string;
@@ -24,6 +25,8 @@ type ClientMasterFileFilterProps = {
   setSearchKey: React.Dispatch<React.SetStateAction<string>>
   setSorthKey: React.Dispatch<React.SetStateAction<string>>
 };
+
+
 
 const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSearchKey, setSorthKey }: ClientMasterFileFilterProps) => {
   const form = useForm<TSearch>({
@@ -98,7 +101,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                 type="date"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                className="!px-3  w-[10rem] rounded-md "
+                className="!px-3  w-[10rem] rounded-md !p-2 !bg-zinc-50 border-zinc-100 "
               />
               </div>
               
@@ -114,7 +117,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                 type="date"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                className="!px-3 !min-h-[1.5rem] w-[10rem] rounded-md !border-orange-500"
+                className="!px-3  w-[10rem] rounded-md !p-2 !bg-zinc-50 border-zinc-100 "
               />
               </div>
               
@@ -139,7 +142,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                       { label: 'Active-Returnee', value: 'Active-Returnee' },
                       { label: 'Resigned', value: 'Resigned' },
                   ]}
-                  className="!border-orange-500 rounded-md !min-w-20 !py-1"
+                  className="!px-3  w-[10rem] rounded-md !p-3 !bg-zinc-50 border-zinc-100"
                 />
             </div>
            
@@ -162,7 +165,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                     { label: 'Name A - Z', value: 'name-asc' },
                     { label: 'Name Z - A', value: 'name-desc' },
                   ]}
-                  className="!border-orange-500 rounded-md !min-w-20 !py-1"
+                  className="!px-3  w-[10rem] rounded-md !p-2 !bg-zinc-50 border-zinc-100"
                 />
             </div>
           
@@ -185,12 +188,12 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                 clearErrors={form.clearErrors}
                 // label="Code"
                 placeholder="Search..."
-                 className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
+                 className="!px-3  w-[10rem] !mb-1 !h-9 rounded-md  !bg-zinc-50 border-zinc-100"
                 suggestions={data.clients.map(item => item.name)}
               />
             </FormIonItem>
-            <IonButton type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-              Search
+            <IonButton type="submit" fill="clear" className="h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl" strong>
+              <Search size={15}/>
             </IonButton>
           </div>
         </form>

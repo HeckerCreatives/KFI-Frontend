@@ -14,7 +14,17 @@ const Dashboard = () => {
       <IonContent className=" max-w-[1920px] overflow-y-hidden bg-zinc-100 h-full " fullscreen>
         <div className="h-full flex flex-col gap-6 items-stretch justify-start bg-zinc-100 py-6">
           {/* <PageTitle pages={['Dashboard']} /> */}
-          <div className="px-3 pb-3 flex-1">
+
+          
+           
+          <div className="px-3 pb-3 flex-1 space-y-4">
+
+             <div>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl !font-medium'>Dashboard</p>
+
+            </div>
+            
             <div className=" h-full gap-2">
               <div className="md:col-span-1 lg:col-span-2 flex flex-col space-y-4">
                 <CardStatistics />
