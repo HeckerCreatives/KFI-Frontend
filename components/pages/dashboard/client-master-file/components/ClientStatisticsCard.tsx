@@ -12,6 +12,13 @@ type ClientStatisticsCardProps = {
 const ClientStatisticsCard = ({ title, icon, value, loading = false }: ClientStatisticsCardProps) => {
   return (
     <div className=" relative bg-white p-6 flex-1 min-w-56 rounded-xl flex items-start justify-between shadow-md">
+       <svg className=' absolute bottom-0 right-0 w-full z-20' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280">
+        <path fill="#FCA95C" fill-opacity=".3" d="M0,96L34.3,106.7C68.6,117,137,139,206,133.3C274.3,128,343,96,411,90.7C480,85,549,107,617,128C685.7,149,754,171,823,149.3C891.4,128,960,64,1029,58.7C1097.1,53,1166,107,1234,112C1302.9,117,1371,75,1406,53.3L1440,32L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path>
+      </svg>
+
+       <svg className=' absolute bottom-0 right-0 w-full z-10' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+        <path fill="#F9761A" fill-opacity=".2" d="M0,96L34.3,106.7C68.6,117,137,139,206,133.3C274.3,128,343,96,411,90.7C480,85,549,107,617,128C685.7,149,754,171,823,149.3C891.4,128,960,64,1029,58.7C1097.1,53,1166,107,1234,112C1302.9,117,1371,75,1406,53.3L1440,32L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path>
+      </svg>
       <div className=" relative z-10 space-y-2">
         <div className="text-[0.8rem] truncate text-zinc-500 ">{title}</div>
         <div className="text-3xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : value}</div>

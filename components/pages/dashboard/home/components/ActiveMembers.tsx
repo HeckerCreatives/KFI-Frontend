@@ -8,6 +8,7 @@ import TablePagination from '../../../../ui/forms/TablePagination';
 import ViewMemberListInfo from './memberListInfo';
 import ActiveMemberlist from './ActiveMemberList';
 import kfiAxios from '../../../../utils/axios';
+import { ArrowRight } from 'lucide-react';
 
 type DashboardCardProps = {
   title: string;
@@ -82,9 +83,9 @@ const ActiveMembers = ({ title, icon, value, loading = false, details = false }:
         onClick={() => setIsOpen(true)}
         type="button"
         fill="clear"
-        className=" rounded-lg w-20 h-2! ![--padding-start:0]  ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
+        className=" rounded-lg w-fit h-2! ![--padding-start:0] !gap-2  ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs !text-orange-700 hover:underline"
       >
-        &nbsp;See Details
+        &nbsp;See Details <ArrowRight size={15}/>
       </IonButton>
       <IonModal isOpen={isOpen} backdropDismiss={false} className=" [--border-radius:0.7rem] auto-height [--max-width:104rem] [--width:95%]">
         {/* <IonHeader>

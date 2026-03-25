@@ -51,23 +51,23 @@ const ViewDamayanFund = ({ damayanFund }: { damayanFund: DamayanFund }) => {
           <div className="space-y-1 mb-1 mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 space-y-1">
                 <div className="space-y-1">
-                  <DamayanFundViewCard label="JV#" value={`${damayanFund.code}`} labelClassName="min-w-24 text-end" />
+                  <DamayanFundViewCard label="JV#" value={`${damayanFund?.code}`} labelClassName="min-w-24 text-end" />
                   <DamayanFundViewCard label="Center Code" value={damayanFund?.center?.description} labelClassName="min-w-24 text-end" />
                 </div>
                 <div className="space-y-1">
-                  <DamayanFundViewCard label="Date" value={formatDateTable(damayanFund.date)} labelClassName="min-w-24 text-end" />
-                  <DamayanFundViewCard label="Account Month" value={`${damayanFund.acctMonth}`} labelClassName="min-w-24 text-end" />
-                  <DamayanFundViewCard label="Account Year" value={`${damayanFund.acctYear}`} labelClassName="min-w-24 text-end" />
+                  <DamayanFundViewCard label="Date" value={formatDateTable(damayanFund?.date)} labelClassName="min-w-24 text-end" />
+                  <DamayanFundViewCard label="Account Month" value={`${damayanFund?.acctMonth}`} labelClassName="min-w-24 text-end" />
+                  <DamayanFundViewCard label="Account Year" value={`${damayanFund?.acctYear}`} labelClassName="min-w-24 text-end" />
                 </div>
                  <div className="space-y-1">
-                  <DamayanFundViewCard label="Check Number" value={damayanFund.checkNo} labelClassName="min-w-24 text-end" />
-                  <DamayanFundViewCard label="Check Date" value={formatDateTable(damayanFund.checkDate)} labelClassName="min-w-24 text-end" />
-                  <DamayanFundViewCard label="Bank Code" value={damayanFund.bank.code} labelClassName="min-w-24 text-end" />
-                  <DamayanFundViewCard label="Amount" value={`${formatNumber(damayanFund.amount)}`} labelClassName="min-w-24 text-end" />
+                  <DamayanFundViewCard label="Check Number" value={damayanFund?.checkNo} labelClassName="min-w-24 text-end" />
+                  <DamayanFundViewCard label="Check Date" value={formatDateTable(damayanFund?.checkDate)} labelClassName="min-w-24 text-end" />
+                  <DamayanFundViewCard label="Bank Code" value={damayanFund.bank?.code} labelClassName="min-w-24 text-end" />
+                  <DamayanFundViewCard label="Amount" value={`${formatNumber(damayanFund?.amount)}`} labelClassName="min-w-24 text-end" />
                 </div>
                 <div className=" lg:col-span-3 space-y-1">
-                  <DamayanFundViewCard label="Particular" value={damayanFund.remarks} labelClassName="min-w-24 text-end" />
-                   <DamayanFundViewCard label="User" value={damayanFund.encodedBy.username} labelClassName="min-w-24 text-end" containerClassName="" />
+                  <DamayanFundViewCard label="Particular" value={damayanFund?.remarks} labelClassName="min-w-24 text-end" />
+                   <DamayanFundViewCard label="User" value={damayanFund?.encodedBy?.username} labelClassName="min-w-24 text-end" containerClassName="" />
 
                 </div>
               </div>

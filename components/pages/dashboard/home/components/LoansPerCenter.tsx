@@ -127,7 +127,7 @@ const LoansPerCenter = () => {
   return (
     <div className=" relative h-fit flex-1 flex flex-col bg-white shadow-lg rounded-xl">
       <div className=" pb-2 flex-1 flex flex-col">
-        <div className="flex items-center justify-between w-full py-2 bg-orange-50 p-4 px-8 rounded-t-xl">
+        <div className="flex items-center justify-between w-full h-[80px] bg-orange-50 p-4 px-8 rounded-t-xl">
           <h3 className="text-[0.9rem] pb-2 text-black !font-medium">Loans per Account Officer</h3>
            <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
           

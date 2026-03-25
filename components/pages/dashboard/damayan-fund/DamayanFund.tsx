@@ -178,12 +178,12 @@ const DamayanFund = () => {
                       data.damayanFunds.length > 0 &&
                       data.damayanFunds.map((damayanFund: DamayanFundType, i: number) => (
                         <TableRow key={damayanFund._id}>
-                          <TableCell>{damayanFund.code}</TableCell>
-                          <TableCell>{formatDateTable(damayanFund.date)}</TableCell>
-                          <TableCell>{damayanFund.bank.description}</TableCell>
-                          <TableCell>{damayanFund.checkNo}</TableCell>
-                          <TableCell>{formatMoney(damayanFund.amount)}</TableCell>
-                          <TableCell>{damayanFund.encodedBy.username}</TableCell>
+                          <TableCell>{damayanFund?.code}</TableCell>
+                          <TableCell>{formatDateTable(damayanFund?.date)}</TableCell>
+                          <TableCell>{damayanFund.bank?.description}</TableCell>
+                          <TableCell>{damayanFund?.checkNo}</TableCell>
+                          <TableCell>{formatMoney(damayanFund?.amount)}</TableCell>
+                          <TableCell>{damayanFund.encodedBy?.username}</TableCell>
                           {haveActions(token.role, 'damayan fund', permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <DamayanFundActions

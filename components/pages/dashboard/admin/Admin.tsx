@@ -179,7 +179,7 @@ const Admin = () => {
           </div>
             <ManageAccountNav />
 
-           <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(clamp(250px,30vw,280px),1fr))]">
+           <div className="w-full grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1">
             <DashboardCard title="Active" value={`${statistics.active}`} icon={<UserMultiple02Icon stroke='.8' size={20}/>} />
             <DashboardCard title="Banned" value={`${statistics.banned}`} icon={<UserBlock01Icon stroke='.8' size={20}/>} />
             {/* <DashboardCard title="Inactive" value={`${statistics.inactive}`} icon={<UserMinus01Icon stroke='.8' size={20}/>} /> */}

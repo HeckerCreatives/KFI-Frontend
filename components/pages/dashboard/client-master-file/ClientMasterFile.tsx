@@ -270,7 +270,7 @@ const ClientMasterFile = () => {
                         <TableRow key={client._id} className="[&>td]:bg-white">
                           <TableCell className="hidden lg:table-cell min-w-[10rem] max-w-[10rem]">{client.acctNumber}</TableCell>
                           <TableCell className=" hidden lg:table-cell min-w-[10rem] max-w-[10rem]">{client.name}</TableCell>
-                          <TableCell className="hidden lg:table-cell min-w-[5rem] max-w-[5rem]">{client.center.centerNo}</TableCell>
+                          <TableCell className="hidden lg:table-cell min-w-[5rem] max-w-[5rem]">{client.center?.centerNo}</TableCell>
                           <TableCell className="hidden lg:table-cell min-w-[12rem] max-w-[12rem]">{client.acctOfficer}</TableCell>
                         </TableRow>
                       ))}
@@ -306,7 +306,7 @@ const ClientMasterFile = () => {
                         <TableRow key={client._id} className="[&>td]:bg-white">
                           <TableCell className=" lg:hidden min-w-[10rem] max-w-[10rem]">{client.acctNumber}</TableCell>
                           <TableCell className=" md:hidden min-w-[10rem] max-w-[10rem]">{client.name}</TableCell>
-                          <TableCell className=" lg:hidden min-w-[5rem] max-w-[5rem]">{client.center.centerNo}</TableCell>
+                          <TableCell className=" lg:hidden min-w-[5rem] max-w-[5rem]">{client.center?.centerNo}</TableCell>
                           <TableCell className=" lg:hidden min-w-[12rem] max-w-[12rem]">{client.acctOfficer}</TableCell>
                           <TableCell className=" min-w-[10rem] max-w-[10rem]">{client.memberStatus}</TableCell>
                           <TableCell>{client.address}</TableCell>

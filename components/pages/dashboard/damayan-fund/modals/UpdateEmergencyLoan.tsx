@@ -45,9 +45,9 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
       client: item.client?._id,
       clientLabel: item.client?.name,
       particular: item.particular,
-      acctCodeId: item.acctCode._id,
-      acctCode: item.acctCode.code,
-      description: item.acctCode.description,
+      acctCodeId: item.acctCode?._id,
+      acctCode: item.acctCode?.code,
+      description: item.acctCode?.description,
       debit: String(item.debit) ?? '0' ,
       credit: String(item.credit) ?? '0' ,
       interest: (item.interest || item.interestRate) === null ? '0' : String(item.interest || item.interestRate),
@@ -84,23 +84,23 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
   useEffect(() => {
     if (damayanFund) {
       form.reset({
-        code: damayanFund.code,
+        code: damayanFund?.code,
         centerLabel: damayanFund?.center?.centerNo,
         center: damayanFund?.center?._id,
-        refNo: damayanFund.refNo,
+        refNo: damayanFund?.refNo,
         remarks: damayanFund.remarks,
-        date: formatDateInput(damayanFund.date),
-        acctMonth: `${damayanFund.acctMonth}`,
-        acctYear: `${damayanFund.acctYear}`,
-        checkNo: damayanFund.checkNo,
-        checkDate: formatDateInput(damayanFund.checkDate),
-        bankCode: damayanFund.bank._id,
-        bankCodeLabel: `${damayanFund.bank.code}`,
-        amount: `${formatAmount(damayanFund.amount)}`,
+        date: formatDateInput(damayanFund?.date),
+        acctMonth: `${damayanFund?.acctMonth}`,
+        acctYear: `${damayanFund?.acctYear}`,
+        checkNo: damayanFund?.checkNo,
+        checkDate: formatDateInput(damayanFund?.checkDate),
+        bankCode: damayanFund.bank?._id,
+        bankCodeLabel: `${damayanFund.bank?.code}`,
+        amount: `${formatAmount(damayanFund?.amount)}`,
         mode: 'update',
-        nature: damayanFund.nature,
+        nature: damayanFund?.nature,
         entries: fomattedEntries,
-        name: damayanFund.name
+        name: damayanFund?.name
       });
     }
   }, [damayanFund, form]);

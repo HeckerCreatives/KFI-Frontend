@@ -1,13 +1,15 @@
 import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonToolbar } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
-import { UserMultiple02Icon, ViewIcon} from 'hugeicons-react';
+import { ArrowRight02Icon, UserMultiple02Icon, ViewIcon} from 'hugeicons-react';
 import DashboardCard from './DashboardCard';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from "../../../../ui/table/Table"
 import TablePagination from '../../../../ui/forms/TablePagination';
 import ViewMemberListInfo from './memberListInfo';
 import kfiAxios from '../../../../utils/axios';
 import { search } from 'ionicons/icons';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowRight } from 'lucide-react';
 
 type DashboardCardProps = {
   title: string;
@@ -82,9 +84,9 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
         onClick={() => setIsOpen(true)}
         type="button"
         fill="clear"
-        className=" rounded-lg w-20 h-2! ![--padding-start:0]  ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
+        className=" rounded-lg w-fit h-2! ![--padding-start:0] !gap-2 !font-medium  ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs !text-orange-700 hover:underline"
       >
-        &nbsp;See Details
+        &nbsp;See Details <ArrowRight size={15}/>
       </IonButton>
       <IonModal isOpen={isOpen} backdropDismiss={false} className=" [--border-radius:0.7rem] auto-height [--max-width:104rem] [--width:95%]">
         {/* <IonHeader>
