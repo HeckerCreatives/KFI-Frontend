@@ -46,19 +46,19 @@ const TopNavigation = () => {
 
 
   return (
-    <div className=" hidden lg:flex p-1 font-semibold text-sm h-12 bg-orange-50 rounded-md relative">
-      <div className="flex items-center justify-start gap-4 h-full">
+    <div className=" hidden lg:flex p-1 font-semibold text-sm h-12  rounded-md relative">
+      <div className="flex items-center justify-start h-full">
         {isVisible(token.role, permissions, dashboardResource) && (
           <div>
             <IonButton
               fill="clear"
               routerLink="/dashboard/home"
               className={classNames(
-                'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1  [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
-                pathname === '/dashboard/home' ? 'bg-orange-600 text-white' : 'bg-transparent',
+                'min-h-6 text-[1rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1  [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+                pathname === '/dashboard/home' ? 'bg-orange-600 text-white' : 'bg-transparent hover:bg-orange-50',
               )}
             >
-              <DashboardSquare01Icon size={15} stroke='.8' className=' mr-1 mb-1' />
+              <DashboardSquare01Icon size={20} stroke='.8' className=' mr-1' />
               Dashboard
             </IonButton>
           </div>
@@ -72,11 +72,11 @@ const TopNavigation = () => {
                 permissions.find((e: Permission) => e.resource === 'admin' && e.actions.visible) ? '/dashboard/admin' : '/dashboard/client'
               }
               className={classNames(
-                'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1 [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
-                ['/dashboard/admin', '/dashboard/client'].includes(pathname) ? 'bg-orange-600 text-white' : 'bg-transparent',
+                'min-h-6 text-[1rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1 [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+                ['/dashboard/admin', '/dashboard/client'].includes(pathname) ? 'bg-orange-600 text-white' : 'bg-transparent hover:bg-orange-50',
               )}
             >
-              <UserMultiple02Icon size={15} stroke='.8' className=' mr-1 mb-1'/>
+              <UserMultiple02Icon size={20} stroke='.8' className=' mr-1 '/>
               Manage Account
             </IonButton>
           </div>

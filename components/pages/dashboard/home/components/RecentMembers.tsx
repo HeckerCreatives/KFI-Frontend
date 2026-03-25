@@ -197,7 +197,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
                 <TableRow key={`${client.name}-${i}`} className="!border-0  [&>td]:text-[0.8rem]">
                   <TableCell className="">{client.name}</TableCell>
                   <TableCell className="">
-                    {client.center.centerNo} - {client.center.description}
+                    {client.center?.centerNo} - {client.center?.description}
                   </TableCell>
                   <TableCell>{client.createdAt?.split('T')[0] || ''}</TableCell>
                   <TableCell className="">
@@ -228,9 +228,9 @@ const RecentMembers = ({setSelected, selected} : Props) => {
               data.clients.length > 0 &&
               data.clients.map((client: Member, i: number) => (
                 <TableRow key={`${client.name}-${i}`} className="!border-0  [&>td]:text-[0.8rem]">
-                  <TableCell className="">{client.name}</TableCell>
+                  <TableCell className="">{client?.name}</TableCell>
                   <TableCell className="">
-                    {client.center.centerNo} - {client.center.description}
+                    {client?.center?.centerNo} - {client?.center?.description}
                   </TableCell>
                   <TableCell>{client.createdAt?.split('T')[0] || ''}</TableCell>
                   <TableCell className="">

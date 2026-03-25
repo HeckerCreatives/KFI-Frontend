@@ -54,19 +54,19 @@ const SystemNav = () => {
       <IonButton
         fill="clear"
         className={classNames(
-          'min-h-6 text-[0.8rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1 [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
+          'min-h-6 text-[1rem] capitalize [--padding-start:1rem] [--padding-end:1rem] rounded-md py-1 [--padding-bottom:0] [--padding-top:0]  [--color:black]  [--ripple-color:transparent]',
           isOpen && '!font-semibold',
           fileLinks
             .map(link => (link.children ? link.children.map(child => child.path) : link.path))
             .flat()
             .includes(pathname)
             ? 'bg-orange-600 text-white'
-            : 'bg-transparent',
+            : 'bg-transparent hover:bg-orange-50',
         )}
         id="systems"
         onClick={() => setIsOpen(true)}
       >
-        <Settings02Icon size={15} stroke='.8' className=' mr-1 mb-1' />
+        <Settings02Icon size={20} stroke='.8' className=' mr-1' />
         System&nbsp;
         <IonIcon icon={chevronDownOutline} className="text-xs" />
       </IonButton>

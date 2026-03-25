@@ -9,6 +9,7 @@ import { ClientMasterFile, TTableFilter } from '../../../../../types/types';
 import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
+import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 
 type DashboardCardProps = {
   title: string;
@@ -56,20 +57,22 @@ const ViewMemberListInfo = ({year, month}: Props) => {
         if (year) filter.year = year;
         if (month) filter.month = month;
         if (search) filter.search = search
-        const result = await kfiAxios.get('/customer/list-by-year-month', { params: filter });
-        const { success, customers, hasPrevPage, hasNextPage, totalPages } = result.data;
-        if (success) {
+        const result = await kfiAxios.get('/customer/members-by-month', { params: filter });
+        const { success, customers, hasPrevPage, hasNextPage, totalPages, data } = result.data;
+        if (data.success) {
           setData(prev => ({
             ...prev,
-            clients: customers,
-            totalPages: totalPages,
-            nextPage: hasNextPage,
-            prevPage: hasPrevPage,
+            clients: data.members,
+            totalPages: data.totalPages,
+            nextPage: data.hasNextPage,
+            prevPage: data.hasPrevPage,
           }));
           setCurrentPage(page);
           return;
         }
       } catch (error) {
+        setData(prev => ({ ...prev, loading: false }));
+
        
       } finally {
         setData(prev => ({ ...prev, loading: false }));
@@ -174,6 +177,7 @@ const ViewMemberListInfo = ({year, month}: Props) => {
                     </TableHeader>
 
                     <TableBody>
+
                        {!data.loading && data.clients.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
 
                       {data.clients.length !== 0 && data.clients.map((item) => (
@@ -181,15 +185,18 @@ const ViewMemberListInfo = ({year, month}: Props) => {
                         key={item._id}
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.sex}</TableCell>
-                            <TableCell>{item.acctNumber}</TableCell>
-                            <TableCell>{item.dateRelease}</TableCell>
-                            <TableCell>{item.center.centerNo}</TableCell>
-                            <TableCell>{item.acctOfficer}</TableCell>
+                            <TableCell>{item?.name}</TableCell>
+                            <TableCell>{item?.sex}</TableCell>
+                            <TableCell>{item?.acctNumber}</TableCell>
+                            <TableCell>{item?.dateRelease}</TableCell>
+                            <TableCell>{item.center?.centerNo}</TableCell>
+                            <TableCell>{item?.acctOfficer}</TableCell>
                          
                         </TableRow>
                       )) }
+
+                    {data.loading && <TableLoadingRow colspan={7} />}
+
                     
                       
                     </TableBody>

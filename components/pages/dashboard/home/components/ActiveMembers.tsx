@@ -46,13 +46,12 @@ const ActiveMembers = ({ title, icon, value, loading = false, details = false }:
 
    const getData = async () => {
     try {
-      const result = await kfiAxios.get("/customer/active-by-year",{params: {year: year}})
+      const result = await kfiAxios.get("/customer/list-by-year-month",{params: {year: year}})
         const { success, data} = result.data;
-      console.log(result)
-      if(success){
+      if(data.success){
          setData((prev: any) => ({
             ...prev,
-            data: data,
+            data: data.yearMonths,
             
           }));
 
@@ -149,23 +148,23 @@ const ActiveMembers = ({ title, icon, value, loading = false, details = false }:
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
                             <TableCell>{item.year}</TableCell>
-                            <TableCell>{item.month}</TableCell>
-                            <TableCell>{Number(item.activenew).toLocaleString()}</TableCell>
-                            <TableCell>{Number(item.activeexisting).toLocaleString()}</TableCell>
-                            <TableCell>{Number(item.resigned).toLocaleString()}</TableCell>
-                            <TableCell>{Number(item.activeonleave).toLocaleString()}</TableCell>
-                            <TableCell>{Number(item.activereturnee).toLocaleString()}</TableCell>
-                            <TableCell>{Number(item.activepastdue).toLocaleString()}</TableCell>
+                            <TableCell>{item.monthLabel.split(' ')[0]}</TableCell>
+                            <TableCell>{Number(item.statusCounts["Active-New"]).toLocaleString()}</TableCell>
+                            <TableCell> {Number(item.statusCounts["Active-Existing"]).toLocaleString()}</TableCell>
+                            <TableCell>{Number(item.statusCounts.Resigned).toLocaleString()}</TableCell>
+                            <TableCell>{Number(item.statusCounts["Active On-Leave"]).toLocaleString()}</TableCell>
+                            <TableCell>{Number(item.statusCounts["Active-Returnee"]).toLocaleString()}</TableCell>
+                            <TableCell>{Number(item.statusCounts["Active-PastDue"]).toLocaleString()}</TableCell>
 
                             <TableCell>
-                                <ViewMemberListInfo year={item.year} month={index + 1}/>
+                                <ActiveMemberlist year={item.year} month={index + 1} status='active'/>
                             </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                 </Table>
 
-                 <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+                 {/* <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} /> */}
          </div>
         
         </div>

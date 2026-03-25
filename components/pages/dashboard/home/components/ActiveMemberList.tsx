@@ -1,10 +1,16 @@
 import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonSelect, IonSelectOption, IonToolbar } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { UserMultiple02Icon, ViewIcon} from 'hugeicons-react';
 import DashboardCard from './DashboardCard';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from "../../../../ui/table/Table"
 import TablePagination from '../../../../ui/forms/TablePagination';
+import { TDFData } from '../../damayan-fund/components/UpdateDFEntries';
+import { TABLE_LIMIT } from '../../../../utils/constants';
+import { ClientMasterFile, TTableFilter } from '../../../../../types/types';
+import kfiAxios from '../../../../utils/axios';
+import TableNoRows from '../../../../ui/forms/TableNoRows';
+import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 
 type DashboardCardProps = {
   title: string;
@@ -13,23 +19,81 @@ type DashboardCardProps = {
   loading?: boolean;
   details?: boolean
 };
-const ActiveMemberlist = () => {
+
+export type TClientMasterFile = {
+  clients: ClientMasterFile[];
+  totalPages: number;
+  nextPage: boolean;
+  prevPage: boolean;
+  loading: boolean;
+};
+
+ type Props = {
+  year: number,
+  month: number,
+  status: string,
+ }
+const ActiveMemberlist = ({year, month, status}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+    const [search, setSearch] = useState('')
   
-    const [data, setData] = useState<any>({
-      loans: [],
+  
+    const [data, setData] = useState<TClientMasterFile>({
+      clients: [],
       loading: false,
       totalPages: 0,
       nextPage: false,
       prevPage: false,
     });
 
+      const getClients = async (page: number, keyword: string = '',) => {
+          setData(prev => ({ ...prev, loading: true }));
+      
+          try {
+            const filter: TTableFilter = { limit: TABLE_LIMIT, page };
+            if (keyword) filter.search = keyword;
+            if (year) filter.year = year;
+            if (month) filter.month = month;
+            if (search) filter.search = search
+            if (status) filter.status = status
+            const result = await kfiAxios.get('/customer/members-by-month', { params: filter });
+            const { success, customers, hasPrevPage, hasNextPage, totalPages, data } = result.data;
+            if (data.success) {
+              setData(prev => ({
+                ...prev,
+                clients: data.members,
+                totalPages: data.totalPages,
+                nextPage: data.hasNextPage,
+                prevPage: data.hasPrevPage,
+              }));
+              setCurrentPage(page);
+              return;
+            }
+          } catch (error) {
+            setData(prev => ({ ...prev, loading: false }));
+    
+           
+          } finally {
+            setData(prev => ({ ...prev, loading: false }));
+          }
+        };
+    
+
   const dismiss = () => {
     setIsOpen(false);
   };
 
-  const handlePagination = (page: number) => (page);
+  const handlePagination = (page: number) => getClients(page);
+
+    useEffect(() => {
+         if(isOpen){
+          const timer = setTimeout(() => {
+           getClients(currentPage);
+         }, 500);
+         return () => clearTimeout(timer);
+         }
+       }, [isOpen]);
 
 
   return (
@@ -85,15 +149,24 @@ const ActiveMemberlist = () => {
                         </IonSelect> */}
                     </div>
                     
-                     <IonInput
-                      name="search"
-                      type='text'
-                      placeholder="Search ..."
-                      className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
-                    />
+                     <div className=' flex items-center gap-2'>
+                      <IonInput
+                       name="search"
+                       value={search}
+                       onIonChange={(e) => setSearch(e.detail.value || '')}
+                       type='text'
+                       placeholder="Search ..."
+                       className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
+                     />
+                     <IonButton 
+                     onClick={() => getClients(currentPage)}
+                     type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+                       Search
+                     </IonButton>
+                   </div>
                 </div>
 
-                 <Table className=" w-full border-collapse mt-4">
+                   <Table className=" w-full border-collapse mt-4">
                     <TableHeader className=" bg-white backdrop-blur-sm shadow-sm">
                     <TableHeadRow>
                         <TableHead className="!font-[400] border-b border-gray-200">Name</TableHead>
@@ -106,19 +179,28 @@ const ActiveMemberlist = () => {
                     </TableHeader>
 
                     <TableBody>
-                    
-                        <TableRow
-                        
+
+                       {!data.loading && data.clients.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
+
+                      {data.clients.length !== 0 && data.clients.map((item) => (
+                         <TableRow
+                        key={item._id}
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
-                            <TableCell>Grace</TableCell>
-                            <TableCell>Female</TableCell>
-                            <TableCell>3948569458</TableCell>
-                            <TableCell>3/15/26</TableCell>
-                            <TableCell>Timugan</TableCell>
-                            <TableCell>RCL</TableCell>
+                            <TableCell>{item?.name}</TableCell>
+                            <TableCell>{item?.sex}</TableCell>
+                            <TableCell>{item?.acctNumber}</TableCell>
+                            <TableCell>{item?.dateRelease}</TableCell>
+                            <TableCell>{item.center?.centerNo}</TableCell>
+                            <TableCell>{item?.acctOfficer}</TableCell>
                          
                         </TableRow>
+                      )) }
+
+                    {data.loading && <TableLoadingRow colspan={7} />}
+
+                    
+                      
                     </TableBody>
                 </Table>
 

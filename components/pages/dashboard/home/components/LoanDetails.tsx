@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { UserMultiple02Icon, ViewIcon} from 'hugeicons-react';
 import DashboardCard from './DashboardCard';
@@ -9,6 +9,8 @@ import ViewMemberListInfo from './memberListInfo';
 import InactiveMemberlist from './InactiveMemberList';
 import Loanlist from './LoanList';
 import { ArrowRight } from 'lucide-react';
+import kfiAxios from '../../../../utils/axios';
+import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 
 type DashboardCardProps = {
   title: string;
@@ -17,17 +19,61 @@ type DashboardCardProps = {
   loading?: boolean;
   details?: boolean
 };
+
+export type TData = {
+  data: any[];
+  loading: boolean;
+   totalPages: number;
+  nextPage: boolean;
+  prevPage: boolean;
+};
 const LoanDetails = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+    const [year, setYear] = useState(2026)
   
-    const [data, setData] = useState<any>({
-      loans: [],
+  
+    const [data, setData] = useState<TData>({
+      data: [],
       loading: false,
       totalPages: 0,
       nextPage: false,
       prevPage: false,
     });
+
+     const getData = async () => {
+      setData(prev => ({ ...prev, loading: true }));
+    try {
+      const result = await kfiAxios.get("/transaction/loans/list-by-year-month",{params: {year: year}})
+        const { success, data, message} = result.data;
+      console.log(result)
+      if(data.success){
+         setData((prev: any) => ({
+            ...prev,
+            data: data.loanMonths,
+            
+          }));
+
+          return
+      }
+    } catch (error) {
+        setData(prev => ({ ...prev, loading: false }));
+     
+    } finally {
+        setData(prev => ({ ...prev, loading: false }));
+
+    }
+  }
+
+   useEffect(() => {
+  if(isOpen){
+     const timer = setTimeout(() => {
+     getData();
+   }, 500);
+
+   return () => clearTimeout(timer);
+  }
+ }, [year, isOpen]);
 
   const dismiss = () => {
     setIsOpen(false);
@@ -75,44 +121,50 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
                 </div>
 
                 <div className=' w-full flex items-end justify-end'>
-                     <IonInput
-                      name="year"
-                      type='number'
-                      placeholder="Search year ..."
-                      className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
-                    />
+                   <IonInput
+                     name="year"
+                     type="number"
+                     value={year}
+                     onIonChange={(e) => setYear(Number(e.detail.value))}
+                     placeholder="Search year ..."
+                     className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
+                   />
                 </div>
 
-                 <Table className=" w-full border-collapse mt-4">
+                <Table className=" w-full border-collapse mt-4">
                     <TableHeader className=" bg-white backdrop-blur-sm shadow-sm">
                     <TableHeadRow>
                         <TableHead className="!font-[400] border-b border-gray-200">Year</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Month</TableHead>
-                        <TableHead className="  !font-[600] bg-zinc-100">No. of Member Loan</TableHead>
-                        <TableHead className="!font-[400] border-b border-gray-200">Total Loan</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">Total Loans</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Action</TableHead>
                     </TableHeadRow>
                     </TableHeader>
 
                     <TableBody>
-                    
-                        <TableRow
-                        
+                    {data.loading && <TableLoadingRow colspan={5} />}
+
+
+                      {data.data.length !== 0 && data.data.map((item, index) => (
+                          <TableRow
+                        key={item.month}
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
-                            <TableCell>2025</TableCell>
-                            <TableCell>March</TableCell>
-                            <TableCell>256</TableCell>
-                            <TableCell>55,000</TableCell>
+                            <TableCell>{item.year}</TableCell>
+                            <TableCell>{item.monthLabel.split(' ')[0]}</TableCell>
+                            <TableCell>{Number(item.totalAmount).toLocaleString()}</TableCell>
 
                             <TableCell>
-                                <Loanlist/>
+                                <Loanlist year={item.year} month={index + 1}/>
                             </TableCell>
                         </TableRow>
+                      ))}
+                    
+                      
                     </TableBody>
                 </Table>
 
-                 <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+                 {/* <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} /> */}
          </div>
         
         </div>

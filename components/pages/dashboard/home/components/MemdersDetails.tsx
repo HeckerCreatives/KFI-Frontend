@@ -10,6 +10,7 @@ import kfiAxios from '../../../../utils/axios';
 import { search } from 'ionicons/icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowRight } from 'lucide-react';
+import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 
 type DashboardCardProps = {
   title: string;
@@ -45,22 +46,26 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
   };
 
    const getData = async () => {
+      setData(prev => ({ ...prev, loading: true }));
     try {
-      const result = await kfiAxios.get("/customer/by-year",{params: {year: year}})
-        const { success, data} = result.data;
+      const result = await kfiAxios.get("/customer/list-by-year-month",{params: {year: year}})
+        const { success, data, message} = result.data;
       console.log(result)
-      if(success){
+      if(message === 'success'){
          setData((prev: any) => ({
             ...prev,
-            data: data,
+            data: data.yearMonths,
             
           }));
 
           return
       }
     } catch (error) {
+        setData(prev => ({ ...prev, loading: false }));
      
     } finally {
+        setData(prev => ({ ...prev, loading: false }));
+
     }
   }
 
@@ -138,6 +143,8 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                     </TableHeader>
 
                     <TableBody>
+                    {data.loading && <TableLoadingRow colspan={5} />}
+
 
                       {data.data.length !== 0 && data.data.map((item, index) => (
                           <TableRow
@@ -145,8 +152,8 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
                             <TableCell>{item.year}</TableCell>
-                            <TableCell>{item.month}</TableCell>
-                            <TableCell>{Number(item.count).toLocaleString()}</TableCell>
+                            <TableCell>{item.monthLabel.split(' ')[0]}</TableCell>
+                            <TableCell>{Number(item.memberCount).toLocaleString()}</TableCell>
 
                             <TableCell>
                                 <ViewMemberListInfo year={item.year} month={index + 1}/>

@@ -41,7 +41,7 @@ const ExportAllClient = ({sort, search}:Props) => {
 
   return (
     <>
-      <IonButton fill="clear" id="export_all_client" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+      <IonButton fill="clear" id="export_all_client" className="h-10 bg-orange-50 text-orange-500 border border-orange-200 capitalize font-semibold rounded-md" strong>
         <FileExportIcon stroke='.8' size={15} className=' mr-2'/>
         Export
       </IonButton>

@@ -21,6 +21,7 @@ import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
+import { Circle, Dot } from 'lucide-react';
 
 export type TUser = {
   users: User[];
@@ -176,12 +177,13 @@ const Admin = () => {
 
           <div>
             <PageTitle pages={['Manage Account', 'Admin']} />
+            <p className=' text-xl !font-medium'>Manage Accounts</p>
           </div>
             <ManageAccountNav />
 
            <div className="w-full grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1">
-            <DashboardCard title="Active" value={`${statistics.active}`} icon={<UserMultiple02Icon stroke='.8' size={20}/>} />
-            <DashboardCard title="Banned" value={`${statistics.banned}`} icon={<UserBlock01Icon stroke='.8' size={20}/>} />
+            <DashboardCard title="Active" value={`${statistics.active}`} icon={<UserMultiple02Icon stroke='.8' size={25}/>} />
+            <DashboardCard title="Banned" value={`${statistics.banned}`} icon={<UserBlock01Icon stroke='.8' size={25}/>} />
             {/* <DashboardCard title="Inactive" value={`${statistics.inactive}`} icon={<UserMinus01Icon stroke='.8' size={20}/>} /> */}
 
            </div>
@@ -228,11 +230,21 @@ const Admin = () => {
                              style={{ '--size': '14px' }} 
                             value={user._id} onIonChange={handleSelected} />
                           </TableCell>
-                          <TableCell>{user.username}</TableCell>
-                          <TableCell className="capitalize">
-                            <div className={classNames('!font-medium px-2 py-1 text-[.7rem] w-fit rounded-full', user.status === 'banned' ? 'text-red-600 bg-red-50' : 'text-green-600 bg-green-50')}>{user.status}</div>
+                          <TableCell>
+                            <div className=' flex items-center gap-1 text-sm'>
+                              <div className=' h-10 w-10 rounded-full flex items-center justify-center bg-orange-50 uppercase text-sm font-semibold'>
+                                {user.username.charAt(1)}
+                              </div>
+                              <p>{user.username}</p>
+
+                            </div>
                           </TableCell>
-                          <TableCell>{formatDateTable(user.createdAt)}</TableCell>
+                          <TableCell className="capitalize text-sm">
+                            <div className={classNames('!font-medium px-4 py-1 w-fit rounded-full text-sm flex items-center gap-2', user.status === 'banned' ? 'text-red-600 bg-red-50 border border-red-200' : 'text-green-600 bg-green-50 border border-green-200')}>
+                              <Circle size={8} fill={user.status === 'active' ? '#16a34a' : '#dc2626'}/>
+                              {user.status}</div>
+                          </TableCell>
+                          <TableCell className=' !text-sm'>{formatDateTable(user.createdAt)}</TableCell>
                           <TableCell>
                             <UserActions user={user} setData={setData} />
                           </TableCell>

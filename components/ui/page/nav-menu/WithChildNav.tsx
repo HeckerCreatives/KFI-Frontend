@@ -21,7 +21,7 @@ const WithChildNav = ({ label, resource, childPaths }: WithChildNavProps) => {
       <div
         role="button"
         className={classNames(
-          'flex items-center justify-between gap-2 text-[0.8rem] text-slate-700 hover:bg-slate-200 py-1 mx-2 px-2 rounded-md cursor-pointer active:bg-slate-200',
+          'flex items-center justify-between gap-2 text-[1rem] text-slate-700 hover:bg-slate-200 py-1 mx-2 px-2 rounded-md cursor-pointer active:bg-slate-200',
         )}
         id={`${label}-childPaths`}
       >

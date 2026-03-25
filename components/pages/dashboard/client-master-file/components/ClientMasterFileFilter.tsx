@@ -98,7 +98,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                 type="date"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                className="!px-3 !min-h-[1.5rem] w-[10rem] rounded-md !border-orange-500"
+                className="!px-3  w-[10rem] rounded-md "
               />
               </div>
               

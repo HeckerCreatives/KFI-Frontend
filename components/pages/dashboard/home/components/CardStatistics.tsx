@@ -35,10 +35,10 @@ const CardStatistics = () => {
   return (
     <div className="overflow-auto">
       <div className="flex flex-nowrap items-center justify-around gap-4">
-        <DashboardCard title="Total Members" value={`${data.totalMembers.toLocaleString()}`} icon={<UserMultiple02Icon stroke='.8' size={20}/>} loading={loading} details={true}/>
-        <DashboardCard title="Total Active Members" value={`${data.totalActiveMembers.toLocaleString()}`} icon={<UserCheck01Icon stroke='.8' size={20}/>} loading={loading} details={true} />
-        <DashboardCard title="Total Inactive Members" value={`${data.totalInactiveMembers.toLocaleString()}`} icon={<UserBlock02Icon stroke='.8' size={20}/>} loading={loading} details={true} />
-        <DashboardCard title="Total Loan Amount" value={`${data.totalLoan.toLocaleString()}`} icon={<Wallet03Icon stroke='.8' size={20}/>} loading={loading} details={true} />
+        <DashboardCard title="Total Members" value={`${data.totalMembers.toLocaleString()}`} icon={<UserMultiple02Icon stroke='.8' size={25}/>} loading={loading} details={true}/>
+        <DashboardCard title="Total Active Members" value={`${data.totalActiveMembers.toLocaleString()}`} icon={<UserCheck01Icon stroke='.8' size={25}/>} loading={loading} details={true} />
+        <DashboardCard title="Total Inactive Members" value={`${data.totalInactiveMembers.toLocaleString()}`} icon={<UserBlock02Icon stroke='.8' size={25}/>} loading={loading} details={true} />
+        <DashboardCard title="Total Loan Amount" value={`${data.totalLoan.toLocaleString()}`} icon={<Wallet03Icon stroke='.8' size={25}/>} loading={loading} details={true} />
       </div>
     </div>
   );

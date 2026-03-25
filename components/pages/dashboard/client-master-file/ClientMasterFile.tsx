@@ -235,6 +235,8 @@ const ClientMasterFile = () => {
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start p-4">
           <div>
             <PageTitle pages={['Manage Account', 'Client Master File']} />
+            <p className=' text-xl !font-medium'>Manage Accounts</p>
+
           </div>
           <div className=" flex-1 flex flex-col gap-4">
             <ManageAccountNav />
