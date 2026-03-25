@@ -3,12 +3,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, Tabl
 import { DamayanFund, DamayanFundEntry, EmergencyLoan, EmergencyLoanEntry, TTableFilter } from '../../../../../types/types';
 import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
-import { useIonToast } from '@ionic/react';
+import { IonButton, IonIcon, useIonToast } from '@ionic/react';
 import TablePagination from '../../../../ui/forms/TablePagination';
 import { formatNumber, removeAmountComma } from '../../../../ui/utils/formatNumber';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import { entries } from '../../../../../validations/beginningbalance.schema';
+import { arrowBack, arrowForward } from 'ionicons/icons';
 
 export type TELData = {
   entries: DamayanFundEntry[];
@@ -27,49 +28,34 @@ const ViewDFEntries = ({ isOpen, damayanFund }: ViewEntriesProps) => {
   const [present] = useIonToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
+  const entries = damayanFund.entries;
+    const totalPages = Math.ceil(damayanFund.entries.length / TABLE_LIMIT);
+  
+    const handlePrevPage = () => {
+      setCurrentPage((prev) => Math.max(prev - 1, 1)); 
+    };
+  
+    const handleNextPage = () => {
+      setCurrentPage((prev) => Math.min(prev + 1, totalPages)); 
+    };
+  
+    const paginatedEntries = entries.slice(
+      (currentPage - 1) * TABLE_LIMIT,
+      currentPage * TABLE_LIMIT
+    );
+
   const [data, setData] = useState<TELData>({
-    entries: [],
+    entries: damayanFund.entries,
     loading: false,
     totalPages: 0,
     nextPage: false,
     prevPage: false,
   });
 
-  const getEntries = async (page: number) => {
-    setData(prev => ({ ...prev, loading: true }));
-    try {
-      const filter: TTableFilter = { limit: TABLE_LIMIT, page };
+      useEffect(() => {
+        setCurrentPage(1);
+      }, [damayanFund]);
 
-      const result = await kfiAxios.get(`/damayan-fund/entries/${damayanFund._id}`, { params: filter });
-      const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          entries: entries,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        setCurrentPage(page);
-        return;
-      }
-    } catch (error) {
-      present({
-        message: 'Failed to get entry records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setData(prev => ({ ...prev, loading: false }));
-    }
-  };
-
-  const handlePagination = (page: number) => getEntries(page);
-
-  useEffect(() => {
-    if (isOpen) {
-      getEntries(1);
-    }
-  }, [isOpen]);
 
   return (
     <div className="pb-2 h-full flex flex-col">
@@ -89,7 +75,7 @@ const ViewDFEntries = ({ isOpen, damayanFund }: ViewEntriesProps) => {
             {data.loading && <TableLoadingRow colspan={11} />}
             {!data.loading && data.entries.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
             {!data.loading &&
-              data.entries.map((entry: DamayanFundEntry, index: number) => (
+              paginatedEntries.map((entry: DamayanFundEntry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]">
                   <TableCell>{entry?.client?.name || ''}</TableCell>
                   <TableCell>{entry.particular || ''}</TableCell>
@@ -103,7 +89,32 @@ const ViewDFEntries = ({ isOpen, damayanFund }: ViewEntriesProps) => {
         </Table>
       </div>
       <div className="pt-2">
-        <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+       {data.entries.length > 0 && (
+                         <div className="w-full pb-3">
+                           <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">
+                             <div>
+                               <IonButton onClick={handlePrevPage} disabled={currentPage === 1} fill="clear" className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"> {/* ✅ was page */}
+                                 <IonIcon icon={arrowBack} />
+                               </IonButton>
+                             </div>
+                             <div>
+                               <div className="text-sm !font-semibold px-3 py-1.5 rounded-lg text-slate-700">
+                                 {currentPage} / {totalPages}
+                               </div>
+                             </div>
+                             <div>
+                               <IonButton
+                                 onClick={handleNextPage}
+                                 disabled={currentPage === totalPages}
+                                 fill="clear"
+                                 className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                               >
+                                 <IonIcon icon={arrowForward} /> 
+                               </IonButton>
+                             </div>
+                           </div>
+                         </div>
+                       )}
       </div>
 
       <div className="px-3">
