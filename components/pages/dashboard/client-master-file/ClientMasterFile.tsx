@@ -283,11 +283,12 @@ const ClientMasterFile = () => {
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px]" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start p-4">
-          <div>
-            <PageTitle pages={['Manage Account', 'Client Master File']} />
-            <p className=' text-xl !font-medium'>Manage Accounts</p>
+         <div className=' space-y-1'>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl text-gray-700 !font-medium'>Manage Account</p>
+              <p className=' text-sm text-gray-500 '>Manage user and members accounts.</p>
 
-          </div>
+            </div>
           <div className=" flex-1 flex flex-col gap-4">
             <ManageAccountNav />
            

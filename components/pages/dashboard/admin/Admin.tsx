@@ -175,13 +175,15 @@ const Admin = () => {
       <IonContent className="[--background:#f4f4f5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 items-stretch justify-start p-4">
 
-          <div>
-            <PageTitle pages={['Manage Account', 'Admin']} />
-            <p className=' text-xl !font-medium'>Manage Accounts</p>
-          </div>
+          <div className=' space-y-1'>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl text-gray-700 !font-medium'>Manage Account</p>
+              <p className=' text-sm text-gray-500 '>Manage user and members accounts.</p>
+
+            </div>
             <ManageAccountNav />
 
-           <div className="w-full grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1">
+           <div className="w-full grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
             <DashboardCard title="Active" value={`${statistics.active}`} icon={<UserMultiple02Icon stroke='.8' size={25}/>} />
             <DashboardCard title="Banned" value={`${statistics.banned}`} icon={<UserBlock01Icon stroke='.8' size={25}/>} />
             {/* <DashboardCard title="Inactive" value={`${statistics.inactive}`} icon={<UserMinus01Icon stroke='.8' size={20}/>} /> */}

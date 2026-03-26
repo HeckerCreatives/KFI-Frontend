@@ -11,6 +11,7 @@ import Loanlist from './LoanList';
 import { ArrowRight } from 'lucide-react';
 import kfiAxios from '../../../../utils/axios';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
+import TableNoRows from '../../../../ui/forms/TableNoRows';
 
 type DashboardCardProps = {
   title: string;
@@ -30,7 +31,7 @@ export type TData = {
 const LoanDetails = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-    const [year, setYear] = useState(2026)
+    const [year, setYear] = useState<string>('')
   
   
     const [data, setData] = useState<TData>({
@@ -44,14 +45,14 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
      const getData = async () => {
       setData(prev => ({ ...prev, loading: true }));
     try {
-      const result = await kfiAxios.get("/transaction/loans/list-by-year-month",{params: {year: year}})
+      const result = await kfiAxios.get("/transaction/loans/list-by-year-month",{params: {year: Number(year)}})
         const { success, data, message} = result.data;
       console.log(result)
       if(data.success){
          setData((prev: any) => ({
             ...prev,
             data: data.loanMonths,
-            
+            loading: false
           }));
 
           return
@@ -121,14 +122,17 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
                 </div>
 
                 <div className=' w-full flex items-end justify-end'>
-                   <IonInput
-                     name="year"
-                     type="number"
-                     value={year}
-                     onIonChange={(e) => setYear(Number(e.detail.value))}
-                     placeholder="Search year ..."
-                     className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
-                   />
+                   <div className=' flex flex-col gap-1'>
+                                                                             <p className=' text-xs'>Search</p>
+                                                                             <IonInput
+                                                                               name="year"
+                                                                               type="number"
+                                                                               value={year}
+                                                                               onIonInput={(e) => setYear(String(e.target.value))}
+                                                                               placeholder="Search year ..."
+                                                                               className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
+                                                                             />
+                                                                           </div>
                 </div>
 
                 <Table className=" w-full border-collapse mt-4">
@@ -143,6 +147,8 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
 
                     <TableBody>
                     {data.loading && <TableLoadingRow colspan={5} />}
+                    {!data.loading && data.data.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
+
 
 
                       {data.data.length !== 0 && data.data.map((item, index) => (
@@ -155,7 +161,7 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
                             <TableCell>{Number(item.totalAmount).toLocaleString()}</TableCell>
 
                             <TableCell>
-                                <Loanlist year={item.year} month={index + 1}/>
+                                <Loanlist year={item.year} month={index + 1} totalLoans={Number(item.totalAmount)}/>
                             </TableCell>
                         </TableRow>
                       ))}

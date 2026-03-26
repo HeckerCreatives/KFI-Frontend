@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
-import { IonButton, IonIcon, IonInput, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import { search } from 'ionicons/icons';
+import { IonButton, IonIcon, IonInput, IonSelect, IonSelectOption, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { list, search } from 'ionicons/icons';
 import { TTableFilter } from '../../../../../types/types';
 import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
@@ -15,6 +15,7 @@ import SearchInput from '../../../../ui/forms/InputSearch';
 
 type TSearch = {
   keyword: string;
+  center: string
 };
 
 export type Loan = {
@@ -44,13 +45,16 @@ const LoansPerCenter = () => {
   const form = useForm<TSearch>({
       defaultValues: {
         keyword: '',
+        center: ''
       },
     });
 
   const code = form.watch('keyword')
+  const [center, setCenter] = useState('')
 
 
   const [currentPage, setCurrentPage] = useState<number>(1);
+
 
   const [data, setData] = useState<TRecentMember>({
     loans: [],
@@ -60,12 +64,13 @@ const LoansPerCenter = () => {
     prevPage: false,
   });
   const [items, setItems] = useState<string[]>([])
+  const [centers, setCenters] = useState<any[]>([])
 
   const getRecentLoans = async (page: number) => {
     setData(prev => ({ ...prev, loading: true }));
     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-      const result = await kfiAxios.get('/statistics/loans-per-center', { params: { ...filter, keyword: code } });
+      const result = await kfiAxios.get('/statistics/loans-per-center', { params: { ...filter, keyword: code, center: center } });
       const { success, loans, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({
@@ -74,6 +79,7 @@ const LoansPerCenter = () => {
           totalPages: totalPages,
           nextPage: hasNextPage,
           prevPage: hasPrevPage,
+          loading: false
         }));
         setCurrentPage(page);
         return;
@@ -83,6 +89,8 @@ const LoansPerCenter = () => {
         message: 'Failed to get recentt members records. Please try again',
         duration: 1000,
       });
+      setData(prev => ({ ...prev, loading: false }));
+
     } finally {
       setData(prev => ({ ...prev, loading: false }));
     }
@@ -100,36 +108,62 @@ const LoansPerCenter = () => {
 
 
     useEffect(() => {
+
        const getData = async () => {
 
       try {
         const result = await kfiAxios.get('/statistics/loans-per-center', { params: { limit: 5, keyword: code, page: 1 } });
+        const centers = await kfiAxios.get('/center/selection', { params: { limit: 20, page: 1 } });
         const { success, loans, hasPrevPage, hasNextPage, totalPages } = result.data;
+        const { centers: list } = centers.data;
         if (success) {
           setItems(loans.map((item: any) => item.acctOfficer));
+          setCenters(list)
+
         }
       } catch (error) {
+
         // handle error
       } finally {
+
       }
     };
 
     const timer = setTimeout(() => {
       getData();
-    }, 800);
+      getRecentLoans(currentPage)
+    }, 500);
 
     return () => clearTimeout(timer);
    
-  }, [code]);
+  }, [code, center]);
 
 
 
   return (
     <div className=" relative h-fit flex-1 flex flex-col bg-white shadow-lg rounded-xl">
       <div className=" pb-2 flex-1 flex flex-col">
-        <div className="flex items-center justify-between w-full h-[80px] bg-orange-50 p-4 px-8 rounded-t-xl">
+        <div className="flex flex-wrap items-center justify-between w-full h-fit bg-orange-50 p-4 px-8 rounded-t-xl">
           <h3 className="text-[0.9rem] pb-2 text-black !font-medium">Loans per Account Officer</h3>
            <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
+
+            <div className="min-w-56">
+              <IonSelect
+                aria-label={'no label'}
+                interface="popover"
+                placeholder="Centers"
+                labelPlacement="stacked"
+                className={'!px-3 !py-2.5 border border-zinc-300 rounded-xl [--highlight-color-focused:none] bg-white !text-[0.8rem] !min-h-[1.2rem] min-w-full '}
+                 onIonChange={e => setCenter(e.detail.value)}
+                 value={center}
+              >
+                {centers.map((item) => (
+                  <IonSelectOption key={item._id} value={item.description} className="h-10 text-xs ![--min-height:1rem] [&>ion-radio]:checked:bg-red-600">
+                   {item.description}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </div>
           
             <div className="flex items-center min-w-20 overflow-visible!">
               <FormIonItem className="flex-1 overflow-visible!">
@@ -140,14 +174,14 @@ const LoansPerCenter = () => {
                   control={form.control}
                   clearErrors={form.clearErrors}
                   // label="Code"
-                  placeholder="Search acct. officer..."
-                  className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
+                  placeholder="Search ..."
+                  className="!px-3 !py-1 rounded-xl "
                   suggestions={items}
                 />
               </FormIonItem>
-              <IonButton type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+              {/* <IonButton type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
                 <IonIcon icon={search} />
-              </IonButton>
+              </IonButton> */}
             </div>
           </form>
          
@@ -173,8 +207,8 @@ const LoansPerCenter = () => {
                 style={{ visibility: 'collapse' }}
               
               >
-                {data.loading && <TableLoadingRow colspan={4} />}
-                {!data.loading && data.loans.length < 1 && <TableNoRows label="No Loans Found" colspan={4} />}
+                {data.loading && <TableLoadingRow colspan={8} />}
+                {!data.loading && data.loans.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
                 {!data.loading &&
                   data.loans.length > 0 &&
                   data.loans.map((loan: Loan, i: number) => (

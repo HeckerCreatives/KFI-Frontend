@@ -122,7 +122,8 @@ const RecentMembers = ({setSelected, selected} : Props) => {
   
       const timer = setTimeout(() => {
         getData();
-      }, 800);
+        getRecentMembers(currentPage)
+      }, 500);
   
       return () => clearTimeout(timer);
      
@@ -131,48 +132,46 @@ const RecentMembers = ({setSelected, selected} : Props) => {
 
   return (
       <div className=" flex flex-col space-y-2 bg-white rounded-xl shadow-lg">
-                            <div className="flex items-center justify-between bg-orange-50 p-4 rounded-t-xl">
-                              <div className="min-w-44">
-                                <IonSelect
-                                  aria-label={'no label'}
-                                  interface="popover"
-                                  placeholder="Recent Loan"
-                                  labelPlacement="stacked"
-                                  className={'!border border-orange-400 [--highlight-color-focused:none] rounded-md bg-orange-50 !px-2 !py-2 !text-[0.8rem] !min-h-[1.2rem] min-w-full '}
-                                  onIonChange={e => setSelected(e.detail.value)}
-                                  value={selected}
-                                >
-                                  <IonSelectOption value="recent loan" className="h-10 text-xs ![--min-height:1rem] [&>ion-radio]:checked:bg-red-600">
-                                    Recent Loan
-                                  </IonSelectOption>
-                                  <IonSelectOption value="recent member" className="h-18 text-xs ![--min-height:1rem]">
-                                    Recent Member
-                                  </IonSelectOption>
-                                </IonSelect>
-                              </div>
-    
-                               <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2 ">
-                                <div className="flex items-center min-w-20 overflow-visible!">
-                                  <FormIonItem className="flex-1 overflow-visible!">
-    
-                                    <SearchInput
-                                      name="code"
-                                      control={form.control}
-                                      clearErrors={form.clearErrors}
-                                      // label="Code"
-                                      placeholder="Search ..."
-                                      className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
-                                      suggestions={items}
-                                    />
-                                  </FormIonItem>
-                                  <IonButton type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                                    <IonIcon icon={search} />
-                                  </IonButton>
-                                </div>
-                              </form>
-        
-                              
+                           <div className="flex items-center justify-between bg-orange-50 p-4 rounded-t-xl">
+                          <div className="min-w-44">
+                            <IonSelect
+                              aria-label={'no label'}
+                              interface="popover"
+                              placeholder="Recent Loan"
+                              labelPlacement="stacked"
+                              className={'!px-3 !py-2.5 border border-zinc-300 rounded-xl [--highlight-color-focused:none] bg-white !text-[0.8rem] !min-h-[1.2rem] min-w-full '}
+                              onIonChange={e => setSelected(e.detail.value)}
+                              value={selected}
+                            >
+                              <IonSelectOption value="recent loan" className="h-10 text-xs ![--min-height:1rem] [&>ion-radio]:checked:bg-red-600">
+                                Recent Loan
+                              </IonSelectOption>
+                              <IonSelectOption value="recent member" className="h-18 text-xs ![--min-height:1rem]">
+                                Recent Member
+                              </IonSelectOption>
+                            </IonSelect>
+                          </div>
+
+                           <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2 ">
+                            <div className="flex items-center min-w-20 overflow-visible!">
+                              <FormIonItem className="flex-1 overflow-visible!">
+
+                                <SearchInput
+                                  name="code"
+                                  control={form.control}
+                                  clearErrors={form.clearErrors}
+                                  // label="Code"
+                                  placeholder="Search ..."
+                                  className="!px-3 !py-1 rounded-xl"
+                                  suggestions={items}
+                                />
+                              </FormIonItem>
+                             
                             </div>
+                          </form>
+    
+                          
+                        </div>
                              <div className="relative max-h-[500px] h-full flex flex-col !rounded-xl">
        <div className=' w-full absolute top-0 z-[9]'>
         <Table>
@@ -189,8 +188,8 @@ const RecentMembers = ({setSelected, selected} : Props) => {
                 style={{ visibility: 'collapse' }}
             
             >
-            {data.loading && <TableLoadingRow colspan={3} />}
-            {!data.loading && data.clients.length < 1 && <TableNoRows label="No Recent Member Found" colspan={3} />}
+            {data.loading && <TableLoadingRow colspan={8} />}
+            {!data.loading && data.clients.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
             {!data.loading &&
               data.clients.length > 0 &&
               data.clients.map((client: Member, i: number) => (
@@ -222,8 +221,8 @@ const RecentMembers = ({setSelected, selected} : Props) => {
             </TableHeadRow>
           </TableHeader>
           <TableBody>
-            {data.loading && <TableLoadingRow colspan={3} />}
-            {!data.loading && data.clients.length < 1 && <TableNoRows label="No Recent Member Found" colspan={3} />}
+          {data.loading && <TableLoadingRow colspan={8} />}
+            {!data.loading && data.clients.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
             {!data.loading &&
               data.clients.length > 0 &&
               data.clients.map((client: Member, i: number) => (

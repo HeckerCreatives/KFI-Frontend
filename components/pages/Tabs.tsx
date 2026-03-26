@@ -370,14 +370,14 @@ const Tabs = () => {
     
       <IonPage id="main-content">
        
-        <div className=' w-full flex'>
-          <div className='min-h-screen w-[320px] flex flex-col p-6'>
+        <div className=' w-full min-h-screen flex'>
+          <div className='min-h-screen w-[320px] hidden xl:flex flex-col p-6'>
             <div className=' px-4'>
                <div className='flex items-center'>
               <Image alt="logo" src={logoNoBg} className="h-16 w-auto" />
             </div>
 
-            <p className=' text-sm text-zinc-400 mt-6'>Menu</p>
+            <p className=' text-sm text-zinc-400 mt-6 mb-2'>Menu</p>
             </div>
            
 
@@ -401,7 +401,7 @@ const Tabs = () => {
                        
                     >
                       {link.icon && (
-                       <div className={`rounded-md mr-2 ${location.pathname === link.path ? "text-white" : "text-orange-600"}`}>
+                       <div className={`rounded-md mr-2 ${isParentActive(link) ? "text-white" : "text-orange-600"}`}>
                         {link.icon}
                       </div>
                       )}
@@ -571,7 +571,7 @@ const Tabs = () => {
                     <ChangeOwnPassword />
                     <div
                       onClick={logout}
-                      className="flex items-center gap-2 text-[1rem] text-slate-700 font-semibold hover:bg-slate-100 py-1 px-3 cursor-pointer active:bg-slate-200"
+                      className="flex items-center gap-2 text-[1rem] text-red-500 font-semibold hover:bg-slate-100 py-1 px-3 cursor-pointer active:bg-slate-200"
                     >
                       <IonIcon icon={logOut} /> Logout
                     </div>

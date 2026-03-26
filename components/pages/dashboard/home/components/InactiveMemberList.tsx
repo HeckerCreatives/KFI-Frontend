@@ -88,7 +88,7 @@ const InactiveMemberlist = ({year, month, status} : Props) => {
            }, 500);
            return () => clearTimeout(timer);
            }
-         }, [isOpen]);
+         }, [isOpen, search]);
   const dismiss = () => {
     setIsOpen(false);
   };
@@ -145,19 +145,18 @@ const InactiveMemberlist = ({year, month, status} : Props) => {
                     </div>
                     
                      <div className=' flex items-center gap-2'>
-                                            <IonInput
-                                             name="search"
-                                             value={search}
-                                             onIonChange={(e) => setSearch(e.detail.value || '')}
-                                             type='text'
-                                             placeholder="Search ..."
-                                             className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
-                                           />
-                                           <IonButton 
-                                           onClick={() => getClients(currentPage)}
-                                           type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                                             Search
-                                           </IonButton>
+                                           <div className=' flex flex-col gap-1'>
+                                                                   <p className=' text-xs'>Search</p>
+                                                                    <IonInput
+                                                                    name="search"
+                                                                    value={search}
+                                                                    onIonInput={(e) => setSearch(String(e.target.value))}
+                                                                    type='text'
+                                                                    placeholder="Search ..."
+                                                                    className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
+                                                                  />
+                                                                </div>
+                                         
                                          </div>
                 </div>
 

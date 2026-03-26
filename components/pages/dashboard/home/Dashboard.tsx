@@ -19,9 +19,10 @@ const Dashboard = () => {
            
           <div className="px-3 pb-3 flex-1 space-y-4">
 
-             <div>
+             <div className=' space-y-1'>
               {/* <PageTitle pages={['Dashboard']} /> */}
-              <p className=' text-xl !font-medium'>Dashboard</p>
+              <p className=' text-xl text-gray-700 !font-medium'>Dashboard</p>
+              <p className=' text-sm text-gray-500 '>Monitor loan activity, collections, and members.</p>
 
             </div>
             

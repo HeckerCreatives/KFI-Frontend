@@ -30,8 +30,9 @@ export type TClientMasterFile = {
  type Props = {
   year: number,
   month: number,
+  totalLoans: number
  }
-const Loanlist = ({year, month}: Props) => {
+const Loanlist = ({year, month, totalLoans}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   
@@ -87,7 +88,7 @@ const Loanlist = ({year, month}: Props) => {
               }, 500);
               return () => clearTimeout(timer);
               }
-            }, [isOpen]);
+            }, [isOpen, search]);
      const dismiss = () => {
        setIsOpen(false);
      };
@@ -119,7 +120,7 @@ const Loanlist = ({year, month}: Props) => {
               <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full max-w-64 rounded-xl flex items-start justify-between overflow-hidden">
                   <div className=" relative z-10 space-y-2">
                     <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total Loans</div>
-                    <div className="text-3xl text-orange-600 !font-bold">0</div>
+                    <div className="text-3xl text-orange-600 !font-bold">{totalLoans.toLocaleString()}</div>
                   </div>
                  
                   <div className=' flex flex-col items-end justify-between'>
@@ -166,19 +167,18 @@ const Loanlist = ({year, month}: Props) => {
                     </div>
                     
                     <div className=' flex items-center gap-2'>
-                      <IonInput
-                       name="search"
-                       value={search}
-                       onIonChange={(e) => setSearch(e.detail.value || '')}
-                       type='text'
-                       placeholder="Search ..."
-                       className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
-                     />
-                     <IonButton 
-                     onClick={() => getClients(currentPage)}
-                     type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                       Search
-                     </IonButton>
+                     <div className=' flex flex-col gap-1'>
+                                             <p className=' text-xs'>Search</p>
+                                              <IonInput
+                                              name="search"
+                                              value={search}
+                                              onIonInput={(e) => setSearch(String(e.target.value))}
+                                              type='text'
+                                              placeholder="Search ..."
+                                              className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
+                                            />
+                                          </div>
+                    
                    </div>
                 </div>
 
