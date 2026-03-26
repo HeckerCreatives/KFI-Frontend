@@ -151,7 +151,7 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
 
 
 
-                      {data.data.length !== 0 && data.data.map((item, index) => (
+                      {!data.loading && data.data.length !== 0 && data.data.map((item, index) => (
                           <TableRow
                         key={item.month}
                             className="!border-1 [&>td]:text-[0.7rem]"

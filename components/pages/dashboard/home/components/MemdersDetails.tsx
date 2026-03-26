@@ -153,7 +153,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                     
 
 
-                      {data.data.length !== 0 && data.data.map((item, index) => (
+                      {!data.loading && data.data.length !== 0 && data.data.map((item, index) => (
                           <TableRow
                         key={item.month}
                             className="!border-1 [&>td]:text-[0.7rem]"
@@ -163,7 +163,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                             <TableCell>{Number(item.memberCount).toLocaleString()}</TableCell>
 
                             <TableCell>
-                                <ViewMemberListInfo year={item.year} month={index + 1}/>
+                                <ViewMemberListInfo year={item.year} month={item.month}/>
                             </TableCell>
                         </TableRow>
                       ))}

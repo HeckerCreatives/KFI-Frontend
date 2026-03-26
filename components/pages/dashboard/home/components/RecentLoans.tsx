@@ -80,7 +80,7 @@ const RecentLoans = ({setSelected, selected} : Props) => {
   const getRecentLoans = async (page: number) => {
     setData((prev) => ({ ...prev, loading: true }))
     try {
-      const result = await kfiAxios.get("/transaction/loan-release",{params: {keyword: code, page: 1, limit: 10}})
+      const result = await kfiAxios.get("/transaction/loan-release",{params: {search: code, page: 1, limit: 10}})
         const { success, transactions, hasPrevPage, hasNextPage, totalPages } = result.data;
         if (success) {
           setData(prev => ({
@@ -121,10 +121,10 @@ const RecentLoans = ({setSelected, selected} : Props) => {
      useEffect(() => {
         const getData = async () => {
        try {
-         const result = await kfiAxios.get('/statistics/recent-loans', {params: {search: code}});
-          const { success, entries } = result.data
+         const result = await kfiAxios.get('/transaction/loan-release', {params: {search: code, page: 1}});
+           const { success, transactions, hasPrevPage, hasNextPage, totalPages } = result.data;
          if (success) {
-           setItems(entries.map((item: any) => item.client.name));
+           setItems(transactions.map((item: any) => item.code));
          }
        } catch (error) {
        } finally {
@@ -210,7 +210,7 @@ const RecentLoans = ({setSelected, selected} : Props) => {
       </div>
      <div className="relative max-h-[500px] overflow-auto flex-1 ">
      
-      <Table className=" w-full border-collapse">
+      <Table className=" w-full border-collapse mt-12">
         {/* Make the entire TableHeader sticky */}
         {/* <TableHeader className="sticky top-0 z-10 bg-white backdrop-blur-sm shadow-sm">
           <TableHeadRow>

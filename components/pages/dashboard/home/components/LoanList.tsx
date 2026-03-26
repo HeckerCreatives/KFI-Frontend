@@ -195,7 +195,7 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
                     <TableBody>
                        {!data.loading && data.clients.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
 
-                      {data.clients.length !== 0 && data.clients.map((item) => (
+                      {!data.loading && data.clients.length !== 0 && data.clients.map((item) => (
                          <TableRow
                         key={item._id}
                             className="!border-1 [&>td]:text-[0.7rem]"

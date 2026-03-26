@@ -159,7 +159,7 @@ const ActiveMembers = ({ title, icon, value, loading = false, details = false }:
                       
 
                     
-                  {data.data.length !== 0 && data.data.map((item, index) => (
+                  {!data.loading && data.data.length !== 0 && data.data.map((item, index) => (
                           <TableRow
                         key={item.month}
                             className="!border-1 [&>td]:text-[0.7rem]"
@@ -174,7 +174,7 @@ const ActiveMembers = ({ title, icon, value, loading = false, details = false }:
                             <TableCell>{Number(item.statusCounts["Active-PastDue"]).toLocaleString()}</TableCell>
 
                             <TableCell>
-                                <ActiveMemberlist year={item.year} month={index + 1} status='active'/>
+                                <ActiveMemberlist year={item.year} month={item.month} status='active'/>
                             </TableCell>
 
 

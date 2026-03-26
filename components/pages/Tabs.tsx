@@ -237,7 +237,7 @@ const Tabs = () => {
         <div className="w-full  p-6 rounded-md">
             <Image alt="logo" src={logoNoBg} className="h-12 w-auto" />
           </div>
-        <IonAccordionGroup multiple={true} className="border-collapse">
+        <IonAccordionGroup multiple={false} className="border-collapse">
           {navLinks.map((link, idx) =>
             link.children ? (
               <IonAccordion key={idx} value={link.label}>
@@ -262,7 +262,7 @@ const Tabs = () => {
                   </IonLabel>
                 </IonItem>
                 <IonList slot="content">
-                  <IonAccordionGroup multiple={true}>
+                  <IonAccordionGroup multiple={false}>
                     {link.children.map((child, cIdx) =>
                       child.children ? (
                         <IonAccordion key={cIdx} value={child.label}>

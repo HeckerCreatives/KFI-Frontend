@@ -156,7 +156,7 @@ const InactiveMembers = ({ title, icon, value, loading = false, details = false 
 
 
                     
-                  {data.data.length !== 0 && data.data.map((item, index) => (
+                  {!data.loading && data.data.length !== 0 && data.data.map((item, index) => (
                           <TableRow
                         key={item.month}
                             className="!border-1 [&>td]:text-[0.7rem]"
@@ -167,7 +167,7 @@ const InactiveMembers = ({ title, icon, value, loading = false, details = false 
                     
 
                             <TableCell>
-                                <InactiveMemberlist year={item.year} month={index + 1} status='inactive'/>
+                                <InactiveMemberlist year={item.year} month={item.month} status='inactive'/>
                             </TableCell>
                         </TableRow>
                       ))}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
-import { IonButton, IonIcon, IonInput, IonSelect, IonSelectOption, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonInput, IonModal, IonPopover, IonSelect, IonSelectOption, IonSpinner, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import { list, search } from 'ionicons/icons';
 import { TTableFilter } from '../../../../../types/types';
 import { TABLE_LIMIT } from '../../../../utils/constants';
@@ -12,6 +12,7 @@ import { formatNumber } from '../../../../ui/utils/formatNumber';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import SearchInput from '../../../../ui/forms/InputSearch';
+import { ChevronDownIcon } from 'lucide-react';
 
 type TSearch = {
   keyword: string;
@@ -66,11 +67,11 @@ const LoansPerCenter = () => {
   const [items, setItems] = useState<string[]>([])
   const [centers, setCenters] = useState<any[]>([])
 
-  const getRecentLoans = async (page: number) => {
+  const getRecentLoans = async (page: number, centerData?: string) => {
     setData(prev => ({ ...prev, loading: true }));
     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-      const result = await kfiAxios.get('/statistics/loans-per-center', { params: { ...filter, keyword: code, center: center } });
+      const result = await kfiAxios.get('/statistics/loans-per-center', { params: { ...filter, keyword: code, center: centerData } });
       const { success, loans, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({
@@ -96,14 +97,14 @@ const LoansPerCenter = () => {
     }
   };
 
-  const handlePagination = (page: number) => getRecentLoans(page);
+  const handlePagination = (page: number) => getRecentLoans(page, center);
 
   const onSubmit = (data: TSearch) => {
-    getRecentLoans(currentPage)
+    getRecentLoans(currentPage, center)
   };
 
   useIonViewWillEnter(() => {
-    getRecentLoans(currentPage);
+    getRecentLoans(currentPage, center);
   });
 
 
@@ -112,13 +113,10 @@ const LoansPerCenter = () => {
        const getData = async () => {
 
       try {
-        const result = await kfiAxios.get('/statistics/loans-per-center', { params: { limit: 5, keyword: code, page: 1 } });
-        const centers = await kfiAxios.get('/center/selection', { params: { limit: 20, page: 1 } });
+        const result = await kfiAxios.get('/statistics/loans-per-center', { params: { limit: 5, keyword: code, page: 1, center: center } });
         const { success, loans, hasPrevPage, hasNextPage, totalPages } = result.data;
-        const { centers: list } = centers.data;
         if (success) {
           setItems(loans.map((item: any) => item.acctOfficer));
-          setCenters(list)
 
         }
       } catch (error) {
@@ -131,12 +129,50 @@ const LoansPerCenter = () => {
 
     const timer = setTimeout(() => {
       getData();
-      getRecentLoans(currentPage)
+      getRecentLoans(currentPage, center)
     }, 500);
 
     return () => clearTimeout(timer);
    
   }, [code, center]);
+
+  // state additions
+const [centerSearch, setCenterSearch] = useState('');
+const [centerPage, setCenterPage] = useState(1);
+const [centerHasNext, setCenterHasNext] = useState(false);
+const [loadingCenters, setLoadingCenters] = useState(false);
+const [showCenterPicker, setShowCenterPicker] = useState(false);
+const centerTriggerRef = useRef<HTMLButtonElement>(null);
+
+
+// separate center fetcher
+const fetchCenters = async (page: number, keyword: string, append = false) => {
+  try {
+    setLoadingCenters(true);
+    const centers = await kfiAxios.get('/center/selection', {
+      params: { limit: 10, page, keyword },
+    });
+    const { centers: list, hasNextPage } = centers.data;
+    setCenters(prev => append ? [...prev, ...list] : list);
+    setCenterHasNext(hasNextPage);
+  } catch (error) {
+    // handle
+  } finally {
+    setLoadingCenters(false);
+  }
+};
+
+
+// on search change — reset to page 1
+useEffect(() => {
+  setCenterPage(1);
+  fetchCenters(1, centerSearch, false);
+}, [centerSearch]);
+
+// on page increment — append
+useEffect(() => {
+  if (centerPage > 1) fetchCenters(centerPage, centerSearch, true);
+}, [centerPage]);
 
 
 
@@ -148,21 +184,101 @@ const LoansPerCenter = () => {
            <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
 
             <div className="min-w-56">
-              <IonSelect
-                aria-label={'no label'}
-                interface="popover"
-                placeholder="Centers"
-                labelPlacement="stacked"
-                className={'!px-3 !py-2.5 border border-zinc-300 rounded-xl [--highlight-color-focused:none] bg-white !text-[0.8rem] !min-h-[1.2rem] min-w-full '}
-                 onIonChange={e => setCenter(e.detail.value)}
-                 value={center}
+             <button
+              ref={centerTriggerRef}
+              id="center-picker-trigger"
+              type='button'
+              onClick={() => setShowCenterPicker(true)}
+              className="flex items-center justify-between px-3 py-3 rounded-xl bg-white text-[0.8rem] min-w-full border border-zinc-300"
+              style={{ border: '1px solid #d4d4d8' }}
+            >
+                <span className={center ? 'text-gray-800' : 'text-gray-400'}>
+                  {center || 'Centers'}
+                </span>
+                <ChevronDownIcon size={14} className="text-gray-400" />
+              </button>
+
+              <IonPopover
+                trigger="center-picker-trigger"
+                isOpen={showCenterPicker}
+                onDidDismiss={() => setShowCenterPicker(false)}
+                showBackdrop={false}
+                side="bottom"
+                alignment="start"
+                className="[--width:220px] [--max-height:320px]"
               >
-                {centers.map((item) => (
-                  <IonSelectOption key={item._id} value={item.description} className="h-10 text-xs ![--min-height:1rem] [&>ion-radio]:checked:bg-red-600">
-                   {item.description}
-                  </IonSelectOption>
-                ))}
-              </IonSelect>
+                <IonContent scrollY={true}>
+                  {/* search */}
+                  <div className="px-3 pt-3 pb-2 sticky top-0 bg-white z-10 border-b border-zinc-100">
+                    <IonInput
+                      placeholder="Search centers..."
+                      value={centerSearch}
+                      onIonInput={e => {
+                        setCenterSearch(String(e.target.value ?? ''));
+                        setCenterPage(1);
+                      }}
+                      clearInput
+                      className="border border-zinc-300 rounded-xl ![--background:white] ![--padding-start:10px] ![--padding-end:10px] ![--min-height:1rem] !text-xs"
+                    />
+                  </div>
+
+                  {/* list */}
+                  <div className="flex flex-col py-1 overflow-y-auto max-h-[250px]">
+                    
+                    {centers.map(item => (
+                      <button
+                        key={item._id}
+                        onClick={() => {
+                          setCenter(item.description);
+                          setShowCenterPicker(false);
+                        }}
+                        className={`text-left px-4 py-2.5 text-xs hover:bg-orange-50 transition-colors ${
+                          center === item.description
+                            ? 'text-orange-500 font-medium bg-orange-50'
+                            : 'text-gray-700'
+                        }`}
+                      >
+                        {item.description}
+                      </button>
+                    ))}
+
+                    {loadingCenters && (
+                      <div className="flex justify-center py-3">
+                        <IonSpinner name="crescent" className="text-orange-400 w-5 h-5" />
+                      </div>
+                    )}
+
+                    {centers.length === 0 && !loadingCenters && (
+                      <p className="text-center text-xs text-gray-400 py-4">No centers found</p>
+                    )}
+
+                     {centerHasNext && (
+                        <button
+                          onClick={() => setCenterPage(prev => prev + 1)}
+                          className="w-full py-2.5 text-xs text-zinc-500 font-medium border-t border-zinc-100 hover:bg-orange-50 transition-colors"
+                        >
+                          Load more
+                        </button>
+                      )}
+
+                   
+                  </div>
+
+                  {/* infinite scroll */}
+                  <IonInfiniteScroll
+                    disabled={!centerHasNext}
+                    onIonInfinite={async (e) => {
+                      setCenterPage(prev => prev + 1);
+                      await (e.target as HTMLIonInfiniteScrollElement).complete();
+                    }}
+                  >
+                    <IonInfiniteScrollContent
+                      loadingSpinner="crescent"
+                      loadingText="Loading more..."
+                    />
+                  </IonInfiniteScroll>
+                </IonContent>
+              </IonPopover>
             </div>
           
             <div className="flex items-center min-w-20 overflow-visible!">

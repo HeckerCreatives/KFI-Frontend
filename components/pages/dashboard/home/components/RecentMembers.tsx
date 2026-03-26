@@ -78,7 +78,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
     
      const code = form.watch('code')
 
-  const getRecentMembers = async (page: number) => {
+  const getRecentMembers = async (page: number, ) => {
     setData(prev => ({ ...prev, loading: true }));
     try {
       const result = await kfiAxios.get('/statistics/recent-members', {params: {code: code}});
@@ -109,7 +109,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
          const getData = async () => {
   
         try {
-          const result = await kfiAxios.get('/statistics/recent-members', {params: {search: code}});
+          const result = await kfiAxios.get('/statistics/recent-members', {params: {code: code}});
            const { success, customers } = result.data;
           if (success) {
             setItems(customers.map((item: any) => item.name));
@@ -210,7 +210,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
       </div>
      <div className="relative max-h-[500px] overflow-auto flex-1 !rounded-xl ">
      
-      <Table>
+      <Table className=''>
           <TableHeader>
             <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
               <TableHead className=" text-orange-700 !font-[600]">Name</TableHead>
