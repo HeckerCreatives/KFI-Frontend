@@ -6,6 +6,7 @@ import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import { Trash } from 'lucide-react';
 
 type DeleteCenterProps = {
   client: ClientMasterFile;
@@ -103,9 +104,9 @@ const DeleteClientMasterFile = ({ client, getClients, searchkey, sortKey, curren
         type="button"
         fill="clear"
         id={`delete-cmf-modal-${client._id}`}
-        className="space-x-1 w-20 h-7 rounded-md ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-red-100 text-red-900 capitalize min-h-4 text-xs"
+         className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={trashBin} className="text-xs" />
+        <Trash size={20} className=' mr-1'/>
         <span>Delete</span>
       </IonButton>
       <IonModal

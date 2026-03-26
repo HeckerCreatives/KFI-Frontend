@@ -30,7 +30,7 @@ const UserActions = ({ user, setData }: UserActionsProps) => {
         className=" !p-2 bg-zinc-100 rounded-xl text-zinc-800"
         id={triggerId}
       >
-       <Ellipsis size={25}/>
+       <Ellipsis size={20}/>
       </button>
 
           <IonPopover

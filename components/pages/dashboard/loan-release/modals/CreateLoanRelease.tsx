@@ -63,7 +63,6 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
     setIsOpen(false)
   }
 
-  console.log(form.formState.errors, form.watch('entries'))
   const difference = `${formatNumber(Math.abs(form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.debit as string)), 0) - form.watch('entries').reduce((acc, current) => acc + Number(removeAmountComma(current.credit as string)), 0)))}`
 
   async function onSubmit(data: LoanReleaseFormData) {
@@ -179,10 +178,10 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
          onClick={() => setIsOpen(true)}
           fill="clear"
           id="create-loanRelease-modal"
-          className="max-h-10 min-h-6 min-w-32 max-w-32 w-32 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+          className="h-10 w-fit !px-2 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl"
           strong
         >
-          + Add Record
+          + Add
         </IonButton>
       </div>
       <IonModal

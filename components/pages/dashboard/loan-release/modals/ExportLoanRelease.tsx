@@ -9,6 +9,7 @@ import { Transaction } from '../../../../../types/types';
 import { fileTrayFullSharp, print } from 'ionicons/icons';
 import PrintExportOptionForm from '../components/PrintExportOptionForm';
 import { FileExportIcon, PrinterIcon } from 'hugeicons-react';
+import { File } from 'lucide-react';
 
 export const loanReleaseOptionSchema = z.object({
   option: z.string().optional().or(z.literal('')),
@@ -79,9 +80,9 @@ const ExportLoanRelease = ({ transaction }: { transaction: Transaction }) => {
         id={`export_loan_release_${transaction._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 w-20 h-7 rounded-md ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-pink-50 text-pink-900 capitalize min-h-4 text-xs"
+        className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={fileTrayFullSharp} className="text-xs" />
+        <File size={20} className=' mr-1'/>
         <span>Export</span>
       </IonButton>
       <IonModal

@@ -154,7 +154,7 @@ const PrintAllLoanRelease = () => {
 
   return (
     <>
-      <IonButton fill="clear" id="print_all_loan_release" className="max-h-10 w-fit min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+      <IonButton fill="clear" id="print_all_loan_release" className="h-10 bg-orange-50 text-orange-500 border border-orange-200 capitalize font-semibold rounded-xl" strong>
        <PrinterIcon stroke='.8' size={15} className=' mr-1'/>Print
       </IonButton>
       <IonModal

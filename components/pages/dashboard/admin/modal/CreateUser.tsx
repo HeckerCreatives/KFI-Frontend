@@ -63,7 +63,7 @@ const CreateUser = ({ getUsers }: CreateUserProps) => {
   return (
     <>
       <div className="text-end">
-        <IonButton fill="clear" id="create-user-modal" className="!h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        <IonButton fill="clear" id="create-user-modal" className="!h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl" strong>
           + Create
         </IonButton>
       </div>

@@ -5,6 +5,7 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import { ClientMasterFile } from '../../../../../types/types';
 import { print } from 'ionicons/icons';
 import { PrinterIcon } from 'hugeicons-react';
+import { Printer } from 'lucide-react';
 
 const PrintClient = ({ client }: { client: ClientMasterFile }) => {
   const [present] = useIonToast();
@@ -69,9 +70,9 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
         type="button"
         fill="clear"
         id={`print_client_${client._id}`}
-        className="space-x-1 rounded-md w-20 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-purple-100 text-purple-900 capitalize min-h-4 text-xs"
+         className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={print} className="text-xs" />
+        <Printer size={20} className=' mr-1'/>
         <span>Profiles</span>
       </IonButton>
       <IonModal

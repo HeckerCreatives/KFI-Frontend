@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import InputText from '../../../../ui/forms/InputText';
 import InputRadio from '../../../../ui/forms/InputRadio';
 import LoanReleaseSelectionClient from '../../../../ui/selections/LoanReleaseSelectionClient';
+import { Download } from 'lucide-react';
 
 const ExportClient = ({ client }: { client: ClientMasterFile }) => {
   const [present] = useIonToast();
@@ -84,9 +85,9 @@ const ExportClient = ({ client }: { client: ClientMasterFile }) => {
         type="button"
         fill="clear"
         id={`export_client_${client._id}`}
-        className="space-x-1 w-20 h-7 rounded-xl ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-pink-50 text-pink-900 capitalize min-h-4 text-xs"
+         className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={download} className="text-xs" />
+        <Download size={20} className=' mr-1'/>
         <span>Soa</span>
       </IonButton>
       <IonModal

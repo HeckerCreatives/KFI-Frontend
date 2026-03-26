@@ -16,6 +16,7 @@ import { jwtDecode } from 'jwt-decode';
 import classNames from 'classnames';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import { Edit } from 'lucide-react';
 
 type UpdateClientMasterFileProps = {
   client: ClientMasterFile;
@@ -211,9 +212,9 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
         type="button"
         id={`update-cmf-modal-${client._id}`}
         fill="clear"
-        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-blue-50 text-blue-900 capitalize min-h-4 text-xs"
+        className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={createSharp} className="text-xs" />
+        <Edit size={20} className=' mr-1'/>
         <span>Edit</span>
       </IonButton>
       <IonModal

@@ -248,7 +248,7 @@ const Tabs = () => {
                   }}
                 >
                   {link.icon && (
-                    <div className="bg-orange-50 p-1 rounded-md text-orange-600 mr-2">
+                    <div className="bg-orange-50 p-1 rounded-xl text-orange-600 mr-2">
                       {link.icon}
                     </div>
                   )}
@@ -344,11 +344,12 @@ const Tabs = () => {
                 detail={false}
                 style={{
                   "--border-width": "0",
+                  "--border-radius": "1",
                   "--inner-border-width": "0",
                 }}
               >
                 {link.icon && (
-                  <div className="bg-orange-50 p-1 rounded-md text-orange-600 mr-2">
+                  <div className="bg-orange-50 p-1 rounded-xl text-orange-600 mr-2">
                     {link.icon}
                   </div>
                 )}
@@ -377,7 +378,7 @@ const Tabs = () => {
               <Image alt="logo" src={logoNoBg} className="h-16 w-auto" />
             </div>
 
-            <p className=' text-sm text-zinc-400 mt-6 mb-2'>Menu</p>
+            <p className=' text-sm text-zinc-400 mt-8 mb-2'>Menu</p>
             </div>
            
 
