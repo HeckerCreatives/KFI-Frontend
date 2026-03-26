@@ -81,7 +81,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
   const getRecentMembers = async (page: number, ) => {
     setData(prev => ({ ...prev, loading: true }));
     try {
-      const result = await kfiAxios.get('/statistics/recent-members', {params: {code: code}});
+      const result = await kfiAxios.get('/statistics/recent-members', {params: {search: code}});
       const { success, customers } = result.data;
       if (success) {
         setData(prev => ({ ...prev, clients: customers }));
@@ -109,7 +109,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
          const getData = async () => {
   
         try {
-          const result = await kfiAxios.get('/statistics/recent-members', {params: {code: code}});
+          const result = await kfiAxios.get('/statistics/recent-members', {params: {search: code}});
            const { success, customers } = result.data;
           if (success) {
             setItems(customers.map((item: any) => item.name));

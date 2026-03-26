@@ -82,7 +82,7 @@ const ViewMemberListInfo = ({year, month}: Props) => {
       useEffect(() => {
        if(isOpen){
         const timer = setTimeout(() => {
-         getClients(currentPage);
+         getClients(currentPage, search);
        }, 500);
        return () => clearTimeout(timer);
        }
