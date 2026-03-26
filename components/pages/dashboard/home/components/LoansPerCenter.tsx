@@ -12,7 +12,7 @@ import { formatNumber } from '../../../../ui/utils/formatNumber';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import SearchInput from '../../../../ui/forms/InputSearch';
-import { ChevronDownIcon } from 'lucide-react';
+import { ChevronDownIcon, X } from 'lucide-react';
 
 type TSearch = {
   keyword: string;
@@ -184,24 +184,36 @@ useEffect(() => {
            <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
 
             <div className="min-w-56">
-             <button
-              ref={centerTriggerRef}
-              id="center-picker-trigger"
-              type='button'
-              onClick={() => setShowCenterPicker(true)}
-              className="flex items-center justify-between px-3 py-3 rounded-xl bg-white text-[0.8rem] min-w-full border border-zinc-300"
-              style={{ border: '1px solid #d4d4d8' }}
-            >
-                <span className={center ? 'text-gray-800' : 'text-gray-400'}>
+              <div className="relative w-full">
+                <button
+                    ref={centerTriggerRef}
+                  id="center-picker-trigger"
+                  type='button'
+                  onClick={() => setShowCenterPicker(true)}
+                 className="flex items-center justify-between px-3 py-3 rounded-xl bg-white text-[0.8rem] min-w-full border border-zinc-300"
+                  style={{ border: '1px solid #d4d4d8' }}
+                >
                   {center || 'Centers'}
-                </span>
-                <ChevronDownIcon size={14} className="text-gray-400" />
-              </button>
+
+                    <ChevronDownIcon size={14} className="text-gray-400" />
+
+                </button>
+
+                {center && (
+                  <X
+                    size={14}
+                    onClick={() => setCenter('')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500 cursor-pointer"
+                  />
+                )}
+              </div>
+
+            
 
               <IonPopover
                 trigger="center-picker-trigger"
                 isOpen={showCenterPicker}
-                onDidDismiss={() => setShowCenterPicker(false)}
+                onDidDismiss={() => {setShowCenterPicker(false)}}
                 showBackdrop={false}
                 side="bottom"
                 alignment="start"
@@ -268,7 +280,7 @@ useEffect(() => {
                   <IonInfiniteScroll
                     disabled={!centerHasNext}
                     onIonInfinite={async (e) => {
-                      setCenterPage(prev => prev + 1);
+                      setCenterPage(prev => prev + 153);
                       await (e.target as HTMLIonInfiniteScrollElement).complete();
                     }}
                   >

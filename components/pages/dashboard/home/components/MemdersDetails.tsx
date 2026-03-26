@@ -31,7 +31,7 @@ export type TData = {
 const ViewMemberDetails = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [year, setYear] = useState<string>('')
+  const [year, setYear] = useState<string>('2026')
   
     const [data, setData] = useState<TData>({
       data: [],

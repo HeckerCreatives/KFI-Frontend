@@ -46,6 +46,7 @@ const ViewMemberListInfo = ({year, month}: Props) => {
 
   const dismiss = () => {
     setIsOpen(false);
+    setSearch('')
   };
 
     const getClients = async (page: number, keyword: string = '',) => {
@@ -202,7 +203,10 @@ const ViewMemberListInfo = ({year, month}: Props) => {
                     </TableBody>
                 </Table>
 
+                   {data.clients.length !== 0 && (
                  <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+                )}
          </div>
         
         </div>

@@ -161,7 +161,7 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
                             <TableCell>{Number(item.totalAmount).toLocaleString()}</TableCell>
 
                             <TableCell>
-                                <Loanlist year={item.year} month={index + 1} totalLoans={Number(item.totalAmount)}/>
+                                <Loanlist year={item.year} month={item.month} totalLoans={Number(item.totalAmount)}/>
                             </TableCell>
                         </TableRow>
                       ))}

@@ -82,6 +82,7 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
        const handlePagination = (page: number) => getClients(page);
      
          useEffect(() => {
+          setCurrentPage(1)
               if(isOpen){
                const timer = setTimeout(() => {
                 getClients(currentPage);
@@ -91,6 +92,7 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
             }, [isOpen, search]);
      const dismiss = () => {
        setIsOpen(false);
+       setSearch('')
      };
    
 
@@ -212,7 +214,10 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
                     </TableBody>
                 </Table>
 
+                   {data.clients.length !== 0 && (
                  <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+                )}
          </div>
         
         </div>

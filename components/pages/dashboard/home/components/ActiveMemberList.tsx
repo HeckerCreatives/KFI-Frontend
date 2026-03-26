@@ -82,11 +82,14 @@ const ActiveMemberlist = ({year, month, status}: Props) => {
 
   const dismiss = () => {
     setIsOpen(false);
+    setSearch('')
   };
 
   const handlePagination = (page: number) => getClients(page);
 
     useEffect(() => {
+        setCurrentPage(1)
+
          if(isOpen){
           const timer = setTimeout(() => {
            getClients(currentPage);
@@ -203,7 +206,11 @@ const ActiveMemberlist = ({year, month, status}: Props) => {
                     </TableBody>
                 </Table>
 
+                {data.clients.length !== 0 && (
                  <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+                )}
+
          </div>
         
         </div>
