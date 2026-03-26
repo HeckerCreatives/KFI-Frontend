@@ -58,156 +58,101 @@ const Login = () => {
 
   // };
 
-   const checkPermissions = async () => {
-         try {
-          const result = await kfiAxios.get('/auth/permissions');
-            const { permissions} = result.data;
-  
-            if(permissions.lenght !== 0){
-            localStorage.setItem('permissions', JSON.stringify(permissions))
-            }
-
-            return permissions
-          
-          } catch (error) {
-           return error
-        };
-      }
-
- const onSubmit = async (data: LoginFormData) => {
-    if(online){
-      try {
-        setLoading(true)
-
-        const result = await kfiAxios.post('/auth/login', {
-          username: data.username,
-          password: data.password,
-          deviceName: 'My PC Name',
-          deviceType: 'desktop'
-        })
-
-        const { success, access } = result.data
-
-        if (!success) return
-
-        const token = jwtDecode(access) as AccessToken
-
-      
-        localStorage.setItem('auth', access)
-        localStorage.setItem('user', token.username)
-        localStorage.setItem('role', token.role)
-        console.log(token)
 
 
-        if (token.role === 'superadmin' || token.role === 'user') {
-          const permRes = await kfiAxios.get('/auth/permissions')
-          const { permissions } = permRes.data
-
-          if (permissions?.length !== 0) {
-            localStorage.setItem(
-              'permissions',
-              JSON.stringify(permissions)
-            )
-
-            const hasDashboard = permissions.find(
-              (item: any) => item.resource === 'dashboard'
-            )?.actions?.visible
-
-        //     if (isPlatform('capacitor')) {
-        //   (window as any).location.reload(true);
-        // } else if (isPlatform('electron')) {
-        //   (window as any).ipcRenderer.send('reload-window');
-        // } else {
-        //   (window as any).location.reload();
-        // }
-
-            if (!hasDashboard) {
-              router.push('/dashboard/kfi')
-             window.location.reload()
-            }else{
-              router.push('/dashboard/home')
-              window.location.reload()
-            }
-          }
-        }
-
-        setLoading(false)
-
-      
-        // Reload only if really required by your platform
-        if (isPlatform('capacitor')) {
-          window.location.reload()
-        } else if (isPlatform('electron')) {
-          (window as any).ipcRenderer.send('reload-window')
-        }
-
-      } catch (error: any) {
-        const errs =
-          error?.response?.data?.error ||
-          error?.response?.data?.msg ||
-          error.message
-
-          present({
-             message: errs,
-             duration: 1000,
-           });
-
-
-        setLoading(false)
-      }
+const onSubmit = async (data: LoginFormData) => {
+  // helper to handle navigation across platforms
+  const navigate = (path: string) => {
+    if (isPlatform('capacitor') || isPlatform('electron')) {
+      window.location.href = path;
     } else {
-      const user = await db.users
-      .where("username")
+      // router.push(path);
+      window.location.reload();
+    }
+  };
+
+  if (online) {
+    try {
+      setLoading(true);
+
+      const result = await kfiAxios.post('/auth/login', {
+        username: data.username,
+        password: data.password,
+        deviceName: 'My PC Name',
+        deviceType: 'desktop'
+      });
+
+      const { success, access } = result.data;
+      if (!success) return;
+
+      const token = jwtDecode(access) as AccessToken;
+
+      localStorage.setItem('auth', access);
+      localStorage.setItem('user', token.username);
+      localStorage.setItem('role', token.role);
+
+      if (token.role === 'superadmin' || token.role === 'user') {
+        const permRes = await kfiAxios.get('/auth/permissions');
+        const { permissions } = permRes.data;
+
+        if (permissions?.length !== 0) {
+          localStorage.setItem('permissions', JSON.stringify(permissions));
+
+          const hasDashboard = permissions.find(
+            (item: any) => item.resource === 'dashboard'
+          )?.actions?.visible;
+
+          navigate(hasDashboard ? '/dashboard/home' : '/dashboard/kfi');
+        }
+      }
+
+    } catch (error: any) {
+      const errs =
+        error?.response?.data?.error ||
+        error?.response?.data?.msg ||
+        error.message;
+
+      present({ message: errs, duration: 1000 });
+    } finally {
+      setLoading(false);
+    }
+
+  } else {
+    const user = await db.users
+      .where('username')
       .equals(data.username)
       .first();
 
-      console.log(user)
+    if (!user) {
+      present({ message: 'User does not exist.', duration: 1000 });
+      return;
+    }
 
-      if(!user){
-        console.log('user not exist')
-        return
+    const isMatch = await bcrypt.compare(data.password, user.password);
+
+    if (!isMatch) {
+      present({ message: 'Incorrect password.', duration: 1000 });
+      return;
+    }
+
+    localStorage.setItem('auth', user.access);
+    localStorage.setItem('user', user.username);
+    localStorage.setItem('role', user.role);
+
+    if (user.role === 'superadmin' || user.role === 'user') {
+      if (user.permissions?.length !== 0) {
+        localStorage.setItem('permissions', JSON.stringify(user.permissions));
+
+        const hasDashboard = user.permissions.find(
+          (item: any) => item.resource === 'dashboard'
+        )?.actions?.visible;
+
+        navigate(hasDashboard ? '/dashboard/home' : '/dashboard/kfi');
       }
-
-      const isMatch = await bcrypt.compare(data.password, user.password);
-
-      if (isMatch) {
-        console.log('logged in', user)
-        localStorage.setItem('auth', user.access)
-        localStorage.setItem('user', user.username)
-        localStorage.setItem('role', user.role)
-        if (user.role === "superadmin" || user.role === "user") {
-          if (user.permissions?.length !== 0) {
-            localStorage.setItem(
-              "permissions",
-              JSON.stringify(user.permissions)
-            );
-
-            const hasDashboard = user.permissions.find(
-              (item: any) => item.resource === "dashboard"
-            )?.actions?.visible;
-
-            if (!hasDashboard) {
-              router.push("/dashboard/kfi");
-             window.location.reload()
-
-            } else {
-              router.push("/dashboard/home");
-             window.location.reload()
-
-            }
-          }
-        }
-      } else {
-        console.log('password incorect')
-          present({
-             message: 'Incorrect password.',
-             duration: 1000,
-           });
-      }
-
-    
     }
   }
+};
+
 
   return (
     <IonPage>

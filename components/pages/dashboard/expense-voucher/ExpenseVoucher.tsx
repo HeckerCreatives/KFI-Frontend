@@ -139,13 +139,18 @@ const ExpenseVoucher = () => {
     getExpenseVouchers(currentPage);
   });
 
-  console.log(data)
   return (
     <IonPage className="w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 items-stretch justify-start py-6">
-          <PageTitle pages={['Transaction', 'Expense Voucher']} />
           <div className="px-3 pb-3 flex-1 flex flex-col">
+
+              <div className=' space-y-1 mb-6'>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl text-gray-700 !font-medium'>Expense Voucher</p>
+              <p className=' text-sm text-gray-500 '>Manage expense voucher records.</p>
+
+            </div>
            
 
             <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">

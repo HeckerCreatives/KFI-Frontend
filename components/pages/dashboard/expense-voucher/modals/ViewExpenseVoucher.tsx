@@ -7,6 +7,7 @@ import { ExpenseVoucher } from '../../../../../types/types';
 import { formatDateTable } from '../../../../utils/date-utils';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
 import ViewExpenseVoucherEntries from '../components/ViewExpenseVoucherEntries';
+import { Eye } from 'lucide-react';
 
 type ViewExpenseVoucherType = {
   expenseVoucher: ExpenseVoucher;
@@ -33,9 +34,9 @@ const ViewExpenseVoucher = ({ expenseVoucher }: ViewExpenseVoucherType) => {
         type="button"
         onClick={() => setIsOpen(true)}
         fill="clear"
-        className="space-x-1 rounded-md w-20 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
+       className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={eye} className="text-xs" />
+        <Eye size={20} className=' mr-1'/>
         <span>View</span>
       </IonButton>
       <IonModal

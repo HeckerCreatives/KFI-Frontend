@@ -151,8 +151,8 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
 
   return (
     <>
-      <IonButton onClick={() => setIsOpen(true)} fill="clear" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-        + Add Record
+      <IonButton onClick={() => setIsOpen(true)} fill="clear" className=" h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl" strong>
+        + Add
       </IonButton>
       <IonModal
         isOpen={isOpen}

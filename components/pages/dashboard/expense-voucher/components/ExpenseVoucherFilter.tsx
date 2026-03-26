@@ -110,7 +110,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
               type="date"
               control={form.control}
               clearErrors={form.clearErrors}
-              className="!px-3 !py-[0.3rem] !min-h-[1rem] rounded-md !border-orange-500 max-w-36 text-xs"
+              className="!px-3 !py-2 !min-h-[1rem] rounded-xl   text-xs"
               max="9999-12-31"
               labelClassName="truncate !text-xs pt-1.5"
             />
@@ -129,7 +129,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
               type="date"
               control={form.control}
               clearErrors={form.clearErrors}
-              className="!px-3 !py-[0.3rem] !min-h-[1rem] rounded-md !border-orange-500 max-w-36 text-xs"
+              className="!px-3 !py-2 !min-h-[1rem] rounded-xl   text-xs"
               max="9999-12-31"
               labelClassName="truncate !text-xs pt-1.5"
             />
@@ -138,7 +138,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
         </FormIonItem>
         <FormIonItem className="min-w-32 ![--min-height:1rem] pb-1">
 
-          <div className=' flex flex-col gap-1 !min-w-36'>
+          <div className=' flex flex-col gap-1 min-w-36'>
             <label htmlFor="sortBy" className=' text-xs'>Sort By</label>
              <InputSelect
                 // label="Sort By"
@@ -151,7 +151,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
                   { label: 'Code A - Z', value: 'code-asc' },
                   { label: 'Code Z - A', value: 'code-desc' },
                 ]}
-                className="!border-orange-500 rounded-md !w-full !py-[0.35rem] !max-w-36 !min-w-36 !min-h-[1rem] text-xs"
+                className="!px-3 !py-2 !min-h-[1rem] rounded-xl   text-xs"
                 labelClassName="truncate !text-xs pt-1.5"
               />
           </div>
@@ -167,15 +167,15 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
                   clearErrors={form.clearErrors}
                   // label="Code"
                   placeholder="Search ..."
-                  className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
+                  className="!px-3 !py-1 rounded-xl"
                   suggestions={data.expenseVouchers.map((item) => item.code || '')}
                 />
           </div>
           
         </FormIonItem>
-        <IonButton type="submit" fill="clear" className=" h-fit bg-[#FA6C2F] text-white capitalize font-semibold rounded-md text-xs" strong>
-          <Search01Icon size={15} stroke='.8' className=' mr-1'/>
-          Search
+        <IonButton type="submit" fill="clear" className=" h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl text-xs" strong>
+          <Search01Icon size={15} stroke='.8' className=' '/>
+         
         </IonButton>
       </div>
     </form>

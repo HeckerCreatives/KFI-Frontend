@@ -9,6 +9,7 @@ import { ExpenseVoucher } from '../../../../../../types/types';
 import { fileTrayFullSharp } from 'ionicons/icons';
 import PrintExportOptionForm from '../../components/PrintExportOptionForm';
 import { FileExportIcon } from 'hugeicons-react';
+import { File } from 'lucide-react';
 
 export const expenseVoucherOptionSchema = z.object({
   option: z.string().optional().or(z.literal('')),
@@ -68,9 +69,9 @@ const ExportExpenseVoucher = ({ expenseVoucher }: { expenseVoucher: ExpenseVouch
         type="button"
         id={`export_expense_voucher_${expenseVoucher._id}`}
         fill="clear"
-        className="space-x-1 w-20 h-7 rounded-md ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-pink-50 text-pink-900 capitalize min-h-4 text-xs"
+       className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={fileTrayFullSharp} className="text-xs" />
+        <File size={20} className=' mr-1'/>
         <span>Export</span>
       </IonButton>
       <IonModal

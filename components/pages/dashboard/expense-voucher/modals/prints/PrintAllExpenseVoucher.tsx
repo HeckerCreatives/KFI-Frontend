@@ -119,7 +119,7 @@ const PrintAllExpenseVoucher = () => {
 
   return (
     <>
-      <IonButton fill="clear" id="print_all_expense_voucher" className="max-h-10 w-32 min-w-32 max-w-32 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+      <IonButton fill="clear" id="print_all_expense_voucher" className="h-10 bg-orange-50 text-orange-500 border border-orange-200 capitalize font-semibold rounded-xl" strong>
         <PrinterIcon size={15} stroke='.8' className=' mr-2'/>
         Print All
       </IonButton>

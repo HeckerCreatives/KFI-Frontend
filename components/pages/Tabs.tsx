@@ -87,6 +87,7 @@ import PortfolioAtRisk from './dashboard/portfolio-at-risk/PortfolioatRisk';
 import kfiAxios from '../utils/axios';
 import HomeScreen from './dashboard/homepage/HomeScreen';
 import { ChevronDownIcon } from 'lucide-react';
+import Breadcrumb from '../ui/common/Breadcrumb';
 
 type NavLink = {
   path?: string;
@@ -100,7 +101,7 @@ type NavLink = {
 
 
 
-const navLinks: NavLink[] = [
+export const navLinks: NavLink[] = [
   { path: "/dashboard/home", label: "Dashboard", resource: "home", icon: <DashboardSquare01Icon size={20} /> },
   { path: "/dashboard/admin", label: "Manage Account", resource: "manage account", icon: <UserMultiple02Icon size={20} /> },
   {
@@ -520,8 +521,8 @@ const Tabs = () => {
             zIndex: '99999 !important'
           }}
           >
-            <div className='flex items-center gap-2'>
-             
+            <div className='flex items-center gap-2 px-2'>
+              <Breadcrumb />
             </div>
 
 
