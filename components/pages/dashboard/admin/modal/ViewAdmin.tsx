@@ -6,6 +6,7 @@ import { TUser } from '../Admin';
 import { User } from '../../../../../types/types';
 import classNames from 'classnames';
 import { CheckmarkBadge01Icon, Clock01Icon, Key01Icon, Key02Icon, Tick01Icon, UserSettings01Icon } from 'hugeicons-react';
+import { Eye } from 'lucide-react';
 
 type AddPermissionProps = {
   user: User;
@@ -32,9 +33,9 @@ const ViewAdmin = ({ user, setData }: AddPermissionProps) => {
         type="button"
         fill="clear"
         onClick={() => setIsOpen(true)}
-        className="space-x-1 rounded-md px-4 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-orange-100 text-orange-900 capitalize text-xs"
+        className=" capitalize text-sm !text-zinc-700"
       >
-        <IonIcon icon={eye} className="text-xs" />
+        <Eye size={20} className=' mr-1'/>
         <span>View</span>
       </IonButton>
       <IonModal

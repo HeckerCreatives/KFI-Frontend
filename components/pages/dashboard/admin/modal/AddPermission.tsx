@@ -11,6 +11,7 @@ import GeneralLedgerPermission from '../components/permissions/GeneralLedgerPerm
 import SystemPermission from '../components/permissions/SystemPermission';
 import DiagnosticsPermission from '../components/permissions/DiagnosticsPermission';
 import DashboardPermission from '../components/permissions/DashboardPermission';
+import { Key } from 'lucide-react';
 
 type AddPermissionProps = {
   user: User;
@@ -79,9 +80,9 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
         id={`update-permissions-modal-${user._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-md w-44 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-orange-100 text-orange-900 capitalize text-xs"
+        className=" capitalize text-sm !text-zinc-700"
       >
-        <IonIcon icon={shieldCheckmarkSharp} className="text-xs" />
+        <Key size={20} className=' mr-1' />
         <span>Manage Permissions</span>
       </IonButton>
       <IonModal

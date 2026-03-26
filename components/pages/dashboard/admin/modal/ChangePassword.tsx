@@ -11,6 +11,7 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import { documentLockSharp } from 'ionicons/icons';
 import InputPassword from '../../../../ui/forms/InputPassword';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
+import { Shield } from 'lucide-react';
 
 type ChangePasswordProps = {
   user: User;
@@ -71,9 +72,9 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
       <IonButton
         fill="clear"
         id={`update-password-modal-${user._id}`}
-        className="space-x-1 rounded-md w-44 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-blue-50 text-blue-900 capitalize text-xs"
+         className=" capitalize text-sm !text-zinc-700"
       >
-        <IonIcon icon={documentLockSharp} className="text-xs" />
+        <Shield size={20} className=' mr-1' />
         <span>Change Password</span>
       </IonButton>
       <IonModal

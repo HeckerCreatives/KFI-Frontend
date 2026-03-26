@@ -248,7 +248,8 @@ const Admin = () => {
                           </TableCell>
                           <TableCell className=' !text-sm'>{formatDateTable(user.createdAt)}</TableCell>
                           <TableCell>
-                            <UserActions user={user} setData={setData} />
+
+                            <UserActions key={user._id} user={user} setData={setData} />
                           </TableCell>
                         </TableRow>
                       ))}

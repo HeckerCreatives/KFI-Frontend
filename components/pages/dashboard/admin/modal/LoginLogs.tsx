@@ -10,6 +10,7 @@ import TableNoRows from '../../../../ui/forms/TableNoRows';
 import TablePagination from '../../../../ui/forms/TablePagination';
 import { formatDateTable } from '../../../../utils/date-utils';
 import { TABLE_LIMIT } from '../../../../utils/constants';
+import { ListCheck } from 'lucide-react';
 
 type AddPermissionProps = {
   user: User;
@@ -92,9 +93,9 @@ const LoginLogs = ({ user }: AddPermissionProps) => {
       <IonButton
         fill="clear"
         onClick={handleOpen}
-        className="space-x-1 rounded-md min-w-32 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-purple-50 text-purple-900 capitalize text-xs"
+       className=" capitalize text-sm !text-zinc-700"
       >
-        <IonIcon icon={list} className="text-xs" />
+        <ListCheck size={20} className=' mr-1'/>
         <span>Login Logs</span>
       </IonButton>
       <IonModal
