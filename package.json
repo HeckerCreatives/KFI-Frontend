@@ -17,15 +17,9 @@
     "presync": "npm run build",
     "sync": "npx cap sync",
     "android": "npx cap run android",
-    "ios": "npx cap run ios",
-    "electron:add": "npx cap add @capacitor-community/electron",
-    "electron:sync": "npx cap sync @capacitor-community/electron",
-    "electron:start": "cd electron && npm install && npm run electron:start",
-    "electron:build": "cd electron && npm install && npm run electron:build",
-    "electron:build-windows": "cd electron && npm install && npm run electron:build-windows"
+    "ios": "npx cap run ios"
   },
   "dependencies": {
-    "@capacitor-community/electron": "5.0.1",
     "@capacitor/android": "5.7.2",
     "@capacitor/core": "5.7.2",
     "@capacitor/device": "5.0.2",
@@ -56,8 +50,6 @@
   },
   "devDependencies": {
     "@capacitor/cli": "5.7.2",
-     "@hugeicons/react": "1.0.5",
-     "dexie-react-hooks": "4.2.0",
     "@types/jest": "29.5.12",
     "@types/node": "20.11.25",
     "@types/react": "18.2.64",
