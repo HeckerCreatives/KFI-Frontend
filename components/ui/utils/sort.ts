@@ -1,7 +1,6 @@
 export function filterAndSortClients(clients: any, search: string, sort: any) {
   let result = [...clients].filter(c => c.action !== 'delete');
 
-  console.log('clients', clients)
 
   if (search) {
     const term = search.toLowerCase();

@@ -89,6 +89,8 @@ import HomeScreen from './dashboard/homepage/HomeScreen';
 import { ChevronDownIcon } from 'lucide-react';
 import Breadcrumb from '../ui/common/Breadcrumb';
 import ReportProgress from '../ui/common/report-progress';
+import { useJobStore } from '../../store/fileQueStore';
+import { FileQueue } from './QueWidget';
 
 type NavLink = {
   path?: string;
@@ -203,6 +205,10 @@ const Tabs = () => {
   const permissions: Permission[] = JSON.parse(localStorage.getItem('permissions') || '[]')
   const online = useOnlineStore((state) => state.online);
   const setOnline = useOnlineStore((state) => state.setOnline);
+  const {jobs} = useJobStore()
+
+  const [minimized, setMinimized] = useState(false);
+  const [showQueue, setShowQueue] = useState(true); 
 
 
   const logout = () => {
@@ -229,9 +235,51 @@ const Tabs = () => {
   );
 };
 
+  const handleDownload = (fileUrl: string) => {
+    if (!fileUrl) return
+
+    const a = document.createElement('a')
+    a.href = fileUrl
+    a.download = 'all-clients.pdf'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+  }
+
 
   return (
     <>
+    {/* {jobs.length !== 0 && (
+      <div className="fixed bottom-8 right-6 w-[300px] bg-white shadow-lg border rounded-xl p-4 z-[999]">
+        <p>File Qeue</p>
+         {jobs.map((job) => (
+          <div key={job.jobId} className="border p-2 rounded-md">
+            <p className="font-medium">{job.label}</p>
+
+            <p className="text-xs text-gray-500">
+              {job.type} • {job.progress}%
+            </p>
+
+            {job.fileUrl && (
+              <button
+                onClick={() => handleDownload(job.fileUrl!)}
+                className="text-blue-600 text-sm underline"
+              >
+                Download
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    )} */}
+
+
+    <FileQueue
+      
+    />
+    
+
+   
       <IonMenu menuId="main-menu" contentId="main-content" side="start">
      
       <IonContent className=' !p-6'>

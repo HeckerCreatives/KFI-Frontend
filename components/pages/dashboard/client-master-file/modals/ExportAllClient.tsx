@@ -1,86 +1,225 @@
-import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/react';
-import React, { useRef, useState } from 'react';
-import kfiAxios from '../../../../utils/axios';
-import ModalHeader from '../../../../ui/page/ModalHeader';
-import { FileExportIcon, PrinterIcon } from 'hugeicons-react';
+"use client"
+
+import {
+  IonButton,
+  IonModal,
+  useIonToast,
+} from '@ionic/react'
+import React, { useEffect, useRef, useState } from 'react'
+import ModalHeader from '../../../../ui/page/ModalHeader'
+import { PrinterIcon } from 'hugeicons-react'
+import kfiAxios from '../../../../utils/axios'
+import { io, Socket } from 'socket.io-client'
+import { X } from 'lucide-react'
+import { useJobStore } from '../../../../../store/fileQueStore'
 
 type Props = {
-  sort: string,
+  sort: string
   search: string
 }
 
-const ExportAllClient = ({sort, search}:Props) => {
-  const [present] = useIonToast();
-  const [loading, setLoading] = useState(false);
+const TestPrintAllClient = ({ sort, search }: Props) => {
+  const [present] = useIonToast()
 
-  const modal = useRef<HTMLIonModalElement>(null);
+  const modal = useRef<HTMLIonModalElement>(null)
+
+  const [loading, setLoading] = useState(false)
+  const socketRef = useRef<Socket | null>(null)
+
+  const [isPrinting, setIsPrinting] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [fileUrl, setFileUrl] = useState<string | null>(null)
+  const [jobId, setJobId] = useState('')
+  const {addJob, updateJob} = useJobStore()
 
   function dismiss() {
-    modal.current?.dismiss();
+    modal.current?.dismiss()
   }
 
-  async function handlePrint() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.get(`/customer/export-all`, { responseType: 'blob',params: {search: search, sort: sort} });
-      const url = window.URL.createObjectURL(new Blob([result.data]));
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'clients.xlsx';
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } catch (error: any) {
-      present({
-        message: 'Failed to export the clients records. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    socketRef.current = io('http://localhost:5005')
+
+    const socket = socketRef.current
+
+    socket.on('connect', () => {
+      console.log('✅ Socket connected:', socket.id)
+    })
+
+    return () => {
+      socket.disconnect()
     }
+  }, [])
+
+  useEffect(() => {
+  const socket = socketRef.current
+  if (!socket || !jobId) return
+
+  console.log('📡 Joining job:', jobId)
+
+  socket.emit('join:report', jobId)
+
+  socket.off('report:progress')
+  socket.off('report:complete')
+
+   const existing = useJobStore
+      .getState()
+      .jobs.find((j) => j.jobId === jobId)
+
+    if (!existing) {
+      addJob({
+        jobId,
+        label: 'Client List (Excel)',
+        type: 'print',
+        progress: 0,
+        status: 'processing',
+        fileType: 'excel'
+      })
+    }
+
+
+  const handleProgress = (data: any) => {
+    if (data.jobId !== jobId) return
+
+   
+
+  console.log('📊 Progress event:', data)
+
+  const percent = data.percent ?? data.progress ?? 0
+
+  setProgress(percent)
+
+  updateJob(jobId, {
+    progress: percent,
+    status: 'processing',
+  })
+  handleComplete(data)
+}
+
+const handleComplete = (data: any) => {
+  if (data.jobId !== jobId) return;
+
+  console.log('✅ Completed:', data);
+
+  setProgress(100);
+
+  let blob: Blob;
+
+  if (data.buffer instanceof ArrayBuffer) {
+    blob = new Blob([data.buffer], { type: 'application/pdf' });
+  } else if (data.buffer?.data) {
+    blob = new Blob([new Uint8Array(data.buffer.data)], { type: 'application/pdf' });
+  } else {
+    console.error('Invalid buffer');
+    return;
   }
+
+  const url = URL.createObjectURL(blob);
+
+  console.log('file url',url)
+
+  // update store after download is triggered
+  updateJob(jobId, {
+    progress: 100,
+    status: 'done',
+    fileUrl: url,
+  });
+
+  setFileUrl(url);
+};
+
+  socket.on('report:progress', handleProgress)
+  socket.on('report:complete', handleComplete)
+
+  return () => {
+    console.log('❌ Leaving job:', jobId)
+
+    socket.emit('leave:report', jobId)
+
+    socket.off('report:progress', handleProgress)
+    socket.off('report:complete', handleComplete)
+  }
+}, [jobId])
+
+
+  async function handleDownload() {
+  setLoading(true)
+
+  try {
+    const result = await kfiAxios.get(`/customer/export-all`, {
+      params: { search, sort },
+    })
+
+    const { jobId } = result.data
+
+    setJobId(jobId)
+    dismiss()
+
+  } catch (error: any) {
+    present({
+      message: 'Failed to start process.',
+      duration: 1000,
+    })
+  } finally {
+    setLoading(false)
+  }
+  }
+
+
 
   return (
     <>
-      <IonButton fill="clear" id="export_all_client" className="h-10 bg-orange-50 text-orange-500 border border-orange-200 capitalize font-semibold rounded-xl" strong>
-        <FileExportIcon stroke='.8' size={15} className=' mr-2'/>
-        Export
+      {/* ✅ TRIGGER */}
+      <IonButton
+        fill="clear"
+        id="export_all_client"
+        className="h-10 bg-orange-50 text-orange-500 border border-orange-200 capitalize font-semibold rounded-xl"
+        strong
+      >
+        <PrinterIcon stroke=".8" size={15} className="mr-2" /> Excel
       </IonButton>
+
+      {/* ✅ MODAL */}
       <IonModal
         ref={modal}
-        trigger={`export_all_client`}
+        trigger="export_all_client"
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height [--max-width:24rem] [--width:95%]"
+        className="[--border-radius:0.35rem] auto-height [--max-width:24rem] [--width:95%]"
       >
-        {/* <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Clients - Export All" sub="System" dismiss={dismiss} />
-          </IonToolbar>
-        </IonHeader> */}
         <div className="inner-content !p-6">
-            <ModalHeader disabled={loading} title="Clients - Export All" sub="Export client profiles." dismiss={dismiss} />
+          <ModalHeader
+            disabled={loading}
+            title="Client - Excel"
+            sub="Generate excel file"
+            dismiss={dismiss}
+          />
 
-          <div></div>
           <div className="text-end mt-4 space-x-2">
             <div className="text-center">
-              <IonButton disabled={loading} onClick={handlePrint} fill="clear" className="w-full bg-zinc-50 rounded-lg ">
-                {/* {loading ? 'Exporting Client Profile...' : 'Client Profile'} */}
+              <IonButton
+                disabled={loading}
+                onClick={handleDownload}
+                fill="clear"
+                className="w-full bg-zinc-50 rounded-lg"
+              >
                 <div className=' flex items-center justify-center gap-2 bg-zinc-50 !border-zinc-300 !border-1 p-3 w-full rounded-md'>
-                    <div className=' p-2 bg-green-100 rounded-md flex items-center text-green-800'>
-                      <PrinterIcon size={20} stroke='.8' className=' '/>
-                    </div>
-                    <div className=' flex flex-col !text-sm !text-black !font-medium capitalize text-start'>
-                      {loading ? 'Exporting Client Profiles...' : 'Client Profiles'}
-                      <p className=' text-xs text-zinc-500 capitalize'>Spreadsheet Format</p>
+                   <div className=' p-2 bg-green-100 rounded-md flex items-center text-green-800'>
+                     <PrinterIcon size={20} stroke='.8' className=' '/>
+                   </div>
+                   <div className=' flex flex-col !text-sm !text-black !font-medium capitalize text-start'>
+                     {loading ? 'Exporting Client Profiles...' : 'Client Profiles'}
+                     <p className=' text-xs text-zinc-500 capitalize'>Spreadsheet Format</p>
   
-                    </div>
-                  </div>
+                   </div>
+                 </div>
               </IonButton>
             </div>
           </div>
         </div>
       </IonModal>
-    </>
-  );
-};
 
-export default ExportAllClient;
+   
+    </>
+  )
+}
+
+export default TestPrintAllClient

@@ -47,6 +47,7 @@ const ViewMemberListInfo = ({year, month}: Props) => {
   const dismiss = () => {
     setIsOpen(false);
     setSearch('')
+    setCurrentPage(1)
   };
 
     const getClients = async (page: number, keyword: string = '',) => {
@@ -81,9 +82,10 @@ const ViewMemberListInfo = ({year, month}: Props) => {
     };
 
       useEffect(() => {
+
        if(isOpen){
         const timer = setTimeout(() => {
-         getClients(currentPage, search);
+         getClients(1, search);
        }, 500);
        return () => clearTimeout(timer);
        }

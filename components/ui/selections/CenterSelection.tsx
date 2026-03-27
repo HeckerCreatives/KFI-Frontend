@@ -93,7 +93,6 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
       
             let allData = await db.centers.toArray();
 
-            console.log(allData)
 
             let allOptions: Option[] = allData.map(center => ({
               _id: center._id,

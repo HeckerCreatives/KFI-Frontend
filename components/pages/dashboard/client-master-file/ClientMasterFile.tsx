@@ -315,8 +315,8 @@ const ClientMasterFile = () => {
                <div className="flex items-start lg:items-center lg:flex-row flex-col flex-wrap gap-2 my-2">
                 <div className="flex flex-wrap">
                   {canDoAction(token.role, permissions, 'clients', 'create') && <CreateClientMasterFile getClientsOffline={getClientsOffline} getClients={getClients} />}
-                  <TestPrintAllClient search={searchKey} sort={sortKey}/>
-                  {/* {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient search={searchKey} sort={sortKey} />} */}
+                  {/* <TestPrintAllClient search={searchKey} sort={sortKey}/> */}
+                  {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient search={searchKey} sort={sortKey} />}
                   {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient search={searchKey} sort={sortKey} />} 
                 </div>
                 <ClientMasterFileFilter setSearchKey={setSearchKey} setSorthKey={setSortKey} getClientsOffline={getClientsOffline} getClients={getClients} clients={data.clients.map(item => item.name)} />
