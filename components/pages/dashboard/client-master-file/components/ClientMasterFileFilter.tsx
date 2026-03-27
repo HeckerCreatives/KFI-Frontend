@@ -75,6 +75,8 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
   const resigned = form.watch('dateResigned');
 
   useEffect(() => {
+     setSearchKey(code)
+    setSorthKey(sort)
     const fetchData = () => {
       if (online) {
         getClients(1, code, sort, status,released, resigned);
@@ -147,11 +149,10 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
             </div>
            
           </FormIonItem>
-          <FormIonItem className=" min-w-44 flex! flex-col! mb-2">
+          {/* <FormIonItem className=" min-w-44 flex! flex-col! mb-2">
             <div className=' w-full flex flex-col'>
                 <p className=' text-xs flex whitespace-nowrap'>Sort By</p>
                 <InputSelect
-                  // label="Sort By"
                   name="sort"
                   showLabel={false}
                   placeholder="Sort By"
@@ -169,7 +170,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                 />
             </div>
           
-          </FormIonItem>
+          </FormIonItem> */}
          
           <div className="flex items-center min-w-20 overflow-visible!">
             <FormIonItem className="flex-1 overflow-visible!">
@@ -189,7 +190,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                 // label="Code"
                 placeholder="Search..."
                  className="!px-3  w-[10rem] !mb-1 !h-9 rounded-md  !bg-zinc-50 border-zinc-100"
-                suggestions={data.clients.map(item => item.name)}
+                suggestions={clients}
               />
             </FormIonItem>
             <IonButton type="submit" fill="clear" className="h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl" strong>

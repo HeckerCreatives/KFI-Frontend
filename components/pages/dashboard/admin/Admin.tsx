@@ -1,5 +1,5 @@
 import { IonButton, IonCheckbox, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import CreateUser from './modal/CreateUser';
@@ -21,7 +21,7 @@ import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
-import { Circle, Dot } from 'lucide-react';
+import { ArrowDown, ArrowUp, Circle, Dot } from 'lucide-react';
 
 export type TUser = {
   users: User[];
@@ -30,6 +30,15 @@ export type TUser = {
   prevPage: boolean;
   loading: boolean;
 };
+
+const SORTS = {
+  USER_ASC: 'user-asc',
+  USER_DESC: 'user-desc',
+  NAME_ASC: 'name-asc',
+  NAME_DESC: 'name-desc',
+  CREATED_ASC: 'created-asc',
+  CREATED_DESC: 'created-desc',
+}
 
 const Admin = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -41,6 +50,10 @@ const Admin = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('');
+  const [usernameSort, setUsernameSort] = useState<string>('asc');
+  const [statusSort, setStatusSort] = useState<string>('asc');
+  const [createdSort, setCreatedSort] = useState<string>('asc');
+  const [status, setStatus] = useState<string>('');
   const [selected, setSelected] = useState<string[]>([]);
 
   const [data, setData] = useState<TUser>({
@@ -58,13 +71,14 @@ const Admin = () => {
     inactive: 0,
   });
 
-  const getUsers = async (page: number, keyword: string = '', sort: string = '') => {
+  const getUsers = async (page: number, keyword: string = '', sort: string = '', status: string = '') => {
     setData(prev => ({ ...prev, loading: true }));
    if(online){
      try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
       if (keyword) filter.search = keyword;
       if (sort) filter.sort = sort;
+      if (status) filter.status = status
       const result = await kfiAxios.get('/user', { params: filter });
       const { success, users, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
@@ -150,7 +164,7 @@ const Admin = () => {
     }
   };
 
-  const handlePagination = (page: number) => getUsers(page, searchKey, sortKey);
+  const handlePagination = (page: number) => getUsers(page, searchKey, sortKey, status);
 
   useIonViewWillEnter(() => {
     getUsers(currentPage);
@@ -166,12 +180,15 @@ const Admin = () => {
     }
   };
 
-  const refetch = () => getUsers(currentPage, searchKey, sortKey);
+  const refetch = () => getUsers(currentPage, searchKey,sortKey, status);
 
-  console.log(data.users)
+  useEffect(() => {
+    refetch()
+  },[sortKey])
+
 
   return (
-    <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100 ">
+    <IonPage className=" w-full flex items-center justify-center h-screen bg-zinc-100 !pb-60 overflow-y-auto ">
       <IonContent className="[--background:#f4f4f5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 items-stretch justify-start p-4">
 
@@ -190,17 +207,12 @@ const Admin = () => {
 
            </div>
           <div className=" flex-1 flex flex-col gap-4">
-            {/* <div className="flex items-center justify-center gap-3 bg-white px-3 py-2 rounded-2xl shadow-lg my-3">
-              <div className="flex items-center gap-2">
-                <CreateUser getUsers={getUsers} />
-                <BanUser selected={selected} setSelected={setSelected} refetch={refetch} banned={statistics.banned} active={statistics.active} />
-              </div>
-              <UserFilter getUsers={getUsers} />
-            </div> */}
+           
 
             
             <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
 
+               <div className="flex items-center justify-center gap-3">
               <div className=' w-fit flex items-center flex-wrap gap-1'>
                 {canDoAction(token.role, permissions,'admin', 'create') && (
                 <CreateUser getUsers={getUsers} />
@@ -209,19 +221,93 @@ const Admin = () => {
                   <BanUser selected={selected} setSelected={setSelected} refetch={refetch} banned={statistics.banned} active={statistics.active} />
                 )}
               </div>
-              <div className="relative overflow-auto rounded-xl mt-2">
+              <UserFilter getUsers={getUsers} setStatus={setStatus} />
+            </div>
+
+             
+              <div className="relative rounded-xl mt-2 h-full">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
                       <TableHead className="!min-w-5 !max-w-5" />
-                      <TableHead>Username</TableHead>
+                      <TableHead>
+                        <div className="flex items-center gap-6">
+                          Name
+                          {sortKey === SORTS.NAME_ASC ? (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.NAME_DESC)}
+                              className="cursor-pointer"
+                            />
+                          ) : sortKey === SORTS.NAME_DESC ? (
+                            <ArrowDown
+                              size={15}
+                              onClick={() => setSortKey(SORTS.NAME_ASC)}
+                              className="cursor-pointer"
+                            />
+                          ) : (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.NAME_ASC)}
+                              className="cursor-pointer opacity-30"
+                            />
+                          )}
+                        </div>
+                      </TableHead>
+                      <TableHead>
+                       <div className="flex items-center gap-6">
+                          Username
+                          {sortKey === SORTS.USER_ASC ? (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.USER_DESC)}
+                              className="cursor-pointer"
+                            />
+                          ) : sortKey === SORTS.USER_DESC ? (
+                            <ArrowDown
+                              size={15}
+                              onClick={() => setSortKey(SORTS.USER_ASC)}
+                              className="cursor-pointer"
+                            />
+                          ) : (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.USER_ASC)}
+                              className="cursor-pointer opacity-30"
+                            />
+                          )}
+                        </div>
+                      </TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Created At</TableHead>
+                      <TableHead>
+                        <div className="flex items-center gap-6">
+                          Created At
+                          {sortKey === SORTS.CREATED_ASC ? (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.CREATED_DESC)}
+                              className="cursor-pointer"
+                            />
+                          ) : sortKey === SORTS.CREATED_DESC ? (
+                            <ArrowDown
+                              size={15}
+                              onClick={() => setSortKey(SORTS.CREATED_ASC)}
+                              className="cursor-pointer"
+                            />
+                          ) : (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.CREATED_ASC)}
+                              className="cursor-pointer opacity-30"
+                            />
+                          )}
+                        </div>
+                      </TableHead>
                       <TableHead>Actions</TableHead>
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
-                    {data.loading && <TableLoadingRow colspan={5} />}
+                    {data.loading && <TableLoadingRow colspan={12} />}
                     {!data.loading && data.users.length < 1 && <TableNoRows label="No User Account Found" colspan={5} />}
                     {!data.loading &&
                       data.users.length > 0 &&
@@ -232,6 +318,8 @@ const Admin = () => {
                              style={{ '--size': '14px' }} 
                             value={user._id} onIonChange={handleSelected} />
                           </TableCell>
+                          <TableCell className=' !text-sm'>{user.name}</TableCell>
+
                           <TableCell>
                             <div className=' flex items-center gap-1 text-sm'>
                               <div className=' h-10 w-10 rounded-full flex items-center justify-center bg-orange-50 uppercase text-sm font-semibold'>
@@ -255,10 +343,16 @@ const Admin = () => {
                       ))}
                   </TableBody>
                 </Table>
+
+                <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+
+
               </div>
+
+
             </div>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>

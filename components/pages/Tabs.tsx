@@ -88,6 +88,7 @@ import kfiAxios from '../utils/axios';
 import HomeScreen from './dashboard/homepage/HomeScreen';
 import { ChevronDownIcon } from 'lucide-react';
 import Breadcrumb from '../ui/common/Breadcrumb';
+import ReportProgress from '../ui/common/report-progress';
 
 type NavLink = {
   path?: string;
@@ -373,6 +374,7 @@ const Tabs = () => {
       <IonPage id="main-content">
        
         <div className=' w-full min-h-screen flex'>
+
           <div className='min-h-screen w-[320px] hidden xl:flex flex-col p-6'>
             <div className=' px-4'>
                <div className='flex items-center'>
@@ -381,9 +383,9 @@ const Tabs = () => {
 
             <p className=' text-sm text-zinc-400 mt-8 mb-2'>Menu</p>
             </div>
-           
 
-            <IonAccordionGroup multiple={true} className=' !px-0 '>
+            <div className=' w-full overflow-y-auto'>
+               <IonAccordionGroup multiple={true} className=' !px-0 '>
               {navLinks.map((link, idx) =>
                 link.children ? (
                   <IonAccordion key={idx} value={link.label}
@@ -512,6 +514,9 @@ const Tabs = () => {
                 )
               )}
             </IonAccordionGroup>
+            </div>
+
+         
           </div>
           <main className=' w-full'>
              <IonHeader class=" ion-header ion-no-border border-b flex items-center justify-center"
@@ -641,6 +646,8 @@ const Tabs = () => {
 
        
       </IonPage>
+
+
 
    
     </>

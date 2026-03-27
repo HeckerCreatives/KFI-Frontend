@@ -49,11 +49,7 @@ const PrintAllClient = ({sort, search}: Props) => {
         backdropDismiss={false}
         className=" [--border-radius:0.35rem] auto-height [--max-width:24rem] [--width:95%]"
       >
-        {/* <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-12">
-            <ModalHeader disabled={loading} title="Client - Print All" sub="System" dismiss={dismiss} />
-          </IonToolbar>
-        </IonHeader> */}
+      
         <div className="inner-content !p-6">
             <ModalHeader disabled={loading} title="Client - Print All" sub="Print client details." dismiss={dismiss} />
 
@@ -71,7 +67,6 @@ const PrintAllClient = ({sort, search}: Props) => {
 
                   </div>
                 </div>
-                {/* {loading ? 'Printing Client Profile...' : 'Client Profile'} */}
               </IonButton>
             </div>
           </div>

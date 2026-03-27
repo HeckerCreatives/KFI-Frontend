@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonIcon, IonPage, IonSpinner, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
 import CreateClientMasterFile from './modals/CreateClientMasterFile';
@@ -23,7 +23,9 @@ import { db } from '../../../../database/db';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { get } from 'http';
 import { filterAndSortClients } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import ReportProgress from '../../../ui/common/report-progress';
+import TestPrintAllClient from './modals/Test';
 
 export type TClientMasterFile = {
   clients: ClientMasterFileType[];
@@ -83,6 +85,14 @@ export const StatusBadge = ({ status, variant = 'filled' }: { status: Status; va
   );
 };
 
+const SORTS = {
+  ACCTNO_ASC: 'acctno-asc',
+  ACCTNO_DESC: 'acctno-desc',
+  NAME_ASC: 'name-asc',
+  NAME_DESC: 'name-desc',
+ 
+}
+
 const ClientMasterFile = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
@@ -91,6 +101,8 @@ const ClientMasterFile = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('');
+  const [sortAcctNo, setSortAcctNo] = useState<string>('acctno-asc');
+  const [sortName, setSortName] = useState<string>('name-asc');
 
   //online status
   const online = useOnlineStore((state) => state.online);
@@ -277,12 +289,16 @@ const ClientMasterFile = () => {
     getStatisticsData()
   });
 
+  useEffect(() => {
+    getCLientsData(currentPage, searchKey, sortKey)
+  },[sortKey])
+
 
 
   return (
-    <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
-      <IonContent className="[--background:#F4F4F5] max-w-[1920px]" fullscreen>
-        <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start p-4">
+    <IonPage className=" w-full flex items-center justify-center h-full !pb-12  bg-zinc-100">
+      <IonContent className="[--background:#F4F4F5] max-w-[1920px] ">
+        <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start p-4 ">
          <div className=' space-y-1'>
               {/* <PageTitle pages={['Dashboard']} /> */}
               <p className=' text-xl text-gray-700 !font-medium'>Manage Account</p>
@@ -299,7 +315,8 @@ const ClientMasterFile = () => {
                <div className="flex items-start lg:items-center lg:flex-row flex-col flex-wrap gap-2 my-2">
                 <div className="flex flex-wrap">
                   {canDoAction(token.role, permissions, 'clients', 'create') && <CreateClientMasterFile getClientsOffline={getClientsOffline} getClients={getClients} />}
-                  {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient search={searchKey} sort={sortKey} />}
+                  <TestPrintAllClient search={searchKey} sort={sortKey}/>
+                  {/* {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient search={searchKey} sort={sortKey} />} */}
                   {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient search={searchKey} sort={sortKey} />} 
                 </div>
                 <ClientMasterFileFilter setSearchKey={setSearchKey} setSorthKey={setSortKey} getClientsOffline={getClientsOffline} getClients={getClients} clients={data.clients.map(item => item.name)} />
@@ -308,8 +325,54 @@ const ClientMasterFile = () => {
                 <Table className=' sticky z-50 top-0 left-0 md:table hidden'>
                   <TableHeader className=''>
                     <TableHeadRow className=''>
-                      <TableHead className=" hidden lg:table-cell min-w-[10rem] max-w-[10rem] py-4">Account No.</TableHead>
-                      <TableHead className=" hidden lg:table-cell min-w-[10rem] max-w-[10rem] py-4">Name</TableHead>
+                      <TableHead className=" hidden lg:table-cell min-w-[12rem] max-w-[12rem] py-4">
+                        <div className="flex items-center gap-6">
+                           Acct. No
+                           {sortKey === SORTS.ACCTNO_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.ACCTNO_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.ACCTNO_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.ACCTNO_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.ACCTNO_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
+                      <TableHead className=" hidden lg:table-cell min-w-[10rem] max-w-[10rem] py-4">
+                          <div className="flex items-center gap-6">
+                           Name
+                           {sortKey === SORTS.NAME_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.NAME_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.NAME_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.NAME_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.NAME_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
                       <TableHead className="hidden lg:table-cell min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
                       <TableHead className="hidden lg:table-cell min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
                     </TableHeadRow>
@@ -335,7 +398,7 @@ const ClientMasterFile = () => {
                 <Table className=' '>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">Account No.</TableHead>
+                      <TableHead className=" lg:hidden min-w-[12rem] max-w-[12rem]">Account No.</TableHead>
                       <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">Name</TableHead>
                       <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
                       <TableHead className=" lg:hidden min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
@@ -427,6 +490,8 @@ const ClientMasterFile = () => {
 
                 
               </div>
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
                {!data.loading && data.clients.length < 1 &&(
                   <p className=' text-xs text-zinc-800 w-full text-center mt-4'>No Client Record Found</p>   
                 )}
@@ -437,9 +502,11 @@ const ClientMasterFile = () => {
 
                   </div>
                 )}
+
+
+
             </div>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>

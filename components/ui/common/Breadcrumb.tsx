@@ -32,7 +32,18 @@ const findBreadcrumb = (
 
 const Breadcrumb = () => {
   const location = useLocation();
-  const crumbs = findBreadcrumb(navLinks, location.pathname) ?? [{ label: 'Dashboard', path: '/dashboard/home' }];
+  let crumbs: BreadcrumbItem[]
+
+  if (location.pathname === '/dashboard/client') {
+    crumbs = [
+      { label: 'Manage Account' },
+    ]
+  } else {
+    crumbs =
+      findBreadcrumb(navLinks, location.pathname) ?? [
+        { label: 'Dashboard', path: '/dashboard/home' },
+      ]
+  }
 
   return (
     <div className="flex items-center gap-1">
