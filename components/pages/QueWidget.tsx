@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Minus, X, Download, File } from 'lucide-react';
+import { Minus, X, Download, File, Trash } from 'lucide-react';
 import { Job, useJobStore } from '../../store/fileQueStore';
 
 
@@ -128,9 +128,16 @@ export const FileQueue = () => {
 
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium text-gray-800 truncate">{job.label}</p>
-                <p className="text-[11px] text-gray-400 mb-1.5">
-                 {done ? 'Complete' : `${job.progress}%`}
-                </p>
+                {job.status === 'error' ? (
+                  <>
+                  <p className=' text-xs text-red-500'>Failed to generate file.</p>
+                  </>
+                ): (
+                  <p className="text-[11px] text-gray-400 mb-1.5">
+                  {done ? 'Complete' : `${job.progress}%`}
+                  </p>
+                )}
+                
                 <div className="h-[3px] bg-zinc-100 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-300 ${done ? 'bg-green-500' : 'bg-[#1a73e8]'}`}
@@ -148,7 +155,36 @@ export const FileQueue = () => {
                     <Download size={15} />
                   </button>
                 ) : (
-                  <div className="w-4 h-4 rounded-full border-2 border-zinc-200" />
+                  <>
+                  {job.status === 'error' ? (
+                  <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><Trash size={15}/></button>
+
+                  ): (
+                  <svg
+                  className="animate-spin text-zinc-500"
+                  width={15}
+                  height={15}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    d="M12 2a10 10 0 0 1 10 10"
+                    stroke=" #71717a"
+                    strokeOpacity={0.4}
+                  />
+                  <path
+                    strokeLinecap="round"
+                    d="M12 2a10 10 0 0 1 10 10"
+                    stroke=" #71717a"
+                    strokeDasharray="15 45"
+                  />
+                </svg>
+
+                  )}
+                  </>
                 )}
               </div>
             </div>

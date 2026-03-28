@@ -52,7 +52,7 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
       bankCodeLabel: '',
       amount: '0',
       cycle: '',
-      interestRate: '',
+      interestRate: '24',
       isEduc: false,
       entries: [],
     },

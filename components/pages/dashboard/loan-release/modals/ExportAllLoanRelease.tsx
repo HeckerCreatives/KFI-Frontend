@@ -251,9 +251,22 @@ const ExportAllLoanRelease = () => {
           throw new Error("Invalid tab selected");
       }
 
-      const { jobId } = result.data;
-      setJobId(jobId);
-      dismiss();
+     if (result.status === 200) {
+        // Immediate blob response — open and print
+        const file = new Blob([result.data], { type: 'application/pdf' });
+        const fileURL = URL.createObjectURL(file);
+        const printWindow = window.open(fileURL);
+        printWindow?.addEventListener('load', () => {
+          printWindow.print();
+        });
+        dismiss();
+
+      } else if (result.status === 202) {
+        // Async job — wait for socket event
+        const { jobId } = result.data;
+        setJobId(jobId);
+        dismiss();
+    }
 
     } catch (error) {
       console.error(error);
@@ -350,6 +363,10 @@ const ExportAllLoanRelease = () => {
       const handleError = (data: any) => {
         if (data.jobId !== jobId) return
         console.log('Error:', data)
+
+        updateJob(jobId, {
+          status: 'error',
+        });
 
       }
 

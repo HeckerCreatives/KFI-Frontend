@@ -153,8 +153,8 @@ const LoanRelease = () => {
   });
 
   useEffect(() => {
-    getTransactions(currentPage, searchKey, sortKey)
-  },[currentPage, sortKey, searchKey])
+    getTransactions(currentPage, searchKey, sortKey, to, from)
+  },[currentPage, sortKey, searchKey, to, from])
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
@@ -183,7 +183,7 @@ const LoanRelease = () => {
                   </div>
 
                    <div className="w-full flex-1 flex">
-                    <LoanReleaseFilter getTransactions={getTransactions} setSearchKey={setSearchKey} suggestions={data.transactions.map((item) => item.code)} />
+                    <LoanReleaseFilter getTransactions={getTransactions} setSearchKey={setSearchKey} suggestions={data.transactions.map((item) => item.code)} setTo={setTo} setFrom={setFrom} />
                   </div>
                 </div>
               <div className="relative overflow-auto rounded-xl mt-4">

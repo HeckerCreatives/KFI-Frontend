@@ -10,6 +10,7 @@ import SearchInput from '../../../../ui/forms/InputSearch';
 import kfiAxios from '../../../../utils/axios';
 import { TData } from '../LoanRelease';
 import { time } from 'console';
+import { Frown } from 'lucide-react';
 
 type TSearch = {
   code: string;
@@ -22,9 +23,11 @@ type LoanReleaseFilterProps = {
   getTransactions: (page: number, keyword?: string, sort?: string, from?: string, to?: string) => void;
   suggestions: string[],
   setSearchKey: React.Dispatch<React.SetStateAction<string>>
+  setFrom: React.Dispatch<React.SetStateAction<string>>
+  setTo: React.Dispatch<React.SetStateAction<string>>
 };
 
-const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions }: LoanReleaseFilterProps) => {
+const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, setFrom }: LoanReleaseFilterProps) => {
   const form = useForm<TSearch>({
     defaultValues: {
       code: '',
@@ -65,19 +68,20 @@ const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions }: LoanR
 
      return () => clearTimeout(timer);
   
-    }, [ online, dateTo, dateFrom]);
+    }, [ online]);
 
 
     useEffect(() => {
       const timer = setTimeout(() => {
         setSearchKey(code)
+        setFrom(dateFrom)
+        setTo(dateTo)
       }, 800);
 
       return () => clearTimeout(timer);
    
-  }, [code]);
+  }, [code, dateFrom, dateTo]);
 
-  console.log('here')
 
 
 
