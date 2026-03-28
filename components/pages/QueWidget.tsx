@@ -11,7 +11,7 @@ export const FileQueue = () => {
     const [showQueue, setShowQueue] = useState(true); 
 
 
-    const handleDownload = (fileUrl: string, label: string, fileType: string, jobId?: string) => {
+    const handleDownload = (fileUrl: string, label: string, fileType: string, jobId?: string, filename?: string) => {
         if (!fileUrl) return;
 
         console.log(fileUrl)
@@ -22,11 +22,10 @@ export const FileQueue = () => {
         };
 
         const ext = extensions[fileType.toLowerCase()] ?? '';
-        const filename = label.endsWith(ext) ? label : `${label}${ext}`;
 
         const a = document.createElement('a');
         a.href = fileUrl;
-        a.download = filename;
+        a.download = filename || label;
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -149,7 +148,7 @@ export const FileQueue = () => {
               <div className="shrink-0">
                 {job.fileUrl ? (
                   <button
-                    onClick={() => handleDownload(job.fileUrl!, job.label, job.fileType || '', job.jobId)}
+                    onClick={() => handleDownload(job.fileUrl!, job.label, job.fileType || '', job.jobId, job.filename)}
                     className="w-7 h-7 rounded-full flex items-center justify-center text-[#1a73e8] hover:bg-blue-50 transition-colors"
                   >
                     <Download size={15} />

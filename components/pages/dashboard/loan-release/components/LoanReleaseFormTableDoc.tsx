@@ -9,6 +9,8 @@ import InputText from '../../../../ui/forms/InputText';
 import ChartOfAccountSelection from '../../../../ui/selections/ChartOfAccountSelection';
 import classNames from 'classnames';
 import ClientSelection from '../../../../ui/selections/ClientSelection';
+import kfiAxios from '../../../../utils/axios';
+import { entries } from '../../../../../validations/beginningbalance.schema';
 
 type LoanReleaseFormTableDocProps = {
   entry: EntryFormData;
@@ -26,6 +28,9 @@ const LoanReleaseFormTableDoc = ({ entry, index, remove, form, setPage, currentL
   const cycle = form.watch(`entries.${index}.cycle`);
   const checkNo = form.watch(`entries.${index}.checkNo`);
   const name = form.watch(`entries.${index}.client`);
+  const clientId = form.watch(`entries.${index}.clientId`);
+  const acctCode = form.watch(`entries.${index}.acctCodeId`);
+  const interest = form.watch(`entries.${index}.interest`);
 
   const handleRemove = () => {
     remove(index);
@@ -46,6 +51,31 @@ const LoanReleaseFormTableDoc = ({ entry, index, remove, form, setPage, currentL
       form.setValue(`entries.${index}.particular`, `${form.watch('centerLabel')} - ${name}`);
     }
   }, [name]);
+
+  // useEffect(() => {
+   
+
+  //   if(clientId && !interest){
+  //      const getData = async () => {
+  //     try {
+  //       const result = await kfiAxios.get(`/customer/${clientId}/loan-cycle-and-amount`);
+  //       const { data } = result.data;
+
+
+  //       form.setValue(`entries.${index}.interest`, data.interestRate);
+  //       form.setValue(`entries.${index}.cycle`, data.latestCycle);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   getData();
+  //   }
+   
+
+  // }, [clientId, index]);
+
+
 
   if(sticky){
     return(

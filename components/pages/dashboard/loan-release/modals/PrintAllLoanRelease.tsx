@@ -291,7 +291,7 @@ async function handleDownload(data: PrintExportFilterFormData) {
       if (!existing) {
         addJob({
           jobId,
-          label: `Loan Release ${type} (PDF)`,
+          label: `Loan Release (PDF)`,
           type: 'print',
           progress: 0,
           status: 'processing',

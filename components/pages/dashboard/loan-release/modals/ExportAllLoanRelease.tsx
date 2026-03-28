@@ -306,7 +306,7 @@ const ExportAllLoanRelease = () => {
       if (!existing) {
         addJob({
           jobId,
-          label: `Loan Release ${type} (Excel)`,
+          label: `Loan Release (Excel)`,
           type: 'export',
           progress: 0,
           status: 'processing',

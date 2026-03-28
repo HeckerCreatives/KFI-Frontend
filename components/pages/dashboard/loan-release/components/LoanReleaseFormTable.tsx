@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
 import { IonButton, IonIcon, IonInput, IonModal } from '@ionic/react';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
@@ -149,7 +149,53 @@ const currentClientItems = useMemo(() => {
     setIsOpen(true);
   };
 
-  console.log(search, 'sadkfjh')
+
+const watchedEntries = form.watch('entries');
+
+const fetchedClientIds = useRef<Map<string, { interestRate: any; latestCycle: any }>>(new Map());
+
+const fetchClientData = async (clientId: string, indexes: number[]) => {
+  try {
+    let data;
+
+    if (fetchedClientIds.current.has(clientId)) {
+      // Reuse cached result
+      data = fetchedClientIds.current.get(clientId);
+    } else {
+      const result = await kfiAxios.get(`/customer/${clientId}/loan-cycle-and-amount`);
+      data = result.data.data;
+      fetchedClientIds.current.set(clientId, data); // cache it
+    }
+
+    // Apply to ALL indexes with this clientId
+    indexes.forEach((i) => {
+      form.setValue(`entries.${i}.interest`, data.interestRate);
+      form.setValue(`entries.${i}.cycle`, data.latestCycle);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+useEffect(() => {
+  if (!watchedEntries) return;
+
+  // Group all indexes by clientId
+  const clientIdMap = new Map<string, number[]>();
+
+  watchedEntries.forEach((entry: any, i: number) => {
+    if (!entry?.clientId) return;
+    if (!clientIdMap.has(entry.clientId)) {
+      clientIdMap.set(entry.clientId, []);
+    }
+    clientIdMap.get(entry.clientId)!.push(i);
+  });
+
+  // Fetch once per unique clientId, apply to all matching indexes
+  clientIdMap.forEach((indexes, clientId) => {
+    fetchClientData(clientId, indexes);
+  });
+}, [watchedEntries?.map((e: any) => e?.clientId).join(',')]);
 
   return (
     <div className="px-2">
