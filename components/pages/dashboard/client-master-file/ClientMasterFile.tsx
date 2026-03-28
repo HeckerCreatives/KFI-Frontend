@@ -90,7 +90,6 @@ const SORTS = {
   ACCTNO_DESC: 'acctno-desc',
   NAME_ASC: 'name-asc',
   NAME_DESC: 'name-desc',
- 
 }
 
 const ClientMasterFile = () => {

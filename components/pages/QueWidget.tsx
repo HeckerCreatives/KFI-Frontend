@@ -14,6 +14,8 @@ export const FileQueue = () => {
     const handleDownload = (fileUrl: string, label: string, fileType: string, jobId?: string) => {
         if (!fileUrl) return;
 
+        console.log(fileUrl)
+
         const extensions: Record<string, string> = {
             pdf: '.pdf',
             excel: '.xlsx',

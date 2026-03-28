@@ -8,6 +8,8 @@ export type Job = {
   progress: number
   status: 'processing' | 'done' | 'error'
   fileUrl?: string
+  file?: string
+  filename?: string
   fileType?: 'pdf' | 'excel'
   createdAt?: number
 }

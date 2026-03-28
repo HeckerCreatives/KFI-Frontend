@@ -193,9 +193,9 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                 suggestions={clients}
               />
             </FormIonItem>
-            <IonButton type="submit" fill="clear" className="h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl" strong>
+            {/* <IonButton type="submit" fill="clear" className="h-10 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl" strong>
               <Search size={15}/>
-            </IonButton>
+            </IonButton> */}
           </div>
         </form>
       </div>

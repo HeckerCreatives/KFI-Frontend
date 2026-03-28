@@ -31,7 +31,7 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
   
 
   const [page, setPage] = useState(1);
-  const limit = 5;
+  const limit = 10;
 
   const { fields, replace, remove, append } = useFieldArray({
     control: form.control,
@@ -40,25 +40,30 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
   const [client, setClient] = useState<SelectClient[]>([])
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [clientpage, setClientPage] = useState(1)
+  const [search, setSearch] = useState('')
 
-  const totalPages = Math.ceil(client.length / limit)
+const filteredList = useMemo(() => 
+  client.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())),
+  [client, search]
+)
 
+const totalPages = Math.ceil(filteredList.length / limit)
 
-  const handleClientNextPage = () => {
-    if (clientpage < totalPages) {
-      setClientPage((prev) => prev + 1)
-    }
+const handleClientNextPage = () => {
+  if (clientpage < totalPages) {
+    setClientPage((prev) => prev + 1)
   }
+}
 
-  const handleClientPrevPage = () => {
-    if (clientpage > 1) {
-      setClientPage((prev) => prev - 1)
-    }
+const handleClientPrevPage = () => {
+  if (clientpage > 1) {
+    setClientPage((prev) => prev - 1)
   }
+}
 
-  const currentClientItems = useMemo(() => {
-    return client.slice((clientpage - 1) * limit, clientpage * limit)
-  }, [client, clientpage, limit])
+const currentClientItems = useMemo(() => {
+  return filteredList.slice((clientpage - 1) * limit, clientpage * limit)
+}, [filteredList, clientpage, limit, search])
 
   const handleToggle = (id: string) => {
     setSelectedIds((prev) =>
@@ -144,6 +149,8 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
     setIsOpen(true);
   };
 
+  console.log(search, 'sadkfjh')
+
   return (
     <div className="px-2">
       <div className="text-start my-2">
@@ -169,6 +176,16 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
         
                   
                   <div className="relative overflow-auto !mt-4">
+                   <IonInput
+                    placeholder='Search'
+                    value={search}
+                    
+                    className=' text-xs !bg-zinc-100 ![--background:#f4f4f5] !border !border-zinc-300 !px-3  !rounded-xl !mb-4'
+                    onIonInput={(e) => {
+                      setSearch(String(e.target.value))
+                      setClientPage(1)
+                    }}
+                  />
                      <Table>
                     <TableHeader>
                       <TableHeadRow className="border-b-0 bg-slate-100">
@@ -220,7 +237,7 @@ const LoanReleaseFormTable = ({ form }: LoanReleaseFormTableProps) => {
                         </div>
                         <div>
                           <div className="text-sm !font-semibold  px-3 py-1.5 rounded-lg text-slate-700">
-                            {clientpage} / {Math.ceil(client.length / limit)}
+                            {clientpage} / {totalPages}
                           </div>
                         </div>
                         <div>

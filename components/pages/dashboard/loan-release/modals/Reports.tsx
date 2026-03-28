@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { useForm } from 'react-hook-form';
@@ -11,6 +11,8 @@ import { PrintExportFilterFormData, printExportFilterSchema } from '../../../../
 import { loanReleaseReports, loanReleaseReportTab, printExportTab } from '../../../../../store/data';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import WeeklyCollections from './WeeklyCollections';
+import { useJobStore } from '../../../../../store/fileQueStore';
+import { Socket, io } from 'socket.io-client';
 
 
 const Reports = () => {
@@ -20,6 +22,9 @@ const Reports = () => {
   
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const [jobId, setJobId] = useState('')
+  const {addJob, updateJob} = useJobStore()
+  const socketRef = useRef<Socket | null>(null)
 
   const form = useForm<PrintExportFilterFormData>({
     resolver: zodResolver(printExportFilterSchema),
@@ -47,14 +52,6 @@ const Reports = () => {
   setLoading(true);
 
     try {
-        const openAndPrintPDF = (blobData: BlobPart) => {
-        const file = new Blob([blobData], { type: "application/pdf" });
-        const fileURL = URL.createObjectURL(file);
-        const printWindow = window.open(fileURL);
-        printWindow?.addEventListener("load", () => {
-            printWindow.print();
-        });
-        };
 
         const params = {
         docNoFrom: data.docNoFromLabel,
@@ -66,6 +63,7 @@ const Reports = () => {
 
         let response;
 
+
         switch (type) {
 
 
@@ -76,7 +74,6 @@ const Reports = () => {
                 loanReleaseDateFrom: data.loanReleaseDateFrom,
                 loanReleaseDateTo: data.loanReleaseDateTo,
             },
-            { responseType: "blob" }
             );
             break;
 
@@ -87,7 +84,6 @@ const Reports = () => {
                 loanReleaseDateFrom: data.loanReleaseDateFrom,
                 loanReleaseDateTo: data.loanReleaseDateTo,
             },
-            { responseType: "blob" }
             );
             break;
 
@@ -104,7 +100,6 @@ const Reports = () => {
                format: data.format,
                weekNo: Number(data.weekNo)
             },
-            { responseType: "blob" }
             );
             break;
 
@@ -112,7 +107,10 @@ const Reports = () => {
             throw new Error("Invalid tab selected");
         }
 
-        openAndPrintPDF(response.data);
+         const { jobId } = response.data;
+          setJobId(jobId);
+          dismiss();
+
 
     } catch (error) {
         console.error(error);
@@ -137,22 +135,7 @@ const Reports = () => {
             dateTo: data.dateTo,
             bankIds: data.bankIds,
             };
-
-            const downloadFile = (blobData: BlobPart, fileName: string) => {
-            const blob = new Blob([blobData], {
-                type:
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            a.click();
-            window.URL.revokeObjectURL(url);
-            };
-
             let response;
-            let fileName = "";
 
             switch (type) {
             
@@ -163,9 +146,7 @@ const Reports = () => {
                     loanReleaseDateFrom: data.loanReleaseDateFrom,
                     loanReleaseDateTo: data.loanReleaseDateTo,
                 },
-                { responseType: "blob" }
                 );
-                fileName = "loan-releases-past-dues.xlsx";
                 break;
 
                 case "aging-of-loans":
@@ -175,9 +156,7 @@ const Reports = () => {
                     loanReleaseDateFrom: data.loanReleaseDateFrom,
                     loanReleaseDateTo: data.loanReleaseDateTo,
                 },
-                { responseType: "blob" }
                 );
-                fileName = "loan-releases-aging-of-loans.xlsx";
                 break;
 
                 case "weekly-collections":
@@ -187,9 +166,7 @@ const Reports = () => {
                     loanReleaseDateFrom: data.loanReleaseDateFrom,
                     loanReleaseDateTo: data.loanReleaseDateTo,
                 },
-                { responseType: "blob" }
                 );
-                fileName = "loan-releases-weekly-collections.xlsx";
                 break;
 
 
@@ -198,7 +175,10 @@ const Reports = () => {
                 throw new Error("Invalid tab selected");
             }
 
-            downloadFile(response.data, fileName);
+
+            const { jobId } = response.data;
+            setJobId(jobId);
+            dismiss();
 
             // form.reset();
         } catch (error) {
@@ -220,6 +200,103 @@ const Reports = () => {
         }
         
     }
+
+     useEffect(() => {
+        socketRef.current = io(`${process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5005'}`)
+        const socket = socketRef.current
+        socket.on('connect', () => {
+          console.log('Socket connected:', socket.id)
+        })
+        return () => {
+          socket.disconnect()
+        }
+      }, [])
+    
+      useEffect(() => {
+        const socket = socketRef.current
+        if (!socket || !jobId) return
+        console.log('Joining job:', jobId)
+        socket.emit('join:report', jobId)
+        socket.off('report:progress')
+        socket.off('report:complete')
+    
+        const existing = useJobStore
+            .getState()
+            .jobs.find((j) => j.jobId === jobId)
+          if (!existing) {
+            addJob({
+              jobId,
+              label: `Loan Release ${type} (PDF)`,
+              type: 'print',
+              progress: 0,
+              status: 'processing',
+              fileType: `${options === 'print' ? 'pdf' : 'excel'}`,
+              file: '',
+              filename: '',
+            })
+          }
+    
+    
+          const handleProgress = (data: any) => {
+            if (data.jobId !== jobId) return
+            console.log('Progress event:', data)
+    
+            const percent = data.percent ?? data.progress ?? 0
+    
+    
+            updateJob(jobId, {
+              progress: percent,
+              status: 'processing',
+            })
+    
+          }
+    
+          const handleReady = (data: any) => {
+            if (data.jobId !== jobId) return;
+    
+            console.log('Ready:', data);
+    
+    
+            let url: string;
+            if (typeof data.file === 'string') {
+              const binary = atob(data.file);
+              const bytes = new Uint8Array(binary.length);
+              for (let i = 0; i < binary.length; i++) {
+                bytes[i] = binary.charCodeAt(i);
+              }
+              const blob = new Blob([bytes], { type: 'application/pdf' });
+              url = URL.createObjectURL(blob);
+            } else {
+              console.error('Expected base64 string, got:', typeof data.file);
+              return;
+            }
+    
+            updateJob(jobId, {
+              progress: 100,
+              status: 'done',
+              file: url,
+              filename: data.filename,
+              fileUrl: url,
+            });
+          };
+    
+          const handleError = (data: any) => {
+            if (data.jobId !== jobId) return
+            console.log('Error:', data)
+    
+          }
+    
+    
+        socket.on('report:progress', handleProgress)
+        socket.on('report:ready', handleReady)
+        socket.on('report:error', handleError)
+    
+        return () => {
+          socket.off('report:progress', handleProgress)
+          socket.off('report:ready', handleReady)
+          socket.off('report:error', handleError)
+        }
+      }, [jobId])
 
 
 
