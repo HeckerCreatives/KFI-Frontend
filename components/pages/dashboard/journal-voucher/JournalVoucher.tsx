@@ -158,12 +158,12 @@ const JournalVoucher = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchKey]);
+  }, [searchKey, from, to]);
   
   useEffect(() => {
     const timer = setTimeout(() => {
       getJournalVouchers(currentPage, searchKey, sortKey, to, from);
-    }, 800);
+    }, 500);
   
     return () => clearTimeout(timer);
   }, [currentPage, searchKey, sortKey, from, to]);

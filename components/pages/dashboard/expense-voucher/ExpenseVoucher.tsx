@@ -158,15 +158,15 @@ const ExpenseVoucher = () => {
 
 useEffect(() => {
   setCurrentPage(1);
-}, [searchKey]);
+}, [searchKey, from, to]);
 
 useEffect(() => {
   const timer = setTimeout(() => {
     getExpenseVouchers(currentPage, searchKey, sortKey, to, from);
-  }, 800);
+  }, 500);
 
   return () => clearTimeout(timer);
-}, [currentPage, searchKey, sortKey, from, to]);
+}, [currentPage, sortKey, from, to]);
 
 
   return (

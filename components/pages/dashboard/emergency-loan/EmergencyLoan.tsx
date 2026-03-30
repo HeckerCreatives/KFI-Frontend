@@ -99,7 +99,7 @@ const EmergencyLoan = () => {
         }
       } catch (error) {
         present({
-          message: 'Failed to get journal voucher records. Please try again',
+          message: 'Failed to get records. Please try again',
           duration: 1000,
         });
       } finally {
@@ -155,7 +155,7 @@ const EmergencyLoan = () => {
 
    useEffect(() => {
       setCurrentPage(1);
-    }, [searchKey]);
+    }, [searchKey, from, to]);
     
     useEffect(() => {
       const timer = setTimeout(() => {
@@ -353,7 +353,7 @@ const EmergencyLoan = () => {
                         <TableRow key={emergencyLoan._id}>
                           <TableCell>{emergencyLoan.code}</TableCell>
                           <TableCell>{formatDateTable(emergencyLoan.date)}</TableCell>
-                          <TableCell>{emergencyLoan.bank.description}</TableCell>
+                          <TableCell>{emergencyLoan.bank?.description}</TableCell>
                           <TableCell>{emergencyLoan.checkNo}</TableCell>
                           <TableCell>{formatMoney(emergencyLoan.amount)}</TableCell>
                           <TableCell>{emergencyLoan.encodedBy?.username}</TableCell>

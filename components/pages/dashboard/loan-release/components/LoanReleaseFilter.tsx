@@ -52,23 +52,6 @@ const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, 
   const sort = form.watch('sort');
   const dateTo = form.watch('dateTo');
   const dateFrom = form.watch('dateFrom');
-  
-    useEffect(() => {
-      const fetchData = () => {
-        if (online) {
-          getTransactions(1, code, sort, dateTo, dateFrom);
-        } else {
-          getTransactions(1, code, sort, dateTo, dateFrom);
-        }
-      };
-
-       const timer = setTimeout(() => {
-      fetchData();
-    }, 800);
-
-     return () => clearTimeout(timer);
-  
-    }, [ online]);
 
 
     useEffect(() => {

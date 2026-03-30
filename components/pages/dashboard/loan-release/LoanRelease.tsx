@@ -146,15 +146,20 @@ const LoanRelease = () => {
   };
 
 
-  const handlePagination = (page: number) => getTransactions(page, searchKey, sortKey);
+  const handlePagination = (page: number) => setCurrentPage(page);
 
   useIonViewWillEnter(() => {
     getTransactions(currentPage);
   });
 
+  
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchKey]);
+
   useEffect(() => {
     getTransactions(currentPage, searchKey, sortKey, to, from)
-  },[currentPage, sortKey, searchKey, to, from])
+  },[currentPage, sortKey, from, to])
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
