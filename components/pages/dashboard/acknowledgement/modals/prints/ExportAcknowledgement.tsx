@@ -9,6 +9,7 @@ import { Acknowledgement, ExpenseVoucher } from '../../../../../../types/types';
 import { fileTrayFullSharp } from 'ionicons/icons';
 import PrintExportOptionForm from '../../components/PrintExportOptionForm';
 import { FileExportIcon } from 'hugeicons-react';
+import { File } from 'lucide-react';
 
 export const acknowledgementOptionSchema = z.object({
   option: z.string().optional().or(z.literal('')),
@@ -66,9 +67,9 @@ const ExportAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowled
         id={`export_acknowledgement_${acknowledgement._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 w-20 h-7 rounded-md ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-pink-50 text-pink-900 capitalize min-h-4 text-xs"
-      >
-        <IonIcon icon={fileTrayFullSharp} className="text-xs" />
+        className=" capitalize text-sm !text-zinc-700 w-fit"
+             >
+        <File size={15} className=' mr-1'/>
         <span>Export</span>
       </IonButton>
       <IonModal

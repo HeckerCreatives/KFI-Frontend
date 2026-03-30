@@ -169,10 +169,10 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
         <IonButton
           fill="clear"
           onClick={() => setIsOpen(true)}
-          className="max-h-10 min-h-6 min-w-32 max-w-32 w-32 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+          className="h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl"
           strong
         >
-          + Add Record
+          + Add
         </IonButton>
       </div>
       <IonModal

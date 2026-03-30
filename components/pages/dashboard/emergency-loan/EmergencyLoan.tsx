@@ -147,7 +147,7 @@ const EmergencyLoan = () => {
 
 
 
-  const handlePagination = (page: number) => setCurrentPage(1);
+  const handlePagination = (page: number) => setCurrentPage(page);
 
   useIonViewWillEnter(() => {
     getEmergencyLoans(currentPage);
@@ -199,7 +199,7 @@ const EmergencyLoan = () => {
                     <TableHeadRow>
                        <TableHead className="min-w-44 max-w-44 sticky left-0">
                           <div className="flex items-center gap-6">
-                           CV No.
+                            Code
                            {sortKey === SORTS.CVNO_ASC ? (
                              <ArrowUp
                                size={15}

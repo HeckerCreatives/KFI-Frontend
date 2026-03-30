@@ -67,11 +67,11 @@ const AcknowledgementSelection = <T extends FieldValues>({
     try {
       const filter: any = { keyword: value, page, limit: 10 };
       const result = await kfiAxios.get('acknowledgement/selection', { params: filter });
-      const { success, acknowledgements, hasPrevPage, hasNextPage, totalPages } = result.data;
+      const { success, receipts, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({
           ...prev,
-          acknowledgements,
+          acknowledgements:receipts,
           totalPages: totalPages,
           nextPage: hasNextPage,
           prevPage: hasPrevPage,
@@ -169,7 +169,7 @@ const AcknowledgementSelection = <T extends FieldValues>({
               </TableHeader>
               <TableBody>
                 {data.loading && <TableLoadingRow colspan={1} />}
-                {!data.loading && data.acknowledgements.length < 1 && <TableNoRows colspan={1} label="No official receipt found" />}
+                {!data.loading && data.acknowledgements?.length < 1 && <TableNoRows colspan={1} label="No official receipt found" />}
                 {!data.loading &&
                   data.acknowledgements.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
