@@ -170,114 +170,129 @@ const ExportAllLoanRelease = () => {
   }
 }
 
-  async function handleDownload(data: PrintExportFilterFormData) {
-    setLoading(true);
+async function handleDownload(data: PrintExportFilterFormData) {
+  setLoading(true);
 
-    try {
-      const params = {
-        docNoFrom: data.docNoFromLabel,
-        docNoTo: data.docNoToLabel,
-        dateFrom: data.dateFrom,
-        dateTo: data.dateTo,
-        bankIds: data.bankIds,
-      };
+  try {
+    const params = {
+      docNoFrom: data.docNoFromLabel,
+      docNoTo: data.docNoToLabel,
+      dateFrom: data.dateFrom,
+      dateTo: data.dateTo,
+      bankIds: data.bankIds,
+    };
 
-      let result;
+    const config = {
+      responseType: 'arraybuffer' as const,
+      validateStatus: (status: number) => [200, 202].includes(status),
+    };
 
-      switch (type) {
-        case "by-document":
-          result = await kfiAxios.get(
-            `/transaction/export/by-document/${data.option}`,
-            { params }
-          );
-          break;
+    let result;
 
-        case "by-date":
-          result = await kfiAxios.get(
-            `/transaction/export/by-date/${data.option}`,
-            { params }
-          );
-          break;
+    switch (type) {
+      case "by-document":
+        result = await kfiAxios.get(
+          `/transaction/export/by-document/${data.option}`,
+          { ...config, params }
+        );
+        break;
 
-        case "by-bank":
-          result = await kfiAxios.post(
-            `/transaction/export/by-bank`,
-            { bankIds: data.bankIds }
-          );
-          break;
+      case "by-date":
+        result = await kfiAxios.get(
+          `/transaction/export/by-date/${data.option}`,
+          { ...config, params }
+        );
+        break;
 
-        case "by-accounts":
-          result = await kfiAxios.post(
-            `/transaction/export/by-accounts/${data.option}`,
-            {
-              chartOfAccountsIds: data.chartOfAccountsIds,
-              dateFrom: data.dateFrom,
-              dateTo: data.dateTo,
-            }
-          );
-          break;
+      case "by-bank":
+        result = await kfiAxios.post(
+          `/transaction/export/by-bank`,
+          { bankIds: data.bankIds },
+          config
+        );
+        break;
 
-        case "past-dues":
-          result = await kfiAxios.post(
-            `/transaction/export/past-dues`,
-            {
-              loanReleaseDateFrom: data.loanReleaseDateFrom,
-              loanReleaseDateTo: data.loanReleaseDateTo,
-            }
-          );
-          break;
+      case "by-accounts":
+        result = await kfiAxios.post(
+          `/transaction/export/by-accounts/${data.option}`,
+          {
+            chartOfAccountsIds: data.chartOfAccountsIds,
+            dateFrom: data.dateFrom,
+            dateTo: data.dateTo,
+          },
+          config
+        );
+        break;
 
-        case "aging-of-loans":
-          result = await kfiAxios.post(
-            `/transaction/export/aging-of-loans`,
-            {
-              loanReleaseDateFrom: data.loanReleaseDateFrom,
-              loanReleaseDateTo: data.loanReleaseDateTo,
-            }
-          );
-          break;
+      case "past-dues":
+        result = await kfiAxios.post(
+          `/transaction/export/past-dues`,
+          {
+            loanReleaseDateFrom: data.loanReleaseDateFrom,
+            loanReleaseDateTo: data.loanReleaseDateTo,
+          },
+          config
+        );
+        break;
 
-        case "weekly-collections":
-          result = await kfiAxios.post(
-            `/transaction/export/weekly-collections`,
-            {
-              loanReleaseDateFrom: data.loanReleaseDateFrom,
-              loanReleaseDateTo: data.loanReleaseDateTo,
-            }
-          );
-          break;
+      case "aging-of-loans":
+        result = await kfiAxios.post(
+          `/transaction/export/aging-of-loans`,
+          {
+            loanReleaseDateFrom: data.loanReleaseDateFrom,
+            loanReleaseDateTo: data.loanReleaseDateTo,
+          },
+          config
+        );
+        break;
 
-        default:
-          throw new Error("Invalid tab selected");
-      }
+      case "weekly-collections":
+        result = await kfiAxios.post(
+          `/transaction/export/weekly-collections`,
+          {
+            loanReleaseDateFrom: data.loanReleaseDateFrom,
+            loanReleaseDateTo: data.loanReleaseDateTo,
+          },
+          config
+        );
+        break;
 
-     if (result.status === 200) {
-        // Immediate blob response — open and print
-        const file = new Blob([result.data], { type: 'application/pdf' });
-        const fileURL = URL.createObjectURL(file);
-        const printWindow = window.open(fileURL);
-        printWindow?.addEventListener('load', () => {
-          printWindow.print();
-        });
-        dismiss();
-
-      } else if (result.status === 202) {
-        // Async job — wait for socket event
-        const { jobId } = result.data;
-        setJobId(jobId);
-        dismiss();
+      default:
+        throw new Error("Invalid tab selected");
     }
 
-    } catch (error) {
-      console.error(error);
-      present({
-        message: "Failed to export the loan release records. Please try again.",
-        duration: 1000,
+    if (result.status === 200) {
+      const blob = new Blob([result.data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
-    } finally {
-      setLoading(false);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'loan-release.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.appendChild(a);
+      window.URL.revokeObjectURL(url);
+      dismiss();
+
+    } else if (result.status === 202) {
+      // Decode arraybuffer → JSON for async job response
+      const text = new TextDecoder().decode(result.data);
+      const { jobId } = JSON.parse(text);
+      setJobId(jobId);
+      dismiss();
     }
+
+  } catch (error) {
+    console.error(error);
+    present({
+      message: "Failed to export the loan release records. Please try again.",
+      duration: 1000,
+    });
+  } finally {
+    setLoading(false);
   }
+}
 
 //socket
 

@@ -226,10 +226,11 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
             />
           </FormIonItem>
 
-          <FormIonItem className="[--min-height:0]">
+          {/* <FormIonItem className="[--min-height:0]">
             <InputText
-              disabled={loading}
+              disabled={true}
               name="cycle"
+              readOnly={true}
               control={form.control}
               clearErrors={form.clearErrors}
               label="Cycle"
@@ -237,7 +238,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               className="!p-2 rounded-md !text-[0.7rem]"
               labelClassName="truncate min-w-24 !text-[0.7rem] !text-slate-600 text-end"
             />
-          </FormIonItem>
+          </FormIonItem> */}
 
           <FormIonItem className=" [--min-height:0]">
             <InputText
@@ -283,6 +284,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               control={form.control}
               clearErrors={form.clearErrors}
               label="Cycle"
+              readOnly={true}
               placeholder="Type here"
               className="!p-2 rounded-md !text-[0.7rem]"
               labelClassName="truncate min-w-24 !text-[0.7rem] !text-slate-600 text-end"

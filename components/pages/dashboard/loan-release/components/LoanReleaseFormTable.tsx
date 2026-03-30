@@ -159,19 +159,27 @@ const fetchClientData = async (clientId: string, indexes: number[]) => {
     let data;
 
     if (fetchedClientIds.current.has(clientId)) {
-      // Reuse cached result
       data = fetchedClientIds.current.get(clientId);
     } else {
       const result = await kfiAxios.get(`/customer/${clientId}/loan-cycle-and-amount`);
       data = result.data.data;
-      fetchedClientIds.current.set(clientId, data); // cache it
+      fetchedClientIds.current.set(clientId, data);
     }
 
-    // Apply to ALL indexes with this clientId
     indexes.forEach((i) => {
-      form.setValue(`entries.${i}.interest`, data.interestRate);
-      form.setValue(`entries.${i}.cycle`, data.latestCycle);
+      const currentCycle = form.getValues(`entries.${i}.cycle`);
+      const currentInterest = form.getValues(`entries.${i}.interest`);
+
+      // ✅ ONLY set if empty (prevent overwrite)
+      if (currentInterest === '' || currentInterest === undefined) {
+        form.setValue(`entries.${i}.interest`, data.interestRate);
+      }
+
+      if (currentCycle === '' || currentCycle === undefined) {
+        form.setValue(`entries.${i}.cycle`, data.latestCycle);
+      }
     });
+
   } catch (error) {
     console.error(error);
   }
@@ -179,6 +187,8 @@ const fetchClientData = async (clientId: string, indexes: number[]) => {
 
 useEffect(() => {
   if (!watchedEntries) return;
+
+
 
   // Group all indexes by clientId
   const clientIdMap = new Map<string, number[]>();
@@ -195,7 +205,13 @@ useEffect(() => {
   clientIdMap.forEach((indexes, clientId) => {
     fetchClientData(clientId, indexes);
   });
+
+
+
+  
 }, [watchedEntries?.map((e: any) => e?.clientId).join(',')]);
+
+
 
   return (
     <div className="px-2">

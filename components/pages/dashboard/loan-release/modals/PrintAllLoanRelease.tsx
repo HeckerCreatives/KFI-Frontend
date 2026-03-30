@@ -167,27 +167,33 @@ async function handleDownload(data: PrintExportFilterFormData) {
       bankIds: data.bankIds,
     };
 
+    const config = {
+      responseType: 'arraybuffer' as const,
+      validateStatus: (status: number) => [200, 202].includes(status),
+    };
+
     let result;
 
     switch (type) {
       case "by-document":
         result = await kfiAxios.get(
           `/transaction/print/by-document/${data.option}`,
-          { params }
+          { ...config, params }
         );
         break;
 
       case "by-date":
         result = await kfiAxios.get(
           `/transaction/print/by-date/${data.option}`,
-          { params }
+          { ...config, params }
         );
         break;
 
       case "by-bank":
         result = await kfiAxios.post(
           `/transaction/print/by-bank`,
-          { bankIds: data.bankIds }
+          { bankIds: data.bankIds },
+          config
         );
         break;
 
@@ -198,7 +204,8 @@ async function handleDownload(data: PrintExportFilterFormData) {
             chartOfAccountsIds: data.chartOfAccountsIds,
             dateFrom: data.dateFrom,
             dateTo: data.dateTo,
-          }
+          },
+          config
         );
         break;
 
@@ -208,7 +215,8 @@ async function handleDownload(data: PrintExportFilterFormData) {
           {
             loanReleaseDateFrom: data.loanReleaseDateFrom,
             loanReleaseDateTo: data.loanReleaseDateTo,
-          }
+          },
+          config
         );
         break;
 
@@ -218,7 +226,8 @@ async function handleDownload(data: PrintExportFilterFormData) {
           {
             loanReleaseDateFrom: data.loanReleaseDateFrom,
             loanReleaseDateTo: data.loanReleaseDateTo,
-          }
+          },
+          config
         );
         break;
 
@@ -228,7 +237,8 @@ async function handleDownload(data: PrintExportFilterFormData) {
           {
             loanReleaseDateFrom: data.loanReleaseDateFrom,
             loanReleaseDateTo: data.loanReleaseDateTo,
-          }
+          },
+          config
         );
         break;
 
@@ -237,18 +247,19 @@ async function handleDownload(data: PrintExportFilterFormData) {
     }
 
     if (result.status === 200) {
-      // Immediate blob response — open and print
-      const file = new Blob([result.data], { type: 'application/pdf' });
-      const fileURL = URL.createObjectURL(file);
+      const blob = new Blob([result.data], { type: 'application/pdf' });
+      const fileURL = URL.createObjectURL(blob);
       const printWindow = window.open(fileURL);
       printWindow?.addEventListener('load', () => {
-        printWindow.print();
+        printWindow?.print();
+        URL.revokeObjectURL(fileURL);
       });
       dismiss();
 
     } else if (result.status === 202) {
-      // Async job — wait for socket event
-      const { jobId } = result.data;
+      // Decode arraybuffer → JSON for async job response
+      const text = new TextDecoder().decode(result.data);
+      const { jobId } = JSON.parse(text);
       setJobId(jobId);
       dismiss();
     }

@@ -19,9 +19,14 @@ type TSearch = {
 
 type ExpenseVoucherFilterProps = {
   getExpenseVouchers: (page: number, keyword?: string, sort?: string, from?: string, to?: string) => void;
+  setSortKey: React.Dispatch<React.SetStateAction<string>>;
+  setSearchKey: React.Dispatch<React.SetStateAction<string>>;
+  setTo: React.Dispatch<React.SetStateAction<string>>;
+  setFrom: React.Dispatch<React.SetStateAction<string>>;
+  suggestions: string[];
 };
 
-const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps) => {
+const ExpenseVoucherFilter = ({ getExpenseVouchers, setSearchKey, setSortKey, setTo, setFrom, suggestions }: ExpenseVoucherFilterProps) => {
   const form = useForm<TSearch>({
     defaultValues: {
       code: '',
@@ -44,59 +49,18 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
   const online = useOnlineStore((state) => state.online);
     
     const code = form.watch('code');
-    const sort = form.watch('sort');
     const dateTo = form.watch('dateTo');
     const dateFrom = form.watch('dateFrom');
+
+  useEffect(() => {
+          setSearchKey(code);
+          setTo(dateTo);
+          setFrom(dateFrom);
     
-      useEffect(() => {
-        const fetchData = () => {
-          if (online) {
-            getExpenseVouchers(1, code, sort, dateTo, dateFrom);
-          } else {
-            getExpenseVouchers(1, code, sort, dateTo, dateFrom);
-          }
-        };
-        fetchData();
-      }, [sort, online, dateTo, dateFrom]);
-
- const [data, setData] = useState<TData>({
-        expenseVouchers: [],
-        loading: false,
-        totalPages: 0,
-        nextPage: false,
-        prevPage: false,
-      });
       
-    useEffect(() => {
-       const getData = async () => {
-      setData(prev => ({ ...prev, loading: true }));
+  },[code, dateTo, dateFrom])
 
-      try {
-        const result = await kfiAxios.get('/expense-voucher', { params: { limit: 5, search: code, page: 1 } });
-         const { success, expenseVouchers, hasPrevPage, hasNextPage, totalPages } = result.data;
-        if (success) {
-          setData(prev => ({
-            ...prev,
-            expenseVouchers: expenseVouchers,
-            totalPages: totalPages,
-            nextPage: hasNextPage,
-            prevPage: hasPrevPage,
-          }));
-        }
-      } catch (error) {
-        // handle error
-      } finally {
-        setData(prev => ({ ...prev, loading: false }));
-      }
-    };
 
-    const timer = setTimeout(() => {
-      getData();
-    }, 800);
-
-    return () => clearTimeout(timer);
-   
-  }, [code]);
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit">
@@ -136,12 +100,11 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
           </div>
          
         </FormIonItem>
-        <FormIonItem className="min-w-32 ![--min-height:1rem] pb-1">
+        {/* <FormIonItem className="min-w-32 ![--min-height:1rem] pb-1">
 
           <div className=' flex flex-col gap-1 min-w-36'>
             <label htmlFor="sortBy" className=' text-xs'>Sort By</label>
              <InputSelect
-                // label="Sort By"
                 name="sort"
                 placeholder="Sort By"
                 control={form.control}
@@ -156,7 +119,7 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
               />
           </div>
           
-        </FormIonItem>
+        </FormIonItem> */}
         <FormIonItem className="min-w-32 ![--min-height:1rem] pb-1">
 
           <div className=' flex flex-col gap-1'>
@@ -168,15 +131,15 @@ const ExpenseVoucherFilter = ({ getExpenseVouchers }: ExpenseVoucherFilterProps)
                   // label="Code"
                   placeholder="Search ..."
                   className="!px-3 !py-1 rounded-xl"
-                  suggestions={data.expenseVouchers.map((item) => item.code || '')}
+                  suggestions={suggestions}
                 />
           </div>
           
         </FormIonItem>
-        <IonButton type="submit" fill="clear" className=" h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl text-xs" strong>
+        {/* <IonButton type="submit" fill="clear" className=" h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl text-xs" strong>
           <Search01Icon size={15} stroke='.8' className=' '/>
          
-        </IonButton>
+        </IonButton> */}
       </div>
     </form>
   );

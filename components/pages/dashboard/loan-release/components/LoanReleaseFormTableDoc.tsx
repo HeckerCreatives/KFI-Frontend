@@ -52,28 +52,28 @@ const LoanReleaseFormTableDoc = ({ entry, index, remove, form, setPage, currentL
     }
   }, [name]);
 
-  // useEffect(() => {
-   
+const watchedEntries = form.watch('entries');
 
-  //   if(clientId && !interest){
-  //      const getData = async () => {
-  //     try {
-  //       const result = await kfiAxios.get(`/customer/${clientId}/loan-cycle-and-amount`);
-  //       const { data } = result.data;
+useEffect(() => {
+  if (!watchedEntries?.length) return;
 
+  const validCycles = watchedEntries
+    .map(e => e?.cycle)
+    .filter(c => c !== undefined && c !== null)
+    .map(c => String(c));
 
-  //       form.setValue(`entries.${index}.interest`, data.interestRate);
-  //       form.setValue(`entries.${index}.cycle`, data.latestCycle);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
+  if (!validCycles.length) return;
 
-  //   getData();
-  //   }
-   
+  const uniqueCycles = Array.from(new Set(validCycles));
 
-  // }, [clientId, index]);
+  const cycles =
+    uniqueCycles.length === 1
+      ? uniqueCycles[0]
+      : uniqueCycles.join(', ');
+
+  form.setValue('cycle', cycles);
+}, [JSON.stringify(watchedEntries.map(e => e?.cycle))]);
+
 
 
 

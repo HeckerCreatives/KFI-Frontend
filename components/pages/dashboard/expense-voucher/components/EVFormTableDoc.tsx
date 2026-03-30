@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TableCell, TableRow } from '../../../../ui/table/Table';
 import { EntryFormData } from '../../../../../validations/loan-release.schema';
 import { UseFormReturn } from 'react-hook-form';
@@ -20,6 +20,10 @@ type EVFormTableDocProps = {
 };
 
 const EVFormTableDoc = ({ index, entry, remove, form, loading = false }: EVFormTableDocProps) => {
+
+  const watchedEntries = form.watch('entries');
+  
+
   return (
     <TableRow className="[&>td]:border-2 [&>td]:!py-0 [&>td]:!px-2 [&>td]:!bg-white">
       <TableCell className="text-center">{index + 1}</TableCell>
