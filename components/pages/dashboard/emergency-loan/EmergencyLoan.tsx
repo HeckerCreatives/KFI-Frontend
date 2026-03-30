@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import { canDoAction, haveActions } from '../../../utils/permissions';
@@ -21,7 +21,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { formatELList, formatEVList } from '../../../ui/utils/fomatData';
 import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 
 export type TData = {
   emergencyLoans: EmergencyLoanType[];
@@ -30,6 +30,22 @@ export type TData = {
   prevPage: boolean;
   loading: boolean;
 };
+
+
+const SORTS = {
+  CVNO_ASC: 'code-asc',
+  CVNO_DESC: 'code-desc',
+  DATE_ASC: 'date-asc',
+  DATE_DESC: 'date-desc',
+  BANK_ASC: 'bank-asc',
+  BANK_DESC: 'bank-desc',
+  CHECKNO_ASC: 'checkno-asc',
+  CHECKNO_DESC: 'checkno-desc',
+  AMOUNT_ASC: 'amount-asc',
+  AMOUNT_DESC: 'amount-desc',
+  ENCODEDBY_ASC: 'encodedby-asc',
+  ENCODEDBY_DESC: 'encodedby-desc',
+}
 
 const EmergencyLoan = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -61,8 +77,8 @@ const EmergencyLoan = () => {
         const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
         if (keyword) filter.search = keyword;
         if (sort) filter.sort = sort;
-        if (to) filter.to = to;
-        if (from) filter.from = from;
+        if (to) filter.dateTo = to;
+        if (from) filter.dateFrom = from;
 
         const result = await kfiAxios.get('/emergency-loan', { params: filter });
         const { success, emergencyLoans, hasPrevPage, hasNextPage, totalPages } = result.data;
@@ -129,50 +145,41 @@ const EmergencyLoan = () => {
     }
   };
 
-  const uploadChanges = async () => {
-          setUploading(true)
-          try {
-            const list = await db.emergencyLoans.toArray();
-            const offlineChanges = list.filter(e => e._synced === false);
-          
-    
-            const result = await kfiAxios.put("sync/upload/emergency-loans", { emergencyLoans: offlineChanges });
-            const { success } = result.data;
-            if (success) {
-              setUploading(false)
-               present({
-                  message: 'Offline changes saved!',
-                  duration: 1000,
-                });
-              getEmergencyLoans(currentPage);
-              setUploading(false)
-    
-            }
-          } catch (error: any) {
-              setUploading(false)
-              console.log(error)
-    
-              present({
-                message: `${error.response.data.error.message}`,
-                duration: 1000,
-              });
-          }
-      };
 
-  const handlePagination = (page: number) => getEmergencyLoans(page, searchKey, sortKey);
+
+  const handlePagination = (page: number) => setCurrentPage(1);
 
   useIonViewWillEnter(() => {
     getEmergencyLoans(currentPage);
   });
 
+   useEffect(() => {
+      setCurrentPage(1);
+    }, [searchKey]);
+    
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        getEmergencyLoans(currentPage, searchKey, sortKey, to, from);
+      }, 800);
+    
+      return () => clearTimeout(timer);
+    }, [currentPage, searchKey, sortKey, from, to]);
+
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start py-6 gap-4">
-          <PageTitle pages={['Transaction', 'Emergency Loan']} />
+          
           <div className="px-3 pb-3 flex-1 flex flex-col">
+
+            <div className=' space-y-1 mb-6'>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl text-gray-700 !font-medium'>Emergency Loan</p>
+              <p className=' text-sm text-gray-500 '>Manage emergency loan records.</p>
+
+            </div>
            
-            <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+            <div className=" p-4 pb-16 bg-white rounded-xl flex-1 shadow-lg">
                <div className=" flex flex-col gap-4 flex-wrap">
                
                 <div className="flex items-start flex-wrap">
@@ -183,19 +190,157 @@ const EmergencyLoan = () => {
                 </div>
 
                  <div className="w-full flex-1 flex">
-                  <EmergencyLoanFilter getEmergencyLoans={getEmergencyLoans} />
+                  <EmergencyLoanFilter getEmergencyLoans={getEmergencyLoans} setSearchKey={setSearchKey} setSortKey={setSortKey} setTo={setTo} setFrom={setFrom} suggestions={data.emergencyLoans.map((item) => item.code)} />
                 </div>
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>CV Number</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Bank</TableHead>
-                      <TableHead>CHK. No.</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Encoded By</TableHead>
+                       <TableHead className="min-w-44 max-w-44 sticky left-0">
+                          <div className="flex items-center gap-6">
+                           CV No.
+                           {sortKey === SORTS.CVNO_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CVNO_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.CVNO_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CVNO_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CVNO_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                           Date
+                           {sortKey === SORTS.DATE_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.DATE_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.DATE_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.DATE_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.DATE_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                           Bank
+                           {sortKey === SORTS.BANK_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.BANK_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.BANK_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.BANK_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.BANK_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                           Check No.
+                           {sortKey === SORTS.CHECKNO_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CHECKNO_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.CHECKNO_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CHECKNO_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CHECKNO_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                           Amount
+                           {sortKey === SORTS.AMOUNT_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.AMOUNT_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.AMOUNT_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.AMOUNT_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.AMOUNT_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                           Encoded By
+                           {sortKey === SORTS.ENCODEDBY_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.ENCODEDBY_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.ENCODEDBY_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.ENCODEDBY_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.ENCODEDBY_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
                       {haveActions(token.role, 'emergency loan', permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
@@ -233,9 +378,10 @@ const EmergencyLoan = () => {
                   </TableBody>
                 </Table>
               </div>
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
             </div>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>

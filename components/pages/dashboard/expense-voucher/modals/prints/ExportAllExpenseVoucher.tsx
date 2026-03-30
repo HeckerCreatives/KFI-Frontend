@@ -331,7 +331,7 @@ const ExportAllExpenseVoucher = () => {
         strong
       >
         <FileExportIcon stroke='.8' size={15} className=' mr-2'/>
-        Export All
+        Export
       </IonButton>
       <IonModal
         ref={modal}

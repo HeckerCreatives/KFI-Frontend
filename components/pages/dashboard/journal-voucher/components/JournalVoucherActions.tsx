@@ -10,6 +10,7 @@ import { canDoAction } from '../../../../utils/permissions';
 import { TData } from '../JournalVoucher';
 import PrintJournalVoucher from '../modals/prints/PrintJournalVoucher';
 import ExportJournalVoucher from '../modals/prints/ExportJournalVoucher';
+import { Ellipsis } from 'lucide-react';
 
 type JournalVoucherActionsProps = {
   journalVoucher: JournalVoucher;
@@ -38,24 +39,47 @@ const JournalVoucherActions = ({
 }: JournalVoucherActionsProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+    const triggerId = `expensevoucher-action-trigger-${journalVoucher._id}`;
 
   return (
-    <div>
-      {canDoAction(token.role, permissions, 'journal voucher', 'visible') && <ViewJournalVoucher journalVoucher={journalVoucher} />}
-      {canDoAction(token.role, permissions, 'journal voucher', 'update') && <UpdateJournalVoucher journalVoucher={journalVoucher} setData={setData} getList={getJournalVouchers} currentPage={currentPage} />}
-      {canDoAction(token.role, permissions, 'journal voucher', 'delete') && (
-        <DeleteJournalVoucher
-          journalVoucher={journalVoucher}
-          getJournalVouchers={getJournalVouchers}
-          searchkey={searchKey}
-          sortKey={sortKey}
-          currentPage={currentPage}
-          rowLength={rowLength}
-        />
-      )}
-      {canDoAction(token.role, permissions, 'journal voucher', 'print') && <PrintJournalVoucher journalVoucher={journalVoucher} />}
-      {canDoAction(token.role, permissions, 'expense voucher', 'export') && <ExportJournalVoucher journalVoucher={journalVoucher} />}
-    </div>
+
+    <>
+     <button
+        className=" !p-2 bg-zinc-100 rounded-xl text-zinc-800"
+        id={triggerId}
+      >
+       <Ellipsis size={20}/>
+      </button>
+
+      <IonPopover
+       showBackdrop={false}
+       trigger={triggerId}
+       triggerAction="click"
+       className="[--max-width:12rem] !p-6 !rounded-xl"
+     >
+       <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem] !p-6 !rounded-xl">
+       <div className=' w-full flex flex-col p-4'>
+         <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
+
+          {canDoAction(token.role, permissions, 'journal voucher', 'visible') && <ViewJournalVoucher journalVoucher={journalVoucher} />}
+          {canDoAction(token.role, permissions, 'journal voucher', 'update') && <UpdateJournalVoucher journalVoucher={journalVoucher} setData={setData} getList={getJournalVouchers} currentPage={currentPage} />}
+          {canDoAction(token.role, permissions, 'journal voucher', 'delete') && (
+            <DeleteJournalVoucher
+              journalVoucher={journalVoucher}
+              getJournalVouchers={getJournalVouchers}
+              searchkey={searchKey}
+              sortKey={sortKey}
+              currentPage={currentPage}
+              rowLength={rowLength}
+            />
+          )}
+          {canDoAction(token.role, permissions, 'journal voucher', 'print') && <PrintJournalVoucher journalVoucher={journalVoucher} />}
+          {canDoAction(token.role, permissions, 'expense voucher', 'export') && <ExportJournalVoucher journalVoucher={journalVoucher} />}
+       </div>
+       </IonContent>
+     </IonPopover>
+    </>
+  
    
   );
 };

@@ -189,7 +189,7 @@ const PrintExpenseVoucher = ({ expenseVoucher }: { expenseVoucher: ExpenseVouche
         fill="clear"
        className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <Printer size={20} className=' mr-1'/>
+        <Printer size={15} className=' mr-1'/>
         <span>Print</span>
       </IonButton>
       <IonModal

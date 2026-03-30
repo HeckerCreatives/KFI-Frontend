@@ -19,9 +19,14 @@ type TSearch = {
 
 type JournalVoucherFilterProps = {
   getJournalVouchers: (page: number, keyword?: string, sort?: string, from?: string, to?: string) => void;
+  setSortKey: React.Dispatch<React.SetStateAction<string>>;
+  setSearchKey: React.Dispatch<React.SetStateAction<string>>;
+  setTo: React.Dispatch<React.SetStateAction<string>>;
+  setFrom: React.Dispatch<React.SetStateAction<string>>;
+  suggestions: string[];
 };
 
-const JournalVoucherFilter = ({ getJournalVouchers }: JournalVoucherFilterProps) => {
+const JournalVoucherFilter = ({ getJournalVouchers, setSearchKey, setSortKey, setTo, setFrom, suggestions }: JournalVoucherFilterProps) => {
   const form = useForm<TSearch>({
     defaultValues: {
       code: '',
@@ -45,63 +50,17 @@ const JournalVoucherFilter = ({ getJournalVouchers }: JournalVoucherFilterProps)
       const sort = form.watch('sort');
       const dateTo = form.watch('dateTo');
       const dateFrom = form.watch('dateFrom');
-      
-        useEffect(() => {
-          const fetchData = () => {
-            if (online) {
-              getJournalVouchers(1, code, sort, dateTo, dateFrom);
-            } else {
-              getJournalVouchers(1, code, sort, dateTo, dateFrom);
-            }
-          };
-          fetchData();
-        }, [sort, online, dateTo, dateFrom]);
-
-
-         const [data, setData] = useState<TData>({
-                journalVouchers: [],
-                loading: false,
-                totalPages: 0,
-                nextPage: false,
-                prevPage: false,
-              });
-              
-            useEffect(() => {
-               const getData = async () => {
-              setData(prev => ({ ...prev, loading: true }));
+     useEffect(() => {
+              setSearchKey(code);
+              setTo(dateTo);
+              setFrom(dateFrom);
         
-              try {
-                const result = await kfiAxios.get('/journal-voucher', { params: { limit: 5, search: code, page: 1 } });
-                 const { success, journalVouchers, hasPrevPage, hasNextPage, totalPages } = result.data;
-                if (success) {
-                  setData(prev => ({
-                    ...prev,
-                    journalVouchers: journalVouchers,
-                    totalPages: totalPages,
-                    nextPage: hasNextPage,
-                    prevPage: hasPrevPage,
-                  }));
-                }
-              } catch (error) {
-                // handle error
-              } finally {
-                setData(prev => ({ ...prev, loading: false }));
-              }
-            };
-        
-            const timer = setTimeout(() => {
-              getData();
-            }, 800);
-        
-            return () => clearTimeout(timer);
-           
-          }, [code]);
-
-  
+          
+      },[code, dateTo, dateFrom])
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit">
-       <div className="flex flex-wrap gap-2 items-end ">
+      <div className="flex flex-wrap gap-2 items-end ">
        <FormIonItem className="min-w-32 ![--min-height:1rem] pb-1">
           <div className=' flex flex-col gap-1'>
             <label htmlFor="dateFrom" className=' text-xs'>Date From</label>
@@ -111,7 +70,7 @@ const JournalVoucherFilter = ({ getJournalVouchers }: JournalVoucherFilterProps)
               type="date"
               control={form.control}
               clearErrors={form.clearErrors}
-              className="!px-3 !py-[0.3rem] !min-h-[1rem] rounded-md !border-orange-500 max-w-36 text-xs"
+              className="!px-3 !py-2 !min-h-[1rem] rounded-xl   text-xs"
               max="9999-12-31"
               labelClassName="truncate !text-xs pt-1.5"
             />
@@ -130,19 +89,18 @@ const JournalVoucherFilter = ({ getJournalVouchers }: JournalVoucherFilterProps)
               type="date"
               control={form.control}
               clearErrors={form.clearErrors}
-              className="!px-3 !py-[0.3rem] !min-h-[1rem] rounded-md !border-orange-500 max-w-36 text-xs"
+              className="!px-3 !py-2 !min-h-[1rem] rounded-xl   text-xs"
               max="9999-12-31"
               labelClassName="truncate !text-xs pt-1.5"
             />
           </div>
          
         </FormIonItem>
-        <FormIonItem className="min-w-32 ![--min-height:1rem] pb-1">
+        {/* <FormIonItem className="min-w-32 ![--min-height:1rem] pb-1">
 
-          <div className=' flex flex-col gap-1 !min-w-36'>
+          <div className=' flex flex-col gap-1 min-w-36'>
             <label htmlFor="sortBy" className=' text-xs'>Sort By</label>
              <InputSelect
-                // label="Sort By"
                 name="sort"
                 placeholder="Sort By"
                 control={form.control}
@@ -152,12 +110,12 @@ const JournalVoucherFilter = ({ getJournalVouchers }: JournalVoucherFilterProps)
                   { label: 'Code A - Z', value: 'code-asc' },
                   { label: 'Code Z - A', value: 'code-desc' },
                 ]}
-                className="!border-orange-500 rounded-md !w-full !py-[0.35rem] !max-w-36 !min-w-36 !min-h-[1rem] text-xs"
+                className="!px-3 !py-2 !min-h-[1rem] rounded-xl   text-xs"
                 labelClassName="truncate !text-xs pt-1.5"
               />
           </div>
           
-        </FormIonItem>
+        </FormIonItem> */}
         <FormIonItem className="min-w-32 ![--min-height:1rem] pb-1">
 
           <div className=' flex flex-col gap-1'>
@@ -168,16 +126,16 @@ const JournalVoucherFilter = ({ getJournalVouchers }: JournalVoucherFilterProps)
                   clearErrors={form.clearErrors}
                   // label="Code"
                   placeholder="Search ..."
-                  className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
-                  suggestions={data.journalVouchers.map((item) => item.code || '')}
+                  className="!px-3 !py-1 rounded-xl"
+                  suggestions={suggestions}
                 />
           </div>
           
         </FormIonItem>
-        <IonButton type="submit" fill="clear" className=" h-fit bg-[#FA6C2F] text-white capitalize font-semibold rounded-md text-xs" strong>
-          <Search01Icon size={15} stroke='.8' className=' mr-1'/>
-          Search
-        </IonButton>
+        {/* <IonButton type="submit" fill="clear" className=" h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl text-xs" strong>
+          <Search01Icon size={15} stroke='.8' className=' '/>
+         
+        </IonButton> */}
       </div>
     </form>
   );

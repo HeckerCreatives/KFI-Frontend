@@ -144,27 +144,33 @@ const TestPrintAllClient = ({ sort, search }: Props) => {
  }, [jobId])
 
 
-  async function handleDownload() {
-  setLoading(true)
+async function handleDownload() {
+  setLoading(true);
 
   try {
     const result = await kfiAxios.get(`/customer/export-all`, {
       params: { search, sort },
-    })
+      responseType: 'arraybuffer',
+      validateStatus: (status: number) => [200, 202].includes(status),
+    });
 
-  if (result.status === 200) {
-      // Immediate blob response — open and print
-      const file = new Blob([result.data], { type: 'application/pdf' });
-      const fileURL = URL.createObjectURL(file);
-      const printWindow = window.open(fileURL);
-      printWindow?.addEventListener('load', () => {
-        printWindow.print();
+    if (result.status === 200) {
+      const blob = new Blob([result.data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'customers.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
       dismiss();
 
     } else if (result.status === 202) {
-      // Async job — wait for socket event
-      const { jobId } = result.data;
+      const text = new TextDecoder().decode(result.data);
+      const { jobId } = JSON.parse(text);
       setJobId(jobId);
       dismiss();
     }
@@ -173,11 +179,11 @@ const TestPrintAllClient = ({ sort, search }: Props) => {
     present({
       message: 'Failed to start process.',
       duration: 1000,
-    })
+    });
   } finally {
-    setLoading(false)
+    setLoading(false);
   }
-  }
+}
 
 
 

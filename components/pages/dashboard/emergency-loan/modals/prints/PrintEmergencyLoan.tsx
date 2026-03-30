@@ -9,6 +9,7 @@ import { EmergencyLoan, JournalVoucher } from '../../../../../../types/types';
 import { print } from 'ionicons/icons';
 import PrintExportOptionForm from '../../components/PrintExportOptionForm';
 import { PrinterIcon } from 'hugeicons-react';
+import { Printer } from 'lucide-react';
 
 export const emergencyLoanOptionSchema = z.object({
   option: z.string().optional().or(z.literal('')),
@@ -64,9 +65,9 @@ const PrintEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan })
         id={`print_emergency_loan_${emergencyLoan._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-purple-100 text-purple-900 capitalize min-h-4 text-xs"
-      >
-        <IonIcon icon={print} className="text-xs" />
+          className=" capitalize text-sm !text-zinc-700 w-fit"
+          >
+          <Printer size={15} className=' mr-1'/>
         <span>Print</span>
       </IonButton>
       <IonModal

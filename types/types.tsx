@@ -567,6 +567,8 @@ export type TTableFilter = {
   status?: string
   dateReleased?: string
   dateResigned?: string
+  dateFrom?: string
+  dateTo?: string
   year?: number,
   month?: number
 };

@@ -320,7 +320,7 @@ async function handleDownload(data: PrintExportFilterFormData) {
     <>
       <IonButton fill="clear" id="print_all_expense_voucher" className="h-10 bg-orange-50 text-orange-500 border border-orange-200 capitalize font-semibold rounded-xl" strong>
         <PrinterIcon size={15} stroke='.8' className=' mr-2'/>
-        Print All
+        Print
       </IonButton>
       <IonModal
         ref={modal}

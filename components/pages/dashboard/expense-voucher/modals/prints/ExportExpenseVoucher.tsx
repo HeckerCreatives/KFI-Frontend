@@ -197,7 +197,7 @@ const ExportExpenseVoucher = ({ expenseVoucher }: { expenseVoucher: ExpenseVouch
         fill="clear"
        className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <File size={20} className=' mr-1'/>
+        <File size={15} className=' mr-1'/>
         <span>Export</span>
       </IonButton>
       <IonModal

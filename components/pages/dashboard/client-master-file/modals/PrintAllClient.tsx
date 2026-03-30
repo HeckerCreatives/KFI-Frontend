@@ -144,46 +144,45 @@ const TestPrintAllClient = ({ sort, search }: Props) => {
 }, [jobId])
 
 
-  async function handlePrintClientProfile() {
-  setLoading(true)
+ async function handlePrintClientProfile() {
+  setLoading(true);
 
   try {
     const result = await kfiAxios.get(`/customer/print-all`, {
       params: { search, sort },
-    })
+      responseType: 'arraybuffer',
+      validateStatus: (status: number) => [200, 202].includes(status),
+    });
 
-   if (result.status === 200) {
-      // Immediate blob response — open and print
-      const file = new Blob([result.data], { type: 'application/pdf' });
-      const fileURL = URL.createObjectURL(file);
+    if (result.status === 200) {
+      const blob = new Blob([result.data], { type: 'application/pdf' });
+      const fileURL = URL.createObjectURL(blob);
       const printWindow = window.open(fileURL);
       printWindow?.addEventListener('load', () => {
-        printWindow.print();
+        printWindow?.print();
+        URL.revokeObjectURL(fileURL);
       });
       dismiss();
 
     } else if (result.status === 202) {
-      // Async job — wait for socket event
-      const { jobId } = result.data;
+      const text = new TextDecoder().decode(result.data);
+      const { jobId } = JSON.parse(text);
       setJobId(jobId);
+      setIsPrinting(true);
+      setProgress(0);
+      setFileUrl(null);
       dismiss();
     }
-
-    setIsPrinting(true)
-    setProgress(0)
-    setFileUrl(null)
-
-
 
   } catch (error: any) {
     present({
       message: 'Failed to start printing process.',
       duration: 1000,
-    })
+    });
   } finally {
-    setLoading(false)
+    setLoading(false);
   }
-  }
+}
 
 
   return (

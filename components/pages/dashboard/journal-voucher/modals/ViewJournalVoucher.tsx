@@ -8,6 +8,7 @@ import { formatDateTable } from '../../../../utils/date-utils';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
 import { JournalVoucher } from '../../../../../types/types';
 import ViewJVEntries from './ViewJVEntries';
+import { Eye } from 'lucide-react';
 
 const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,9 +31,9 @@ const ViewJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVoucher
         type="button"
         onClick={() => setIsOpen(true)}
         fill="clear"
-        className="space-x-1 rounded-md w-20 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
+        className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={eye} className="text-xs" />
+        <Eye size={15} className=' mr-1'/>
         <span>View</span>
       </IonButton>
       <IonModal

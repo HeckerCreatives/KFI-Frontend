@@ -99,7 +99,7 @@ const DeleteExpenseVoucher = ({ expenseVoucher, getExpenseVouchers, searchkey, s
         fill="clear"
        className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <Trash size={20} className=' mr-1'/>
+        <Trash size={15} className=' mr-1'/>
         <span>Delete</span>
       </IonButton>
       <IonModal

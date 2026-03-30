@@ -244,7 +244,7 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
         fill="clear"
         className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <Edit size={20} className=' mr-1'/>
+        <Edit size={15} className=' mr-1'/>
         <span>Edit</span>
       </IonButton>
       <IonModal
