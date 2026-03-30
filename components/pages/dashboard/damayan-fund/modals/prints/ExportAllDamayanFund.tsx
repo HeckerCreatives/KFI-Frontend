@@ -343,9 +343,9 @@ const ExportAllDamayanFund = () => {
           <ModalHeader disabled={loading} title="Damayan Fund - Export All" sub="Manage damayan fund records." dismiss={dismiss} />
 
            <div className=' flex items-center w-fit mt-2 bg-zinc-50 !rounded-sm'>
-             {printExportTab.map((item,index) => (
-             <button onClick={() => setTabActive(item.value)} key={item.value} className={` ${tabActive === item.value && 'bg-[#FA6C2F] text-white'} p-2 text-sm !rounded-md`}>{item.name}</button>
-             ))}
+           {printExportTab.filter((item) => item.value !== 'by-bank' ).map((item,index) => (
+                      <button onClick={() => setTabActive(item.value)} key={item.value} className={` ${tabActive === item.value && 'bg-[#FA6C2F] text-white'} p-2 text-sm !rounded-md`}>{item.name}</button>
+                      ))}
            </div>
           
           <form onSubmit={form.handleSubmit(handleDownload)} className=' mt-4'>
