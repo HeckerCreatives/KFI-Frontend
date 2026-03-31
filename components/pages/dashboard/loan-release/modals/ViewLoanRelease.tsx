@@ -33,7 +33,7 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
         onClick={() => setIsOpen(true)}
       className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <Eye size={20} className=' mr-1'/>
+        <Eye size={15} className=' mr-1'/>
         <span>View</span>
       </IonButton>
       <IonModal

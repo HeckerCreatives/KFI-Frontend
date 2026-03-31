@@ -18,6 +18,7 @@ import FinancialStatementEntryForm from './entries-form';
 import FSFormTable from '../components/entry-table';
 import { update } from 'pullstate';
 import { entries } from '../../../../../validations/beginningbalance.schema';
+import { List } from 'lucide-react';
 
 type UpdateProps = {
     item: FinancialStatements
@@ -221,10 +222,9 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
       <div className="text-start">
         <IonButton fill="clear" id={`update-fs-entries-${item._id}`}
         
-       className="space-x-1 rounded-md w-24 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-purple-100 text-purple-900 capitalize text-xs"
-        >
-        
-                 <IonIcon icon={createSharp} className="text-[1rem] mr-1" /> Entries
+      className=" capitalize text-sm !text-zinc-700 w-fit"
+                    >
+        <List size={15} className=' mr-1'/> Entries
         </IonButton>
       </div>
       <IonModal

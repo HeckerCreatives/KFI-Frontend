@@ -17,7 +17,6 @@ type PrintExportFilterFormProps = {
 
 const GenerateForm = ({ form, loading, type }: PrintExportFilterFormProps) => {
 
-    console.log(form.watch('year'), form.formState.errors)
 
 
 

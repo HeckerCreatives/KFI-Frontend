@@ -18,6 +18,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import { db } from '../../../../database/db';
 import { filterAndSortGOA } from '../../../ui/utils/sort';
+import FSActions from './components/actions';
 
 export type TFS = {
   financialStatements: FinancialStatements[];
@@ -56,9 +57,9 @@ const FinancialStatement = () => {
                setData(prev => ({
               ...prev,
               financialStatements: data.items,
-              totalPages: totalPages,
-              nextPage: hasNextPage,
-              prevPage: hasPrevPage,
+              totalPages: data.totalPages,
+              nextPage: data.hasNextPage,
+              prevPage: data.hasPrevPage,
             }));
             }
            
@@ -109,8 +110,14 @@ const FinancialStatement = () => {
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <PageTitle pages={['General Ledger', 'Financial Statement']} />
-           <div className="px-3 pb-3 flex-1">
+           <div className="px-3 pb-3 flex-1 flex-col">
+
+            <div className=' space-y-1 mb-6'>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl text-gray-700 !font-medium'>Financial Statement</p>
+              <p className=' text-sm text-gray-500 '>Manage financial statement records.</p>
+
+            </div>
 
             <div className="flex items-center gap-2 flex-wrap">
               {canDoAction(token.role, permissions, 'financial statement', 'create') && (
@@ -146,16 +153,8 @@ const FinancialStatement = () => {
                         {/* <TableCell>{item.title}</TableCell>
                         <TableCell>{item.subTitle}</TableCell> */}
                         <TableCell className=' flex '>
-                           {canDoAction(token.role, permissions, 'financial statement', 'update') && (
-                            <UpdateFS key={item._id} item={item} getList={getList} currentPage={currentPage}/>
-                            
-                            )}
-                            {canDoAction(token.role, permissions, 'financial statement', 'delete') && (
-                            <DeleteFS item={item} getList={getList} currentPage={currentPage}/>
-                            )}
-                            {canDoAction(token.role, permissions, 'financial statement', 'update') && (
-                            <UpdateFSEntries key={index} item={item} getList={getList} currentPage={currentPage}/>
-                            )}
+                          <FSActions data={item} getList={getList} currentPage={currentPage}/>
+                          
                           
                           
 

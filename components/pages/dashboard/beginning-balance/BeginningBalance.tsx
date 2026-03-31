@@ -16,6 +16,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import { db } from '../../../../database/db';
 import { filterAndSortGOA } from '../../../ui/utils/sort';
+import BBActions from './components/actions';
 
 export type TBS = {
   beginningBalances: BegBalance[];
@@ -105,8 +106,14 @@ const BeginningBalance = () => {
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <PageTitle pages={['General Ledger', 'Beginning Balance']} />
            <div className="px-3 pb-3 flex-1">
+
+            <div className=' space-y-1 mb-6'>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl text-gray-700 !font-medium'>Beginning Balance</p>
+              <p className=' text-sm text-gray-500 '>Manage beginning balance records.</p>
+
+            </div>
 
             <div className="flex items-center gap-2 flex-wrap">
               {canDoAction(token.role, permissions, 'beginning balance', 'create') && (
@@ -143,12 +150,8 @@ const BeginningBalance = () => {
                         <TableCell>{item.credit.toLocaleString()}</TableCell>
                       
                         <TableCell className=' flex '>
-                          {canDoAction(token.role, permissions, 'beginning balance', 'update') && (
-                            <Update item={item} getList={getList} currentPage={currentPage}/>
-                          )}
-                          {canDoAction(token.role, permissions, 'beginning balance', 'delete') && (
-                            <Delete item={item} getList={getList} currentPage={currentPage}/>
-                          )}
+                          <BBActions data={item} getList={getList} currentPage={currentPage}/>
+                          
                         </TableCell>
                       
                       </TableRow>

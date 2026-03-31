@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonModal, IonSelect, IonSelectOption, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { GLFormData, glSchema } from '../../../../../validations/gl.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,16 +18,21 @@ import { File } from 'lucide-react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import classNames from 'classnames';
 import { TBS } from '../TrialBalance';
+import { useJobStore } from '../../../../../store/fileQueStore';
+import { Socket, io } from 'socket.io-client';
 
 type Props = {
   trialBalances: any[]
 }
 
 export default function TBReport({ trialBalances }: Props) {
-     const [present] = useIonToast();
-      const [loading, setLoading] = useState(false);
-        const modal = useRef<HTMLIonModalElement>(null);
-      
+    const [present] = useIonToast();
+    const [loading, setLoading] = useState(false);
+    const modal = useRef<HTMLIonModalElement>(null);
+    const [jobId, setJobId] = useState('')
+    const {addJob, updateJob} = useJobStore()
+    const socketRef = useRef<Socket | null>(null)
+
        const form = useForm<TBReportForm>({
           resolver: zodResolver(tbreport),
           defaultValues: {
@@ -42,8 +47,10 @@ export default function TBReport({ trialBalances }: Props) {
           },
         });
 
+        const type = form.watch('type')
+
         function dismiss() {
-            form.reset();
+            // form.reset();
             modal.current?.dismiss();
         }
         const [data, setData] = useState<TBS>({
@@ -53,13 +60,13 @@ export default function TBReport({ trialBalances }: Props) {
               nextPage: false,
               prevPage: false,
             });
-        
+
            const getList = async () => {
                   try {
                     const result = await kfiAxios.get('/trial-balance');
-        
+
                     const { data, success,hasPrevPage, hasNextPage, totalPages } = result.data
-        
+
                     if(success){
                        setData(prev => ({
                       ...prev,
@@ -69,75 +76,201 @@ export default function TBReport({ trialBalances }: Props) {
                       prevPage: hasPrevPage,
                     }));
                     }
-        
+
                   } catch (error) {
                   } finally {
                   }
-                
+
             };
-    
-    
-        async function onSubmit(data: TBReportForm) {
-          setLoading(true)
-    
-         
-           try {
-            if(data.type === 'print'){
-               const result = await kfiAxios.get('/report/print/gl/trial-balance',
-                {params: data, responseType: 'blob'}
-               );
-    
-                const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
-                const pdfUrl = URL.createObjectURL(pdfBlob);
-                window.open(pdfUrl, '_blank');
-                setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
-    
-                setLoading(false)
-            } else if(data.type === 'export'){
-               const result = await kfiAxios.get('/report/export/gl/trial-balance',
-                {params: data, responseType: 'blob'}
-               );
-    
-                 const url = window.URL.createObjectURL(new Blob([result.data]));
+
+            console.log(type)
+
+
+       async function onSubmit(data: TBReportForm) {
+          setLoading(true);
+
+          try {
+            if (data.type === 'print') {
+              const result = await kfiAxios.get('/report/print/gl/trial-balance', {
+                params: data,
+                responseType: 'arraybuffer',
+                validateStatus: (status: number) => [200, 202].includes(status),
+              });
+
+              if (result.status === 200) {
+                const blob = new Blob([result.data], { type: 'application/pdf' });
+                const pdfUrl = URL.createObjectURL(blob);
+                const printWindow = window.open(pdfUrl, '_blank');
+                printWindow?.addEventListener('load', () => {
+                  printWindow?.print();
+                  URL.revokeObjectURL(pdfUrl);
+                });
+
+              } else if (result.status === 202) {
+                const text = new TextDecoder().decode(result.data);
+                const { jobId } = JSON.parse(text);
+                setJobId(jobId);
+                dismiss()
+              }
+
+            } else if (data.type === 'export') {
+              const result = await kfiAxios.get('/report/export/gl/trial-balance', {
+                params: data,
+                responseType: 'arraybuffer',
+                validateStatus: (status: number) => [200, 202].includes(status),
+              });
+
+              if (result.status === 200) {
+                const blob = new Blob([result.data], {
+                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                });
+                const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = 'trial-balance.xlsx';
+                document.body.appendChild(a);
                 a.click();
+                document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
-    
-                setLoading(false)
+
+              } else if (result.status === 202) {
+                const text = new TextDecoder().decode(result.data);
+                const { jobId } = JSON.parse(text);
+                setJobId(jobId);
+                dismiss()
+              }
             }
-              
-    
-            } catch (error: any) {
-              setLoading(false)
-    
-              present({
-                message: "No data found.",
-                duration: 1200,
-              });
-    
-              
-    
-              const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
-              const errors: TFormError[] | string = checkError(errs);
-              const fields: string[] = Object.keys(form.formState.defaultValues as Object);
-              formErrorHandler(errors, form.setError, fields);
-            } finally {
-            }
+
+          } catch (error: any) {
+            present({
+              message: "No data found.",
+              duration: 1200,
+            });
+
+            const errs: TErrorData | string =
+              error?.response?.data?.error ||
+              error?.response?.data?.msg ||
+              error.message;
+            const errors: TFormError[] | string = checkError(errs);
+            const fields: string[] = Object.keys(form.formState.defaultValues as Object);
+            formErrorHandler(errors, form.setError, fields);
+
+          } finally {
+            setLoading(false);
           }
+        }
 
           useIonViewWillEnter(() => {
               getList();
             });
 
-            console.log()
+
+    useEffect(() => {
+          socketRef.current = io(`${process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5005'}`)
+          const socket = socketRef.current
+          socket.on('connect', () => {
+            console.log('Socket connected:', socket.id)
+          })
+          return () => {
+            socket.disconnect()
+          }
+        }, [])
+
+        useEffect(() => {
+          const socket = socketRef.current
+          if (!socket || !jobId) return
+          console.log('Joining job:', jobId)
+          socket.emit('join:report', jobId)
+          socket.off('report:progress')
+          socket.off('report:complete')
+
+          const existing = useJobStore
+              .getState()
+              .jobs.find((j) => j.jobId === jobId)
+            if (!existing) {
+             addJob({
+                jobId,
+                label: `Trial Balance (${type === 'print' ? 'Pdf' : 'Excel'})`,
+                type: type === 'print' ? 'print' : 'export',
+                progress: 0,
+                status: 'processing',
+                fileType: `${type === 'print' ? 'pdf' : 'excel'}`,
+                file: '',
+                filename: '',
+              })
+            }
+
+
+            const handleProgress = (data: any) => {
+              if (data.jobId !== jobId) return
+              console.log('Progress event:', data)
+
+              const percent = data.percent ?? data.progress ?? 0
+
+
+              updateJob(jobId, {
+                progress: percent,
+                status: 'processing',
+              })
+
+            }
+
+            const handleReady = (data: any) => {
+              if (data.jobId !== jobId) return;
+
+              console.log('Ready:', data);
+
+
+              let url: string;
+              if (typeof data.file === 'string') {
+                const binary = atob(data.file);
+                const bytes = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) {
+                  bytes[i] = binary.charCodeAt(i);
+                }
+                const blob = new Blob([bytes], { type: 'application/pdf' });
+                url = URL.createObjectURL(blob);
+              } else {
+                console.error('Expected base64 string, got:', typeof data.file);
+                return;
+              }
+
+              updateJob(jobId, {
+                progress: 100,
+                status: 'done',
+                file: url,
+                filename: data.filename,
+                fileUrl: url,
+              });
+            };
+
+            const handleError = (data: any) => {
+              if (data.jobId !== jobId) return
+              console.log('Error:', data)
+
+              updateJob(jobId, {
+                status: 'error',
+              });
+
+            }
+
+
+          socket.on('report:progress', handleProgress)
+          socket.on('report:ready', handleReady)
+          socket.on('report:error', handleError)
+
+          return () => {
+            socket.off('report:progress', handleProgress)
+            socket.off('report:ready', handleReady)
+            socket.off('report:error', handleError)
+          }
+        }, [jobId])
 
 
   return (
      <>
       <div className="text-end">
-        <IonButton fill="clear" id="report-tb-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+        <IonButton fill="clear" id="report-tb-modal" className="h-10 bg-orange-50 text-orange-500 border border-orange-200 capitalize font-semibold rounded-xl" strong>
           <File size={15} className=' mr-1'/>Report
         </IonButton>
       </div>
@@ -152,7 +285,7 @@ export default function TBReport({ trialBalances }: Props) {
             <ModalHeader disabled={loading} title="Nature - Add Record" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader> */}
-       
+
        <form onSubmit={form.handleSubmit(onSubmit)} className=' flex flex-col gap-2 bg-white !p-6 w-full rounded-md shadow-md h-full inner-content max-h-[90%]'>
                  <ModalHeader disabled={loading} title="Trial Balance " sub="" dismiss={dismiss} />
                 <div className=' w-full flex flex-col gap-2 p-4 border border-zinc-200 rounded-md'>
@@ -194,12 +327,12 @@ export default function TBReport({ trialBalances }: Props) {
                       name='displayZero'
                       disabled={loading}
                       className=' !w-4'
-                      
+
                     />
                   <p className=' text-xs !w-full'>Display Zero Values</p>
-                 
+
                 </div>
-                 
+
                 </div>
                 <div className='flex flex-col gap-1 w-full'>
                       <p className=' text-xs !font-medium'>Accounting Year</p>
@@ -229,7 +362,7 @@ export default function TBReport({ trialBalances }: Props) {
                         labelClassName="!text-slate-600 truncate min-w-28 !text-sm text-end"
                       /> */}
 
-                      
+
                        <IonSelect
                        placeholder='Select report code'
                        labelPlacement="stacked"
@@ -252,34 +385,34 @@ export default function TBReport({ trialBalances }: Props) {
                     </div>
                  <div className=' w-full flex gap-2 p-4 border border-zinc-200 rounded-md'>
 
-                  
+
                   <InputCheckbox
                       control={form.control}
                       name='summarizeBalance'
                       disabled={form.watch('includeBalance')}
                       className=' !w-4'
-                      
-                      
-                    
+
+
+
                     />
                   <p className=' text-xs !w-full'>Summarize Beginning & Ending Balance </p>
 
-                 
+
                 </div>
                 <div className=' w-full flex gap-2 p-4 border border-zinc-200 rounded-md'>
 
-                  
+
                   <InputCheckbox
                       control={form.control}
                       name="includeBalance"
                       disabled={form.watch('summarizeBalance')}
                       className=' !w-4'
-                      
-                    
+
+
                     />
                   <p className=' text-xs !w-full'>Include Beginning & Ending Balance </p>
 
-                 
+
                 </div>
 
                  <div className='flex flex-col gap-1 w-full'>
@@ -295,8 +428,8 @@ export default function TBReport({ trialBalances }: Props) {
 
                     </div>
 
-                    
-              
+
+
 
                 <div className=' w-full flex flex-col gap-2 p-4 border border-zinc-200 rounded-md'>
                   <p className=' text-sm !font-semibold'>Select</p>
@@ -311,12 +444,12 @@ export default function TBReport({ trialBalances }: Props) {
                       { label: 'Export', value: 'export' },
                     ]}
                   />
-                 
+
                 </div>
 
-                
 
-                 
+
+
 
                 <div className="text-end mt-6 space-x-2">
                   <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
@@ -324,7 +457,7 @@ export default function TBReport({ trialBalances }: Props) {
                     {loading ? 'Loading...' : `${form.watch('type') === 'print' ? 'Print' : 'Export'}`}
                   </IonButton>
 
-                
+
                 </div>
 
 
@@ -332,6 +465,6 @@ export default function TBReport({ trialBalances }: Props) {
               </form>
       </IonModal>
     </>
-    
+
   )
 }

@@ -6,6 +6,7 @@ import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import { Trash } from 'lucide-react';
 
 type DeleteNatureProps = {
   item: FinancialStatements;
@@ -84,9 +85,9 @@ const DeleteTB = ({item,getList,currentPage }: DeleteNatureProps) => {
                id={`delete-fs-modal-${item.id}`}
                type="button"
                fill="clear"
-               className="space-x-1 rounded-md w-24 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-red-100 text-red-900 capitalize text-xs"
-             >
-               <IonIcon icon={trashBin} className="text-[1rem] mr-1" /> Delete
+              className=" capitalize text-sm !text-zinc-700 w-fit"
+                    >
+                <Trash size={15} className=' mr-1'/> Delete
              </IonButton>
       <IonModal
         ref={modal}

@@ -21,6 +21,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { TABLE_LIMIT } from '../../../utils/constants';
 import { db } from '../../../../database/db';
 import { filterAndSortGOA } from '../../../ui/utils/sort';
+import TBActions from './components/actions';
 
 export type TBS = {
   trialBalances: any[];
@@ -59,9 +60,9 @@ const TrialBalance = () => {
                setData(prev => ({
               ...prev,
               trialBalances: data.items,
-              totalPages: totalPages,
-              nextPage: hasNextPage,
-              prevPage: hasPrevPage,
+              totalPages: data.totalPages,
+              nextPage: data.hasNextPage,
+              prevPage: data.hasPrevPage,
             }));
             }
 
@@ -114,8 +115,14 @@ const TrialBalance = () => {
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <PageTitle pages={['General Ledger', 'Trial Balance']} />
            <div className="px-3 pb-3 flex-1">
+
+             <div className=' space-y-1 mb-6'>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl text-gray-700 !font-medium'>Trial Balance</p>
+              <p className=' text-sm text-gray-500 '>Manage trial balance records.</p>
+
+            </div>
 
             <div className="flex items-center gap-2 flex-wrap">
               {canDoAction(token.role, permissions, 'trial balance', 'create') && (
@@ -148,15 +155,7 @@ const TrialBalance = () => {
                         <TableCell>{item.reportName}</TableCell>
                       
                         <TableCell className=' flex '>
-                           {canDoAction(token.role, permissions, 'trial balance', 'update') && (
-                              <UpdateTB item={item} getList={getList} currentPage={currentPage}/>
-                            )}
-                            {canDoAction(token.role, permissions, 'trial balance', 'delete') && (
-                               <DeleteTB item={item} getList={getList} currentPage={currentPage}/>
-                            )}
-                            {canDoAction(token.role, permissions, 'trial balance', 'update') && (
-                               <UpdateFSEntries item={item} getList={getList} currentPage={currentPage}/>
-                            )}
+                           <TBActions data={item} getList={getList} currentPage={currentPage}/>
                           
                         </TableCell>
                       

@@ -20,6 +20,7 @@ import { begbalancechema, BegBalanceFormData } from '../../../../../validations/
 import FormTable from '../components/entry-table';
 import { removeAmountComma } from '../../../../ui/utils/formatNumber';
 import { watch } from 'fs';
+import { Edit } from 'lucide-react';
 
 type UpdateProps = {
     item: BegBalance
@@ -178,10 +179,9 @@ const Update = ({ getList, item, currentPage }: UpdateProps) => {
         <IonButton fill="clear"  id={`edit-bb-modal-${item._id}`}
         type='button'
         
-       className="space-x-1 rounded-md w-24 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-blue-100 text-blue-900 capitalize text-xs"
+       className=" capitalize text-sm !text-zinc-700 w-fit"
         >
-        
-          <IonIcon icon={createSharp} className="text-[1rem] mr-1" /> Edit
+      <Edit size={15} className=' mr-1'/> Edit
         </IonButton>
       </div>
       <IonModal

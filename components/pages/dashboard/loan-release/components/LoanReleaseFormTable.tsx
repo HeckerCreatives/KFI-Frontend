@@ -80,7 +80,7 @@ const currentClientItems = useMemo(() => {
 
     try {
       setLoading(true);
-      const result = await kfiAxios.get(`/customer/by-center/${center}`,);
+      const result = await kfiAxios.get(`/customer/by-center/${center}?page=1`,);
       const { success, entries } = result.data;
       if (success) {
         setClient(result.data.clients)

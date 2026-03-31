@@ -14,6 +14,7 @@ import FinancialStatementForm from './financial-statement-form';
 import { fschema, FSFormData } from '../../../../../validations/financialstatement.schema';
 import { TFS } from '../FinancialStatement';
 import { createSharp } from 'ionicons/icons';
+import { Edit, Trash } from 'lucide-react';
 
 type UpdateProps = {
     item: FinancialStatements
@@ -125,10 +126,9 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
       <div className="text-start">
         <IonButton fill="clear" id={`update-fs-modal-${item._id}`} 
         
-       className="space-x-1 rounded-md w-24 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-blue-100 text-blue-900 capitalize text-xs"
-        >
-        
-                 <IonIcon icon={createSharp} className="text-[1rem] mr-1" /> Edit
+       className=" capitalize text-sm !text-zinc-700 w-fit"
+                    >
+          <Edit size={15} className=' mr-1'/> Edit
         </IonButton>
       </div>
       <IonModal
