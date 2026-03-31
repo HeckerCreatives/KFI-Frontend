@@ -4,6 +4,7 @@ import { document, eye } from 'ionicons/icons';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { Loan, LoanCode } from '../../../../../types/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../../ui/table/Table';
+import { Eye } from 'lucide-react';
 
 const ViewLoanCodes = ({ loan }: { loan: Loan }) => {
   const modal = useRef<HTMLIonModalElement>(null);
@@ -26,10 +27,10 @@ const ViewLoanCodes = ({ loan }: { loan: Loan }) => {
         id={`view-loan-code-${loan._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-md w-40 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
+         className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={eye} className="text-xs" />
-        <span>View Loan Codes</span>
+        <Eye size={15} className=' mr-1'/>
+        <span>View </span>
       </IonButton>
       <IonModal
         ref={modal}

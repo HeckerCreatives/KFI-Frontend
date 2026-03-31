@@ -1,40 +1,161 @@
 import { IonButton, IonHeader, IonModal, IonToolbar, useIonToast } from '@ionic/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { PrinterIcon } from 'hugeicons-react';
+import { useJobStore } from '../../../../../store/fileQueStore';
+import { Socket, io } from 'socket.io-client';
 
 const PrintAllWeeklySavingsTable = () => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const [jobId, setJobId] = useState('')
+  const {addJob, updateJob} = useJobStore()
+  const socketRef = useRef<Socket | null>(null)
 
   function dismiss() {
     modal.current?.dismiss();
   }
 
   async function handlePrint() {
-    setLoading(true);
-    try {
-      const result = await kfiAxios.get(`/weekly-saving/print-all`, { responseType: 'blob' });
-      const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl, '_blank');
-      setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
-    } catch (error: any) {
-      present({
-        message: 'Failed to print the weekly savings records. Please try again',
-        duration: 1000,
+  setLoading(true);
+  try {
+    const result = await kfiAxios.get(`/weekly-saving/print-all`, {
+      responseType: 'arraybuffer',
+      validateStatus: (status: number) => [200, 202].includes(status),
+    });
+
+    if (result.status === 200) {
+      const blob = new Blob([result.data], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(blob);
+      const printWindow = window.open(pdfUrl, '_blank');
+      printWindow?.addEventListener('load', () => {
+        printWindow?.print();
+        URL.revokeObjectURL(pdfUrl);
       });
-    } finally {
-      setLoading(false);
+
+    } else if (result.status === 202) {
+      const text = new TextDecoder().decode(result.data);
+      const { jobId } = JSON.parse(text);
+      setJobId(jobId);
     }
+
+  } catch (error: any) {
+    present({
+      message: 'Failed to print the weekly savings records. Please try again',
+      duration: 1000,
+    });
+  } finally {
+    setLoading(false);
   }
+}
+
+  useEffect(() => {
+      socketRef.current = io(`${process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5005'}`)
+      const socket = socketRef.current
+      socket.on('connect', () => {
+        console.log('Socket connected:', socket.id)
+      })
+      return () => {
+        socket.disconnect()
+      }
+    }, [])
+  
+    useEffect(() => {
+      const socket = socketRef.current
+      if (!socket || !jobId) return
+      console.log('Joining job:', jobId)
+      socket.emit('join:report', jobId)
+      socket.off('report:progress')
+      socket.off('report:complete')
+  
+      const existing = useJobStore
+          .getState()
+          .jobs.find((j) => j.jobId === jobId)
+        if (!existing) {
+          addJob({
+            jobId,
+            label: `Weekly Savings (PDF)`,
+            type: 'print',
+            progress: 0,
+            status: 'processing',
+            fileType: 'pdf',
+            file: '',
+            filename: '',
+          })
+        }
+  
+  
+        const handleProgress = (data: any) => {
+          if (data.jobId !== jobId) return
+          console.log('Progress event:', data)
+  
+          const percent = data.percent ?? data.progress ?? 0
+  
+  
+          updateJob(jobId, {
+            progress: percent,
+            status: 'processing',
+          })
+  
+        }
+  
+        const handleReady = (data: any) => {
+          if (data.jobId !== jobId) return;
+  
+          console.log('Ready:', data);
+  
+  
+          let url: string;
+          if (typeof data.file === 'string') {
+            const binary = atob(data.file);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) {
+              bytes[i] = binary.charCodeAt(i);
+            }
+            const blob = new Blob([bytes], { type: 'application/pdf' });
+            url = URL.createObjectURL(blob);
+          } else {
+            console.error('Expected base64 string, got:', typeof data.file);
+            return;
+          }
+  
+          updateJob(jobId, {
+            progress: 100,
+            status: 'done',
+            file: url,
+            filename: data.filename,
+            fileUrl: url,
+          });
+        };
+  
+        const handleError = (data: any) => {
+          if (data.jobId !== jobId) return
+          console.log('Error:', data)
+  
+          updateJob(jobId, {
+            status: 'error',
+          });
+  
+        }
+  
+  
+      socket.on('report:progress', handleProgress)
+      socket.on('report:ready', handleReady)
+      socket.on('report:error', handleError)
+  
+      return () => {
+        socket.off('report:progress', handleProgress)
+        socket.off('report:ready', handleReady)
+        socket.off('report:error', handleError)
+      }
+    }, [jobId])
 
   return (
     <>
-      <IonButton fill="clear" id="print_all_wst" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+      <IonButton fill="clear" id="print_all_wst" className="h-10 bg-orange-50 text-orange-500 border border-orange-200 capitalize font-semibold rounded-xl" strong>
         <PrinterIcon size={15} stroke='.8' className=' mr-1'/>
         Print
       </IonButton>

@@ -13,6 +13,7 @@ import { TLoan } from '../Loans';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
 import LoanForm from '../components/LoanForm';
+import { Edit } from 'lucide-react';
 
 const UpdateLoan = ({ loan, setData, getLoans, currentPage }: { loan: Loan; currentPage: number, setData: React.Dispatch<React.SetStateAction<TLoan>>, getLoans: (currentage: number) => void }) => {
   const [loading, setLoading] = useState(false);
@@ -155,9 +156,9 @@ const UpdateLoan = ({ loan, setData, getLoans, currentPage }: { loan: Loan; curr
         type="button"
         id={`update-loan-modal-${loan._id}`}
         fill="clear"
-        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-blue-50 text-blue-900 capitalize min-h-4 text-xs"
+         className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={createSharp} className="text-xs" />
+        <Edit size={15} className=' mr-1'/>
         <span>Edit</span>
       </IonButton>
       <IonModal

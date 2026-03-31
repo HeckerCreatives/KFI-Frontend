@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
 import CreateGroupAccount from './modals/CreateGroupAccount';
@@ -16,7 +16,7 @@ import { canDoAction, haveActions } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortGOA } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 
 export type TGroupAccount = {
   groupAccounts: GroupAccountType[];
@@ -25,6 +25,11 @@ export type TGroupAccount = {
   prevPage: boolean;
   loading: boolean;
 };
+
+const SORTS = {
+  CODE_ASC: 'code-asc',
+  CODE_DESC: 'code-desc',
+}
 
 const GroupAccount = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -125,35 +130,73 @@ const GroupAccount = () => {
   };
 
 
-  const handlePagination = (page: number) => getGroupAccounts(page, searchKey, sortKey);
+  const handlePagination = (page: number) => setCurrentPage(page);
 
   useIonViewWillEnter(() => {
     getGroupAccounts(currentPage);
   });
+
+  useEffect(() => {
+    setCurrentPage(1);
+    getGroupAccounts(1, searchKey, sortKey);
+  }, [searchKey, sortKey]);
+  
+  useEffect(() => {
+    getGroupAccounts(currentPage, searchKey, sortKey);
+  }, [currentPage]);
 
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <PageTitle pages={['System', 'Loan Products', 'Group Account']} />
           <div className="px-3 pb-3 flex-1 flex flex-col">
+
+            <div className=' space-y-1 mb-6'>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl text-gray-700 !font-medium'>Group of Account</p>
+              <p className=' text-sm text-gray-500 '>Manage group of account records.</p>
+
+            </div>
             
 
-            <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+            <div className=" p-4 pb-16 bg-white rounded-xl flex-1 shadow-lg">
 
               <div className=" flex lg:flex-row flex-col items-start justify-start">
                 <div className=' flex flex-wrap items-center gap-2'>
                   {canDoAction(token.role, permissions, 'group of account', 'create') && <CreateGroupAccount getGroupAccounts={getGroupAccounts} />}
                  
                 </div>
-                <GroupAccountFilter getGroupAccounts={getGroupAccounts} />
+                <GroupAccountFilter getGroupAccounts={getGroupAccounts} setSearchKey={setSearchKey} setSortKey={setSortKey} suggestions={data.groupAccounts.map((item) => item.code)} />
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>Group Account</TableHead>
+                       <TableHead className="min-w-44 max-w-44 sticky left-0">
+                          <div className="flex items-center gap-6">
+                          Name
+                           {sortKey === SORTS.CODE_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CODE_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.CODE_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CODE_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CODE_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
                       {haveActions(token.role, 'group of account', permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
@@ -184,9 +227,10 @@ const GroupAccount = () => {
                   </TableBody>
                 </Table>
               </div>
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
             </div>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>

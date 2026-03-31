@@ -13,6 +13,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import { Edit } from 'lucide-react';
 
 type UpdateNatureProps = {
   nature: Nature;
@@ -113,9 +114,9 @@ const UpdateNature = ({ nature, setData }: UpdateNatureProps) => {
          id={`update-nature-modal-${nature._id}`}
          type="button"
          fill="clear"
-         className="space-x-1 rounded-md w-24 min-h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0] bg-blue-100 text-blue-900 capitalize text-xs"
-       >
-         <IonIcon icon={createSharp} className="text-[1rem] mr-1" /> Edit
+         className=" capitalize text-sm !text-zinc-700 w-fit"
+          >
+          <Edit size={15} className=' mr-1'/> Edit
        </IonButton>
       <IonModal
         ref={modal}

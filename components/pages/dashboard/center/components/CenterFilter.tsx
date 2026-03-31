@@ -16,10 +16,11 @@ type TCenterSearch = {
 
 type CenterFilterProps = {
   getCenters: (page: number, keyword?: string, sort?: string) => {};
-  data: Center[]
+  setSearchKey: React.Dispatch<React.SetStateAction<string>>;
+  suggestion: string[]
 };
 
-const CenterFilter = ({ getCenters, data }: CenterFilterProps) => {
+const CenterFilter = ({ getCenters, setSearchKey, suggestion }: CenterFilterProps) => {
   const form = useForm<TCenterSearch>({
     defaultValues: {
       code: '',
@@ -40,68 +41,34 @@ const CenterFilter = ({ getCenters, data }: CenterFilterProps) => {
             
             const code = form.watch('code');
             const sort = form.watch('sort');
-  
-  useEffect(() => {
-  const delayDebounce = setTimeout(() => {
-    if (online) {
-      getCenters(1, code, sort);
-    } else {
-      getCenters(1, code, sort);
-    }
-  }, 500);
 
-  return () => clearTimeout(delayDebounce);
-}, [sort, online, code]);
+            useEffect(() => {
+                          const timer = setTimeout(() => {
+                            setSearchKey(code)
+                          }, 500);
+                          return () => clearTimeout(timer);
+                      }, [code]);
+  
+
 
   return (
     <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center justify-between ">
       <div className="w-full flex-1 md:flex-none">
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2">
-          <FormIonItem className="">
-            <p className=" text-xs whitespace-nowrap mr-1">Sort By</p>
-
-            <InputSelect
-              // label="Sort By"
-              name="sort"
-              showLabel={false}
-              placeholder="Sort By"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              options={[
-                { label: 'All', value: '' },
-                { label: 'Center No. A - Z', value: 'centerno-asc' },
-                { label: 'Center No. Z - A', value: 'centerno-desc' },
-                { label: 'Description A - Z', value: 'description-asc' },
-                { label: 'Description Z - A', value: 'description-desc' },
-              ]}
-              className="!border-orange-500 rounded-md !w-[12rem] !py-1"
-            />
-          </FormIonItem>
-          <div className="flex items-center min-w-20">
+         
+           <div className="flex items-center min-w-20">
             <FormIonItem className="flex-1">
-              {/* <InputText
-                name="code"
-                placeholder="Type here"
-                type="search"
-                control={form.control}
-                clearErrors={form.clearErrors}
-                className="!px-3 !min-h-[1rem] rounded-md !border-orange-500 max-w-[12rem]"
-              /> */}
-
-               <SearchInput
+                <SearchInput
                   name="code"
                   control={form.control}
                   clearErrors={form.clearErrors}
                   // label="Code"
-                  placeholder="Search..."
-                   className="!px-3 !min-h-[1rem] rounded-md !border-orange-500"
-                  suggestions={data.map(item => item.centerNo)}
+                  placeholder="Search ..."
+                  className="!px-3 !py-1 !min-h-[1rem] rounded-xl   text-xs"
+                  suggestions={suggestion}
                 />
             </FormIonItem>
-            <IonButton type="submit" fill="clear" className="max-h-8 min-h-[2rem] bg-[#FA6C2F] text-white capitalize font-semibold rounded-md text-xs" strong>
-              <Search01Icon size={15} stroke='.8' className=' mr-1'/>
-              Search
-            </IonButton>
+           
           </div>
         </form>
       </div>

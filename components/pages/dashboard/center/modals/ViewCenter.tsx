@@ -5,6 +5,7 @@ import ModalHeader from '../../../../ui/page/ModalHeader';
 import { Center, GroupAccount } from '../../../../../types/types';
 import classNames from 'classnames';
 import ViewCenterCard from '../components/ViewCenterCard';
+import { Eye } from 'lucide-react';
 
 type ViewCenterProps = {
   center: Center;
@@ -31,9 +32,9 @@ const ViewCenter = ({ center }: ViewCenterProps) => {
         id={`view-center-modal-${center._id}`}
         type="button"
         fill="clear"
-        className="space-x-1 rounded-md w-16 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
+      className=" capitalize text-sm !text-zinc-700 w-fit"
       >
-        <IonIcon icon={eye} className="text-xs" />
+        <Eye size={15} className=' mr-1'/>
         <span>View</span>
       </IonButton>
       <IonModal

@@ -563,6 +563,7 @@ export type TTableFilter = {
   limit: number;
   page: number;
   search?: string;
+  keyword?: string;
   sort?: string;
   status?: string
   dateReleased?: string

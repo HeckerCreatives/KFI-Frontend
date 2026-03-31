@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
 import CreateWeeklySavingTable from './modals/CreateWeeklySavingTable';
@@ -19,7 +19,7 @@ import ExportAllWeeklySavingsTable from './modals/ExportAllWeeklySavingsTable';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortSavings } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 
 export type TWeeklySavingsTable = {
   savings: WeeklySavings[];
@@ -28,6 +28,14 @@ export type TWeeklySavingsTable = {
   prevPage: boolean;
   loading: boolean;
 };
+
+const SORTS = {
+  FROM_ASC: 'from-asc',
+  FROM_DESC: 'from-desc',
+  TO_ASC: 'to-asc',
+  TO_DESC: 'to-desc',
+}
+
 
 const WeeklySavingTable = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -119,32 +127,6 @@ const WeeklySavingTable = () => {
     }
   };
 
-  const uploadChanges = async () => {
-      setUploading(true)
-      try {
-        const list = await db.weeklySavings.toArray();
-        const offlineChanges = list.filter(e => e._synced === false);
-        const result = await kfiAxios.put("sync/upload/weekly-savings", { weeklySavings: offlineChanges });
-        const { success } = result.data;
-        if (success) {
-          setUploading(false)
-           present({
-              message: 'Offline changes saved!',
-              duration: 1000,
-            });
-          getWeeklySavings(1);
-          setUploading(false)
-
-        }
-      } catch (error: any) {
-          setUploading(false)
-
-          present({
-            message: `${error.response.data.error.message}`,
-            duration: 1000,
-          });
-      }
-  };
 
   const handlePagination = (page: number) => getWeeklySavings(page, searchKey, sortKey);
 
@@ -152,35 +134,91 @@ const WeeklySavingTable = () => {
     getWeeklySavings(currentPage);
   });
 
+        useEffect(() => {
+           setCurrentPage(1);
+           getWeeklySavings(1, searchKey, sortKey);
+         }, [searchKey, sortKey]);
+         
+         useEffect(() => {
+           getWeeklySavings(currentPage, searchKey, sortKey);
+         }, [currentPage]);
+
   return (
     <IonPage className="w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F1F1F1] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <div>
-            <PageTitle pages={['System', 'Weekly Savings']} />
-          </div>
+         
           <div className="px-3 pb-3 flex-1">
+
+            <div className=' space-y-1 mb-6'>
+              <p className=' text-xl text-gray-700 !font-medium'>Weekly Savings</p>
+              <p className=' text-sm text-gray-500 '>Manage weekly saving records.</p>
+            </div>
             
 
-            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+            <div className="px-3 pt-3 pb-16 bg-white rounded-xl flex-1 shadow-lg">
               <div className="flex flex-col lg:flex-row items-start justify-start gap-3 ">
                 <div className=' flex flex-wrap gap-2'>
                   {canDoAction(token.role, permissions, 'weekly savings', 'print') && <PrintAllWeeklySavingsTable />}
                   {canDoAction(token.role, permissions, 'weekly savings', 'export') && <ExportAllWeeklySavingsTable />}
-                  {online && (
-                      <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                        <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                      </IonButton>
-                    )}
+                 
                 </div>
-                <WeeklySavingTableFilter getWeeklySavings={getWeeklySavings} />
+                {/* <WeeklySavingTableFilter getWeeklySavings={getWeeklySavings} /> */}
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>Range Amount From</TableHead>
-                      <TableHead>Range Amount To</TableHead>
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                          Range Amount From
+                           {sortKey === SORTS.FROM_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.FROM_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.FROM_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.FROM_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.FROM_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+
+                      </TableHead>
+                      <TableHead>
+                        <div className="flex items-center gap-6">
+                          Range Amount To
+                           {sortKey === SORTS.TO_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.TO_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.TO_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.TO_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.TO_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                        
+                      </TableHead>
                       <TableHead>WSF</TableHead>
                       {haveActions(token.role, 'weekly savings', permissions, ['update', 'delete']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
@@ -214,9 +252,10 @@ const WeeklySavingTable = () => {
                   </TableBody>
                 </Table>
               </div>
+              <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
             </div>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>

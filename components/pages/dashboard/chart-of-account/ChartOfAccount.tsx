@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import ChartOfAccountFilter from './components/ChartOfAccountFilter';
 import PageTitle from '../../../ui/page/PageTitle';
@@ -18,7 +18,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { on } from 'events';
 import { db } from '../../../../database/db';
 import { filterAndSortCOA } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 
 export type TChartOfAccount = {
   chartOfAccounts: ChartOfAccountType[];
@@ -27,6 +27,14 @@ export type TChartOfAccount = {
   prevPage: boolean;
   loading: boolean;
 };
+
+const SORTS = {
+  CODE_ASC: 'code-asc',
+  CODE_DESC: 'code-desc',
+  DESCRIPTION_ASC: 'description-asc',
+  DESCRIPTION_DESC: 'description-desc',
+}
+
 
 const ChartOfAccount = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -127,50 +135,40 @@ const ChartOfAccount = () => {
    }
   };
 
-  const uploadChanges = async () => {
-      setUploading(true)
-      try {
-        const list = await db.chartOfAccounts.toArray();
-        const offlineChanges = list.filter(e => e._synced === false);
-        const result = await kfiAxios.put("sync/upload/chart-of-accounts", { groupAccounts: offlineChanges });
-        const { success } = result.data;
-        if (success) {
-          setUploading(false)
-           present({
-              message: 'Offline changes saved!',
-              duration: 1000,
-            });
-          getChartOfAccounts(1);
-          setUploading(false)
 
-        }
-      } catch (error: any) {
-          setUploading(false)
 
-          present({
-            message: `${error.response.data.error.message}`,
-            duration: 1000,
-          });
-      }
-  };
-
-  const handlePagination = (page: number) => getChartOfAccounts(page, searchKey, sortKey);
+  const handlePagination = (page: number) => setCurrentPage(page);
 
   useIonViewWillEnter(() => {
     getChartOfAccounts(currentPage);
   });
+
+  useEffect(() => {
+  setCurrentPage(1);
+  getChartOfAccounts(1, searchKey, sortKey);
+}, [searchKey, sortKey]);
+
+useEffect(() => {
+  getChartOfAccounts(currentPage, searchKey, sortKey);
+}, [currentPage]);
 
   return (
     <IonPage className="w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col items-stretch justify-start gap-4 p-4">
           <div>
-            <PageTitle pages={['System', 'Loan Products', 'Chart of Account']} />
           </div>
           <div className="px-3 pb-3 flex-1 flex flex-col">
+
+            <div className=' space-y-1 mb-6'>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl text-gray-700 !font-medium'>Chart of Account</p>
+              <p className=' text-sm text-gray-500 '>Manage chart of account records.</p>
+
+            </div>
           
 
-            <div className="p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+            <div className="p-4 pb-16 bg-white rounded-xl flex-1 shadow-lg">
                 <div className="flex lg:flex-row flex-col flex-wrap gap-2  ">
                   <div>
                     {canDoAction(token.role, permissions, 'chart of account', 'print') && <PrintAllChartOfAccount />}
@@ -181,14 +179,60 @@ const ChartOfAccount = () => {
                       </IonButton>
                     )} */}
                   </div>
-                  <ChartOfAccountFilter getChartOfAccounts={getChartOfAccounts} />
+                  <ChartOfAccountFilter getChartOfAccounts={getChartOfAccounts} setSearchKey={setSearchKey} setSortKey={setSortKey} suggestions={data.chartOfAccounts.map((item) => item.code)} />
                 </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>Account Code</TableHead>
-                      <TableHead>Description</TableHead>
+                     <TableHead className="min-w-44 max-w-44 sticky left-0">
+                          <div className="flex items-center gap-6">
+                          Code
+                           {sortKey === SORTS.CODE_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CODE_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.CODE_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CODE_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CODE_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                          Description
+                           {sortKey === SORTS.DESCRIPTION_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.DESCRIPTION_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.DESCRIPTION_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.DESCRIPTION_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.DESCRIPTION_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
                       <TableHead>Nature of Account</TableHead>
                       <TableHead>Classification</TableHead>
                       <TableHead>Department Status</TableHead>
@@ -226,9 +270,10 @@ const ChartOfAccount = () => {
                   </TableBody>
                 </Table>
               </div>
+              <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
             </div>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>

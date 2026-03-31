@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
 import CreateBank from './modals/CreateBank';
@@ -16,7 +16,7 @@ import { canDoAction, haveActions } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortBanks } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 
 export type TBank = {
   banks: BankType[];
@@ -25,6 +25,13 @@ export type TBank = {
   prevPage: boolean;
   loading: boolean;
 };
+
+const SORTS = {
+  CODE_ASC: 'code-asc',
+  CODE_DESC: 'code-desc',
+  DESCRIPTION_ASC: 'description-asc',
+  DESCRIPTION_DESC: 'description-desc',
+}
 
 const Bank = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -124,38 +131,22 @@ const Bank = () => {
    }
   };
 
-  const uploadChanges = async () => {
-      setUploading(true)
-      try {
-        const list = await db.banks.toArray();
-        const offlineChanges = list.filter(e => e._synced === false);
-        const result = await kfiAxios.put("sync/upload/banks", { banks: offlineChanges });
-        const { success } = result.data;
-        if (success) {
-          setUploading(false)
-           present({
-              message: 'Offline changes saved!',
-              duration: 1000,
-            });
-          getBanks(1);
-          setUploading(false)
 
-        }
-      } catch (error: any) {
-          setUploading(false)
 
-          present({
-            message: `${error.response.data.error.message}`,
-            duration: 1000,
-          });
-      }
-  };
-
-  const handlePagination = (page: number) => getBanks(page, searchKey, sortKey);
+  const handlePagination = (page: number) => setCurrentPage(page);
 
   useIonViewWillEnter(() => {
     getBanks(currentPage);
   });
+
+      useEffect(() => {
+         setCurrentPage(1);
+         getBanks(1, searchKey, sortKey);
+       }, [searchKey, sortKey]);
+       
+       useEffect(() => {
+         getBanks(currentPage, searchKey, sortKey);
+       }, [currentPage]);
 
   
 
@@ -163,27 +154,72 @@ const Bank = () => {
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F1F1F1] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <PageTitle pages={['System', 'Bank']} />
           <div className="px-3 pb-3 flex-1 flex flex-col">
+            <div className=' space-y-1 mb-6'>
+              <p className=' text-xl text-gray-700 !font-medium'>Bank</p>
+              <p className=' text-sm text-gray-500 '>Manage bank records.</p>
+            </div>
             
-            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+            <div className="px-3 pt-3 pb-16 bg-white rounded-xl flex-1 shadow-lg">
               <div className="flex flex-col lg:flex-row items-start justify-start gap-3">
                 <div className=' flex flex-wrap gap-2'>{canDoAction(token.role, permissions, 'bank', 'create') && <CreateBank getBanks={getBanks} />}
-                {online && (
-                      <IonButton disabled={uploading} onClick={uploadChanges} fill="clear" id="create-center-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-                        <Upload size={15} className=' mr-1'/> {uploading ? 'Uploading...' : 'Upload'}
-                      </IonButton>
-                    )}
-                      
+               
                 </div>
-                <BankFilter getBanks={getBanks} data={data.banks} />
+                <BankFilter getBanks={getBanks} setSearchKey={setSearchKey} suggestion={data.banks.map((item) => item.code)} />
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>Code</TableHead>
-                      <TableHead>Description</TableHead>
+                      <TableHead>
+                        <div className="flex items-center gap-6">
+                        Code
+                         {sortKey === SORTS.CODE_ASC ? (
+                           <ArrowUp
+                             size={15}
+                             onClick={() => setSortKey(SORTS.CODE_DESC)}
+                             className="cursor-pointer"
+                           />
+                         ) : sortKey === SORTS.CODE_DESC ? (
+                           <ArrowDown
+                             size={15}
+                             onClick={() => setSortKey(SORTS.CODE_ASC)}
+                             className="cursor-pointer"
+                           />
+                         ) : (
+                           <ArrowUp
+                             size={15}
+                             onClick={() => setSortKey(SORTS.CODE_ASC)}
+                             className="cursor-pointer opacity-30"
+                           />
+                         )}
+                       </div>
+                      </TableHead>
+                       
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                          Description
+                           {sortKey === SORTS.DESCRIPTION_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.DESCRIPTION_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.DESCRIPTION_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.DESCRIPTION_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.DESCRIPTION_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                      </TableHead>
                       {haveActions(token.role, 'bank', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
                   </TableHeader>
@@ -215,9 +251,10 @@ const Bank = () => {
                   </TableBody>
                 </Table>
               </div>
+              <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
             </div>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>

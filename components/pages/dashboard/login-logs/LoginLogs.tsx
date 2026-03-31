@@ -73,11 +73,14 @@ const LoginLogs = () => {
   return (
     <IonPage className="w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
-        <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <PageTitle pages={['Diagnostics', 'Action Logs']} />
+        <div className="h-full flex flex-col gap-4 p-4 items-stretch justify-start">
+           <div className=' space-y-1 mb-2'>
+              <p className=' text-xl text-gray-700 !font-medium'>Login Logs</p>
+              <p className=' text-sm text-gray-500 '>Manage login logs.</p>
+            </div>
           <div className="p-4 flex-1 bg-white rounded-xl shadow-lg">
-           
-            <div className="relative overflow-auto mt-4">
+
+            <div className="relative overflow-auto mt-2">
               <Table>
                 <TableHeader>
                   <TableHeadRow>
@@ -101,8 +104,9 @@ const LoginLogs = () => {
                 </TableBody>
               </Table>
             </div>
-          </div>
           <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+          </div>
         </div>
       </IonContent>
     </IonPage>

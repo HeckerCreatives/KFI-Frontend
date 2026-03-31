@@ -8,6 +8,7 @@ import { TBusinessType } from '../BusinessType';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../../utils/permissions';
 import ViewBusinessType from '../modals/ViewBusinessType';
+import { Ellipsis } from 'lucide-react';
 
 type BusinessTypeActionsProps = {
   businessType: BusinessType;
@@ -23,42 +24,44 @@ type BusinessTypeActionsProps = {
 const BusinessTypeActions = ({ businessType, setData, currentPage, setCurrentPage, getBusinessTypes, searchKey, sortKey, rowLength }: BusinessTypeActionsProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
+  const triggerId = `loanrelease-action-trigger-${businessType._id}`;
+
 
   return (
-    <div>
-      {canDoAction(token.role, permissions, 'business type', 'visible') && <ViewBusinessType businessType={businessType} />}
-      {canDoAction(token.role, permissions, 'business type', 'update') && <UpdateBusinessType businessType={businessType} setData={setData} />}
-      {canDoAction(token.role, permissions, 'business type', 'delete') && (
-        <DeleteBusinessType
-          businessType={businessType}
-          getBusinessTypes={getBusinessTypes}
-          searchkey={searchKey}
-          sortKey={sortKey}
-          currentPage={currentPage}
-          rowLength={rowLength}
-        />
-      )}
-    </div>
-    // <>
-    //   <IonButton fill="clear" id={`bt-${businessType._id}`} className="[--padding-start:0] [--padding-end:0] [--padding-top:0] [--padding-bottom:0] min-h-5">
-    //     <IonIcon icon={ellipsisVertical} className="text-[#FA6C2F]" />
-    //   </IonButton>
-    //   <IonPopover showBackdrop={false} trigger={`bt-${businessType._id}`} triggerAction="click" className="[--max-width:10rem]">
-    //     <IonContent>
-    //       {canDoAction(token.role, token.permissions, 'business type', 'update') && <UpdateBusinessType businessType={businessType} setData={setData} />}
-    //       {canDoAction(token.role, token.permissions, 'business type', 'delete') && (
-    //         <DeleteBusinessType
-    //           businessType={businessType}
-    //           getBusinessTypes={getBusinessTypes}
-    //           searchkey={searchKey}
-    //           sortKey={sortKey}
-    //           currentPage={currentPage}
-    //           rowLength={rowLength}
-    //         />
-    //       )}
-    //     </IonContent>
-    //   </IonPopover>
-    // </>
+     <>
+         <button
+            className=" !p-2 bg-zinc-100 rounded-xl text-zinc-800"
+            id={triggerId}
+          >
+           <Ellipsis size={20}/>
+          </button>
+    
+          <IonPopover
+           showBackdrop={false}
+           trigger={triggerId}
+           triggerAction="click"
+           className="[--max-width:12rem] !p-6 !rounded-xl"
+         >
+           <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem] !p-6 !rounded-xl">
+           <div className=' w-full flex flex-col p-4'>
+            <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
+              {canDoAction(token.role, permissions, 'business type', 'visible') && <ViewBusinessType businessType={businessType} />}
+              {canDoAction(token.role, permissions, 'business type', 'update') && <UpdateBusinessType businessType={businessType} setData={setData} />}
+              {canDoAction(token.role, permissions, 'business type', 'delete') && (
+                <DeleteBusinessType
+                  businessType={businessType}
+                  getBusinessTypes={getBusinessTypes}
+                  searchkey={searchKey}
+                  sortKey={sortKey}
+                  currentPage={currentPage}
+                  rowLength={rowLength}
+                />
+              )}
+           </div>
+           </IonContent>
+         </IonPopover>
+        </>
+  
   );
 };
 

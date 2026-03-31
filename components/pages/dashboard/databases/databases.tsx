@@ -47,8 +47,11 @@ const Databases = () => {
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100 ">
       <IonContent className="[--background:#f4f4f5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 items-stretch justify-start p-4">
-          <PageTitle pages={['All Files', 'Databases']} />
           <div className="px-3 pb-3 flex-1">
+             <div className=' space-y-1 mb-6'>
+              <p className=' text-xl text-gray-700 !font-medium'>Databases</p>
+              <p className=' text-sm text-gray-500 '>Manage database records.</p>
+            </div>
 
             <div className=' flex flex-wrap gap-6'>
               

@@ -82,8 +82,8 @@ const CreateNature = ({ getNatures }: CreateNatureProps) => {
   return (
     <>
       <div className="text-end">
-        <IonButton fill="clear" id="create-nature-modal" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
-          + Add Record
+        <IonButton fill="clear" id="create-nature-modal" className="h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl" strong>
+          + Add
         </IonButton>
       </div>
       <IonModal

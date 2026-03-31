@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import CreateNature from './modals/CreateNature';
@@ -114,33 +114,6 @@ const Nature = () => {
    }
   };
 
-  const uploadChanges = async () => {
-      setUploading(true)
-      try {
-        const list = await db.natures.toArray();
-        const offlineChanges = list.filter(e => e._synced === false);
-        console.log(offlineChanges)
-        const result = await kfiAxios.put("sync/upload/natures", { natures: offlineChanges });
-        const { success } = result.data;
-        if (success) {
-          setUploading(false)
-           present({
-              message: 'Offline changes saved!',
-              duration: 1000,
-            });
-          getNatures(currentPage);
-          setUploading(false)
-
-        }
-      } catch (error: any) {
-          setUploading(false)
-
-          present({
-            message: `${error.response.data.error.message}`,
-            duration: 1000,
-          });
-      }
-  };
 
   const handlePagination = (page: number) => getNatures(page, searchKey, sortKey);
 
@@ -148,20 +121,34 @@ const Nature = () => {
     getNatures(currentPage);
   });
 
+   useEffect(() => {
+             setCurrentPage(1);
+             getNatures(1, searchKey, sortKey);
+           }, [searchKey, sortKey]);
+           
+           useEffect(() => {
+             getNatures(currentPage, searchKey, sortKey);
+           }, [currentPage]);
+  
+
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100 ">
       <IonContent className="[--background:#f4f4f5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 items-stretch justify-start p-4">
-          <PageTitle pages={['All Files', 'Nature']} />
           <div className="px-3 pb-3 flex-1">
+
+            <div className=' space-y-1 mb-6'>
+              <p className=' text-xl text-gray-700 !font-medium'>Nature</p>
+              <p className=' text-sm text-gray-500 '>Manage nature records.</p>
+            </div>
            
-            <div className="relative overflow-auto px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+            <div className="relative overflow-auto px-3 pt-3 pb-16 bg-white rounded-xl flex-1 shadow-lg">
                <div className="flex items-center justify-center gap-2 flex-wrap">
                 {canDoAction(token.role, permissions, 'nature', 'create') && (
                   <CreateNature getNatures={getNatures} />
                 )}
               
-              <NatureFilter getNatures={getNatures} />
+              <NatureFilter getNatures={getNatures} setSearchKey={setSearchKey} suggestions={data.natures.map((item) => item.nature)} />
             </div>
               <Table>
                 <TableHeader>

@@ -91,6 +91,7 @@ import Breadcrumb from '../ui/common/Breadcrumb';
 import ReportProgress from '../ui/common/report-progress';
 import { useJobStore } from '../../store/fileQueStore';
 import { FileQueue } from './QueWidget';
+import CollapsibleSidebar from './Sidebar';
 
 type NavLink = {
   path?: string;
@@ -176,6 +177,7 @@ export const navLinks: NavLink[] = [
       },
     { path: '/dashboard/nature', label: 'Nature', resource: 'nature' },
     { path: '/dashboard/systemparameters', label: 'System Parameters', resource: 'system parameters' },
+    { path: '/dashboard/databases', label: 'Databases', resource: 'databases' },
 
     ],
   },
@@ -185,7 +187,7 @@ export const navLinks: NavLink[] = [
     resource: ["unbalance entries", "login logs", "action logs"],
     icon: <ToolsIcon size={20} />,
     children: [
-      { path: "/dashboard/unbalance-entries", label: "Unbalance Entries", resource: "unbalance entries" },
+      // { path: "/dashboard/unbalance-entries", label: "Unbalance Entries", resource: "unbalance entries" },
       { path: "/dashboard/login-logs", label: "Login Logs", resource: "login logs" },
       { path: "/dashboard/action-logs", label: "Action Logs", resource: "action logs" },
     ],
@@ -249,34 +251,7 @@ const Tabs = () => {
 
   return (
     <>
-    {/* {jobs.length !== 0 && (
-      <div className="fixed bottom-8 right-6 w-[300px] bg-white shadow-lg border rounded-xl p-4 z-[999]">
-        <p>File Qeue</p>
-         {jobs.map((job) => (
-          <div key={job.jobId} className="border p-2 rounded-md">
-            <p className="font-medium">{job.label}</p>
-
-            <p className="text-xs text-gray-500">
-              {job.type} • {job.progress}%
-            </p>
-
-            {job.fileUrl && (
-              <button
-                onClick={() => handleDownload(job.fileUrl!)}
-                className="text-blue-600 text-sm underline"
-              >
-                Download
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-    )} */}
-
-
-    <FileQueue
-      
-    />
+    <FileQueue/>
     
 
    
@@ -422,8 +397,13 @@ const Tabs = () => {
       <IonPage id="main-content">
        
         <div className=' w-full min-h-screen flex'>
+          <CollapsibleSidebar
+            navLinks={navLinks}
+            logoNoBg={logoNoBg}
+            location={location}
+          />
 
-          <div className='min-h-screen w-[320px] hidden xl:flex flex-col p-6'>
+          {/* <div className='min-h-screen w-[320px] hidden xl:flex flex-col p-6'>
             <div className=' px-4'>
                <div className='flex items-center'>
               <Image alt="logo" src={logoNoBg} className="h-16 w-auto" />
@@ -438,7 +418,6 @@ const Tabs = () => {
                 link.children ? (
                   <IonAccordion key={idx} value={link.label}
                  toggleIconSlot="end"
-                  // toggleIcon={undefined}
                   className={isParentActive(link) ? "active-accordion" : ""}
                   >
                     <IonItem
@@ -464,13 +443,7 @@ const Tabs = () => {
                       >
                         {link.label}
                       </IonLabel>
-{/* 
-                       <div slot="end">
-                          <ChevronDownIcon
-                            size={16}
-                            className={isParentActive(link) ? "text-white" : "text-slate-400"}
-                          />
-                        </div> */}
+
                     </IonItem>
 
                     <div slot="content">
@@ -565,7 +538,7 @@ const Tabs = () => {
             </div>
 
          
-          </div>
+          </div> */}
           <main className=' w-full'>
              <IonHeader class=" ion-header ion-no-border border-b flex items-center justify-center"
         >
@@ -574,7 +547,7 @@ const Tabs = () => {
             zIndex: '99999 !important'
           }}
           >
-            <div className='flex items-center gap-2 px-2'>
+            <div className='flex items-center gap-2 px-4'>
               <Breadcrumb />
             </div>
 

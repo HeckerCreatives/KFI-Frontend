@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonIcon, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
 import CreateLoan from './modals/CreateLoan';
@@ -16,7 +16,7 @@ import { canDoAction, haveActions } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortProducts } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 
 export type TLoan = {
   loans: Loan[];
@@ -25,6 +25,12 @@ export type TLoan = {
   prevPage: boolean;
   loading: boolean;
 };
+
+const SORTS = {
+  CODE_ASC: 'code-asc',
+  CODE_DESC: 'code-desc',
+}
+
 
 const Loans = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -114,66 +120,74 @@ const Loans = () => {
    }
   };
 
-  const uploadChanges = async () => {
-      setUploading(true)
-      try {
-        const list = await db.productLoans.toArray();
-        const offlineChanges: any = [];
-          list.map(e => {
-            if (e._synced === false) {
-              offlineChanges.push({ ...e, loanCodes: [...e.loanCodes.filter((f: { _synced: boolean; }) => f._synced === false)] });
-            }
-          });
-        const result = await kfiAxios.put("sync/upload/loan-products", { products: offlineChanges });
-        const { success } = result.data;
-        if (success) {
-          setUploading(false)
-           present({
-              message: 'Offline changes saved!',
-              duration: 1000,
-            });
-          getLoans(currentPage);
-          setUploading(false)
 
-        }
-      } catch (error: any) {
-          setUploading(false)
-
-          present({
-            message: `${error.response.data.error.message}`,
-            duration: 1000,
-          });
-      }
-  };
-
-  const handlePagination = (page: number) => getLoans(page, searchKey, sortKey);
+  const handlePagination = (page: number) => setCurrentPage(page);
 
   useIonViewWillEnter(() => {
     getLoans(currentPage);
   });
 
+  useEffect(() => {
+     setCurrentPage(1);
+     getLoans(1, searchKey, sortKey);
+   }, [searchKey, sortKey]);
+   
+   useEffect(() => {
+     getLoans(currentPage, searchKey, sortKey);
+   }, [currentPage]);
+ 
+
   return (
     <IonPage className="w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <PageTitle pages={['System', 'Loan Product', 'Product']} />
           <div className="px-3 pb-3 flex-1 flex flex-col">
+
+             <div className=' space-y-1 mb-6'>
+              {/* <PageTitle pages={['Dashboard']} /> */}
+              <p className=' text-xl text-gray-700 !font-medium'>Products</p>
+              <p className=' text-sm text-gray-500 '>Manage product records.</p>
+
+            </div>
             
 
-            <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+            <div className=" p-4 pb-16 bg-white rounded-xl flex-1 shadow-lg">
 
               <div className="flex flex-col lg:flex-row items-start justify-start flex-wrap gap-2">
                 <div className=' flex flex-wrap gap-2'>
                   {canDoAction(token.role, permissions, 'product', 'create') && <CreateLoan getLoans={getLoans} currentPage={currentPage} />}
                
                 </div>
-                <LoanFilter getLoans={getLoans} />
+                <LoanFilter getLoans={getLoans} setSearchKey={setSearchKey} suggestion={data.loans.map((item) => item.code)} />
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>Code</TableHead>
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                         Code
+                          {sortKey === SORTS.CODE_ASC ? (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.CODE_DESC)}
+                              className="cursor-pointer"
+                            />
+                          ) : sortKey === SORTS.CODE_DESC ? (
+                            <ArrowDown
+                              size={15}
+                              onClick={() => setSortKey(SORTS.CODE_ASC)}
+                              className="cursor-pointer"
+                            />
+                          ) : (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.CODE_ASC)}
+                              className="cursor-pointer opacity-30"
+                            />
+                          )}
+                        </div>
+                      </TableHead>
                       <TableHead>Description</TableHead>
                       {haveActions(token.role, 'product', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
@@ -206,9 +220,11 @@ const Loans = () => {
                   </TableBody>
                 </Table>
               </div>
+
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
             </div>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>

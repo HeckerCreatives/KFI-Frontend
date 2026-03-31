@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
 import PageTitle from '../../../ui/page/PageTitle';
 import CreateCenter from './modals/CreateCenter';
@@ -18,7 +18,7 @@ import ExportAllCenter from './modals/ExportAllCenter';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortCenter } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 
 export type TCenter = {
   centers: CenterType[];
@@ -27,6 +27,14 @@ export type TCenter = {
   prevPage: boolean;
   loading: boolean;
 };
+
+const SORTS = {
+  CODE_ASC: 'centerno-asc',
+  CODE_DESC: 'centerno-desc',
+  DESCRIPTION_ASC: 'description-asc',
+  DESCRIPTION_DESC: 'description-desc',
+}
+
 
 const Center = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
@@ -56,6 +64,7 @@ const Center = () => {
       try {
         const filter: TTableFilter = { limit: TABLE_LIMIT, page };
         if (keyword) filter.search = keyword;
+        if (keyword) filter.keyword = keyword;
         if (sort) filter.sort = sort;
         const result = await kfiAxios.get('/center', { params: filter });
         const { success, centers, hasPrevPage, hasNextPage, totalPages } = result.data;
@@ -126,22 +135,36 @@ const Center = () => {
    
   };
 
-  const handlePagination = (page: number) => getCenters(page, searchKey, sortKey);
+  const handlePagination = (page: number) => setCurrentPage(page);
 
   useIonViewWillEnter(() => {
     getCenters(currentPage);
   });
+
+    useEffect(() => {
+       setCurrentPage(1);
+       getCenters(1, searchKey, sortKey);
+     }, [searchKey, sortKey]);
+     
+     useEffect(() => {
+       getCenters(currentPage, searchKey, sortKey);
+     }, [currentPage]);
+   
 
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">
       <IonContent className="[--background:#F4F4F5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start">
-          <PageTitle pages={['System', 'Center']} />
           <div className="px-3 pb-3 flex-1 flex flex-col">
+
+             <div className=' space-y-1 mb-6'>
+              <p className=' text-xl text-gray-700 !font-medium'>Center</p>
+              <p className=' text-sm text-gray-500 '>Manage center records.</p>
+            </div>
             
 
-            <div className=" p-4 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+            <div className=" p-4 pb-16 bg-white rounded-xl flex-1 shadow-lg">
               <div className="flex lg:flex-row flex-col gap-3">
                 <div className="flex items-center flex-wrap gap-2">
                   {canDoAction(token.role, permissions, 'center', 'create') && <CreateCenter getCenters={getCenters} />}
@@ -149,14 +172,60 @@ const Center = () => {
                   {canDoAction(token.role, permissions, 'center', 'export') && <ExportAllCenter />}
                  
                 </div>
-                <CenterFilter getCenters={getCenters} data={data.centers} />
+                <CenterFilter getCenters={getCenters} setSearchKey={setSearchKey} suggestion={data.centers.map((item) => item.centerNo)} />
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead>Center No.</TableHead>
-                      <TableHead>Center Name</TableHead>
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                         Center no.
+                          {sortKey === SORTS.CODE_ASC ? (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.CODE_DESC)}
+                              className="cursor-pointer"
+                            />
+                          ) : sortKey === SORTS.CODE_DESC ? (
+                            <ArrowDown
+                              size={15}
+                              onClick={() => setSortKey(SORTS.CODE_ASC)}
+                              className="cursor-pointer"
+                            />
+                          ) : (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.CODE_ASC)}
+                              className="cursor-pointer opacity-30"
+                            />
+                          )}
+                        </div>
+                      </TableHead>
+                      <TableHead>
+                         <div className="flex items-center gap-6">
+                         Name
+                          {sortKey === SORTS.DESCRIPTION_ASC ? (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.DESCRIPTION_DESC)}
+                              className="cursor-pointer"
+                            />
+                          ) : sortKey === SORTS.DESCRIPTION_DESC ? (
+                            <ArrowDown
+                              size={15}
+                              onClick={() => setSortKey(SORTS.DESCRIPTION_ASC)}
+                              className="cursor-pointer"
+                            />
+                          ) : (
+                            <ArrowUp
+                              size={15}
+                              onClick={() => setSortKey(SORTS.DESCRIPTION_ASC)}
+                              className="cursor-pointer opacity-30"
+                            />
+                          )}
+                        </div>
+                      </TableHead>
                       <TableHead>Location</TableHead>
                       <TableHead>Center Chief</TableHead>
                       <TableHead>Treasurer</TableHead>
@@ -196,9 +265,11 @@ const Center = () => {
                   </TableBody>
                 </Table>
               </div>
+
+          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
             </div>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonContent>
     </IonPage>
