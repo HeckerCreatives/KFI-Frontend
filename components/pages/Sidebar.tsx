@@ -103,10 +103,11 @@ export default function CollapsibleSidebar({
                 <p
                   key={idx}
                   title={link.label}
+                    onClick={() => setCollapsed(!collapsed)}
                   className={`
                     group relative flex items-center justify-center
-                    h-10 w-10 mx-auto rounded-lg
-                    transition-all duration-200
+                    h-10 w-10 mx-auto rounded-xl
+                    transition-all duration-200 cursor-pointer
                     ${active
                       ? "bg-orange-500 text-white"
                       : "text-orange-500 hover:bg-orange-50"

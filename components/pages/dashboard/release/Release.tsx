@@ -152,12 +152,14 @@ const Release = () => {
   });
 
    useEffect(() => {
-      setCurrentPage(1);
-    }, [searchKey]);
-  
-    useEffect(() => {
-      getReleases(currentPage, searchKey, sortKey, to, from)
-    },[currentPage, sortKey, from, to])
+        setCurrentPage(1);
+        getReleases(1, searchKey, sortKey, to, from);
+      }, [searchKey, sortKey, to, from]);
+    
+      useEffect(() => {
+        getReleases(currentPage, searchKey, sortKey, to, from);
+      }, [currentPage]);
+   
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">

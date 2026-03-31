@@ -149,17 +149,15 @@ const Acknowledgement = () => {
     getAcknowledgements(currentPage);
   });
 
-   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchKey]);
-      
-      useEffect(() => {
-        const timer = setTimeout(() => {
-          getAcknowledgements(currentPage, searchKey, sortKey, to, from);
-        }, 500);
-      
-        return () => clearTimeout(timer);
-      }, [currentPage, searchKey, sortKey, from, to]);
+  useEffect(() => {
+       setCurrentPage(1);
+       getAcknowledgements(1, searchKey, sortKey, to, from);
+     }, [searchKey, sortKey, to, from]);
+   
+     useEffect(() => {
+       getAcknowledgements(currentPage, searchKey, sortKey, to, from);
+     }, [currentPage]);
+  
 
 
   return (

@@ -137,7 +137,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                   
                 </div>
 
-                 <Table className=" w-full border-collapse mt-4">
+                 <Table className=" w-full border-collapse mt-4 overflow-x-auto">
                     <TableHeader className=" bg-white backdrop-blur-sm shadow-sm">
                     <TableHeadRow>
                         <TableHead className="!font-[400] border-b border-gray-200">Year</TableHead>

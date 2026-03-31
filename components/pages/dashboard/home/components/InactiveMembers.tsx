@@ -140,7 +140,8 @@ const InactiveMembers = ({ title, icon, value, loading = false, details = false 
                                                          </div>
                 </div>
 
-                  <Table className=" w-full border-collapse mt-4">
+                <div className=' w-full overflow-x-auto'>
+                   <Table className=" w-full border-collapse mt-4">
                     <TableHeader className=" bg-white backdrop-blur-sm shadow-sm">
                     <TableHeadRow>
                         <TableHead className="!font-[400] border-b border-gray-200">Year</TableHead>
@@ -173,6 +174,9 @@ const InactiveMembers = ({ title, icon, value, loading = false, details = false 
                       ))}
                     </TableBody>
                 </Table>
+                </div>
+
+                 
 
 
                  {/* <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} /> */}

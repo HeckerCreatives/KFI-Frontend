@@ -157,16 +157,13 @@ const JournalVoucher = () => {
   });
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchKey, from, to]);
-  
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      getJournalVouchers(currentPage, searchKey, sortKey, to, from);
-    }, 500);
-  
-    return () => clearTimeout(timer);
-  }, [currentPage, searchKey, sortKey, from, to]);
+     setCurrentPage(1);
+     getJournalVouchers(1, searchKey, sortKey, to, from);
+   }, [searchKey, sortKey, to, from]);
+ 
+   useEffect(() => {
+     getJournalVouchers(currentPage, searchKey, sortKey, to, from);
+   }, [currentPage]);
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">

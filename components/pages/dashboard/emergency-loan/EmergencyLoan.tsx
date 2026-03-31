@@ -153,17 +153,15 @@ const EmergencyLoan = () => {
     getEmergencyLoans(currentPage);
   });
 
-   useEffect(() => {
-      setCurrentPage(1);
-    }, [searchKey, from, to]);
-    
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        getEmergencyLoans(currentPage, searchKey, sortKey, to, from);
-      }, 800);
-    
-      return () => clearTimeout(timer);
-    }, [currentPage, searchKey, sortKey, from, to]);
+  useEffect(() => {
+       setCurrentPage(1);
+       getEmergencyLoans(1, searchKey, sortKey, to, from);
+     }, [searchKey, sortKey, to, from]);
+   
+     useEffect(() => {
+       getEmergencyLoans(currentPage, searchKey, sortKey, to, from);
+     }, [currentPage]);
+  
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">

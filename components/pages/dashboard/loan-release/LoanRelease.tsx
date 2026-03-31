@@ -155,11 +155,14 @@ const LoanRelease = () => {
   
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchKey]);
+    getTransactions(1, searchKey, sortKey, to, from);
+  }, [searchKey, sortKey, to, from]);
 
   useEffect(() => {
-    getTransactions(currentPage, searchKey, sortKey, to, from)
-  },[currentPage, sortKey, from, to])
+    getTransactions(currentPage, searchKey, sortKey, to, from);
+  }, [currentPage]);
+
+
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">

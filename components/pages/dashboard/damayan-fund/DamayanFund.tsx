@@ -152,16 +152,14 @@ const DamayanFund = () => {
 
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchKey, from, to]);
+       setCurrentPage(1);
+       getDamayanFunds(1, searchKey, sortKey, to, from);
+     }, [searchKey, sortKey, to, from]);
+   
+     useEffect(() => {
+       getDamayanFunds(currentPage, searchKey, sortKey, to, from);
+     }, [currentPage]);
   
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      getDamayanFunds(currentPage, searchKey, sortKey, to, from);
-    }, 500);
-  
-    return () => clearTimeout(timer);
-  }, [currentPage, searchKey, sortKey, from, to]);
 
   return (
     <IonPage className="  w-full flex items-center justify-center h-full bg-zinc-100">

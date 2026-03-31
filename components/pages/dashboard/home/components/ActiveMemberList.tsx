@@ -120,55 +120,21 @@ const ActiveMemberlist = ({year, month, status}: Props) => {
             <ModalHeader title="Active Members List" sub="" dismiss={dismiss} />
 
          <div className=' w-full flex flex-col'>
-           
+          
 
-                <div className=' w-full flex items-end  justify-between'>
-                    <div className=' flex items-center gap-2'>
-                        {/* <IonInput
-                        name="year"
-                        type='number'
-                        placeholder="Year..."
-                        className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
-                        /> */}
-
-                       {/* <IonSelect
-                        placeholder="Month"
-                        labelPlacement="stacked"
-                        interface="popover"
-                        className="!border border-zinc-400 rounded-md !min-h-[1rem] [--highlight-color-focused:none] !px-2 !py-2 text-xs !overflow-y-auto w-[12rem] !max-w-[24rem] !max-h-[18rem]"
-                        >
-                        <IonSelectOption value="January" className="text-xs">January</IonSelectOption>
-                        <IonSelectOption value="February" className="text-xs">February</IonSelectOption>
-                        <IonSelectOption value="March" className="text-xs">March</IonSelectOption>
-                        <IonSelectOption value="April" className="text-xs">April</IonSelectOption>
-                        <IonSelectOption value="May" className="text-xs">May</IonSelectOption>
-                        <IonSelectOption value="June" className="text-xs">June</IonSelectOption>
-                        <IonSelectOption value="July" className="text-xs">July</IonSelectOption>
-                        <IonSelectOption value="August" className="text-xs">August</IonSelectOption>
-                        <IonSelectOption value="September" className="text-xs">September</IonSelectOption>
-                        <IonSelectOption value="October" className="text-xs">October</IonSelectOption>
-                        <IonSelectOption value="November" className="text-xs">November</IonSelectOption>
-                        <IonSelectOption value="December" className="text-xs">December</IonSelectOption>
-                        </IonSelect> */}
-                    </div>
-                    
-                     <div className=' flex items-center gap-2'>
-                     <div className=' flex flex-col gap-1'>
-                                             <p className=' text-xs'>Search</p>
-                                              <IonInput
-                                              name="search"
-                                              value={search}
-                                              onIonInput={(e) => setSearch(String(e.target.value))}
-                                              type='text'
-                                              placeholder="Search ..."
-                                              className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
-                                            />
-                                          </div>
-                    
-                   </div>
-                </div>
-
-                   <Table className=" w-full border-collapse mt-4">
+                <div className=' w-full overflow-x-auto'>
+                  <div className=' flex flex-col gap-1'>
+                     <p className=' text-xs'>Search</p>
+                      <IonInput
+                      name="search"
+                      value={search}
+                      onIonInput={(e) => setSearch(String(e.target.value))}
+                      type='text'
+                      placeholder="Search ..."
+                      className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
+                    />
+                  </div>
+                    <Table className=" w-full border-collapse mt-4">
                     <TableHeader className=" bg-white backdrop-blur-sm shadow-sm">
                     <TableHeadRow>
                         <TableHead className="!font-[400] border-b border-gray-200">Name</TableHead>
@@ -204,7 +170,10 @@ const ActiveMemberlist = ({year, month, status}: Props) => {
                     
                       
                     </TableBody>
-                </Table>
+                    </Table>
+                </div>
+
+                 
 
                 {data.clients.length !== 0 && (
                  <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
