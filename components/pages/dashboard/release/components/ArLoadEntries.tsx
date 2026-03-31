@@ -1,4 +1,3 @@
-import { IonButton, IonCheckbox, IonModal, IonSelect, IonSelectOption } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Search01Icon } from 'hugeicons-react';
@@ -12,6 +11,7 @@ import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import { ReleaseFormData } from '../../../../../validations/release.schema';
 import { Table, TableHeader, TableHeadRow, TableHead, TableBody, TableCell, TableRow } from '../../../../ui/table/Table';
+import { IonButton, IonCheckbox, IonModal, IonSelect, IonSelectOption, IonPopover, IonContent, IonList, IonItem, IonLabel, IonSearchbar, IonText, IonInput } from '@ionic/react';
 
 type Option = {
   _id: string;
@@ -41,11 +41,168 @@ export type TAcknowledgement = {
   loading: boolean;
 };
 
+type DueDate = {
+  _id: string;
+  week: string | number;
+  date: string;
+  transaction: { code: string } | null;
+  client: {name: string, _id: string}
+};
+
 
 type Props = {
   center: string,
   form: UseFormReturn<ReleaseFormData>
 }
+
+const DUE_DATE_PAGE_SIZE = 5;
+
+const DueDateDropdown = ({
+  duedates,
+  value,
+  onChange,
+  disabled,
+}: {
+  duedates: DueDate[];
+  value: string;
+  onChange: (id: string) => void;
+  disabled?: boolean;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+
+  const selected = duedates.find((d) => d._id === value);
+
+  const filtered = duedates.filter((item) => {
+    const q = search.toLowerCase();
+    return (
+      item.transaction?.code?.toLowerCase().includes(q) ||
+      String(item.week).toLowerCase().includes(q) ||
+      item.date.split('T')[0].includes(q) ||
+      item.client.name.toLowerCase().includes(q)
+    );
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / DUE_DATE_PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const paginated = filtered.slice((safePage - 1) * DUE_DATE_PAGE_SIZE, safePage * DUE_DATE_PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
+
+  const handleSelect = (id: string) => {
+    onChange(id);
+    setIsOpen(false);
+    setSearch('');
+    setPage(1);
+  };
+
+  return (
+    <>
+     
+
+       <button
+        className=" !p-2 !px-4 bg-zinc-100 rounded-lg text-zinc-800"
+        id="due-date-trigger"
+        disabled={disabled}
+        onClick={() => setIsOpen(true)}
+      >
+       <span className="truncate text-left w-full text-xs">
+          {selected
+            ? `${selected.transaction?.code ?? ''}, Week: ${selected.week}, Date: ${selected.date.split('T')[0]}`
+            : 'Due dates'}
+        </span>
+      </button>
+
+      <IonPopover
+        isOpen={isOpen}
+        trigger="due-date-trigger"
+        triggerAction="click"
+        onDidDismiss={() => {
+          setIsOpen(false);
+          setSearch('');
+          setPage(1);
+        }}
+        dismissOnSelect={false}
+        showBackdrop={false}
+        className="[--max-width:20rem] !p-6 !rounded-xl"
+      >
+        <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem] !p-6 !rounded-xl">
+          <IonInput
+            value={search}
+            onIonInput={(e) => setSearch(e.detail.value ?? '')}
+            placeholder="Search due dates..."
+            debounce={0}
+            className="text-xs !px-4 !bg-zinc-50 !border !border-zinc-200 rounded-xl !mb-2"
+          />
+
+          <IonList lines="full" className="py-0">
+            {paginated.length === 0 && (
+              <IonItem>
+                <IonLabel className="text-xs ion-text-center" color="medium">
+                  No results found
+                </IonLabel>
+              </IonItem>
+            )}
+            {paginated.map((item) => (
+              <IonItem
+                key={item._id}
+                button
+                detail={false}
+                onClick={() => handleSelect(item._id)}
+                color={value === item._id ? '' : undefined}
+              >
+                <IonLabel className="!text-xs">
+                  {item.transaction?.code ?? '—'}, Week: {item.week}, Date:{' '}
+                  {item.date.split('T')[0]}, {item.client.name || ''}
+                </IonLabel>
+              </IonItem>
+            ))}
+          </IonList>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-3 py-2 border-t border-zinc-200">
+              <IonText color="medium">
+                <span className="text-xs">
+                  Page {safePage} of {totalPages}
+                </span>
+              </IonText>
+              <div className="flex items-center gap-1">
+                <IonButton
+                  size="small"
+                  fill='clear'
+                  disabled={safePage <= 1}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPage((p) => Math.max(1, p - 1));
+                  }}
+                  className=" !text-white !rounded-md !bg-orange-500"
+                >
+                  ‹
+                </IonButton>
+                <IonButton
+                  fill='clear'
+                  size="small"
+                  disabled={safePage >= totalPages}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPage((p) => Math.min(totalPages, p + 1));
+                  }}
+                  className=" !text-white !rounded-md !bg-orange-500"
+                >
+                  ›
+                </IonButton>
+              </div>
+            </div>
+          )}
+        </IonContent>
+      </IonPopover>
+    </>
+  );
+};
+
 
 
 const ARLoadEntries = ({center, form}: Props) => {
@@ -187,31 +344,12 @@ const ARLoadEntries = ({center, form}: Props) => {
               <div className="flex items-center min-w-20 gap-2">
              
 
-                   <FormIonItem>
-
-                  <IonSelect
-                                    placeholder='Due dates'
-                                    labelPlacement="stacked"
-                                     interface="popover"
-                                    value={dueDateId}
-                                    
-                                    onIonChange={e => {
-                                        setDueDateId(e.target.value);
-                                      }}
-                                     className={classNames(
-                                        '!border border-zinc-300 [--highlight-color-focused:none] !px-2 !py-1 text-xs !overflow-y-auto w-[18rem] !max-w-[24rem] !max-h-[18rem] !min-h-[0.5rem] ',
-                                      )}
-                                      >
-                                        {duedates.map((item, index) => (
-                                          <IonSelectOption key={index}  value={item._id} className="text-xs">
-                                            {item.transaction?.code}, Week:{item.week}, Date:{item.date.split("T")[0]}
-                                          </IonSelectOption>
-                                        ))}
-                                      </IonSelect>
-
-                    
-                  
-                  </FormIonItem>
+                <DueDateDropdown
+                  duedates={duedates}
+                  value={dueDateId}
+                  onChange={setDueDateId}
+                  disabled={loading}
+                />
 
 
                   <FormIonItem>
