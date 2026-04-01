@@ -66,7 +66,7 @@ export default function Signatures({open, type, approvedBy, checkedBy, recordedB
 
         if(type === 'loan release' || type === 'expense voucher' || type === 'journal voucher' || type === 'emergency loan' || type === 'damayan fund'){
            return (
-            <div className={`w-full grid grid-cols-4 bg-zinc-100 p-2 mt-6 text-sm font-semibold`}>
+            <div className={`w-full grid grid-cols-2 gap-4 lg:grid-cols-4 bg-zinc-100 p-2 mt-6 text-sm font-semibold`}>
                 <div className=' flex items-center gap-2'>
                   Prepared by: <span className=' text-sm !font-bold capitalize'>{preparedBy}</span>
                 </div>
@@ -87,7 +87,7 @@ export default function Signatures({open, type, approvedBy, checkedBy, recordedB
 
         if(type === 'official receipt' || type === 'acknowledgement receipt'){
            return (
-            <div className={`w-full grid grid-cols-5 bg-zinc-100 p-2 mt-6 text-sm font-semibold`}>
+            <div className={`w-full grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 bg-zinc-100 p-2 mt-6 text-sm font-semibold`}>
                 <div className=' flex items-center gap-2'>
                   Prepared by: <span className=' text-sm !font-bold capitalize'>{preparedBy}</span>
                 </div>

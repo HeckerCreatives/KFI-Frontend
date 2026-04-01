@@ -188,7 +188,7 @@ const Admin = () => {
 
 
   return (
-    <IonPage className=" w-full flex items-center justify-center h-screen bg-zinc-100 !pb-60 overflow-y-auto ">
+    <IonPage className=" w-full flex items-center justify-center h-screen bg-zinc-100 overflow-y-auto ">
       <IonContent className="[--background:#f4f4f5] max-w-[1920px] h-full" fullscreen>
         <div className="h-full flex flex-col gap-4 items-stretch justify-start p-4">
 
@@ -210,7 +210,7 @@ const Admin = () => {
            
 
             
-            <div className="px-3 pt-3 pb-5 bg-white rounded-xl flex-1 shadow-lg">
+            <div className="relative px-3 pt-3 pb-16 bg-white rounded-xl flex-1 shadow-lg">
 
                <div className="flex items-center justify-center gap-3">
               <div className=' w-fit flex items-center flex-wrap gap-1'>
@@ -224,8 +224,10 @@ const Admin = () => {
               <UserFilter getUsers={getUsers} setStatus={setStatus} />
             </div>
 
+
+
              
-              <div className="relative rounded-xl mt-2 h-full">
+              <div className="relative rounded-xl mt-2 h-fit w-full overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableHeadRow>
@@ -343,15 +345,15 @@ const Admin = () => {
                       ))}
                   </TableBody>
                 </Table>
+              </div>
 
+             
                 <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
 
-
-              </div>
-
-
             </div>
+
+
           </div>
         </div>
       </IonContent>
