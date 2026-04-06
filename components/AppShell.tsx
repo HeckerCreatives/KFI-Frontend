@@ -1,6 +1,6 @@
 'use client';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
+import { IonReactHashRouter } from '@ionic/react-router'; // ← change this
 import { Route, Redirect } from 'react-router-dom';
 import Login from './pages/auth/login/Login';
 import Tabs from './pages/Tabs';
@@ -17,22 +17,20 @@ const AppShell = () => {
   const setOnline = useOnlineStore((state) => state.setOnline);
 
   useEffect(() => {
-    // Client-side only check
     setIsLoggedIn(!!localStorage.getItem('auth'));
     setAuthChecked(true);
   }, []);
 
-    useEffect(() => {
-       const handleOnline = () => setOnline(true);
-       const handleOffline = () => setOnline(false);
-       window.addEventListener("online", handleOnline);
-       window.addEventListener("offline", handleOffline);
-       return () => {
-         window.removeEventListener("online", handleOnline);
-         window.removeEventListener("offline", handleOffline);
-       };
-   }, [setOnline]);
-
+  useEffect(() => {
+    const handleOnline = () => setOnline(true);
+    const handleOffline = () => setOnline(false);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [setOnline]);
 
   if (!authChecked) {
     return (
@@ -44,25 +42,23 @@ const AppShell = () => {
 
   return (
     <IonApp>
-      <IonReactRouter>
+      <IonReactHashRouter> {/* ← swapped */}
         <IonRouterOutlet id="main">
           <Route
             path="/"
             exact
-            render={() => {
-              if (!authChecked) return null;
-              return isLoggedIn ? <Redirect to="/dashboard" /> : <Login />;
-            }}
+            render={() =>
+              isLoggedIn ? <Redirect to="/dashboard" /> : <Login />
+            }
           />
           <Route
             path="/dashboard"
-            render={() => {
-              if (!authChecked) return null;
-              return isLoggedIn ? <Tabs /> : <Redirect to="/" />;
-            }}
+            render={() =>
+              isLoggedIn ? <Tabs /> : <Redirect to="/" />
+            }
           />
         </IonRouterOutlet>
-      </IonReactRouter>
+      </IonReactHashRouter>
     </IonApp>
   );
 };

@@ -148,7 +148,6 @@ const Bank = () => {
          getBanks(currentPage, searchKey, sortKey);
        }, [currentPage]);
 
-  
 
   return (
     <IonPage className=" w-full flex items-center justify-center h-full bg-zinc-100">

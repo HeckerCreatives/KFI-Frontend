@@ -64,10 +64,9 @@ const onSubmit = async (data: LoginFormData) => {
   // helper to handle navigation across platforms
   const navigate = (path: string) => {
     if (isPlatform('capacitor') || isPlatform('electron')) {
-      window.location.href = path;
+      window.location.href = path; // ← use hash instead of href
     } else {
-      // router.push(path);
-      window.location.reload();
+      window.location.href = path;
     }
   };
 
