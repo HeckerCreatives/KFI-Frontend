@@ -22,7 +22,7 @@ type ClientStatisticsProps = {
 
 const ClientStatistics = ({ data }: ClientStatisticsProps) => {
   return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
         <ClientStatisticsCard icon={<UserMultiple02Icon stroke='.8' size={25}/>} loading={false} title="Total Clients" value={`${data.totalClient.toLocaleString()}`} />
         <ClientStatisticsCard icon={<UserRemove02Icon stroke='.8' size={25}/>} loading={false} title="Resigned" value={`${data.resigned.toLocaleString()}`} />
         <ClientStatisticsCard icon={<UserMinus01Icon stroke='.8' size={25}/>} loading={false} title="Active On-Leave" value={`${data.activeOnLeave.toLocaleString()}`} />
