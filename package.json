@@ -1,5 +1,5 @@
 {
-  "name": "KFI",
+  "name": "KFIDekstopApp",
   "description": "KFI Desktop App",
 "author": "Your Name <your@email.com>",
   "version": "5.0.0",
@@ -25,15 +25,27 @@
     "electron:dev": "npm run build:electron && electron electron.js",
     "build:exe": "npm run build:electron && electron-builder --win"
   },
+
  "build": {
-  "appId": "com.yourapp.id",
-  "productName": "KFI",
+  "appId": "com.kfi.app",
+  "productName": "KFIDekstopApp",
+  "directories": {
+    "output": "dist"
+  },
   "files": [
-    "out/**/*",
-    "electron.js"
+    "electron.js",
+    "package.json"
   ],
+  "extraResources": [
+    {
+      "from": "out",
+      "to": "out"
+    }
+  ],
+  "asar": false,
   "win": {
-    "target": "nsis"
+    "target": "nsis",
+    "icon": "public/icon.ico"
   }
 },
   "dependencies": {
