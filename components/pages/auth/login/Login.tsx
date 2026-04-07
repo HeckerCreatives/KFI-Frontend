@@ -21,14 +21,21 @@ import { useRouter } from 'next/navigation';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import bcrypt from "bcryptjs";
+import { useHistory } from 'react-router-dom';
 
 
-const Login = () => {
+interface LoginProps {
+  onLoginSuccess: () => void;
+}
+
+const Login = ({ onLoginSuccess }: LoginProps) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const online = useOnlineStore((state) => state.online);
   const setOnline = useOnlineStore((state) => state.setOnline);
     const [present] = useIonToast();
+const history = useHistory();
+
   
 
   const form = useForm<LoginFormData>({
@@ -61,15 +68,7 @@ const Login = () => {
 
 
 const onSubmit = async (data: LoginFormData) => {
-  // helper to handle navigation across platforms
-  const navigate = (path: string) => {
-    if (isPlatform('capacitor') || isPlatform('electron')) {
-      window.location.href = path; // ← use hash instead of href
-    } else {
-      window.location.href = path;
-    }
-  };
-
+ 
   if (online) {
     try {
       setLoading(true);
@@ -101,7 +100,7 @@ const onSubmit = async (data: LoginFormData) => {
             (item: any) => item.resource === 'dashboard'
           )?.actions?.visible;
 
-          navigate(hasDashboard ? '/dashboard/home' : '/dashboard/kfi');
+          onLoginSuccess();
         }
       }
 
@@ -110,7 +109,6 @@ const onSubmit = async (data: LoginFormData) => {
         error?.response?.data?.error ||
         error?.response?.data?.msg ||
         error.message;
-
       present({ message: errs, duration: 1000 });
     } finally {
       setLoading(false);
@@ -146,7 +144,7 @@ const onSubmit = async (data: LoginFormData) => {
           (item: any) => item.resource === 'dashboard'
         )?.actions?.visible;
 
-        navigate(hasDashboard ? '/dashboard/home' : '/dashboard/kfi');
+          onLoginSuccess();
       }
     }
   }

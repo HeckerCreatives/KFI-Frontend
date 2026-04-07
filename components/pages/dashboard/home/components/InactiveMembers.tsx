@@ -31,8 +31,9 @@ export type TData = {
 
 const InactiveMembers = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isView, setIsView] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-    const [year, setYear] = useState<string>('2026')
+   const [year, setYear] = useState<string>(new Date().getFullYear().toString())
   
   
     const [data, setData] = useState<TData>({
@@ -111,7 +112,7 @@ const InactiveMembers = ({ title, icon, value, loading = false, details = false 
             <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full max-w-64 rounded-xl flex items-start justify-between overflow-hidden">
                   <div className=" relative z-10 space-y-2">
                     <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">{title}</div>
-                    <div className="text-3xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : value}</div>
+                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : value}</div>
                   </div>
                  
                   <div className=' flex flex-col items-end justify-between'>
@@ -168,7 +169,7 @@ const InactiveMembers = ({ title, icon, value, loading = false, details = false 
                     
 
                             <TableCell>
-                                <InactiveMemberlist year={item.year} month={item.month} status='inactive'/>
+                                <InactiveMemberlist year={item.year} month={item.month} status='inactive' setIsOpen={setIsOpen} isView={isView} setIsView={setIsView}/>
                             </TableCell>
                         </TableRow>
                       ))}

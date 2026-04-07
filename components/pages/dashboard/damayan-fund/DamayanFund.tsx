@@ -22,6 +22,7 @@ import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
 import { formatDFForUpload, formatELList } from '../../../ui/utils/fomatData';
 import { db } from '../../../../database/db';
 import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TData = {
   damayanFunds: DamayanFundType[];
@@ -376,7 +377,7 @@ const DamayanFund = () => {
                 </Table>
               </div>
 
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+          <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
             </div>
           </div>

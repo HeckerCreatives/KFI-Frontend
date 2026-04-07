@@ -1,6 +1,6 @@
 'use client';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
-import { IonReactHashRouter } from '@ionic/react-router'; // ← change this
+import { IonReactHashRouter } from '@ionic/react-router';
 import { Route, Redirect } from 'react-router-dom';
 import Login from './pages/auth/login/Login';
 import Tabs from './pages/Tabs';
@@ -12,8 +12,6 @@ setupIonicReact({});
 const AppShell = () => {
   const [authChecked, setAuthChecked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const online = useOnlineStore((state) => state.online);
   const setOnline = useOnlineStore((state) => state.setOnline);
 
   useEffect(() => {
@@ -42,19 +40,19 @@ const AppShell = () => {
 
   return (
     <IonApp>
-      <IonReactHashRouter> {/* ← swapped */}
+      <IonReactHashRouter>
         <IonRouterOutlet id="main">
           <Route
             path="/"
             exact
             render={() =>
-              isLoggedIn ? <Redirect to="/dashboard" /> : <Login />
+              isLoggedIn ? <Redirect to="/dashboard/home" /> : <Login onLoginSuccess={() => setIsLoggedIn(true)} />
             }
           />
           <Route
             path="/dashboard"
             render={() =>
-              isLoggedIn ? <Tabs /> : <Redirect to="/" />
+              isLoggedIn ? <Tabs onLogout={() => setIsLoggedIn(false)} /> : <Redirect to="/" />
             }
           />
         </IonRouterOutlet>

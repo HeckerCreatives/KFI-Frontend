@@ -10,6 +10,7 @@ import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
+import Paginations from '../../../../ui/common/PaginationsV2';
 
 type DashboardCardProps = {
   title: string;
@@ -122,7 +123,7 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
               <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full max-w-64 rounded-xl flex items-start justify-between overflow-hidden">
                   <div className=" relative z-10 space-y-2">
                     <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total Loans</div>
-                    <div className="text-3xl text-orange-600 !font-bold">{totalLoans.toLocaleString()}</div>
+                    <div className="text-xl text-orange-600 !font-bold">{totalLoans.toLocaleString()}</div>
                   </div>
                  
                   <div className=' flex flex-col items-end justify-between'>
@@ -219,7 +220,7 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
                  
 
                    {data.clients.length !== 0 && (
-                 <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+                 <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
                 )}
          </div>

@@ -1,0 +1,11 @@
+[2026-04-06T11:32:20.782Z] App ready, isDev: true
+[2026-04-06T11:32:20.857Z] isDev: true
+[2026-04-06T11:32:20.858Z] outDir: C:\Users\User\Documents\GitHub\KFI-Frontend\out
+[2026-04-06T11:32:20.860Z] indexPath: C:\Users\User\Documents\GitHub\KFI-Frontend\out\index.html
+[2026-04-06T11:32:20.861Z] exists: true
+[2026-04-06T11:32:21.196Z] ready-to-show fired
+[2026-04-06T11:32:21.419Z] did-finish-load fired
+[2026-04-06T11:32:21.421Z] loadFile resolved
+[2026-04-06T11:32:21.748Z] NOT FOUND: C:\fonts\Poppins-Regular.otf
+[2026-04-06T11:32:21.751Z] NOT FOUND: C:\fonts\Poppins-Bold.otf
+[2026-04-06T11:32:21.752Z] NOT FOUND: C:\fonts\Poppins-Medium.otf

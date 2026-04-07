@@ -26,6 +26,7 @@ import { filterAndSortClients } from '../../../ui/utils/sort';
 import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 import ReportProgress from '../../../ui/common/report-progress';
 import TestPrintAllClient from './modals/Test';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TClientMasterFile = {
   clients: ClientMasterFileType[];
@@ -489,7 +490,7 @@ const ClientMasterFile = () => {
 
                 
               </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+          <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
                {!data.loading && data.clients.length < 1 &&(
                   <p className=' text-xs text-zinc-800 w-full text-center mt-4'>No Client Record Found</p>   

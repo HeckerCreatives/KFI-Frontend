@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Minus, X, Download, File, Trash } from 'lucide-react';
+import { Minus, X, Download, File, Trash, XIcon } from 'lucide-react';
 import { Job, useJobStore } from '../../store/fileQueStore';
 
 
@@ -159,29 +159,34 @@ export const FileQueue = () => {
                   <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><Trash size={15}/></button>
 
                   ): (
-                  <svg
-                  className="animate-spin text-zinc-500"
-                  width={15}
-                  height={15}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    d="M12 2a10 10 0 0 1 10 10"
-                    stroke=" #71717a"
-                    strokeOpacity={0.4}
-                  />
-                  <path
-                    strokeLinecap="round"
-                    d="M12 2a10 10 0 0 1 10 10"
-                    stroke=" #71717a"
-                    strokeDasharray="15 45"
-                  />
-                </svg>
+                    <div className=' flex gap-2'>
+                        <svg
+                        className="animate-spin text-zinc-500"
+                        width={15}
+                        height={15}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          d="M12 2a10 10 0 0 1 10 10"
+                          stroke=" #71717a"
+                          strokeOpacity={0.4}
+                        />
+                        <path
+                          strokeLinecap="round"
+                          d="M12 2a10 10 0 0 1 10 10"
+                          stroke=" #71717a"
+                          strokeDasharray="15 45"
+                        />
+                      </svg>
+                    <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
 
+
+                    </div>
+                
                   )}
                   </>
                 )}

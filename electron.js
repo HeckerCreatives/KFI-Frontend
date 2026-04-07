@@ -63,8 +63,8 @@ app.whenReady().then(() => {
   });
 
   const win = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1440,
+    height: 840,
     show: true,
     webPreferences: {
       nodeIntegration: true,
@@ -73,7 +73,7 @@ app.whenReady().then(() => {
     },
   });
 
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   const indexPath = path.join(outDir, 'index.html');
   log('Loading: ' + indexPath);

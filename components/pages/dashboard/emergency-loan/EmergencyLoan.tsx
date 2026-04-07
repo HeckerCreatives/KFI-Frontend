@@ -22,6 +22,7 @@ import { db } from '../../../../database/db';
 import { formatELList, formatEVList } from '../../../ui/utils/fomatData';
 import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
 import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TData = {
   emergencyLoans: EmergencyLoanType[];
@@ -376,7 +377,7 @@ const EmergencyLoan = () => {
                   </TableBody>
                 </Table>
               </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+          <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
             </div>
           </div>

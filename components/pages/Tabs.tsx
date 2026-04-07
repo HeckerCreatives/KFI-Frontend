@@ -1,4 +1,4 @@
-import { Redirect, Route, useLocation } from 'react-router-dom';
+import { Redirect, Route, useHistory, useLocation } from 'react-router-dom';
 import {
   IonRouterOutlet,
   IonHeader,
@@ -92,6 +92,7 @@ import ReportProgress from '../ui/common/report-progress';
 import { useJobStore } from '../../store/fileQueStore';
 import { FileQueue } from './QueWidget';
 import CollapsibleSidebar from './Sidebar';
+import { on } from 'node:process';
 
 type NavLink = {
   path?: string;
@@ -100,6 +101,10 @@ type NavLink = {
   icon?: React.ReactNode; 
   children?: NavLink[];
 };
+
+interface TabsProps {
+  onLogout: () => void;
+}
 
 
 
@@ -198,10 +203,10 @@ export const navLinks: NavLink[] = [
 
 
 
-const Tabs = () => {
+const Tabs = ({ onLogout }: TabsProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
-  const pathname = usePathname();
-  const location = useLocation();
+const history = useHistory();
+const location = useLocation();
   const router = useRouter()
 
   const permissions: Permission[] = JSON.parse(localStorage.getItem('permissions') || '[]')
@@ -213,40 +218,14 @@ const Tabs = () => {
   const [showQueue, setShowQueue] = useState(true); 
 
 
-  const logout = () => {
-    localStorage.removeItem('auth');
-    if (isPlatform('capacitor')) {
-      (window as any).location.reload(true);
-    } else if (isPlatform('electron')) {
-      (window as any).ipcRenderer.send('reload-window');
-    } else {
-      (window as any).location.reload();
-    }
-  };
+const logout = () => {
+  localStorage.removeItem('auth');
+  localStorage.removeItem('user');
+  localStorage.removeItem('role');
+  localStorage.removeItem('permissions');
 
-  const openMenu = async () => {
-    await menuController.open("main-menu");
-  };
-
-  const isParentActive = (link: NavLink): boolean => {
-  if (!link.children) return location.pathname === link.path;
-  return link.children.some(child =>
-    child.children
-      ? child.children.some(grand => location.pathname === grand.path)
-      : location.pathname === child.path
-  );
+  onLogout();
 };
-
-  const handleDownload = (fileUrl: string) => {
-    if (!fileUrl) return
-
-    const a = document.createElement('a')
-    a.href = fileUrl
-    a.download = 'all-clients.pdf'
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-  }
 
 
   return (

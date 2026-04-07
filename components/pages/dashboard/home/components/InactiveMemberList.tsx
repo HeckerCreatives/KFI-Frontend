@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonIcon, IonInput, IonModal, IonSelect, IonSelectOption, IonToolbar } from '@ionic/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { UserMultiple02Icon, ViewIcon} from 'hugeicons-react';
 import DashboardCard from './DashboardCard';
@@ -10,6 +10,7 @@ import kfiAxios from '../../../../utils/axios';
 import { TABLE_LIMIT } from '../../../../utils/constants';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
+import Paginations from '../../../../ui/common/PaginationsV2';
 
 type DashboardCardProps = {
   title: string;
@@ -31,11 +32,16 @@ export type TClientMasterFile = {
   year: number,
   month: number,
   status: string,
+  setIsView: React.Dispatch<React.SetStateAction<boolean>>
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isView: boolean
  }
-const InactiveMemberlist = ({year, month, status} : Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+const InactiveMemberlist = ({year, month, status, setIsOpen, isView, setIsView} : Props) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-    const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('')
+  const trigger = `inactive-${year}-${month}`
+  const modal = useRef<HTMLIonModalElement>(null);
+    
     
     
       const [data, setData] = useState<TClientMasterFile>({
@@ -83,15 +89,16 @@ const InactiveMemberlist = ({year, month, status} : Props) => {
   
       useEffect(() => {
         setCurrentPage(1)
-           if(isOpen){
+           if(modal.current){
             const timer = setTimeout(() => {
              getClients(currentPage);
            }, 500);
            return () => clearTimeout(timer);
            }
-         }, [isOpen, search]);
+         }, [modal, search]);
   const dismiss = () => {
-    setIsOpen(false);
+    modal.current?.dismiss();
+    setIsOpen(true)
     setSearch('')
     setCurrentPage(1)
   };
@@ -102,15 +109,20 @@ const InactiveMemberlist = ({year, month, status} : Props) => {
   return (
     <>
       <IonButton
-        onClick={() => setIsOpen(true)}
+        onClick={() => {setIsOpen(false)}}
         type="button"
         fill="clear"
+        id={trigger}
         className=" bg-orange-50 rounded-lg w-20 h-2! ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
       >
         <ViewIcon size={25} stroke='.8' className="text-xs" />
         &nbsp;View
       </IonButton>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className=" [--border-radius:0.7rem] auto-height [--max-width:90rem] [--width:95%]">
+      <IonModal
+        ref={modal}
+        trigger={trigger}
+        backdropDismiss={false}
+      className=" [--border-radius:0.7rem] auto-height [--max-width:90rem] [--width:95%]">
         {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Loan Details" sub="System" dismiss={dismiss} />
@@ -189,7 +201,7 @@ const InactiveMemberlist = ({year, month, status} : Props) => {
                             <TableCell>{item?.name}</TableCell>
                             <TableCell>{item?.sex}</TableCell>
                             <TableCell>{item?.acctNumber}</TableCell>
-                            <TableCell>{item?.dateRelease}</TableCell>
+                            <TableCell>{item?.dateRelease?.split('T')[0] || ''}</TableCell>
                             <TableCell>{item.center?.centerNo}</TableCell>
                             <TableCell>{item?.acctOfficer}</TableCell>
                          
@@ -207,7 +219,7 @@ const InactiveMemberlist = ({year, month, status} : Props) => {
 
              
                    {data.clients.length !== 0 && (
-                 <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+                 <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
                 )}
          </div>

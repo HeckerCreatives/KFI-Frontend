@@ -23,6 +23,7 @@ import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
 import { formatLoanReleaseForUpload, formatLoanReleaseList } from '../../../ui/utils/fomatData';
 import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 import Reports from './modals/Reports';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TData = {
   transactions: Transaction[];
@@ -379,7 +380,7 @@ const LoanRelease = () => {
                   </TableBody>
                 </Table>
 
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
               </div>
             </div>

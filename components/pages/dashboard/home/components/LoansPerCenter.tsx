@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import SearchInput from '../../../../ui/forms/InputSearch';
 import { ChevronDownIcon, X } from 'lucide-react';
+import Paginations from '../../../../ui/common/PaginationsV2';
 
 type TSearch = {
   keyword: string;
@@ -391,7 +392,7 @@ useEffect(() => {
         
       </div>
       <div>
-        <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+        <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
       </div>
     </div>
   );

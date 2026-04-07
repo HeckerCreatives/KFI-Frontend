@@ -11,6 +11,7 @@ import { ClientMasterFile, TTableFilter } from '../../../../../types/types';
 import kfiAxios from '../../../../utils/axios';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
+import Paginations from '../../../../ui/common/PaginationsV2';
 
 type DashboardCardProps = {
   title: string;
@@ -158,7 +159,8 @@ const ActiveMemberlist = ({year, month, status}: Props) => {
                             <TableCell>{item?.name}</TableCell>
                             <TableCell>{item?.sex}</TableCell>
                             <TableCell>{item?.acctNumber}</TableCell>
-                            <TableCell>{item?.dateRelease}</TableCell>
+                            <TableCell>{item?.dateRelease?.split('T')[0] || ''}</TableCell>
+                            
                             <TableCell>{item.center?.centerNo}</TableCell>
                             <TableCell>{item?.acctOfficer}</TableCell>
                          
@@ -176,7 +178,7 @@ const ActiveMemberlist = ({year, month, status}: Props) => {
                  
 
                 {data.clients.length !== 0 && (
-                 <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+                 <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
                 )}
 
