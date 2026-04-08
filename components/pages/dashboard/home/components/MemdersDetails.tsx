@@ -33,6 +33,7 @@ export type TData = {
 const ViewMemberDetails = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openList, setOpenList] = useState(false);
+  const [view, setView] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [year, setYear] = useState<string>(new Date().getFullYear().toString())
   const [selected, setSelected] = useState<any>()
@@ -337,7 +338,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
         </div>
       </IonModal>
 
-      <ViewMemberListInfo year={selected?.year} month={selected?.month} openList={openList} setOpenList={setOpenList} setIsOpen={setIsOpen}/>
+      <ViewMemberListInfo year={selected?.year} month={selected?.month} openList={openList} setOpenList={setOpenList} setIsOpen={setIsOpen} view={view} setView={setView}/>
 
 
 

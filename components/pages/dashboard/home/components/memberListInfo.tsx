@@ -11,8 +11,9 @@ import kfiAxios from '../../../../utils/axios';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import Paginations from '../../../../ui/common/PaginationsV2';
-import { ArrowDown, ArrowLeft, ArrowUp } from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowUp, Eye } from 'lucide-react';
 import ViewClientMasterFile from './ViewClientMasterFile';
+import UpdateClientMasterFile from './UpdateClientMasterFile';
 
 
 export type TClientMasterFile = {
@@ -27,7 +28,9 @@ export type TClientMasterFile = {
   year: number,
   month: number,
   openList: boolean,
+  view: boolean,
   setOpenList: React.Dispatch<React.SetStateAction<boolean>>
+  setView: React.Dispatch<React.SetStateAction<boolean>>
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
  }
 
@@ -42,13 +45,14 @@ export type TClientMasterFile = {
 
 
 
-const ViewMemberListInfo = ({year, month, openList, setOpenList, setIsOpen}: Props) => {
+const ViewMemberListInfo = ({year, month, openList, setOpenList, setIsOpen, view, setView}: Props) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [search, setSearch] = useState('')
   const [gender, setGender] = useState('all')
   const [status, setStatus] = useState('all')
   const [date, setDate] = useState('')
   const [sortKey, setSortKey] = useState<string[]>(['name-asc']);
+  const [selected, setSelected] = useState<any>()
   
   
     const [data, setData] = useState<TClientMasterFile>({
@@ -318,6 +322,7 @@ const ViewMemberListInfo = ({year, month, openList, setOpenList, setIsOpen}: Pro
                         <TableHead className="  !font-[600] bg-zinc-100">Date Release</TableHead>
                        
                         <TableHead className="  !font-[600] bg-zinc-100">Acct. Officer</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">Status</TableHead>
                         <TableHead className="  !font-[600] bg-zinc-100">Action</TableHead>
                     </TableHeadRow>
                     </TableHeader>
@@ -337,7 +342,19 @@ const ViewMemberListInfo = ({year, month, openList, setOpenList, setIsOpen}: Pro
                             <TableCell className=' capitalize'>{item?.sex}</TableCell>
                             <TableCell>{item?.dateRelease?.split('T')[0] || ''}</TableCell>
                             <TableCell>{item?.acctOfficer}</TableCell>
-                            <TableCell><ViewClientMasterFile member={item}/></TableCell>
+                            <TableCell>{item?.status}</TableCell>
+                            <TableCell>
+                               <IonButton
+                               onClick={() => {setView(true), setOpenList(false), setSelected(item)}}
+                               type="button"
+                               fill="clear"
+                              className=" capitalize text-sm !text-zinc-700 w-fit bg-orange-50"
+                             >
+                               <Eye size={20} className=' mr-1'/>
+                               <span>View</span>
+                             </IonButton>
+                              {/* <ViewClientMasterFile member={item}/> */}
+                            </TableCell>
                         </TableRow>
                       )) }
 
@@ -359,6 +376,12 @@ const ViewMemberListInfo = ({year, month, openList, setOpenList, setIsOpen}: Pro
         
         </div>
       </IonModal>
+      {selected && (
+      <UpdateClientMasterFile client={selected} view={view} setView={setView} setOpenList={setOpenList}/>
+
+      )}
+
+
     </>
   );
 };

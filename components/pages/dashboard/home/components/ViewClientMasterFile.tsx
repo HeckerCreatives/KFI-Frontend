@@ -94,7 +94,7 @@ const ViewClientMasterFile = ({ member }: { member: ClientMasterFile }) => {
             </div>
 
             <div className=' w-full flex items-end justify-end'>
-              <UpdateClientMasterFile client={member}/>
+              {/* <UpdateClientMasterFile client={member}/> */}
 
             </div>
 

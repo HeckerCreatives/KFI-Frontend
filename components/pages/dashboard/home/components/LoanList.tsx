@@ -48,6 +48,9 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selected, setSelected] = useState<Transaction>()
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [hover, setHover] = useState('');
+
   
      const [search, setSearch] = useState('')
        
@@ -95,7 +98,6 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
        const handlePagination = (page: number) => setCurrentPage(page);
      
          useEffect(() => {
-          setCurrentPage(1)
               if(openList){
                const timer = setTimeout(() => {
                 getClients(currentPage);
@@ -104,12 +106,17 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
               }
             }, [openList, search, currentPage]);
 
+            useEffect(() => {
+              setCurrentPage(1)
+            },[openList, search])
+
 
      const dismiss = () => {
        setOpenList(false);
        setSearch('')
      };
-   
+
+  
 
 
 
@@ -155,17 +162,7 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
            
 
                 <div className=' w-full flex items-end  justify-end mt-4'>
-                    <div className=' flex items-end gap-2'>
-                      <IonButton
-                           
-                            type="button"
-                            fill="clear"
-                            className=" btn-color text-white mb-4 rounded-lg w-20 h-2! ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
-                          >
-                          <Plus size={15} className=' mr-1'/>
-                          Add
-                    </IonButton>
-                    </div>
+                    
                     
                     <div className=' flex items-center gap-2'>
                      <div className=' flex flex-col gap-1'>
@@ -183,11 +180,12 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
                    </div>
                 </div>
 
-                 <div className=' w-full overflow-x-auto'>
-                  <Table className=" w-full border-collapse mt-4">
+                 <div className=' w-full !overflow-visible'>
+                  <Table className=" w-full border-collapse mt-4 !overflow-visible">
                     <TableHeader className=" bg-white backdrop-blur-sm shadow-sm">
                     <TableHeadRow>
                         <TableHead className="!font-[400] border-b border-gray-200">Code</TableHead>
+                        <TableHead className="!font-[400] border-b border-gray-200">Clients</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Date</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Amount</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Action</TableHead>
@@ -204,6 +202,39 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
                             <TableCell>{item.code}</TableCell>
+                            <TableCell>{(() => {
+                              const uniqueNames = [...new Set(item.entries?.map((entry) => entry.client?.name).filter(Boolean) || [])];
+                              const displayNames = uniqueNames.slice(0, 2);
+                              const hasMore = uniqueNames.length > 2;
+                              return (
+                                <div className=' flex items-center gap-1'>
+                                  {displayNames.join(', ')},
+                                  {hasMore ? (
+                                    <div className='relative z-[99] group'>
+                                      <p 
+                                        className=' text-xs text-orange-400 cursor-pointer hover:underline'
+                                        onMouseEnter={() => {setShowTooltip(true), setHover(item.code)}}
+                                        onClick={() => {setShowTooltip(true), setHover(item.code)}}
+                                        onMouseLeave={() => setShowTooltip(false)}
+                                      >
+                                        See all
+                                      </p>
+                                      {(showTooltip && hover === item.code) &&  (
+                                        <div className='absolute bottom-full left-0 mb-2 bg-gray-800 text-white text-xs rounded-md p-4 whitespace-nowrap z-50 shadow-lg flex flex-col gap-1'>
+                                          {uniqueNames.slice(0, 15).map((item) => (
+                                            <p key={item}>{item}</p>
+                                          ))}
+                                         
+                                        </div>
+                                      )}
+                                    </div>
+                                  ): (
+                                    ''
+                                  )}
+
+                                </div>
+                              )
+                            })()}</TableCell>
                             <TableCell>{item.date.split('T')[0]}</TableCell>
                             <TableCell>{Number(item?.amount).toLocaleString()}</TableCell>
                             <TableCell>

@@ -63,6 +63,7 @@ export interface ClientMasterFile {
   dateResigned: string;
   groupNumber: GroupAccount;
   memberStatus: string;
+  status?: string;
   mobileNo: string;
   name: string;
   newStatus: string;

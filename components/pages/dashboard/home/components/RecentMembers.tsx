@@ -242,7 +242,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
     </div>
 
     </div>
-                          </div>
+  </div>
    
    
   );

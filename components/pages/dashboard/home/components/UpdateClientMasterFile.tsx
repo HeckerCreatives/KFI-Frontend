@@ -14,15 +14,18 @@ import { jwtDecode } from 'jwt-decode';
 import classNames from 'classnames';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
-import { Edit } from 'lucide-react';
+import { ArrowLeft, Edit, Eye } from 'lucide-react';
 import { TClientMasterFile } from '../../client-master-file/ClientMasterFile';
 import CMFPersonalForm from './CMFPersonalForm';
 
 type UpdateClientMasterFileProps = {
   client: ClientMasterFile;
+  view: boolean,
+  setView: React.Dispatch<React.SetStateAction<boolean>>
+  setOpenList: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const UpdateClientMasterFile = ({ client }: UpdateClientMasterFileProps) => {
+const UpdateClientMasterFile = ({ client, view, setView, setOpenList }: UpdateClientMasterFileProps) => {
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
 
@@ -107,7 +110,8 @@ const UpdateClientMasterFile = ({ client }: UpdateClientMasterFileProps) => {
   }, [client, form]);
 
   function dismiss() {
-    form.reset();
+    form.reset()
+    setView(false)
     modal.current?.dismiss();
     form.setValue('clientImage', '')
   }
@@ -192,25 +196,26 @@ const UpdateClientMasterFile = ({ client }: UpdateClientMasterFileProps) => {
   return (
     <>
      
-      <IonButton
-        type="button"
-        id={`update-cmf-modal-${client._id}`}
-        fill="clear"
-        className=" capitalize text-sm !text-white w-fit btn-color !rounded-lg"
-      >
-        <Edit size={20} className=' mr-1'/>
-        <span>Edit</span>
-      </IonButton>
+      
       <IonModal
-        ref={modal}
-        trigger={`update-cmf-modal-${client._id}`}
+       isOpen={view}
         backdropDismiss={false}
         className=" [--border-radius:0.35rem] auto-height [--max-width:74rem] [--width:100%]"
       >
         
         <div className="inner-content !p-6">
+
+            <IonButton
+                  onClick={() => {setView(false), setOpenList(true)}}
+                  type="button"
+                  fill="clear"
+                  className=" bg-orange-50 mb-4 rounded-lg w-20 h-2! ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
+                >
+                 <ArrowLeft size={15} className=' mr-1'/>
+                Back
+          </IonButton>
          
-            <ModalHeader disabled={loading} title="Client - Edit Record" sub="Manage client record." dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Client Record" sub="Manage client record." dismiss={dismiss} />
 
 
           <form onSubmit={form.handleSubmit(onSubmit) }>
