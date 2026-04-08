@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonIcon, IonPage, IonSpinner, isPlatform, useIonRouter, useIonToast } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../ui/utils/FormIonItem';
 import InputText from '../../../ui/forms/InputText';
@@ -49,6 +49,17 @@ const history = useHistory();
 
     },
   });
+
+   useEffect(() => {
+      const handleOnline = () => setOnline(true);
+      const handleOffline = () => setOnline(false);
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+      return () => {
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
+      };
+    }, [setOnline]);
 
   // const getDeviceName = async (): string => {
   //   if (!Capacitor.isNativePlatform()) return 'Web Browser';

@@ -21,7 +21,7 @@ clientImage: z
 
 
   name: z.string().min(1, 'Name is required')
-  .max(20, "Name must not exceed 20 characters"),
+  .max(40, "Name must not exceed 20 characters"),
   address: z.string().min(1, 'Address is required')
   .max(100, "Address must not exceed 100 characters"),
   city: z.string().min(1, 'City is required')

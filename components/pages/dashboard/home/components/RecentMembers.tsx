@@ -152,7 +152,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
                             </IonSelect>
                           </div>
 
-                           <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2 ">
+                           {/* <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap lg:justify-end gap-2 ">
                             <div className="flex items-center min-w-20 overflow-visible!">
                               <FormIonItem className="flex-1 overflow-visible!">
 
@@ -168,7 +168,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
                               </FormIonItem>
                              
                             </div>
-                          </form>
+                          </form> */}
     
                           
                         </div>

@@ -5,12 +5,16 @@ import { UserMultiple02Icon, ViewIcon} from 'hugeicons-react';
 import DashboardCard from './DashboardCard';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from "../../../../ui/table/Table"
 import TablePagination from '../../../../ui/forms/TablePagination';
-import { ClientMasterFile, TTableFilter } from '../../../../../types/types';
+import { ClientMasterFile, Transaction, TTableFilter } from '../../../../../types/types';
 import { TABLE_LIMIT } from '../../../../utils/constants';
 import kfiAxios from '../../../../utils/axios';
 import TableNoRows from '../../../../ui/forms/TableNoRows';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import Paginations from '../../../../ui/common/PaginationsV2';
+import ViewLoans from './ViewLoans';
+import { ArrowLeft, Plus } from 'lucide-react';
+import ViewLoanRelease from './ViewLoanRelease';
+import { eye } from 'ionicons/icons';
 
 type DashboardCardProps = {
   title: string;
@@ -20,33 +24,41 @@ type DashboardCardProps = {
   details?: boolean
 };
 
-export type TClientMasterFile = {
-  clients: any[];
+export type TData = {
+  transactions: Transaction[];
   totalPages: number;
   nextPage: boolean;
   prevPage: boolean;
   loading: boolean;
 };
 
- type Props = {
+type Props = {
   year: number,
   month: number,
-  totalLoans: number
- }
-const Loanlist = ({year, month, totalLoans}: Props) => {
+  totalLoans: number,
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setOpenList: React.Dispatch<React.SetStateAction<boolean>>
+  setView: React.Dispatch<React.SetStateAction<boolean>>
+  view: boolean,
+  openList: boolean,
+}
+
+
+const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view, openList}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selected, setSelected] = useState<Transaction>()
   
      const [search, setSearch] = useState('')
        
        
-         const [data, setData] = useState<TClientMasterFile>({
-           clients: [],
-           loading: false,
-           totalPages: 0,
-           nextPage: false,
-           prevPage: false,
-         });
+        const [data, setData] = useState<TData>({
+             transactions: [],
+             loading: false,
+             totalPages: 0,
+             nextPage: false,
+             prevPage: false,
+           });
      
            const getClients = async (page: number, keyword: string = '',) => {
                setData(prev => ({ ...prev, loading: true }));
@@ -58,14 +70,14 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
                  if (month) filter.month = month;
                  if (search) filter.search = search
                  const result = await kfiAxios.get('/transaction/loans/transactions-by-month', { params: filter });
-                 const { success, customers, hasPrevPage, hasNextPage, totalPages, data } = result.data;
+                 const { success, data } = result.data;
                  if (data.success) {
                    setData(prev => ({
                      ...prev,
-                     clients: data.data,
-                     totalPages: data.pagination.totalPages,
-                     nextPage: data.pagination.hasNextPage,
-                     prevPage: data.pagination.hasPrevPage,
+                     transactions: data.transactions,
+                     totalPages: data.totalPages,
+                     nextPage: data.hasNextPage,
+                     prevPage: data.hasPrevPage,
                    }));
                    setCurrentPage(page);
                    return;
@@ -80,19 +92,21 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
              };
          
      
-       const handlePagination = (page: number) => getClients(page);
+       const handlePagination = (page: number) => setCurrentPage(page);
      
          useEffect(() => {
           setCurrentPage(1)
-              if(isOpen){
+              if(openList){
                const timer = setTimeout(() => {
                 getClients(currentPage);
               }, 500);
               return () => clearTimeout(timer);
               }
-            }, [isOpen, search]);
+            }, [openList, search, currentPage]);
+
+
      const dismiss = () => {
-       setIsOpen(false);
+       setOpenList(false);
        setSearch('')
      };
    
@@ -101,22 +115,23 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
 
   return (
     <>
-      <IonButton
-        onClick={() => setIsOpen(true)}
-        type="button"
-        fill="clear"
-        className=" bg-orange-50 rounded-lg w-20 h-2! ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
-      >
-        <ViewIcon size={25} stroke='.8' className="text-xs" />
-        &nbsp;View
-      </IonButton>
-      <IonModal isOpen={isOpen} backdropDismiss={false} className=" [--border-radius:0.7rem] auto-height [--max-width:90rem] [--width:95%]">
+     
+      <IonModal isOpen={openList} backdropDismiss={false} className=" [--border-radius:0.7rem] auto-height [--max-width:90rem] [--width:95%]">
         {/* <IonHeader>
           <IonToolbar className=" text-white [--min-height:1rem] h-12">
             <ModalHeader title="Loan Details" sub="System" dismiss={dismiss} />
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6">
+           <IonButton
+                  onClick={() => {setOpen(true), setOpenList(false)}}
+                  type="button"
+                  fill="clear"
+                  className=" bg-orange-50 mb-4 rounded-lg w-20 h-2! ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
+                >
+                 <ArrowLeft size={15} className=' mr-1'/>
+                Back
+          </IonButton>
             <ModalHeader title="Loan List" sub="" dismiss={dismiss} />
 
          <div className=' w-full flex flex-col'>
@@ -139,34 +154,17 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
                 </div>
            
 
-                <div className=' w-full flex items-end  justify-between mt-4'>
-                    <div className=' flex items-center gap-2'>
-                        {/* <IonInput
-                        name="year"
-                        type='number'
-                        placeholder="Year..."
-                        className=" text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400  !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border "
-                        /> */}
-
-                       {/* <IonSelect
-                        placeholder="Month"
-                        labelPlacement="stacked"
-                        interface="popover"
-                        className="!border border-zinc-400 rounded-md !min-h-[1rem] [--highlight-color-focused:none] !px-2 !py-2 text-xs !overflow-y-auto w-[12rem] !max-w-[24rem] !max-h-[18rem]"
-                        >
-                        <IonSelectOption value="January" className="text-xs">January</IonSelectOption>
-                        <IonSelectOption value="February" className="text-xs">February</IonSelectOption>
-                        <IonSelectOption value="March" className="text-xs">March</IonSelectOption>
-                        <IonSelectOption value="April" className="text-xs">April</IonSelectOption>
-                        <IonSelectOption value="May" className="text-xs">May</IonSelectOption>
-                        <IonSelectOption value="June" className="text-xs">June</IonSelectOption>
-                        <IonSelectOption value="July" className="text-xs">July</IonSelectOption>
-                        <IonSelectOption value="August" className="text-xs">August</IonSelectOption>
-                        <IonSelectOption value="September" className="text-xs">September</IonSelectOption>
-                        <IonSelectOption value="October" className="text-xs">October</IonSelectOption>
-                        <IonSelectOption value="November" className="text-xs">November</IonSelectOption>
-                        <IonSelectOption value="December" className="text-xs">December</IonSelectOption>
-                        </IonSelect> */}
+                <div className=' w-full flex items-end  justify-end mt-4'>
+                    <div className=' flex items-end gap-2'>
+                      <IonButton
+                           
+                            type="button"
+                            fill="clear"
+                            className=" btn-color text-white mb-4 rounded-lg w-20 h-2! ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
+                          >
+                          <Plus size={15} className=' mr-1'/>
+                          Add
+                    </IonButton>
                     </div>
                     
                     <div className=' flex items-center gap-2'>
@@ -192,23 +190,34 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
                         <TableHead className="!font-[400] border-b border-gray-200">Code</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Date</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Amount</TableHead>
+                        <TableHead className="!font-[400] border-b border-gray-200">Action</TableHead>
                        
                     </TableHeadRow>
                     </TableHeader>
 
                     <TableBody>
-                       {!data.loading && data.clients.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
+                       {!data.loading && data.transactions.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
 
-                      {!data.loading && data.clients.length !== 0 && data.clients.map((item) => (
+                      {!data.loading && data.transactions.length !== 0 && data.transactions.map((item) => (
                          <TableRow
                         key={item._id}
                             className="!border-1 [&>td]:text-[0.7rem]"
                         >
-                            <TableCell>{item?.code}</TableCell>
-                            <TableCell>{item?.date.split('T')[0]}</TableCell>
+                            <TableCell>{item.code}</TableCell>
+                            <TableCell>{item.date.split('T')[0]}</TableCell>
                             <TableCell>{Number(item?.amount).toLocaleString()}</TableCell>
-                           
-                         
+                            <TableCell>
+                                <IonButton
+                                      type="button"
+                                      fill="clear"
+                                      className="space-x-1 rounded-md w-20 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
+                                      onClick={() => {setView(true), setSelected(item), setOpenList(false)}}
+                                    >
+                                      <IonIcon icon={eye} className="text-xs" />
+                                      <span>View</span>
+                                    </IonButton>
+                            </TableCell>
+
                         </TableRow>
                       )) }
 
@@ -219,7 +228,7 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
 
                  
 
-                   {data.clients.length !== 0 && (
+                   {data.transactions.length !== 0 && (
                  <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
                 )}
@@ -227,6 +236,15 @@ const Loanlist = ({year, month, totalLoans}: Props) => {
         
         </div>
       </IonModal>
+
+      {selected && (
+      <ViewLoanRelease transaction={selected} view={view} setView={setView} setOpenList={setOpenList}/>
+
+      )}
+
+
+
+
     </>
   );
 };

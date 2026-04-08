@@ -28,10 +28,14 @@ export type TData = {
   nextPage: boolean;
   prevPage: boolean;
 };
+
+
 const ViewMemberDetails = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [openList, setOpenList] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [year, setYear] = useState<string>(new Date().getFullYear().toString())
+  const [selected, setSelected] = useState<any>()
   
     const [data, setData] = useState<TData>({
       data: [],
@@ -44,6 +48,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
 
   const dismiss = () => {
     setIsOpen(false);
+    setYear(new Date().getFullYear().toString())
   };
 
    const getData = async () => {
@@ -83,6 +88,33 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
 
   const handlePagination = (page: number) => (page);
 
+  const totalStatusCounts = data.data.reduce((acc, curr) => {
+    const counts = curr.statusCounts || {};
+
+    Object.entries(counts).forEach(([key, value]) => {
+      acc[key] = (acc[key] || 0) + Number(value || 0);
+    });
+
+    return acc;
+  }, {} as Record<string, number>);
+
+  const activeTotal =
+    totalStatusCounts["Active On-Leave"] +
+    totalStatusCounts["Active-Existing"] +
+    totalStatusCounts["Active-New"] +
+    totalStatusCounts["Active-PastDue"] +
+    totalStatusCounts["Active-Returnee"];
+
+  const totalMembers =
+    totalStatusCounts["Active On-Leave"] +
+    totalStatusCounts["Active-Existing"] +
+    totalStatusCounts["Active-New"] +
+    totalStatusCounts["Active-PastDue"] +
+    totalStatusCounts["Active-Returnee"] +
+    totalStatusCounts["Resigned"]
+
+  const resignedTotal = totalStatusCounts["Resigned"];
+
 
   return (
     <>
@@ -103,11 +135,31 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
         <div className="inner-content !p-6">
             <ModalHeader title="Total Members" sub="" dismiss={dismiss} />
 
-         <div className=' w-full flex flex-col'>
-            <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full max-w-64 rounded-xl flex items-start justify-between overflow-hidden">
+         <div className=' w-full flex flex-col gap-4'>
+
+          <div className=' w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 '>
+             <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full rounded-xl flex items-start justify-between overflow-hidden">
                   <div className=" relative z-10 space-y-2">
                     <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">{title}</div>
-                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : value}</div>
+                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : Number(totalMembers || 0).toLocaleString()}</div>
+                  </div>
+                 
+                  <div className=' flex flex-col items-end justify-between'>
+                    <div className=" relative z-10 bg-orange-50 w-10 h-10 rounded-full flex items-center justify-center text-orange-500">
+                    {icon}
+                    </div>
+            
+                 
+                  </div>
+                  
+            
+                 
+              </div>
+
+               <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full  rounded-xl flex items-start justify-between overflow-hidden">
+                  <div className=" relative z-10 space-y-2">
+                    <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total Inactive</div>
+                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : Number(resignedTotal || 0).toLocaleString()}</div>
                   </div>
                  
                   <div className=' flex flex-col items-end justify-between'>
@@ -122,17 +174,87 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                  
                 </div>
 
+                <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full rounded-xl flex items-start justify-between overflow-hidden">
+                  <div className=" relative z-10 space-y-2">
+                    <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total Resigned</div>
+                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : Number(resignedTotal ?? 0).toLocaleString()}</div>
+                  </div>
+                 
+                  <div className=' flex flex-col items-end justify-between'>
+                    <div className=" relative z-10 bg-orange-50 w-10 h-10 rounded-full flex items-center justify-center text-orange-500">
+                    {icon}
+                    </div>
+            
+                 
+                  </div>
+                  
+            
+                 
+                </div>
+
+                <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full rounded-xl flex items-start justify-between overflow-hidden">
+                  <div className=" relative z-10 space-y-2">
+                    <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total On-Leave</div>
+                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : Number(totalStatusCounts['Active On-Leave'] ?? 0).toLocaleString()}</div>
+                  </div>
+                 
+                  <div className=' flex flex-col items-end justify-between'>
+                    <div className=" relative z-10 bg-orange-50 w-10 h-10 rounded-full flex items-center justify-center text-orange-500">
+                    {icon}
+                    </div>
+                  </div>
+                </div>
+
+                 <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full rounded-xl flex items-start justify-between overflow-hidden">
+                  <div className=" relative z-10 space-y-2">
+                    <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total Returnee</div>
+                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : Number(totalStatusCounts['Active-Returnee'] ?? 0).toLocaleString()}</div>
+                  </div>
+                 
+                  <div className=' flex flex-col items-end justify-between'>
+                    <div className=" relative z-10 bg-orange-50 w-10 h-10 rounded-full flex items-center justify-center text-orange-500">
+                    {icon}
+                    </div>
+                  </div>
+                </div>
+
+                <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full rounded-xl flex items-start justify-between overflow-hidden">
+                  <div className=" relative z-10 space-y-2">
+                    <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total Pastdue</div>
+                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : Number(totalStatusCounts['Active-PastDue'] ?? 0).toLocaleString()}</div>
+                  </div>
+                 
+                  <div className=' flex flex-col items-end justify-between'>
+                    <div className=" relative z-10 bg-orange-50 w-10 h-10 rounded-full flex items-center justify-center text-orange-500">
+                    {icon}
+                    </div>
+                  </div>
+                </div>
+          </div>
+           
+
                 <div className=' w-full flex flex-col items-end justify-end'>
-                  <div className=' flex flex-col gap-1'>
-                    <p className=' text-xs'>Search</p>
-                    <IonInput
-                      name="year"
-                      type="number"
+                  <div className="flex flex-col gap-1">
+                    <p className="text-xs">Year</p>
+
+                    <select
                       value={year}
-                      onIonInput={(e) => setYear(String(e.target.value))}
-                      placeholder="Search year ..."
-                      className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
-                    />
+                      
+                      onChange={(e) => setYear(e.target.value)}
+                      className="text-xs p-2 rounded-md border border-zinc-400 bg-white w-[6rem]"
+                    >
+                      {Array.from(
+                        { length: new Date().getFullYear() - 2010 + 1 },
+                        (_, i) => {
+                          const y = Number(new Date().getFullYear()) - i;
+                          return (
+                            <option key={y} value={y}>
+                              {y}
+                            </option>
+                          );
+                        }
+                      )}
+                    </select>
                   </div>
                   
                 </div>
@@ -143,13 +265,20 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                         <TableHead className="!font-[400] border-b border-gray-200">Year</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Month</TableHead>
                         <TableHead className="  !font-[600] bg-zinc-100">No. of Members</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of Active New</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of Active Existing</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of Resigned</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of On-Leave</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of Returnee</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">No. of Pastdue</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Action</TableHead>
+
                     </TableHeadRow>
                     </TableHeader>
 
                     <TableBody>
-                    {data.loading && <TableLoadingRow colspan={5} />}
-                    {!data.loading && data.data.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
+                    {data.loading && <TableLoadingRow colspan={16} />}
+                    {!data.loading && data.data.length < 1 && <TableNoRows label="No Record Found" colspan={16} />}
                     
 
 
@@ -161,22 +290,57 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                             <TableCell>{item.year}</TableCell>
                             <TableCell>{item.monthLabel.split(' ')[0]}</TableCell>
                             <TableCell>{Number(item.memberCount).toLocaleString()}</TableCell>
+                            <TableCell>
+                              {Number(item.statusCounts["Active-New"]).toLocaleString()}
+                            </TableCell>
+                            <TableCell>
+                              {Number(item.statusCounts["Active-Existing"]).toLocaleString()}
+                            </TableCell>
+                            <TableCell>
+                              {Number(item.statusCounts["Resigned"]).toLocaleString()}
+                            </TableCell>
+                            <TableCell>
+                              {Number(item.statusCounts["Active On-Leave"]).toLocaleString()}
+                            </TableCell>
+                             <TableCell>
+                              {Number(item.statusCounts["Active-Returnee"]).toLocaleString()}
+                            </TableCell>
+                             <TableCell>
+                              {Number(item.statusCounts["Active-PastDue"]).toLocaleString()}
+                            </TableCell>
+
 
                             <TableCell>
-                                <ViewMemberListInfo year={item.year} month={item.month}/>
+                              <IonButton
+                                  onClick={() => {setSelected(item), setOpenList(true), setIsOpen(false)}}
+                                  type="button"
+                                  fill="clear"
+                                  className=" bg-orange-50 rounded-lg w-20 h-2! ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
+                                >
+                                  <ViewIcon size={25} stroke='.8' className="text-xs" />
+                                  &nbsp;View
+                                </IonButton>
+
                             </TableCell>
                         </TableRow>
                       ))}
+
                     
-                      
                     </TableBody>
                 </Table>
 
                  {/* <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} /> */}
+
+
          </div>
         
         </div>
       </IonModal>
+
+      <ViewMemberListInfo year={selected?.year} month={selected?.month} openList={openList} setOpenList={setOpenList} setIsOpen={setIsOpen}/>
+
+
+
     </>
   );
 };

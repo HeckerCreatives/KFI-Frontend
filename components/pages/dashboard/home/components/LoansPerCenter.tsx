@@ -12,7 +12,7 @@ import { formatNumber } from '../../../../ui/utils/formatNumber';
 import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import SearchInput from '../../../../ui/forms/InputSearch';
-import { ChevronDownIcon, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronDownIcon, X } from 'lucide-react';
 import Paginations from '../../../../ui/common/PaginationsV2';
 
 type TSearch = {
@@ -37,9 +37,21 @@ export type TRecentMember = {
   loading: boolean;
 };
 
+const SORTS = {
+  CENTER_ASC: 'name-asc',
+  CENTER_DESC: 'name-desc',
+  MEMBERS_ASC: 'members-asc',
+  MEMBERS_DESC: 'members-desc',
+  AMOUNT_ASC: 'amount-asc',
+  AMOUNT_DESC: 'amount-desc',
+}
+
+
 const LoansPerCenter = () => {
   const arrDummy: string[] = Array.from(Array(10)).fill('');
   const ionInputRef = useRef<HTMLIonInputElement>(null);
+  const [sortKey, setSortKey] = useState<string>('');
+  
 
   const [present] = useIonToast();
   
@@ -72,7 +84,7 @@ const LoansPerCenter = () => {
     setData(prev => ({ ...prev, loading: true }));
     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-      const result = await kfiAxios.get('/statistics/loans-per-center', { params: { ...filter, keyword: code, center: centerData } });
+      const result = await kfiAxios.get('/statistics/loans-per-center', { params: { ...filter, keyword: code, center: centerData, sort: sortKey } });
       const { success, loans, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({
@@ -114,7 +126,7 @@ const LoansPerCenter = () => {
        const getData = async () => {
 
       try {
-        const result = await kfiAxios.get('/statistics/loans-per-center', { params: { limit: 5, keyword: code, page: 1, center: center } });
+        const result = await kfiAxios.get('/statistics/loans-per-center', { params: { limit: 5, keyword: code, page: 1, center: center, sort: sortKey } });
         const { success, loans, hasPrevPage, hasNextPage, totalPages } = result.data;
         if (success) {
           setItems(loans.map((item: any) => item.acctOfficer));
@@ -135,7 +147,7 @@ const LoansPerCenter = () => {
 
     return () => clearTimeout(timer);
    
-  }, [code, center]);
+  }, [code, center, sortKey]);
 
   // state additions
 const [centerSearch, setCenterSearch] = useState('');
@@ -325,9 +337,78 @@ useEffect(() => {
               <TableHeader>
                 <TableHeadRow className="!bg-white !border-0">
                   <TableHead className=" !font-[600]">Account Officer</TableHead>
-                  <TableHead className=" !font-[400] text-start">Center</TableHead>
-                  <TableHead className=" !font-[400]">Total Members</TableHead>
-                  <TableHead className=" !font-[400]">Total Loan Amount</TableHead>
+                  <TableHead className=" !font-[400] text-start">
+                     <div className="flex items-center gap-6">
+                           Center
+                           {sortKey === SORTS.CENTER_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CENTER_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.CENTER_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CENTER_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CENTER_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                  </TableHead>
+                  <TableHead className=" !font-[400]">
+                     <div className="flex items-center gap-6">
+                           Total Members
+                           {sortKey === SORTS.MEMBERS_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.MEMBERS_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.MEMBERS_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.MEMBERS_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.MEMBERS_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                  </TableHead>
+                  <TableHead className=" !font-[400]">
+                    <div className="flex items-center gap-6">
+                           Total Loan Amount
+                           {sortKey === SORTS.AMOUNT_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.AMOUNT_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.AMOUNT_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.AMOUNT_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.AMOUNT_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                  </TableHead>
                   {/* <TableHead className=" !font-[400]">Date</TableHead> */}
                   
                 </TableHeadRow>

@@ -5,38 +5,27 @@ import { eye } from 'ionicons/icons';
 import { Transaction } from '../../../../../types/types';
 import { formatDateTable } from '../../../../utils/date-utils';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
-import LoanReleaseViewCard from './LoanReleaseViewCard';
-import ViewEntries from './ViewEntries';
+import LoanReleaseViewCard from '../modals/LoanReleaseViewCard';
+import ViewEntries from '../modals/ViewEntries';
+import { ArrowLeft } from 'lucide-react';
 
-const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
+
+const ViewLoanRelease = ({ transaction, view, setView, setOpenList }: { transaction: Transaction, view: boolean, setView: React.Dispatch<React.SetStateAction<boolean>>, setOpenList: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
 
   function dismiss() {
-    setIsOpen(false);
+    setView(false);
   }
 
 
   return (
     <>
-      {/* <div
-        onClick={() => setIsOpen(true)}
-        className="w-full flex items-center justify-start gap-2 text-sm font-semibold cursor-pointer active:bg-slate-200 hover:bg-slate-50 text-slate-600 px-2 py-1"
-      >
-        <IonIcon icon={eye} className="text-[1rem]" /> View
-      </div> */}
-      <IonButton
-        type="button"
-        fill="clear"
-        className="space-x-1 rounded-md w-20 h-7 ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  bg-orange-100 text-orange-900 capitalize min-h-4 text-xs"
-        onClick={() => setIsOpen(true)}
-      >
-        <IonIcon icon={eye} className="text-xs" />
-        <span>View</span>
-      </IonButton>
+     
+    
       <IonModal
-        isOpen={isOpen}
+        isOpen={view}
         trigger={`view-leanRelease-modal-${transaction._id}`}
         backdropDismiss={false}
         className=" [--border-radius:0.35rem] auto-height [--max-width:84rem] [--width:95%]"
@@ -47,6 +36,15 @@ const ViewLoanRelease = ({ transaction }: { transaction: Transaction }) => {
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content h-[80vh] !p-6 space-y-1 flex flex-col">
+           <IonButton
+                  onClick={() => {setOpenList(true), setView(false)}}
+                  type="button"
+                  fill="clear"
+                  className=" bg-orange-50 mb-4 rounded-lg w-20 h-2! ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
+                >
+                 <ArrowLeft size={15} className=' mr-1'/>
+                Back
+          </IonButton>
             <ModalHeader title="Loan - View Record" sub="Manage loan release records." dismiss={dismiss} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 !mt-4">

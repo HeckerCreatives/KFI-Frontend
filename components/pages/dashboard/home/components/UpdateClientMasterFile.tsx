@@ -2,14 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { IonButton, IonModal, IonHeader, IonToolbar, IonIcon, useIonToast, IonItem } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import ModalHeader from '../../../../ui/page/ModalHeader';
-import CMFPersonalForm from '../components/CMFPersonalForm';
 import { ClientMasterFileFormData, clientMasterFileSchema } from '../../../../../validations/client-master-file.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import kfiAxios from '../../../../utils/axios';
 import { AccessToken, ClientMasterFile, TErrorData, TFormError } from '../../../../../types/types';
 import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
-import { TClientMasterFile } from '../ClientMasterFile';
 import { formatDateInput } from '../../../../utils/date-utils';
 import { createSharp } from 'ionicons/icons';
 import { jwtDecode } from 'jwt-decode';
@@ -17,15 +15,14 @@ import classNames from 'classnames';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
 import { Edit } from 'lucide-react';
+import { TClientMasterFile } from '../../client-master-file/ClientMasterFile';
+import CMFPersonalForm from './CMFPersonalForm';
 
 type UpdateClientMasterFileProps = {
   client: ClientMasterFile;
-  setData: React.Dispatch<React.SetStateAction<TClientMasterFile>>;
-  getClientsOffline: (page: number, keyword?: string, sort?: string) => void;
-
 };
 
-const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateClientMasterFileProps) => {
+const UpdateClientMasterFile = ({ client }: UpdateClientMasterFileProps) => {
   const [loading, setLoading] = useState(false);
   const [present] = useIonToast();
 
@@ -121,19 +118,14 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
   if (online) {
     // ONLINE UPDATE
     try {
-      const result = await kfiAxios.put(`/customer/${client._id}`, data, {
+      const result = await kfiAxios.put(`/customer/${client.id}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       const { success } = result.data;
 
       if (success) {
-        setData(prev => {
-          let clone = [...prev.clients];
-          let index = clone.findIndex(e => e._id === result.data.customer._id);
-          clone[index] = { ...result.data.customer };
-          return { ...prev, clients: clone };
-        });
+      
 
         dismiss();
         present({
@@ -187,7 +179,6 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
         message: "Client record updated.",
         duration: 1200,
       });
-      getClientsOffline(1)
 
     } catch (err) {
       console.error("Offline edit failed:", err);
@@ -205,7 +196,7 @@ const UpdateClientMasterFile = ({ client, setData, getClientsOffline }: UpdateCl
         type="button"
         id={`update-cmf-modal-${client._id}`}
         fill="clear"
-        className=" capitalize text-sm !text-zinc-700 w-fit"
+        className=" capitalize text-sm !text-white w-fit btn-color !rounded-lg"
       >
         <Edit size={20} className=' mr-1'/>
         <span>Edit</span>

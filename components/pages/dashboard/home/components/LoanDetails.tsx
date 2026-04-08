@@ -30,8 +30,11 @@ export type TData = {
 };
 const LoanDetails = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [openList, setOpenList] = useState(false);
+  const [view, setView] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
    const [year, setYear] = useState<string>(new Date().getFullYear().toString())
+   const [selected, setSelected] = useState<any>()
   
   
     const [data, setData] = useState<TData>({
@@ -122,17 +125,28 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
                 </div>
 
                 <div className=' w-full flex items-end justify-end'>
-                   <div className=' flex flex-col gap-1'>
-                                                                             <p className=' text-xs'>Search</p>
-                                                                             <IonInput
-                                                                               name="year"
-                                                                               type="number"
-                                                                               value={year}
-                                                                               onIonInput={(e) => setYear(String(e.target.value))}
-                                                                               placeholder="Search year ..."
-                                                                               className="text-xs !p-2 !min-h-[1rem] w-fit rounded-md !border-zinc-400 !bg-white ![--background:white] md:![--padding-bottom:2] ![--padding-top:2] ![--padding-start:2] border"
-                                                                             />
-                                                                           </div>
+                  <div className="flex flex-col gap-1">
+                    <p className="text-xs">Year</p>
+
+                    <select
+                      value={year}
+                      
+                      onChange={(e) => setYear(e.target.value)}
+                      className="text-xs p-2 rounded-md border border-zinc-400 bg-white w-[6rem]"
+                    >
+                     {Array.from(
+                        { length: new Date().getFullYear() - 2010 + 1 },
+                        (_, i) => {
+                          const y = Number(new Date().getFullYear()) - i;
+                          return (
+                            <option key={y} value={y}>
+                              {y}
+                            </option>
+                          );
+                        }
+                      )}
+                    </select>
+                  </div>
                 </div>
 
                 <div className=' w-full overflow-x-auto'>
@@ -141,6 +155,7 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
                     <TableHeadRow>
                         <TableHead className="!font-[400] border-b border-gray-200">Year</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Month</TableHead>
+                        <TableHead className="  !font-[600] bg-zinc-100">Number of Loans</TableHead>
                         <TableHead className="  !font-[600] bg-zinc-100">Total Loans</TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Action</TableHead>
                     </TableHeadRow>
@@ -159,13 +174,24 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
                         >
                             <TableCell>{item.year}</TableCell>
                             <TableCell>{item.monthLabel.split(' ')[0]}</TableCell>
+                            <TableCell>{Number(item.memberCount).toLocaleString()}</TableCell>
                             <TableCell>{Number(item.totalAmount).toLocaleString()}</TableCell>
-
+                            
                             <TableCell>
-                                <Loanlist year={item.year} month={item.month} totalLoans={Number(item.totalAmount)}/>
+                               <IonButton
+                                    onClick={() => {setOpenList(true), setSelected(item), setIsOpen(false)}}
+                                    type="button"
+                                    fill="clear"
+                                    className=" bg-orange-50 rounded-lg w-20 h-2! ![--padding-start:0] ![--padding-end:0] ![--padding-top:0] ![--padding-bottom:0]  capitalize text-xs"
+                                  >
+                                    <ViewIcon size={25} stroke='.8' className="text-xs" />
+                                    &nbsp;View
+                                  </IonButton>
                             </TableCell>
                         </TableRow>
                       ))}
+
+                      
                     
                       
                     </TableBody>
@@ -179,6 +205,9 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
         
         </div>
       </IonModal>
+
+      <Loanlist year={selected?.year} month={selected?.month} totalLoans={Number(selected?.totalAmount || 0)} setOpen={setIsOpen} setOpenList={setOpenList} setView={setView} view={view} openList={openList} />
+
     </>
   );
 };
