@@ -540,8 +540,11 @@ export type Center = {
   description: string;
   location: string;
   centerChief: string;
+  centerChiefName: string;
   treasurer: string;
+  treasurerName: string;
   acctOfficer: string;
+  acctOfficerName: string;
   createdAt: string;
 };
 

@@ -24,6 +24,7 @@ import { formatLoanReleaseForUpload, formatLoanReleaseList } from '../../../ui/u
 import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 import Reports from './modals/Reports';
 import Paginations from '../../../ui/common/PaginationsV2';
+import { set } from 'react-hook-form';
 
 export type TData = {
   transactions: Transaction[];
@@ -63,6 +64,9 @@ const LoanRelease = () => {
   const [to, setTo] = useState<string>('');
   const online = useOnlineStore((state) => state.online);
   const [uploading, setUploading] = useState<boolean>(false)
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [hover, setHover] = useState<string | undefined>(undefined);
+  const [hasMore, setasMore] = useState(false);
 
   const [data, setData] = useState<TData>({
     transactions: [],
@@ -195,11 +199,11 @@ const LoanRelease = () => {
                     <LoanReleaseFilter getTransactions={getTransactions} setSearchKey={setSearchKey} suggestions={data.transactions.map((item) => item.code)} setTo={setTo} setFrom={setFrom} />
                   </div>
                 </div>
-              <div className="relative overflow-auto rounded-xl mt-4">
-                <Table>
+              <div className={`relative ${hasMore ? ' !overflow-visible' : ' overflow-auto'} rounded-xl mt-4`}>
+                <Table className={`${hasMore ? ' !overflow-visible' : ' overflow-auto'}`}>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead className="min-w-44 max-w-44 sticky left-0">
+                      <TableHead className="min-w-44 max-w-44 ">
                           <div className="flex items-center gap-6">
                            CV No.
                            {sortKey === SORTS.CVNO_ASC ? (
@@ -222,6 +226,9 @@ const LoanRelease = () => {
                              />
                            )}
                          </div>
+                      </TableHead>
+                      <TableHead className="min-w-44 max-w-44 sticky left-0">
+                        Clients
                       </TableHead>
                       <TableHead>
                          <div className="flex items-center gap-6">
@@ -354,7 +361,41 @@ const LoanRelease = () => {
                       data.transactions.map((transaction: Transaction, i: number) => (
                         <TableRow key={transaction._id}>
                           <TableCell className="min-w-44 max-w-44 sticky left-0 bg-white">{transaction.code ?? transaction.cvNo}</TableCell>
+                          <TableCell>{(() => {
+                              const uniqueNames = [...new Set(transaction.entries?.map((entry) => entry.client?.name).filter(Boolean) || [])];
+                              const displayNames = uniqueNames.slice(0, 2);
+                              const hasMore = uniqueNames.length > 2;
+                              return (
+                                <div className=' flex items-center gap-1'>
+                                  {displayNames.join(', ')}
+                                  {hasMore ? (
+                                    <div className={`relative z-[99 + ${i}] group`}>
+                                      <p 
+                                        className=' text-xs text-orange-400 cursor-pointer hover:underline'
+                                        onMouseEnter={() => {setShowTooltip(true), setHover(transaction?._id || transaction?.id), setasMore(true)}}
+                                        onClick={() => {setShowTooltip(true), setHover(transaction?._id || transaction?.id), setasMore(true)}}
+                                        onMouseLeave={() => {setShowTooltip(false), setHover(''), setasMore(false)}}
+                                      >
+                                        See all
+                                      </p>
+                                      {(showTooltip && hover === transaction._id || transaction.id) &&  (
+                                        <div className='absolute top-full mb-2 bg-gray-800 text-white text-xs rounded-md p-4 whitespace-nowrap z-50 shadow-lg flex flex-col gap-1'>
+                                          {uniqueNames.slice(0, 10).map((item) => (
+                                            <p key={item}>{item}</p>
+                                          ))}
+                                         
+                                        </div>
+                                      )}
+                                    </div>
+                                  ): (
+                                    ''
+                                  )}
+
+                                </div>
+                              )
+                            })()}</TableCell>
                           <TableCell>{formatDateTable(transaction.date)}</TableCell>
+                          
                           <TableCell className="max-w-52 truncate">{transaction.bank?.description}</TableCell>
                           <TableCell>{transaction.checkNo}</TableCell>
                           <TableCell>{formatMoney(transaction.amount)}</TableCell>
@@ -380,9 +421,14 @@ const LoanRelease = () => {
                   </TableBody>
                 </Table>
 
+              {data.transactions.length !== 0 && (
                 <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
-              </div>
+              )}
+
+
+            </div>
+            <div className=' w-full h-[300px]'></div>
             </div>
           </div>
         </div>

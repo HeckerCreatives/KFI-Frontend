@@ -296,8 +296,8 @@ const ClientMasterFile = () => {
 
 
   return (
-    <IonPage className=" w-full flex items-center justify-center h-full !pb-12  bg-zinc-100">
-      <IonContent className="[--background:#F4F4F5] max-w-[1920px] ">
+    <IonPage className=" w-full flex items-center justify-center !h-full pb-12 bg-zinc-100">
+      <IonContent className="[--background:#F4F4F5] max-w-[1920px]  ">
         <div className="h-full flex flex-col gap-4 py-6 items-stretch justify-start p-4 ">
          <div className=' space-y-1'>
               {/* <PageTitle pages={['Dashboard']} /> */}
@@ -490,7 +490,10 @@ const ClientMasterFile = () => {
 
                 
               </div>
+              {data.clients.length !== 0 && (
           <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+              )}
 
                {!data.loading && data.clients.length < 1 &&(
                   <p className=' text-xs text-zinc-800 w-full text-center mt-4'>No Client Record Found</p>   
@@ -506,7 +509,13 @@ const ClientMasterFile = () => {
 
 
             </div>
+
+            <div className=' w-full !h-[300px]'>
+
           </div>
+          </div>
+
+          
         </div>
       </IonContent>
     </IonPage>

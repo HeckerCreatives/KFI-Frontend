@@ -19,6 +19,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortCenter } from '../../../ui/utils/sort';
 import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TCenter = {
   centers: CenterType[];
@@ -243,9 +244,9 @@ const Center = () => {
                           <TableCell>{center.centerNo}</TableCell>
                           <TableCell>{center.description}</TableCell>
                           <TableCell>{center.location}</TableCell>
-                          <TableCell>{center.centerChief}</TableCell>
-                          <TableCell>{center.treasurer}</TableCell>
-                          <TableCell>{center.acctOfficer}</TableCell>
+                          <TableCell>{center.centerChief}  {center.centerChiefName}</TableCell>
+                          <TableCell>{center.treasurer}  {center.treasurerName}</TableCell>
+                          <TableCell>{center.acctOfficer}  {center.acctOfficerName}</TableCell>
                           {haveActions(token.role, 'center', permissions, ['update', 'delete', 'visible']) && (
                             <TableCell>
                               <CenterActions
@@ -266,9 +267,14 @@ const Center = () => {
                 </Table>
               </div>
 
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+              {data.centers.length !== 0 && (
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+              )}
+
 
             </div>
+            <div className=' w-full h-[300px]'></div>
           </div>
         </div>
       </IonContent>

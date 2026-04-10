@@ -19,6 +19,7 @@ import { filterAndSortBusinessTypes } from '../../../ui/utils/sort';
 import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 import { AxiosError } from 'axios';
 import { search } from 'ionicons/icons';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TBusinessType = {
   businessTypes: BusinessTypeInt[];
@@ -226,9 +227,15 @@ const BusinessType = () => {
                 </Table>
               </div>
 
-              <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+              
+              {data.businessTypes.length !== 0 && (
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+              )}
+
 
             </div>
+            <div className=' w-full h-[300px]'></div>
           </div>
         </div>
       </IonContent>

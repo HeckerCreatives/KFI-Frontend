@@ -17,6 +17,7 @@ import { filterAndSortNatures } from '../../../ui/utils/sort';
 import { Upload } from 'lucide-react';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../utils/permissions';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TNature = {
   natures: NatureType[];
@@ -185,9 +186,15 @@ const Nature = () => {
               </Table>
             </div>
 
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+         
+              {data.natures.length !== 0 && (
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
-          </div>
+              )}
+
+
+            </div>
+            <div className=' w-full h-[300px]'></div>
         </div>
       </IonContent>
     </IonPage>

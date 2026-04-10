@@ -9,6 +9,7 @@ import TablePagination from '../../../ui/forms/TablePagination';
 import TableLoadingRow from '../../../ui/forms/TableLoadingRow';
 import TableNoRows from '../../../ui/forms/TableNoRows';
 import { formatDateTable } from '../../../utils/date-utils';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TActivity = {
   logs: any[];
@@ -104,9 +105,15 @@ const LoginLogs = () => {
                 </TableBody>
               </Table>
             </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+         
+              {data.logs.length !== 0 && (
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
-          </div>
+              )}
+
+
+            </div>
+            <div className=' w-full h-[300px]'></div>
         </div>
       </IonContent>
     </IonPage>

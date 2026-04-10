@@ -41,6 +41,9 @@ const UpdateCenter = ({ center, setData }: { center: Center; setData: React.Disp
       centerChief: center.centerChief,
       treasurer: center.treasurer,
       acctOfficer: center.acctOfficer,
+      acctOfficerName: center.acctOfficerName,
+      centerChiefName: center.centerChiefName,
+      treasurerName: center.treasurerName,
     },
   });
 
@@ -53,6 +56,9 @@ const UpdateCenter = ({ center, setData }: { center: Center; setData: React.Disp
         centerChief: center.centerChief,
         treasurer: center.treasurer,
         acctOfficer: center.acctOfficer,
+        acctOfficerName: center.acctOfficerName,
+        centerChiefName: center.centerChiefName,
+        treasurerName: center.treasurerName,
       });
     }
   }, [center, form]);

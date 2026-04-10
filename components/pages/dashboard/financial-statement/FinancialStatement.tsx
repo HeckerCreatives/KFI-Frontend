@@ -19,6 +19,7 @@ import { TABLE_LIMIT } from '../../../utils/constants';
 import { db } from '../../../../database/db';
 import { filterAndSortGOA } from '../../../ui/utils/sort';
 import FSActions from './components/actions';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TFS = {
   financialStatements: FinancialStatements[];
@@ -166,11 +167,15 @@ const FinancialStatement = () => {
               </Table>
 
 
-              <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
-              
+            
+              {data.financialStatements.length !== 0 && (
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+              )}
 
 
-          </div>
+            </div>
+            <div className=' w-full h-[300px]'></div>
         </div>
       </IonContent>
     </IonPage>

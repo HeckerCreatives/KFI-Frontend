@@ -19,6 +19,7 @@ import { on } from 'events';
 import { db } from '../../../../database/db';
 import { filterAndSortCOA } from '../../../ui/utils/sort';
 import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TChartOfAccount = {
   chartOfAccounts: ChartOfAccountType[];
@@ -270,9 +271,15 @@ useEffect(() => {
                   </TableBody>
                 </Table>
               </div>
-              <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+            
+              {data.chartOfAccounts.length !== 0 && (
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+              )}
+
 
             </div>
+            <div className=' w-full h-[300px]'></div>
           </div>
         </div>
       </IonContent>

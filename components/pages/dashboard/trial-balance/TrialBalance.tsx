@@ -22,6 +22,7 @@ import { TABLE_LIMIT } from '../../../utils/constants';
 import { db } from '../../../../database/db';
 import { filterAndSortGOA } from '../../../ui/utils/sort';
 import TBActions from './components/actions';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TBS = {
   trialBalances: any[];
@@ -165,11 +166,14 @@ const TrialBalance = () => {
               </Table>
 
 
-              <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
               
+              {data.trialBalances.length !== 0 && (
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+              )}
 
 
-          </div>
+            </div>
+            <div className=' w-full h-[300px]'></div>
         </div>
       </IonContent>
     </IonPage>

@@ -84,7 +84,7 @@ const Paginations = ({
 
   return (
     <div className="w-full pb-3">
-      <div className="flex items-center justify-center py-1 px-5 rounded-md w-fit mx-auto">
+      <div className="flex flex-wrap items-center justify-center py-1 px-5 rounded-md w-fit mx-auto">
 
         {/* Prev */}
         <IonButton

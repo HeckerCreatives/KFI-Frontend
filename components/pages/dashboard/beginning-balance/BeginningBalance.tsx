@@ -17,6 +17,7 @@ import { TABLE_LIMIT } from '../../../utils/constants';
 import { db } from '../../../../database/db';
 import { filterAndSortGOA } from '../../../ui/utils/sort';
 import BBActions from './components/actions';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TBS = {
   beginningBalances: BegBalance[];
@@ -160,11 +161,15 @@ const BeginningBalance = () => {
               </Table>
 
 
-              <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
-              
+            
+              {data.beginningBalances.length !== 0 && (
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+              )}
 
 
-          </div>
+            </div>
+            <div className=' w-full h-[300px]'></div>
         </div>
       </IonContent>
     </IonPage>

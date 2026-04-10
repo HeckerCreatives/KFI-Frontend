@@ -544,7 +544,7 @@ const logout = () => {
                     <div className={`${online ? ' bg-green-400' : ' bg-red-600'} h-4 w-4 rounded-full absolute bottom-0 right-0 translate-y-1`}>
 
                     </div>
-                    {token.username.substring(0, 2)}
+                    {token.username.substring(0, 1)}
                   </div>
                 </IonButton>
               </div>

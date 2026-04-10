@@ -22,6 +22,7 @@ import { canDoAction } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { ArrowDown, ArrowUp, Circle, Dot } from 'lucide-react';
+import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TUser = {
   users: User[];
@@ -347,11 +348,17 @@ const Admin = () => {
                 </Table>
               </div>
 
-             
-                <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+             {data.users.length !==0 && (
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+
+             )}
 
 
             </div>
+
+            <div className=' w-full !h-[300px]'>
+
+          </div>
 
 
           </div>

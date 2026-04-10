@@ -33,6 +33,9 @@ const CreateCenter = ({ getCenters }: CreateCenterProps) => {
       centerChief: '',
       treasurer: '',
       acctOfficer: '',
+      acctOfficerName: '',
+      centerChiefName: '',
+      treasurerName: '',
     },
   });
 

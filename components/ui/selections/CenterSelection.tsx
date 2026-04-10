@@ -17,6 +17,7 @@ import { db } from '../../../database/db';
 type Option = {
   _id: string;
   code: any;
+  centerNo: any
   description: any;
   acctOfficer: string
 };
@@ -98,7 +99,8 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
               _id: center._id,
               code: center.centerNo || '',       
               description: center.description || '',
-              acctOfficer: center.acctOfficer
+              acctOfficer: center.acctOfficer,
+              centerNo: center.centerNo || '',
             }));
 
              if (value) {
@@ -146,7 +148,7 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
   const handleSelectCenter = async (center: Option) => {
     
 
-    const codeValue = center.code as PathValue<T, Path<T>>;
+    const codeValue = center.code as PathValue<T, Path<T>> || center.description as PathValue<T, Path<T>> || center.centerNo as PathValue<T, Path<T>>;
     const idValue = center._id as PathValue<T, Path<T>>;
     const officer = center.acctOfficer as PathValue<T, Path<T>>;
 
@@ -243,7 +245,7 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
                 {!loading &&
                   data.datas.map((data: Option) => (
                     <TableRow onClick={() => handleSelectCenter(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">{data.code}</TableCell>
+                      <TableCell className="">{data.code || data.centerNo}</TableCell>
                       <TableCell className="">{data.description}</TableCell>
                     </TableRow>
                   ))}

@@ -26,6 +26,7 @@ export type Loan = {
   description: string;
   location: string;
   acctOfficer: string;
+  acctOfficerName: string;
   members: number;
   loans: number;
 };
@@ -254,16 +255,16 @@ useEffect(() => {
                       <button
                         key={item._id}
                         onClick={() => {
-                          setCenter(item.description);
+                          setCenter(item.description || item.centerNo);
                           setShowCenterPicker(false);
                         }}
-                        className={`text-left px-4 py-2.5 text-xs hover:bg-orange-50 transition-colors ${
-                          center === item.description
-                            ? 'text-orange-500 font-medium bg-orange-50'
+                        className={`text-left px-4 py-2.5 text-xs text-black transition-colors ${
+                          center === item.description || item.centerNo
+                            ? ''
                             : 'text-gray-700'
                         }`}
                       >
-                        {item.description}
+                        {item.description || item.centerNo}
                       </button>
                     ))}
 
@@ -409,11 +410,10 @@ useEffect(() => {
                            )}
                          </div>
                   </TableHead>
-                  {/* <TableHead className=" !font-[400]">Date</TableHead> */}
                   
                 </TableHeadRow>
               </TableHeader>
-              <TableBody
+              {/* <TableBody
                 style={{ visibility: 'collapse' }}
               
               >
@@ -423,15 +423,14 @@ useEffect(() => {
                   data.loans.length > 0 &&
                   data.loans.map((loan: Loan, i: number) => (
                     <TableRow key={`${loan._id}-${i}`} className="!border-1 [&>td]:text-[0.7rem] py-2">
-                      <TableCell className="">{loan.acctOfficer}</TableCell>
+                      <TableCell className="">{loan.acctOfficer} ({loan.acctOfficerName || ''})</TableCell>
                       <TableCell className="">{loan.description}</TableCell>
                       <TableCell className="">{loan.members}</TableCell>
                       <TableCell className="">{formatNumber(loan.loans)}</TableCell>
-                     {/* <TableCell>{loan.createdAt?.split('T')[0] || ''}</TableCell> */}
 
                     </TableRow>
                   ))}
-              </TableBody>
+              </TableBody> */}
               
             </Table>
             </div>
@@ -442,11 +441,79 @@ useEffect(() => {
                 style={{ visibility: 'collapse' }}
                 
                 >
-                  <TableHead className=" !font-[600]">Account Officer</TableHead>
-                  <TableHead className=" !font-[400] text-start">Center</TableHead>
-                  <TableHead className=" !font-[400]">Total Members</TableHead>
-                  <TableHead className=" !font-[400]">Total Loan Amount</TableHead>
-                  {/* <TableHead className=" !font-[400]">Date</TableHead> */}
+                   <TableHead className=" !font-[600]">Account Officer</TableHead>
+                  <TableHead className=" !font-[400] text-start">
+                     <div className="flex items-center gap-6">
+                           Center
+                           {sortKey === SORTS.CENTER_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CENTER_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.CENTER_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CENTER_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.CENTER_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                  </TableHead>
+                  <TableHead className=" !font-[400]">
+                     <div className="flex items-center gap-6">
+                           Total Members
+                           {sortKey === SORTS.MEMBERS_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.MEMBERS_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.MEMBERS_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.MEMBERS_ASC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.MEMBERS_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                  </TableHead>
+                  <TableHead className=" !font-[400]">
+                    <div className="flex items-center gap-6">
+                           Total Loan Amount
+                           {sortKey === SORTS.AMOUNT_ASC ? (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.AMOUNT_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : sortKey === SORTS.AMOUNT_DESC ? (
+                             <ArrowDown
+                               size={15}
+                               onClick={() => setSortKey(SORTS.AMOUNT_DESC)}
+                               className="cursor-pointer"
+                             />
+                           ) : (
+                             <ArrowUp
+                               size={15}
+                               onClick={() => setSortKey(SORTS.AMOUNT_ASC)}
+                               className="cursor-pointer opacity-30"
+                             />
+                           )}
+                         </div>
+                  </TableHead>
 
                 </TableHeadRow>
               </TableHeader>
@@ -457,7 +524,10 @@ useEffect(() => {
                   data.loans.length > 0 &&
                   data.loans.map((loan: Loan, i: number) => (
                     <TableRow key={`${loan._id}-${i}`} className="!border-1 [&>td]:text-[0.7rem] py-2">
-                      <TableCell className="">{loan.acctOfficer}</TableCell>
+                      <TableCell className="">{loan.acctOfficer} 
+
+                        {loan.acctOfficerName ? `(${loan.acctOfficerName})` : ''}
+                      </TableCell>
                       <TableCell className="">{loan.description}</TableCell>
                       <TableCell className="">{loan.members}</TableCell>
                       <TableCell className="">{formatNumber(loan.loans)}</TableCell>

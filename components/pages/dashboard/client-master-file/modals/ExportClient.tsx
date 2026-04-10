@@ -1,5 +1,5 @@
 import { IonButton, IonHeader, IonIcon, IonModal, IonToolbar, useIonToast } from '@ionic/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import kfiAxios from '../../../../utils/axios';
 import ModalHeader from '../../../../ui/page/ModalHeader';
 import { ClientMasterFile } from '../../../../../types/types';
@@ -13,12 +13,19 @@ import InputText from '../../../../ui/forms/InputText';
 import InputRadio from '../../../../ui/forms/InputRadio';
 import LoanReleaseSelectionClient from '../../../../ui/selections/LoanReleaseSelectionClient';
 import { Download } from 'lucide-react';
+import { useJobStore } from '../../../../../store/fileQueStore';
+import { Socket, io } from 'socket.io-client';
 
 const ExportClient = ({ client }: { client: ClientMasterFile }) => {
   const [present] = useIonToast();
   const [loading, setLoading] = useState(false);
 
   const modal = useRef<HTMLIonModalElement>(null);
+  
+    const socketRef = useRef<Socket | null>(null)
+  const [jobId, setJobId] = useState('')
+  
+  const {addJob, updateJob} = useJobStore()
   
     
     const form = useForm<SoaFormData>({
@@ -33,42 +40,177 @@ const ExportClient = ({ client }: { client: ClientMasterFile }) => {
     modal.current?.dismiss();
   }
 
-  async function onSubmit(data:SoaFormData) {
-    setLoading(true);
-  if(data.type === 'print'){
-      try {
-      const result = await kfiAxios.get(`/customer/print/soa/${client._id}?loanReleaseId=${data.loanReleaseId}`, { responseType: 'blob' });
-       const pdfBlob = new Blob([result.data], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl, '_blank');
-      setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
-    } catch (error: any) {
-      present({
-        message: 'Failed to print the client profile records. Please try again',
-        duration: 1000,
+  useEffect(() => {
+       socketRef.current = io(`${process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5005'}`)
+   
+       const socket = socketRef.current
+   
+       socket.on('connect', () => {
+         console.log('Socket connected:', socket.id)
+       })
+   
+       return () => {
+         socket.disconnect()
+       }
+     }, [])
+   
+     useEffect(() => {
+     const socket = socketRef.current
+     if (!socket || !jobId) return
+     console.log('Joining job:', jobId)
+     socket.emit('join:report', jobId)
+     socket.off('report:progress')
+     socket.off('report:complete')
+   
+      const existing = useJobStore
+         .getState()
+         .jobs.find((j) => j.jobId === jobId)
+   
+       if (!existing) {
+         addJob({
+           jobId,
+           label: 'Client Soa',
+           type: form.watch('type') === 'print' ? 'print' : 'export',
+           progress: 0,
+           status: 'processing',
+           fileType: form.watch('type') === 'print' ? 'pdf' : 'excel',
+           file: '',
+           filename: '',
+         })
+       }
+   
+   
+       const handleProgress = (data: any) => {
+         if (data.jobId !== jobId) return
+         console.log('Progress event:', data)
+   
+         const percent = data.percent ?? data.progress ?? 0
+   
+   
+         updateJob(jobId, {
+           progress: percent,
+           status: 'processing',
+         })
+   
+       }
+   
+       const handleReady = (data: any) => {
+         if (data.jobId !== jobId) return;
+   
+         console.log('Ready:', data);
+   
+   
+         let url: string;
+         if (typeof data.file === 'string') {
+           const binary = atob(data.file);
+           const bytes = new Uint8Array(binary.length);
+           for (let i = 0; i < binary.length; i++) {
+             bytes[i] = binary.charCodeAt(i);
+           }
+           const blob = new Blob([bytes], { type: 'application/pdf' });
+           url = URL.createObjectURL(blob);
+         } else {
+           console.error('Expected base64 string, got:', typeof data.file);
+           return;
+         }
+   
+         updateJob(jobId, {
+           progress: 100,
+           status: 'done',
+           file: url,
+           filename: data.filename,
+           fileUrl: url,
+         });
+       };
+   
+        const handleError = (data: any) => {
+         if (data.jobId !== jobId) return
+         console.log('Error:', data)
+  
+        updateJob(jobId, {
+          status: 'error',
+        });
+   
+       }
+   
+   
+     socket.on('report:progress', handleProgress)
+     socket.on('report:ready', handleReady)
+     socket.on('report:error', handleError)
+   
+     return () => {
+       socket.off('report:progress', handleProgress)
+       socket.off('report:ready', handleReady)
+       socket.off('report:error', handleError)
+     }
+   }, [jobId])
+
+  async function onSubmit(data: SoaFormData) {
+  setLoading(true);
+
+  try {
+    if (data.type === 'print') {
+      const result = await kfiAxios.get(`/customer/print/soa/${client._id}`, {
+        params: { loanReleaseId: data.loanReleaseId },
+        responseType: 'arraybuffer',
+        validateStatus: (status: number) => [200, 202].includes(status),
       });
-    } finally {
-      setLoading(false);
-    }
-  } else if(data.type === 'export'){
-      try {
-      const result = await kfiAxios.get(`/customer/export/soa/${client._id}?loanReleaseId=${data.loanReleaseId}`, { responseType: 'blob' });
-       const url = window.URL.createObjectURL(new Blob([result.data]));
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'clients-soa.xlsx';
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } catch (error: any) {
-      present({
-        message: 'Failed to print the client profile records. Please try again',
-        duration: 1000,
+
+      if (result.status === 200) {
+        const blob = new Blob([result.data], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(blob);
+        const printWindow = window.open(pdfUrl, '_blank');
+        printWindow?.addEventListener('load', () => {
+          printWindow?.print();
+          URL.revokeObjectURL(pdfUrl);
+        });
+        dismiss()
+
+      } else if (result.status === 202) {
+        const text = new TextDecoder().decode(result.data);
+        const { jobId } = JSON.parse(text);
+        setJobId(jobId);
+        dismiss()
+      }
+
+    } else if (data.type === 'export') {
+      const result = await kfiAxios.get(`/customer/export/soa/${client._id}`, {
+        params: { loanReleaseId: data.loanReleaseId },
+        responseType: 'arraybuffer',
+        validateStatus: (status: number) => [200, 202].includes(status),
       });
-    } finally {
-      setLoading(false);
+
+      if (result.status === 200) {
+        const blob = new Blob([result.data], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'clients-soa.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        dismiss();
+
+      } else if (result.status === 202) {
+        const text = new TextDecoder().decode(result.data);
+        const { jobId } = JSON.parse(text);
+        setJobId(jobId);
+        dismiss();
+      }
     }
+
+  } catch (error: any) {
+    present({
+      message: 'Failed to process the client SOA. Please try again',
+      duration: 1000,
+    });
+  } finally {
+    setLoading(false);
   }
-  }
+}
 
 
   return (

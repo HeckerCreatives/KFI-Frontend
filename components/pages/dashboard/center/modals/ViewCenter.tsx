@@ -54,12 +54,15 @@ const ViewCenter = ({ center }: ViewCenterProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4">
             <div className="space-y-2">
               <ViewCenterCard label="Center Code" value={center.centerNo} labelClassName="text-end min-w-28" />
-              <ViewCenterCard label="Account Officer" value={center.acctOfficer} labelClassName="text-end min-w-28" />
               <ViewCenterCard label="Description" value={center.description} labelClassName="text-end min-w-28" />
+              <ViewCenterCard label="Account Officer Code" value={center.acctOfficer} labelClassName="text-end min-w-28" />
+              <ViewCenterCard label="Account Officer Name" value={center.acctOfficerName} labelClassName="text-end min-w-28" />
             </div>
             <div className="space-y-2">
-              <ViewCenterCard label="Center Chief" value={center.centerChief} labelClassName="text-end min-w-28" />
-              <ViewCenterCard label="Treasurer" value={center.treasurer} labelClassName="text-end min-w-28" />
+              <ViewCenterCard label="Center Chief Code" value={center.centerChief} labelClassName="text-end min-w-28" />
+              <ViewCenterCard label="Center Chief Name" value={center.centerChiefName} labelClassName="text-end min-w-28" />
+              <ViewCenterCard label="Treasurer Code" value={center.treasurer} labelClassName="text-end min-w-28" />
+              <ViewCenterCard label="Treasurer Name" value={center.treasurerName} labelClassName="text-end min-w-28" />
               <ViewCenterCard label="Location" value={center.location} labelClassName="text-end min-w-28" />
             </div>
           </div>

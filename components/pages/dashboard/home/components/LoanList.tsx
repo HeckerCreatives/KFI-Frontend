@@ -259,7 +259,7 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
 
                  
 
-                   {data.transactions.length !== 0 && (
+                   {(!data.loading && data.transactions.length !== 0) && (
                  <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
                 )}

@@ -63,6 +63,9 @@ const ExpenseVoucher = () => {
   const [to, setTo] = useState<string>('');
   const online = useOnlineStore((state) => state.online);
   const [uploading, setUploading] = useState<boolean>(false)
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [hover, setHover] = useState<string | undefined>(undefined);
+  const [hasMore, setasMore] = useState(false);
 
   const [data, setData] = useState<TData>({
     expenseVouchers: [],
@@ -198,8 +201,8 @@ useEffect(() => {
                   <ExpenseVoucherFilter getExpenseVouchers={getExpenseVouchers} setSortKey={setSortKey} setSearchKey={setSearchKey} suggestions={data.expenseVouchers.map((item) => item.code)} setTo={setTo} setFrom={setFrom} />
                 </div>
               </div>
-              <div className="relative overflow-auto rounded-xl mt-4">
-                <Table>
+              <div className={`relative ${hasMore ? ' !overflow-visible' : ' overflow-auto'} rounded-xl mt-4`}>
+                <Table className={`${hasMore ? ' !overflow-visible' : ' overflow-auto'}`}>
                   <TableHeader>
                     <TableHeadRow>
                         <TableHead className="min-w-44 max-w-44 sticky left-0">
@@ -226,6 +229,8 @@ useEffect(() => {
                            )}
                          </div>
                       </TableHead>
+                                           <TableHead className=' text-zinc-600'>Clients</TableHead>
+                     
                       <TableHead>
                          <div className="flex items-center gap-6">
                            Date
@@ -356,6 +361,39 @@ useEffect(() => {
                       data.expenseVouchers.map((expenseVoucher: ExpenseVoucherType, i: number) => (
                         <TableRow key={expenseVoucher._id}>
                           <TableCell>{expenseVoucher.code}</TableCell>
+                          <TableCell>{(() => {
+                              const uniqueNames = [...new Set(expenseVoucher.entries?.map((entry) => entry.client?.name).filter(Boolean) || [])];
+                              const displayNames = uniqueNames.slice(0, 2);
+                              const hasMore = uniqueNames.length > 2;
+                              return (
+                                <div className=' flex items-center gap-1'>
+                                  {displayNames.join(', ')}
+                                  {hasMore ? (
+                                    <div className={`relative z-[99 + ${i}] group`}>
+                                      <p 
+                                        className=' text-xs text-orange-400 cursor-pointer hover:underline'
+                                        onMouseEnter={() => {setShowTooltip(true), setHover(expenseVoucher?._id || expenseVoucher?.id), setasMore(true)}}
+                                        onClick={() => {setShowTooltip(true), setHover(expenseVoucher?._id || expenseVoucher?.id), setasMore(true)}}
+                                        onMouseLeave={() => {setShowTooltip(false), setHover(''), setasMore(false)}}
+                                      >
+                                        See all
+                                      </p>
+                                      {(showTooltip && hover === expenseVoucher._id || expenseVoucher.id) &&  (
+                                        <div className='absolute top-full mb-2 bg-gray-800 text-white text-xs rounded-md p-4 whitespace-nowrap z-50 shadow-lg flex flex-col gap-1'>
+                                          {uniqueNames.slice(0, 10).map((item) => (
+                                            <p key={item}>{item}</p>
+                                          ))}
+                                         
+                                        </div>
+                                      )}
+                                    </div>
+                                  ): (
+                                    ''
+                                  )}
+
+                                </div>
+                              )
+                            })()}</TableCell>
                           <TableCell>{formatDateTable(expenseVoucher.date)}</TableCell>
                           <TableCell>{expenseVoucher.bank.description}</TableCell>
                           <TableCell>{expenseVoucher.checkNo}</TableCell>
@@ -383,7 +421,12 @@ useEffect(() => {
                 </Table>
               </div>
 
-          <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+              {data.expenseVouchers.length !== 0 && (
+                <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+              )}
+            </div>
+
+            <div className=' w-full h-[300px]'>
 
             </div>
           </div>

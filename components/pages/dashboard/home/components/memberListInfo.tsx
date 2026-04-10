@@ -66,6 +66,9 @@ const ViewMemberListInfo = ({year, month, openList, setOpenList, setIsOpen, view
   const dismiss = () => {
     setOpenList(false);
     setSearch('')
+    setDate('')
+    setStatus('all')
+    setGender('all')
     setCurrentPage(1)
   };
 
@@ -368,7 +371,7 @@ const ViewMemberListInfo = ({year, month, openList, setOpenList, setIsOpen, view
 
                
 
-                   {data.clients.length !== 0 && (
+                   {(!data.loading && data.clients.length !== 0) && (
                  <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
                 )}

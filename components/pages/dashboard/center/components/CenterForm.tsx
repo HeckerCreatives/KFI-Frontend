@@ -28,18 +28,7 @@ const CenterForm = ({ form, loading }: TForm) => {
               labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
             />
           </FormIonItem>
-          <FormIonItem>
-            <InputText
-              disabled={loading}
-              name="acctOfficer"
-              control={form.control}
-              clearErrors={form.clearErrors}
-              label="Account Officer"
-              placeholder="Type here"
-              className="!px-2 !py-2 rounded-md"
-              labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
-            />
-          </FormIonItem>
+          
           <FormIonItem>
             <InputTextarea
               name="description"
@@ -52,6 +41,30 @@ const CenterForm = ({ form, loading }: TForm) => {
               labelClassNames="truncate !text-slate-600  !text-sm text-end"
             />
           </FormIonItem>
+          <FormIonItem>
+            <InputText
+              disabled={loading}
+              name="acctOfficer"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Account Officer Code"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
+            />
+          </FormIonItem>
+          <FormIonItem>
+            <InputText
+              disabled={loading}
+              name="acctOfficerName"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Account Officer Name"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
+            />
+          </FormIonItem>
         </IonCol>
         <IonCol size="12" sizeMd='6' className="space-y-2">
           <FormIonItem>
@@ -60,7 +73,19 @@ const CenterForm = ({ form, loading }: TForm) => {
               name="centerChief"
               control={form.control}
               clearErrors={form.clearErrors}
-              label="Center Chief"
+              label="Center Chief Code"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
+            />
+          </FormIonItem>
+          <FormIonItem>
+            <InputText
+              disabled={loading}
+              name="centerChiefName"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Center Chief Name"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
               labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
@@ -72,7 +97,19 @@ const CenterForm = ({ form, loading }: TForm) => {
               name="treasurer"
               control={form.control}
               clearErrors={form.clearErrors}
-              label="Treasurer"
+              label="Treasurer Code"
+              placeholder="Type here"
+              className="!px-2 !py-2 rounded-md"
+              labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
+            />
+          </FormIonItem>
+          <FormIonItem>
+            <InputText
+              disabled={loading}
+              name="treasurerName"
+              control={form.control}
+              clearErrors={form.clearErrors}
+              label="Treasurer Name"
               placeholder="Type here"
               className="!px-2 !py-2 rounded-md"
               labelClassName="truncate !text-slate-600 min-w-28 !text-sm text-end"
