@@ -6,7 +6,7 @@
   "private": true,
   "main": "electron.js",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=18"
   },
   "scripts": {
     "compile": "tsc",
