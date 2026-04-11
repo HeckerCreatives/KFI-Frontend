@@ -352,38 +352,38 @@ const Release = () => {
                         <TableRow key={release._id}>
                           <TableCell>{release.code}</TableCell>
                           <TableCell>{(() => {
-                                                        const uniqueNames = [...new Set(release.entries?.map((entry) => entry.client?.name).filter(Boolean) || [])];
-                                                        const displayNames = uniqueNames.slice(0, 2);
-                                                        const hasMore = uniqueNames.length > 2;
-                                                        return (
-                                                          <div className=' flex items-center gap-1'>
-                                                            {displayNames.join(', ')}
-                                                            {hasMore ? (
-                                                              <div className={`relative z-[99 + ${i}] group`}>
-                                                                <p 
-                                                                  className=' text-xs text-orange-400 cursor-pointer hover:underline'
-                                                                  onMouseEnter={() => {setShowTooltip(true), setHover(release?._id || release?.id), setasMore(true)}}
-                                                                  onClick={() => {setShowTooltip(true), setHover(release?._id || release?.id), setasMore(true)}}
-                                                                  onMouseLeave={() => {setShowTooltip(false), setHover(''), setasMore(false)}}
-                                                                >
-                                                                  See all
-                                                                </p>
-                                                                {(showTooltip && hover === release._id || release?.id) &&  (
-                                                                  <div className='absolute top-full mb-2 bg-gray-800 text-white text-xs rounded-md p-4 whitespace-nowrap z-50 shadow-lg flex flex-col gap-1'>
-                                                                    {uniqueNames.slice(0, 10).map((item) => (
-                                                                      <p key={item}>{item}</p>
-                                                                    ))}
-                                                                   
-                                                                  </div>
-                                                                )}
-                                                              </div>
-                                                            ): (
-                                                              ''
-                                                            )}
-                          
-                                                          </div>
-                                                        )
-                                                      })()}</TableCell>
+                                                           const uniqueNames = [...new Set(release.entries?.map((entry) => entry.client?.name).filter(Boolean) || [])];
+                                                           const displayNames = uniqueNames.slice(0, 2);
+                                                           const hasMore = uniqueNames.length > 2;
+                                                           return (
+                                                             <div className=' flex items-center gap-1'>
+                                                               {displayNames.join(', ')}
+                                                               {hasMore ? (
+                                                                 <div className={`relative z-[99 + ${i}] group`}>
+                                                                   <p 
+                                                                     className=' text-xs text-orange-400 cursor-pointer hover:underline'
+                                                                     onMouseEnter={() => {setShowTooltip(true), setHover(release?._id || release?.id), setasMore(true)}}
+                                                                     onClick={() => {setShowTooltip(true), setHover(release?._id || release?.id), setasMore(true)}}
+                                                                     onMouseLeave={() => {setShowTooltip(false), setHover(''), setasMore(false)}}
+                                                                   >
+                                                                     See all
+                                                                   </p>
+                                                                   {(showTooltip && (hover === release._id || hover === release.id)) &&  (
+                                                                     <div className='absolute top-full mb-2 bg-gray-800 text-white text-xs rounded-md p-4 whitespace-nowrap z-50 shadow-lg flex flex-col gap-1'>
+                                                                       {uniqueNames.slice(0, 10).map((item) => (
+                                                                         <p key={item}>{item}</p>
+                                                                       ))}
+                                                                      
+                                                                     </div>
+                                                                   )}
+                                                                 </div>
+                                                               ): (
+                                                                 ''
+                                                               )}
+                             
+                                                             </div>
+                                                           )
+                                                         })()}</TableCell>
                           <TableCell>{formatDateTable(release.date)}</TableCell>
                           <TableCell>{release.bankCode.description}</TableCell>
                           <TableCell>{release.checkNo}</TableCell>

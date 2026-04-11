@@ -164,6 +164,30 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
     setIsOpen(true);
   };
 
+     const [page, setPage] = useState(1);
+    const limitEntries = 5;
+    const totalPagesEntries = Math.ceil(fields.length / limitEntries)
+
+  
+      const handleNextPage = () => {
+      if (page !== Math.ceil(fields.length / limitEntries)) {
+        setPage(prev => prev + 1);
+      }
+    };
+  
+    const handlePrevPage = () => {
+      if (page > 0) {
+        setPage(prev => prev - 1);
+      }
+    };
+  
+    const currentPageItems = React.useMemo(() => {
+        return fields.slice((page - 1) * limitEntries, page * limitEntries);
+      }, [fields, page, limitEntries]);
+
+      console.log(fields)
+  
+
   return (
     <div className="p-2">
       <div className="text-start my-2">
@@ -339,8 +363,8 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
                 </TableCell>
               </TableRow>
             )} */}
-            {fields.map((entry: AcknowledgementEntryFormData & { id: string }, i: number) => (
-              <AcknowledgementFormTableDoc key={`entry-${entry.id}`} entry={entry} index={i} remove={remove} form={form} sticky={true} />
+            {currentPageItems.map((entry: AcknowledgementEntryFormData & { id: string }, i: number) => (
+              <AcknowledgementFormTableDoc key={`entry-${entry.id}`} entry={entry} index={((page - 1) * limitEntries) + i} remove={remove} form={form} sticky={true} />
             ))}
           </TableBody>
         </Table>
@@ -367,8 +391,8 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
                 </TableCell>
               </TableRow>
             )} */}
-            {fields.map((entry: AcknowledgementEntryFormData & { id: string }, i: number) => (
-              <AcknowledgementFormTableDoc key={`entry-${entry.id}`} entry={entry} index={i} remove={remove} form={form} />
+            {currentPageItems.map((entry: AcknowledgementEntryFormData & { id: string }, i: number) => (
+              <AcknowledgementFormTableDoc key={`entry-${entry.id}`} entry={entry} index={((page - 1) * limitEntries) + i} remove={remove} form={form} />
             ))}
           </TableBody>
         </Table>
@@ -376,6 +400,33 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
        {fields.length < 1 && (
         <p className=' text-xs text-zinc-800 w-full text-center mt-4'>No Entries Yet</p>   
       )}
+
+      {fields.length > 0 && (
+                        <div className="w-full pb-3">
+                          <div className="flex items-center justify-center gap-2 py-1 px-5 rounded-md w-fit mx-auto">
+                            <div>
+                              <IonButton onClick={handlePrevPage} disabled={page === 1} fill="clear" className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md">
+                                <IonIcon icon={arrowBack} />
+                              </IonButton>
+                            </div>
+                            <div>
+                              <div className="text-sm !font-semibold  px-3 py-1.5 rounded-lg text-slate-700">
+                                {page} / {Math.ceil(fields.length / limitEntries)}
+                              </div>
+                            </div>
+                            <div>
+                              <IonButton
+                                onClick={handleNextPage}
+                                disabled={page === totalPagesEntries}
+                                fill="clear"
+                                className="max-h-10 min-h-6 h-8 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md"
+                              >
+                                <IonIcon icon={arrowForward} />
+                              </IonButton>
+                            </div>
+                          </div>
+                        </div>
+                      )}
       
       {form.formState.errors.entries && <div className="text-red-600 text-xs text-center my-2">{form.formState.errors.entries.message}</div>}
       <div className="text-start my-2">

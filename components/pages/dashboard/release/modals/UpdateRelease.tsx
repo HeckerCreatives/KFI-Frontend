@@ -101,7 +101,7 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
         acctYear: `${release.acctYear}`,
         acctOfficer: release.acctOfficer,
         checkNo: release.checkNo,
-        checkDate: formatDateInput(release.checkDate),
+        checkDate: formatDateInput(release.checkDate ||release.date),
         type: release.type,
         bankCode: release.bankCode._id,
         bankCodeLabel: `${release.bankCode.code}`,

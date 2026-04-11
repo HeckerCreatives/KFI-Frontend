@@ -229,8 +229,8 @@ const Activity = () => {
           <div className="px-3 pb-3 flex-1">
             <div className=' space-y-1 mb-6'>
               {/* <PageTitle pages={['Dashboard']} /> */}
-              <p className=' text-xl text-gray-700 !font-medium'>Activity</p>
-              <p className=' text-sm text-gray-500 '>Manage activity records.</p>
+              <p className=' text-xl text-gray-700 !font-medium'>Activity Report</p>
+              <p className=' text-sm text-gray-500 '>Manage activity report records.</p>
 
             </div>
             

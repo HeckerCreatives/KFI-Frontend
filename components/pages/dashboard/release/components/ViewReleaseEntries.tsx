@@ -45,11 +45,11 @@ const ViewReleaseEntries = ({ isOpen, release }: ViewEntriesProps) => {
         const filter: TTableFilter = { limit: TABLE_LIMIT, page };
 
         const result = await kfiAxios.get(`/release/entries/${release._id}`, { params: filter });
-        const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
+        const { success, releases, hasPrevPage, hasNextPage, totalPages } = result.data;
         if (success) {
           setData(prev => ({
             ...prev,
-            entries: entries,
+            entries: releases,
             totalPages: totalPages,
             nextPage: hasNextPage,
             prevPage: hasPrevPage,
@@ -121,9 +121,9 @@ const ViewReleaseEntries = ({ isOpen, release }: ViewEntriesProps) => {
           </TableHeader>
           <TableBody>
             {data.loading && <TableLoadingRow colspan={11} />}
-            {!data.loading && data.entries.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
+            {!data.loading && data.entries?.length < 1 && <TableNoRows label="No Entry Record Found" colspan={11} />}
             {!data.loading &&
-              data.entries.map((entry: ReleaseEntry, index: number) => (
+              data.entries?.map((entry: ReleaseEntry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]">
                   <TableCell>{entry?.loanReleaseEntryId?.transaction?.code ? `CV#${entry?.loanReleaseEntryId?.transaction?.code}` : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId?.transaction?.dueDate ? formatDateTable(entry?.loanReleaseEntryId?.transaction?.dueDate) : ''}</TableCell>
@@ -146,7 +146,7 @@ const ViewReleaseEntries = ({ isOpen, release }: ViewEntriesProps) => {
                  <div className="grid grid-cols-3">
                    <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold">
                      <div>Diff: </div>
-                     <div>{`${formatNumber((data.entries).reduce((acc, current) => acc + Number(removeAmountComma(current.debit ?? '')), 0) - data.entries.reduce((acc, current) => acc + Number(removeAmountComma(current.credit ?? '')), 0))}`}</div>
+                     <div>{`${formatNumber((data.entries || []).reduce((acc, current) => acc + Number(removeAmountComma(current.debit ?? '')), 0) - data.entries?.reduce((acc, current) => acc + Number(removeAmountComma(current.credit ?? '')), 0))}`}</div>
                    </div>
                    <div className="flex items-center justify-start gap-2 text-sm border-4 px-2 py-1 [&>div]:!font-semibold col-span-2">
                      <div>Total: </div>

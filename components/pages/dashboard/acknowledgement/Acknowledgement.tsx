@@ -349,46 +349,48 @@ const Acknowledgement = () => {
                     {!data.loading &&
                       data.acknowledgements.length > 0 &&
                       data.acknowledgements.map((acknowledgement: AcknowledgementType, i: number) => (
-                        <TableRow key={acknowledgement._id}>
+                        <TableRow key={acknowledgement._id ||acknowledgement.id}>
                           <TableCell>{acknowledgement.code}</TableCell>
                             <TableCell>{(() => {
-                                                          const uniqueNames = [...new Set(acknowledgement.entries?.map((entry) => entry.client?.name).filter(Boolean) || [])];
-                                                          const displayNames = uniqueNames.slice(0, 2);
-                                                          const hasMore = uniqueNames.length > 2;
-                                                          return (
-                                                            <div className=' flex items-center gap-1'>
-                                                              {displayNames.join(', ')}
-                                                              {hasMore ? (
-                                                                <div className={`relative z-[99 + ${i}] group`}>
-                                                                  <p 
-                                                                    className=' text-xs text-orange-400 cursor-pointer hover:underline'
-                                                                    onMouseEnter={() => {setShowTooltip(true), setHover(acknowledgement?._id || acknowledgement?.id), setasMore(true)}}
-                                                                    onClick={() => {setShowTooltip(true), setHover(acknowledgement?._id || acknowledgement?.id), setasMore(true)}}
-                                                                    onMouseLeave={() => {setShowTooltip(false), setHover(''), setasMore(false)}}
-                                                                  >
-                                                                    See all
-                                                                  </p>
-                                                                  {(showTooltip && hover === acknowledgement._id || acknowledgement.id) &&  (
-                                                                    <div className='absolute top-full mb-2 bg-gray-800 text-white text-xs rounded-md p-4 whitespace-nowrap z-50 shadow-lg flex flex-col gap-1'>
-                                                                      {uniqueNames.slice(0, 10).map((item) => (
-                                                                        <p key={item}>{item}</p>
-                                                                      ))}
-                                                                     
-                                                                    </div>
-                                                                  )}
-                                                                </div>
-                                                              ): (
-                                                                ''
-                                                              )}
-                            
-                                                            </div>
-                                                          )
-                                                        })()}</TableCell>
+                                  const uniqueNames = [...new Set(acknowledgement.entries?.map((entry) => entry.client?.name).filter(Boolean) || [])];
+                                  const displayNames = uniqueNames.slice(0, 2);
+                                  const hasMore = uniqueNames.length > 2;
+                                  return (
+                                    <div className=' flex items-center gap-1'>
+                                      {displayNames.join(', ')}
+                                      {hasMore ? (
+                                        <div className={`relative z-[99 + ${i}] group`}>
+                                          <p 
+                                            className=' text-xs text-orange-400 cursor-pointer hover:underline'
+                                            onMouseEnter={() => {setShowTooltip(true), setHover(acknowledgement?._id || acknowledgement?.id), setasMore(true)}}
+                                            onClick={() => {setShowTooltip(true), setHover(acknowledgement?._id || acknowledgement?.id), setasMore(true)}}
+                                            onMouseLeave={() => {setShowTooltip(false), setHover(''), setasMore(false)}}
+                                          >
+                                            See all
+                                          </p>
+                                          {(showTooltip && (hover === acknowledgement._id || hover === acknowledgement.id)) &&  (
+                                            <div className='absolute top-full mb-2 bg-gray-800 text-white text-xs rounded-md p-4 whitespace-nowrap z-50 shadow-lg flex flex-col gap-1'>
+                                              {uniqueNames.slice(0, 10).map((item) => (
+                                                <p key={item}>{item}</p>
+                                              ))}
+                                             
+                                            </div>
+                                          )}
+                                        </div>
+                                      ): (
+                                        ''
+                                      )}
+    
+                                    </div>
+                                  )
+                                })()}</TableCell>
+                        
                           <TableCell>{formatDateTable(acknowledgement.date)}</TableCell>
                           <TableCell>{acknowledgement.bankCode.description}</TableCell>
                           <TableCell>{acknowledgement.checkNo}</TableCell>
                           <TableCell>{formatMoney(acknowledgement.amount)}</TableCell>
                           <TableCell>{acknowledgement.encodedBy.username}</TableCell>
+                          
                           {haveActions(token.role, 'acknowledgement', permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
                             <TableCell>
                               <AcknowledgementActions

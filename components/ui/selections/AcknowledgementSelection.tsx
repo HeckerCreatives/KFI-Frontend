@@ -14,10 +14,11 @@ import { Search01Icon } from 'hugeicons-react';
 type Option = {
   _id: string;
   code: string;
+  receiptNo: string
 };
 
 export type TAcknowledgement = {
-  acknowledgements: { _id: string; code: string }[];
+  acknowledgements: Option[];
   totalPages: number;
   nextPage: boolean;
   prevPage: boolean;
@@ -86,7 +87,7 @@ const AcknowledgementSelection = <T extends FieldValues>({
   };
 
   const handleSelectExpenseVoucher = (acknowledgement: Option) => {
-    const code = acknowledgement.code as PathValue<T, Path<T>>;
+    const code = acknowledgement.code as PathValue<T, Path<T>> || acknowledgement.receiptNo as PathValue<T, Path<T>>;
     const id = acknowledgement._id as PathValue<T, Path<T>>;
 
     setValue(acknowledgementLabel as Path<T>, code as any);
@@ -173,7 +174,7 @@ const AcknowledgementSelection = <T extends FieldValues>({
                 {!data.loading &&
                   data.acknowledgements.map((data: Option) => (
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
-                      <TableCell className="">{data.code}</TableCell>
+                      <TableCell className="">{data.code || data.receiptNo}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

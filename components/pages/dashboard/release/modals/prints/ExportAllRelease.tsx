@@ -124,7 +124,7 @@ const ExportAllRelease = () => {
             switch (tabActive) {
               case "by-document":
                 result = await kfiAxios.get(
-                  `/release/export/by-document/${data.option}`,
+                  `/acknowledgement-receipt/export/by-document/${data.option}`,
                   { ...config, params }
                 );
                 break;

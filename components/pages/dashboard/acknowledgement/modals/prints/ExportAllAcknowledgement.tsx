@@ -122,7 +122,7 @@ const ExportAllAcknowledgement = () => {
             switch (tabActive) {
               case "by-document":
                 result = await kfiAxios.get(
-                  `/acknowledgement/export/by-document/${data.option}`,
+                  `/official-receipt/export/by-document/${data.option}`,
                   { ...config, params }
                 );
                 break;
@@ -189,7 +189,7 @@ const ExportAllAcknowledgement = () => {
               if (!existing) {
                 addJob({
                   jobId,
-                  label: `Expense Voucher (Excel)`,
+                  label: `Official Receipt (Excel)`,
                   type: 'export',
                   progress: 0,
                   status: 'processing',

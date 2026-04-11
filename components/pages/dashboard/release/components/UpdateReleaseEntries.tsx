@@ -53,10 +53,10 @@ const UpdateReleaseEntries = ({ isOpen, release, entries, setEntries, deletedIds
   });
    const [page, setPage] = useState(1);
         const limit = 5
-        const totalPages = Math.ceil(data.entries.length / limit)
+        const totalPages = Math.ceil(data.entries?.length / limit)
       
       const handleNextPage = () => {
-        if (page !== Math.ceil(data.entries.length / limit)) {
+        if (page !== Math.ceil(data.entries?.length / limit)) {
           setPage(prev => prev + 1);
         }
       };
@@ -68,7 +68,7 @@ const UpdateReleaseEntries = ({ isOpen, release, entries, setEntries, deletedIds
       };
     
       const currentPageItems = React.useMemo(() => {
-          return data.entries.slice((page - 1) * limit, page * limit);
+          return data.entries?.slice((page - 1) * limit, page * limit);
         }, [data.entries, page, limit]);
 
   const getEntries = async (page: number) => {
@@ -77,11 +77,11 @@ const UpdateReleaseEntries = ({ isOpen, release, entries, setEntries, deletedIds
       try {
         const filter: TTableFilter = { limit: TABLE_LIMIT, page };
         const result = await kfiAxios.get(`/release/entries/${release._id}`, { params: filter });
-        const { success, entries, hasPrevPage, hasNextPage, totalPages } = result.data;
+        const { success, releases, hasPrevPage, hasNextPage, totalPages } = result.data;
         if (success) {
           setData(prev => ({
             ...prev,
-            entries: entries,
+            entries: releases,
             totalPages: totalPages,
             nextPage: hasNextPage,
             prevPage: hasPrevPage,

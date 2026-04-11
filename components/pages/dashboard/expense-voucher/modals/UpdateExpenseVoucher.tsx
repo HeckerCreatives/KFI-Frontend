@@ -83,15 +83,15 @@ const UpdateExpenseVoucher = ({ expenseVoucher, setData, getExpenseVouchers, cur
     if (expenseVoucher) {
       form.reset({
         code: expenseVoucher.code,
-        supplier: `${expenseVoucher.supplier.code}`,
-        supplierId: expenseVoucher.supplier._id,
+        supplier: `${expenseVoucher.supplier?.code}`,
+        supplierId: expenseVoucher.supplier?._id,
         refNo: expenseVoucher.refNo,
         remarks: expenseVoucher.remarks,
         date: formatDateInput(expenseVoucher.date),
         acctMonth: `${expenseVoucher.acctMonth}`,
         acctYear: `${expenseVoucher.acctYear}`,
         checkNo: `${expenseVoucher.checkNo}`,
-        checkDate: formatDateInput(expenseVoucher.checkDate),
+        checkDate: formatDateInput(expenseVoucher.date),
         bank: expenseVoucher.bank._id,
         bankLabel: `${expenseVoucher.bank.code}`,
         amount: `${formatAmount(expenseVoucher.amount)}`,

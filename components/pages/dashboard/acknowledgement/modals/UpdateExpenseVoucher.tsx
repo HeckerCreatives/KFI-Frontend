@@ -104,7 +104,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
         acctYear: `${acknowledgement.acctYear}`,
         acctOfficer: acknowledgement.acctOfficer,
         checkNo: acknowledgement.checkNo,
-        checkDate: formatDateInput(acknowledgement.checkDate),
+        checkDate: formatDateInput(acknowledgement.checkDate || acknowledgement.date),
         type: acknowledgement.type,
         bankCode: acknowledgement.bankCode._id,
         bankCodeLabel: `${acknowledgement.bankCode.code}`,
