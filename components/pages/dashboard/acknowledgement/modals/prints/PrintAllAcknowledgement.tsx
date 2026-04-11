@@ -117,7 +117,7 @@ const PrintAllAcknowledgement = () => {
       switch (tabActive) {
         case "by-document":
           result = await kfiAxios.get(
-            `/official-receipt/print/by-document/${data.option}`,
+            `/acknowledgement/print/by-document/${data.option}`,
             { ...config, params }
           );
           break;

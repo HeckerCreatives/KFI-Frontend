@@ -44,7 +44,7 @@ const PrintAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowledg
 async function handlePrint(data: AcknowledgementOptionFormData) {
   setLoading(true);
   try {
-    const result = await kfiAxios.get(`/official-receipt/print/file/${acknowledgement._id}`, {
+    const result = await kfiAxios.get(`/acknowledgement/print/file/${acknowledgement._id}`, {
       responseType: 'arraybuffer',
       validateStatus: (status: number) => [200, 202].includes(status),
     });

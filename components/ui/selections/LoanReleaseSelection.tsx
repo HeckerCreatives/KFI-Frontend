@@ -10,6 +10,7 @@ import TableNoRows from '../forms/TableNoRows';
 import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } from 'react-hook-form';
 import TablePagination from '../forms/TablePagination';
 import { Search01Icon } from 'hugeicons-react';
+import Paginations from '../common/PaginationsV2';
 
 type Option = {
   _id: string;
@@ -173,7 +174,7 @@ const LoanReleaseSelection = <T extends FieldValues>({ loanReleaseLabel, loanRel
               </TableBody>
             </Table>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+          <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonModal>
     </>

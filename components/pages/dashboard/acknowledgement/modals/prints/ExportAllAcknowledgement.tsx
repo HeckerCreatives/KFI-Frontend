@@ -122,7 +122,7 @@ const ExportAllAcknowledgement = () => {
             switch (tabActive) {
               case "by-document":
                 result = await kfiAxios.get(
-                  `/official-receipt/export/by-document/${data.option}`,
+                  `/acknowledgement/export/by-document/${data.option}`,
                   { ...config, params }
                 );
                 break;

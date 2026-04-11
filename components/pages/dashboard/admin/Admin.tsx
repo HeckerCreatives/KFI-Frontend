@@ -213,7 +213,7 @@ const Admin = () => {
             
             <div className="relative px-3 pt-3 pb-16 bg-white rounded-xl flex-1 shadow-lg">
 
-               <div className="flex items-center justify-center gap-3">
+               <div className="flex md:flex-row flex-col items-center justify-center gap-3">
               <div className=' w-fit flex items-center flex-wrap gap-1'>
                 {canDoAction(token.role, permissions,'admin', 'create') && (
                 <CreateUser getUsers={getUsers} />

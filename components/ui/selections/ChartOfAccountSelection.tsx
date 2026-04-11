@@ -13,6 +13,7 @@ import { Search01Icon } from 'hugeicons-react';
 import { useOnlineStore } from '../../../store/onlineStore';
 import { TABLE_LIMIT } from '../../utils/constants';
 import { db } from '../../../database/db';
+import Paginations from '../common/PaginationsV2';
 
 type Option = {
   _id: string;
@@ -254,7 +255,7 @@ const ChartOfAccountSelection = <T extends FieldValues>({
               </TableBody>
             </Table>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+          <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonModal>
     </>

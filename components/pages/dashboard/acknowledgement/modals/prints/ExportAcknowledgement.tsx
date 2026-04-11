@@ -43,7 +43,7 @@ const ExportAcknowledgement = ({ acknowledgement }: { acknowledgement: Acknowled
 async function handlePrint() {
   setLoading(true);
   try {
-    const result = await kfiAxios.get(`/official-receipt/export/file/${acknowledgement._id}`, {
+    const result = await kfiAxios.get(`/acknowledgement/export/file/${acknowledgement._id}`, {
       responseType: 'arraybuffer',
       validateStatus: (status: number) => [200, 202].includes(status),
     });

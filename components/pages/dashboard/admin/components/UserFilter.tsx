@@ -69,7 +69,7 @@ const UserFilter = ({ getUsers, setStatus }: UserFilterProps) => {
   return (
     <div className="flex-1 flex flex-col md:flex-row flex-wrap items-start md:items-center justify-between ">
       <div className="w-full flex-1 md:flex-none">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center flex-wrap justify-end gap-2">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-center justify-start md:justify-end gap-2">
           <FormIonItem className="w-full max-w-32 min-w-20">
             <InputSelect
               // label="Status"
