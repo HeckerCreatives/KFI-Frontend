@@ -152,6 +152,7 @@ const UpdateReleaseEntries = ({ isOpen, release, entries, setEntries, deletedIds
         <Table>
           <TableHeader>
             <TableHeadRow className="border-4 bg-slate-100 [&>th]:border-4 [&>th]:!font-normal [&>th]:!py-1.5 [&>th]:!text-xs">
+              <TableHead>Line</TableHead>
               <TableHead>CV#</TableHead>
               <TableHead>Due Date</TableHead>
               <TableHead>Week</TableHead>
@@ -168,6 +169,7 @@ const UpdateReleaseEntries = ({ isOpen, release, entries, setEntries, deletedIds
             {
               currentPageItems.map((entry: ReleaseEntry, index: number) => (
                 <TableRow key={entry._id} className="border-b-0 [&>td]:border-4 [&>td]:!py-1 [&>td]:!px-2 [&>td]:!text-[.8rem]">
+                  <TableCell>{((page - 1) * limit) + index}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? `${entry?.loanReleaseEntryId?.transaction?.code}` : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? formatDateTable(entry?.loanReleaseEntryId?.transaction?.dueDate) : ''}</TableCell>
                   <TableCell>{entry?.loanReleaseEntryId ? entry?.loanReleaseEntryId?.transaction?.noOfWeeks : ''}</TableCell>

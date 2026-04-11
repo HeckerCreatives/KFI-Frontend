@@ -185,7 +185,7 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
         return fields.slice((page - 1) * limitEntries, page * limitEntries);
       }, [fields, page, limitEntries]);
 
-      console.log(fields)
+
   
 
   return (

@@ -18,6 +18,7 @@ import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
 import { Edit } from 'lucide-react';
+import ReleaseFormTable from '../components/ReleaseFormTable';
 
 type UpdateReleaseProps = {
   release: Release;
@@ -308,7 +309,9 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
 
           <div className="border-t border-t-slate-200 mx-2 pt-5 flex-1">
-            <UpdateReleaseEntries isOpen={isOpen} release={release} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} />
+            {/* <UpdateReleaseEntries isOpen={isOpen} release={release} entries={entries} setEntries={setEntries} deletedIds={deletedIds} setDeletedIds={setDeletedIds} setPrevEntries={setPrevEntries} /> */}
+
+            <ReleaseFormTable form={form}/>
           </div>
 
 
