@@ -57,7 +57,7 @@ const Release = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
-  const [sortKey, setSortKey] = useState<string>('');
+  const [sortKey, setSortKey] = useState<string>('code-desc');
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
   const online = useOnlineStore((state) => state.online);
@@ -75,7 +75,7 @@ const Release = () => {
     prevPage: false,
   });
 
-  const getReleases = async (page: number, keyword: string = '', sort: string = '', to: string = '', from: string = '') => {
+  const getReleases = async (page: number, keyword: string = '', sort: string = 'code-desc', to: string = '', from: string = '') => {
     if(online){
       setData(prev => ({ ...prev, loading: true }));
       try {
@@ -155,10 +155,15 @@ const Release = () => {
     getReleases(currentPage);
   });
 
-   useEffect(() => {
-        setCurrentPage(1);
-        getReleases(1, searchKey, sortKey, to, from);
-      }, [searchKey, sortKey, to, from]);
+  useEffect(() => {
+       setCurrentPage(1);
+       const timer = setTimeout(() => {
+       getReleases(currentPage, searchKey, sortKey, to, from);
+       })
+     return () => clearTimeout(timer);
+       
+     }, [searchKey, sortKey, to, from]);
+   
     
       useEffect(() => {
         getReleases(currentPage, searchKey, sortKey, to, from);

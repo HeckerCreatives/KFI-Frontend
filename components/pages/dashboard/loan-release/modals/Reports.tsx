@@ -40,7 +40,7 @@ const Reports = () => {
   });
 
   function dismiss() {
-    form.reset();
+    // form.reset();
     modal.current?.dismiss();
   }
 
@@ -253,8 +253,8 @@ const Reports = () => {
           if (!existing) {
             addJob({
               jobId,
-              label: `Loan Release ${type} (PDF)`,
-              type: 'print',
+              label: `Loan Release ${type}`,
+              type: `${options === 'print' ? 'print' : 'export'}`,
               progress: 0,
               status: 'processing',
               fileType: `${options === 'print' ? 'pdf' : 'excel'}`,

@@ -566,6 +566,7 @@ export type TError = {
 export type TTableFilter = {
   limit: number;
   page: number;
+  date?:string
   search?: string;
   keyword?: string;
   sort?: string;

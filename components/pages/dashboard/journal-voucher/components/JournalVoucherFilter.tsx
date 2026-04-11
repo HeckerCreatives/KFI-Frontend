@@ -37,11 +37,11 @@ const JournalVoucherFilter = ({ getJournalVouchers, setSearchKey, setSortKey, se
   });
 
   const onSubmit = (data: TSearch) => {
-    if (data.code !== '' || data.sort !== '' || data.dateFrom !== '' || data.dateTo !== '') {
-      getJournalVouchers(1, data.code, data.sort, data.dateTo, data.dateFrom);
-    } else {
-      getJournalVouchers(1);
-    }
+    // if (data.code !== '' || data.sort !== '' || data.dateFrom !== '' || data.dateTo !== '') {
+    //   getJournalVouchers(1, data.code, data.sort, data.dateTo, data.dateFrom);
+    // } else {
+    //   getJournalVouchers(1);
+    // }
   };
 
   const online = useOnlineStore((state) => state.online);

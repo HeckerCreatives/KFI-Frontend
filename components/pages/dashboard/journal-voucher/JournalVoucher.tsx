@@ -56,7 +56,7 @@ const JournalVoucher = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
-  const [sortKey, setSortKey] = useState<string>('');
+  const [sortKey, setSortKey] = useState<string>('code-desc');
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
   const online = useOnlineStore((state) => state.online);
@@ -75,7 +75,7 @@ const JournalVoucher = () => {
     prevPage: false,
   });
 
-  const getJournalVouchers = async (page: number, keyword: string = '', sort: string = '', to: string = '', from: string = '') => {
+  const getJournalVouchers = async (page: number, keyword: string = '', sort: string = 'code-desc', to: string = '', from: string = '') => {
    if(online){
      setData(prev => ({ ...prev, loading: true }));
       try {
@@ -156,10 +156,16 @@ const JournalVoucher = () => {
     getJournalVouchers(currentPage);
   });
 
-  useEffect(() => {
-     setCurrentPage(1);
-     getJournalVouchers(1, searchKey, sortKey, to, from);
-   }, [searchKey, sortKey, to, from]);
+
+   useEffect(() => {
+    setCurrentPage(1);
+     const timer = setTimeout(() => {
+       getJournalVouchers(currentPage, searchKey, sortKey, to, from);
+     }, 500);
+   
+     return () => clearTimeout(timer);
+   }, [sortKey, from, to, searchKey]);
+   
  
    useEffect(() => {
      getJournalVouchers(currentPage, searchKey, sortKey, to, from);
