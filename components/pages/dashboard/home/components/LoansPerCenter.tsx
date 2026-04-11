@@ -51,7 +51,7 @@ const SORTS = {
 const LoansPerCenter = () => {
   const arrDummy: string[] = Array.from(Array(10)).fill('');
   const ionInputRef = useRef<HTMLIonInputElement>(null);
-  const [sortKey, setSortKey] = useState<string>('');
+  const [sortKey, setSortKey] = useState<string>('name-asc');
   
 
   const [present] = useIonToast();

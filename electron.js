@@ -66,6 +66,7 @@ app.whenReady().then(() => {
     width: 1440,
     height: 840,
     show: true,
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

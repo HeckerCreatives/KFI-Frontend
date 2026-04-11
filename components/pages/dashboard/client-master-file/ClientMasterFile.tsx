@@ -27,6 +27,7 @@ import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 import ReportProgress from '../../../ui/common/report-progress';
 import TestPrintAllClient from './modals/Test';
 import Paginations from '../../../ui/common/PaginationsV2';
+import { set } from 'zod';
 
 export type TClientMasterFile = {
   clients: ClientMasterFileType[];
@@ -100,9 +101,10 @@ const ClientMasterFile = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
-  const [sortKey, setSortKey] = useState<string>('');
-  const [sortAcctNo, setSortAcctNo] = useState<string>('acctno-asc');
-  const [sortName, setSortName] = useState<string>('name-asc');
+  const [sortKey, setSortKey] = useState<string>('name-asc');
+  const [status, setStatus] = useState<string>('');
+  const [dateReleased, setDateReleased] = useState<string>('');
+  const [dateResigned, setDateResigned] = useState<string>('');
 
   //online status
   const online = useOnlineStore((state) => state.online);
@@ -236,13 +238,13 @@ const ClientMasterFile = () => {
 
 
 
-  const getClients = async (page: number, keyword: string = '', sort: string = '', status: string = '', dateReleased: string = '', dateResigned: string = '') => {
+  const getClients = async (page: number, keyword: string = '', sort: string = 'name-asc', status: string = '', dateReleased: string = '', dateResigned: string = '') => {
     setData(prev => ({ ...prev, loading: true }));
 
     try {
       const filter: TTableFilter = { limit: TABLE_LIMIT, page };
       if (keyword) filter.search = keyword;
-      if (sort) filter.sort = sort;
+      if (sort) filter.sort = sort || 'name-asc';
       if (status) filter.status = status;
       if (dateReleased) filter.dateReleased = dateReleased;
       if (dateResigned) filter.dateResigned = dateResigned;
@@ -280,18 +282,44 @@ const ClientMasterFile = () => {
     }
   };
 
-  const handlePagination = (page: number) => getCLientsData(page, searchKey, sortKey);
+  const handlePagination = (page: number) => setCurrentPage(page);
   const [uploading, setUploading] = useState<boolean>(false)
   
 
   useIonViewWillEnter(() => {
-    getCLientsData(currentPage)
+    getClients(currentPage)
     getStatisticsData()
   });
 
-  useEffect(() => {
-    getCLientsData(currentPage, searchKey, sortKey)
-  },[sortKey])
+  // useEffect(() => {
+  //   getClients(currentPage, searchKey, sortKey)
+  // },[sortKey])
+
+      useEffect(() => {
+        setCurrentPage(1)
+      const timer = setTimeout(() => {
+      getClients(currentPage, searchKey, sortKey, status, dateReleased, dateResigned);
+
+      }, 500);
+
+      return () => clearTimeout(timer);
+
+    }, [sortKey, searchKey, dateReleased, dateResigned, status]);
+
+     useEffect(() => {
+        setCurrentPage(1)
+    }, [sortKey, searchKey, dateReleased, dateResigned, status]);
+  
+
+    useEffect(() => {
+       const timer = setTimeout(() => {
+           getClients(currentPage, searchKey, sortKey, status, dateReleased, dateResigned);
+
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }, [currentPage]);
+  
 
 
 
@@ -319,7 +347,7 @@ const ClientMasterFile = () => {
                   {canDoAction(token.role, permissions, 'clients', 'print') && <PrintAllClient search={searchKey} sort={sortKey} />}
                   {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient search={searchKey} sort={sortKey} />} 
                 </div>
-                <ClientMasterFileFilter setSearchKey={setSearchKey} setSorthKey={setSortKey} getClientsOffline={getClientsOffline} getClients={getClients} clients={data.clients.map(item => item.name)} />
+                <ClientMasterFileFilter setDateResigned={setDateResigned} setDateReleased={setDateReleased} setStatus={setStatus} setSearchKey={setSearchKey} setSorthKey={setSortKey} getClientsOffline={getClientsOffline} getClients={getClients} clients={data.clients.map(item => item.name)} />
               </div>
               <div className="relative flex overflow-auto rounded-xl">
                 <Table className=' sticky z-50 top-0 left-0 md:table hidden'>

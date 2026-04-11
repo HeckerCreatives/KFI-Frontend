@@ -9,6 +9,7 @@ import SearchInput from '../../../../ui/forms/InputSearch';
 import kfiAxios from '../../../../utils/axios';
 import { TClientMasterFile } from '../ClientMasterFile';
 import { Search } from 'lucide-react';
+import { date } from 'zod';
 
 type TSearch = {
   code: string;
@@ -24,15 +25,21 @@ type ClientMasterFileFilterProps = {
   clients: string[],
   setSearchKey: React.Dispatch<React.SetStateAction<string>>
   setSorthKey: React.Dispatch<React.SetStateAction<string>>
+  setStatus: React.Dispatch<React.SetStateAction<string>>
+  setDateReleased: React.Dispatch<React.SetStateAction<string>>
+  setDateResigned: React.Dispatch<React.SetStateAction<string>>
 };
 
 
 
-const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSearchKey, setSorthKey }: ClientMasterFileFilterProps) => {
+const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSearchKey, setSorthKey, setStatus, setDateReleased, setDateResigned }: ClientMasterFileFilterProps) => {
   const form = useForm<TSearch>({
     defaultValues: {
       code: '',
-      sort: '',
+      sort: 'name-asc',
+      status: '',
+      dateReleased: '',
+      dateResigned: '',
     },
   });
 
@@ -48,24 +55,27 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
   
 
   const onSubmit = (data: TSearch) => {
-    setSearchKey(data.code)
-    setSorthKey(data.sort)
+    // setSearchKey(data.code)
+    // setSorthKey(data.sort)
+    // setStatus(data.status)
+    // setDateReleased(data.dateReleased)
+    // setDateResigned(data.dateResigned)
     
-    if (data.code !== '' || data.sort !== '') {
-      if(online){
-      getClients(1, data.code, data.sort, data.status, data.dateReleased, data.dateResigned);
+    // if (data.code !== '' || data.sort !== '') {
+    //   if(online){
+    //   getClients(1, data.code, data.sort, data.status, data.dateReleased, data.dateResigned);
         
-      }else{
-        getClientsOffline(1, data.code, data.sort)
-      }
-    } else {
-      if(online){
-      getClients(1);
+    //   }else{
+    //     getClientsOffline(1, data.code, data.sort)
+    //   }
+    // } else {
+    //   if(online){
+    //   getClients(1);
 
-      }else{
-        getClientsOffline(1)
-      }
-    }
+    //   }else{
+    //     getClientsOffline(1)
+    //   }
+    // }
   };
 
   const code = form.watch('code');
@@ -77,16 +87,13 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
   useEffect(() => {
      setSearchKey(code)
     setSorthKey(sort)
-    const fetchData = () => {
-      if (online) {
-        getClients(1, code, sort, status,released, resigned);
-      } else {
-        getClientsOffline(1, code, sort);
-      }
-    };
+    setStatus(status)
+    setDateReleased(released)
+    setDateResigned(resigned)
 
-    fetchData();
   }, [sort, online, code, status, released, resigned]);
+
+  console.log('status', status, released, resigned) 
 
 
 
@@ -137,6 +144,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                   control={form.control}
                   clearErrors={form.clearErrors}
                   options={[
+                    { label: 'All', value: '' },
                     { label: 'Active On-Leave', value: 'Active On-Leave' },
                       { label: 'Active-Existing', value: 'Active-Existing' },
                       { label: 'Active-New', value: 'Active-New' },

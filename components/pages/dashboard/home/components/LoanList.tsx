@@ -12,7 +12,7 @@ import TableNoRows from '../../../../ui/forms/TableNoRows';
 import TableLoadingRow from '../../../../ui/forms/TableLoadingRow';
 import Paginations from '../../../../ui/common/PaginationsV2';
 import ViewLoans from './ViewLoans';
-import { ArrowLeft, Plus } from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowUp, Plus } from 'lucide-react';
 import ViewLoanRelease from './ViewLoanRelease';
 import { eye } from 'ionicons/icons';
 
@@ -43,6 +43,15 @@ type Props = {
   openList: boolean,
 }
 
+const SORTS = {
+  CODE_ASC: 'code-asc',
+  CODE_DESC: 'code-desc',
+  DATE_ASC: 'date-asc',
+  DATE_DESC: 'date-desc',
+  AMOUNT_ASC: 'amount-asc',
+  AMOUNT_DESC: 'amount-desc',
+}
+
 
 const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view, openList}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +59,8 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
   const [selected, setSelected] = useState<Transaction>()
   const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState('');
+  const [sortKey, setSortKey] = useState<string[]>(['code-asc']);
+  
 
   
      const [search, setSearch] = useState('')
@@ -63,7 +74,7 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
              prevPage: false,
            });
      
-           const getClients = async (page: number, keyword: string = '',) => {
+           const getClients = async (page: number, keyword: string = '', sort: string = 'code-asc') => {
                setData(prev => ({ ...prev, loading: true }));
            
                try {
@@ -72,7 +83,7 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
                  if (year) filter.year = year;
                  if (month) filter.month = month;
                  if (search) filter.search = search
-                 const result = await kfiAxios.get('/transaction/loans/transactions-by-month', { params: filter });
+                 const result = await kfiAxios.get('/transaction/loans/transactions-by-month', { params: {...filter, sort: sortKey} });
                  const { success, data } = result.data;
                  if (data.success) {
                    setData(prev => ({
@@ -100,21 +111,35 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
          useEffect(() => {
               if(openList){
                const timer = setTimeout(() => {
-                getClients(currentPage);
+                getClients(currentPage, search, sortKey[0]);
               }, 500);
               return () => clearTimeout(timer);
               }
-            }, [openList, search, currentPage]);
+            }, [openList, search, currentPage, sortKey]);
 
             useEffect(() => {
               setCurrentPage(1)
-            },[openList, search])
+            },[openList, search, sortKey])
 
 
      const dismiss = () => {
        setOpenList(false);
        setSearch('')
+       setSortKey(['code-asc'])
      };
+
+    const toggleSort = (asc: string, desc: string) => {
+    setSortKey((prev) => {
+      if (prev.includes(asc)) {
+        return [desc];
+      }
+      if (prev.includes(desc)) {
+        return [asc];
+      }
+      return [asc];
+    });
+  };
+
 
   
 
@@ -184,10 +209,81 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
                   <Table className=" w-full border-collapse mt-4 !overflow-visible">
                     <TableHeader className=" bg-white backdrop-blur-sm shadow-sm">
                     <TableHeadRow>
-                        <TableHead className="!font-[400] border-b border-gray-200">Code</TableHead>
+                        <TableHead className="!font-[400] border-b border-gray-200">
+                           <div className="flex items-center gap-6">
+                            Code
+                            {sortKey.includes(SORTS.CODE_ASC) ? (
+                              <ArrowUp
+                                size={15}
+                                onClick={() => toggleSort(SORTS.CODE_ASC, SORTS.CODE_DESC)}
+                                className="cursor-pointer"
+                              />
+                            ) : sortKey.includes(SORTS.CODE_DESC) ? (
+                              <ArrowDown
+                                size={15}
+                                onClick={() => toggleSort(SORTS.CODE_ASC, SORTS.CODE_DESC)}
+                                className="cursor-pointer"
+                              />
+                            ) : (
+                              <ArrowUp
+                                size={15}
+                                onClick={() => toggleSort(SORTS.CODE_ASC, SORTS.CODE_DESC)}
+                                className="cursor-pointer opacity-30"
+                              />
+                            )}
+                          </div>
+                        </TableHead>
                         <TableHead className="!font-[400] border-b border-gray-200">Clients</TableHead>
-                        <TableHead className="!font-[400] border-b border-gray-200">Date</TableHead>
-                        <TableHead className="!font-[400] border-b border-gray-200">Amount</TableHead>
+                        <TableHead className="!font-[400] border-b border-gray-200">
+                           <div className="flex items-center gap-6">
+                            Date
+                            {sortKey.includes(SORTS.DATE_ASC) ? (
+                              <ArrowUp
+                                size={15}
+                                onClick={() => toggleSort(SORTS.DATE_ASC, SORTS.DATE_DESC)}
+                                className="cursor-pointer"
+                              />
+                            ) : sortKey.includes(SORTS.DATE_DESC) ? (
+                              <ArrowDown
+                                size={15}
+                                onClick={() => toggleSort(SORTS.DATE_ASC, SORTS.DATE_DESC)}
+                                className="cursor-pointer"
+                              />
+                            ) : (
+                              <ArrowUp
+                                size={15}
+                                onClick={() => toggleSort(SORTS.DATE_ASC, SORTS.DATE_DESC)}
+                                className="cursor-pointer opacity-30"
+                              />
+                            )}
+                          </div>
+                        </TableHead>
+                           
+                        <TableHead className="!font-[400] border-b border-gray-200">
+                            <div className="flex items-center gap-6">
+                            Amount
+                            {sortKey.includes(SORTS.AMOUNT_ASC) ? (
+                              <ArrowUp
+                                size={15}
+                                onClick={() => toggleSort(SORTS.AMOUNT_ASC, SORTS.AMOUNT_DESC)}
+                                className="cursor-pointer"
+                              />
+                            ) : sortKey.includes(SORTS.AMOUNT_DESC) ? (
+                              <ArrowDown
+                                size={15}
+                                onClick={() => toggleSort(SORTS.AMOUNT_ASC, SORTS.AMOUNT_DESC)}
+                                className="cursor-pointer"
+                              />
+                            ) : (
+                              <ArrowUp
+                                size={15}
+                                onClick={() => toggleSort(SORTS.AMOUNT_ASC, SORTS.AMOUNT_DESC)}
+                                className="cursor-pointer opacity-30"
+                              />
+                            )}
+                          </div>
+                        </TableHead>
+                          
                         <TableHead className="!font-[400] border-b border-gray-200">Action</TableHead>
                        
                     </TableHeadRow>

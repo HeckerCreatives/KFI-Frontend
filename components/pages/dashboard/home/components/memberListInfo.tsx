@@ -126,7 +126,6 @@ const ViewMemberListInfo = ({year, month, openList, setOpenList, setIsOpen, view
 
   const handlePagination = (page: number) => setCurrentPage(page);
 
-  console.log(sortKey)
 
   const toggleSort = (asc: string, desc: string) => {
     setSortKey((prev) => {

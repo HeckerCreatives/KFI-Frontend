@@ -31,7 +31,7 @@ const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, 
   const form = useForm<TSearch>({
     defaultValues: {
       code: '',
-      sort: '',
+      sort: 'name-asc',
       dateTo: '',
       dateFrom: '',
     },

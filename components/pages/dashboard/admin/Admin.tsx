@@ -50,7 +50,7 @@ const Admin = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
-  const [sortKey, setSortKey] = useState<string>('');
+  const [sortKey, setSortKey] = useState<string>('name-asc');
   const [usernameSort, setUsernameSort] = useState<string>('asc');
   const [statusSort, setStatusSort] = useState<string>('asc');
   const [createdSort, setCreatedSort] = useState<string>('asc');
@@ -72,7 +72,7 @@ const Admin = () => {
     inactive: 0,
   });
 
-  const getUsers = async (page: number, keyword: string = '', sort: string = '', status: string = '') => {
+  const getUsers = async (page: number, keyword: string = '', sort: string = 'name-asc', status: string = '') => {
     setData(prev => ({ ...prev, loading: true }));
    if(online){
      try {
@@ -325,8 +325,8 @@ const Admin = () => {
 
                           <TableCell>
                             <div className=' flex items-center gap-1 text-sm'>
-                              <div className=' h-10 w-10 rounded-full flex items-center justify-center bg-orange-50 uppercase text-sm font-semibold'>
-                                {user.username.charAt(1)}
+                              <div className=' h-10 w-10 rounded-full flex items-center justify-center bg-orange-50 uppercase text-sm font-semibold uppercase'>
+                                {user.username.substring(0, 1)}
                               </div>
                               <p>{user.username}</p>
 
