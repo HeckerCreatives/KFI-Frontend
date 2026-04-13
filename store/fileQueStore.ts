@@ -10,7 +10,7 @@ export type Job = {
   fileUrl?: string
   file?: string
   filename?: string
-  fileType?: 'pdf' | 'excel'
+  fileType?: 'pdf' | 'excel' | 'zip'
   createdAt?: number
 }
 
