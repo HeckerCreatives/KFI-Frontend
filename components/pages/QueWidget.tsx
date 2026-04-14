@@ -1,38 +1,124 @@
 import { useEffect, useRef, useState } from 'react';
 import { Minus, X, Download, File, Trash, XIcon } from 'lucide-react';
 import { Job, useJobStore } from '../../store/fileQueStore';
+import { Capacitor } from '@capacitor/core';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 
 
 
 
 export const FileQueue = () => {
   const { jobs, deleteJob} = useJobStore()
-   const [minimized, setMinimized] = useState(false);
-    const [showQueue, setShowQueue] = useState(true); 
+  const [minimized, setMinimized] = useState(false);
+  const [showQueue, setShowQueue] = useState(true);
+  const autoDownloadedRef = useRef<Set<string>>(new Set());
 
 
-    const handleDownload = (fileUrl: string, label: string, fileType: string, jobId?: string, filename?: string) => {
+
+    useEffect(() => {
+        jobs.forEach(job => {
+            if (job.fileUrl && job.progress >= 100 && !autoDownloadedRef.current.has(job.jobId)) {
+                autoDownloadedRef.current.add(job.jobId);
+                handleDownload(job.fileUrl, job.label, job.fileType || '', job.jobId, job.filename);
+            }
+        });
+    }, [jobs]);
+
+    const handleDownload = async (fileUrl: string, label: string, fileType: string, jobId?: string, filename?: string) => {
         if (!fileUrl) return;
-
-        console.log(fileUrl)
 
         const extensions: Record<string, string> = {
             pdf: '.pdf',
             excel: '.xlsx',
+            zip: '.zip',
         };
-
-        const ext = extensions[fileType.toLowerCase()] ?? '';
-
-        const a = document.createElement('a');
-        a.href = fileUrl;
-        a.download = filename || label;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-
-        if(jobId){
-            deleteJob(jobId)
+        
+        // Check if filename already has an extension
+        let fullFilename: string;
+        if (filename && /\.(pdf|xlsx|zip)$/i.test(filename)) {
+            // Filename already has an extension, use as-is
+            fullFilename = filename;
+        } else {
+            // Append extension based on fileType
+            const ext = extensions[fileType.toLowerCase()] ?? '';
+            fullFilename = (filename || label) + ext;
         }
+        
+        const mimeTypes: Record<string, string> = {
+            pdf: 'application/pdf',
+            excel: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            zip: 'application/zip',
+        };
+        const mimeType = mimeTypes[fileType.toLowerCase()] ?? 'application/octet-stream';
+
+        if (Capacitor.isNativePlatform()) {
+            try {
+                // 1. Fetch blob and convert to base64
+                const response = await fetch(fileUrl);
+                const blob = await response.blob();
+                const base64 = await new Promise<string>((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve((reader.result as string).split(',')[1]);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+
+                // 2. Write to app cache (no storage permission needed)
+                await Filesystem.writeFile({
+                    path: fullFilename,
+                    data: base64,
+                    directory: Directory.Cache,
+                });
+
+                // 3. Get the native file URI
+                const { uri } = await Filesystem.getUri({
+                    path: fullFilename,
+                    directory: Directory.Cache,
+                });
+
+                // 4. Open Android native share sheet with the file
+                await Share.share({
+                    title: fullFilename,
+                    files: [uri],
+                    dialogTitle: 'Save or share file',
+                });
+            } catch (err: any) {
+                if (err?.message?.includes('Share canceled') || err?.errorMessage?.includes('canceled')) {
+                    return; // user dismissed, keep job
+                }
+                console.error('[FileQueue] Download error:', err);
+                // Last resort: open in new tab
+                window.open(fileUrl, '_blank');
+            }
+        } else {
+            downloadViaLink(fileUrl, fullFilename);
+        }
+
+        if (jobId) {
+            deleteJob(jobId);
+        }
+    };
+
+
+    const downloadViaLink = (fileUrl: string, filename: string) => {
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.download = filename;
+        link.style.display = 'none';
+        link.setAttribute('download', filename);
+        
+        document.body.appendChild(link);
+        link.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(link);
+            if (fileUrl.startsWith('blob:')) {
+                setTimeout(() => {
+                    window.open(fileUrl, '_blank');
+                }, 500);
+            }
+        }, 100);
     };
 
 
@@ -118,7 +204,7 @@ export const FileQueue = () => {
             <div key={job.jobId} className="flex items-center gap-3 px-4 py-3">
               {/* file icon */}
               <div className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 ${
-                job.fileType === 'pdf' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
+                job.fileType === 'pdf' ? 'bg-red-50 text-red-600' : job.fileType === 'zip' ? 'bg-yellow-50 text-yellow-600' : 'bg-green-50 text-green-600'
               }`}>
 
                
@@ -146,10 +232,11 @@ export const FileQueue = () => {
               </div>
 
               <div className="shrink-0">
-                {job.fileUrl ? (
+                {(job.fileUrl || job.progress >= 100) ? (
                   <button
-                    onClick={() => handleDownload(job.fileUrl!, job.label, job.fileType || '', job.jobId, job.filename)}
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-[#1a73e8] hover:bg-blue-50 transition-colors"
+                    onClick={() => job.fileUrl && handleDownload(job.fileUrl!, job.label, job.fileType || '', job.jobId, job.filename)}
+                    disabled={!job.fileUrl}
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-[#1a73e8] hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Download size={15} />
                   </button>
@@ -183,7 +270,6 @@ export const FileQueue = () => {
                         />
                       </svg>
                     <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
-
 
                     </div>
                 

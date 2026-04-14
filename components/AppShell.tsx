@@ -6,13 +6,21 @@ import Login from './pages/auth/login/Login';
 import Tabs from './pages/Tabs';
 import { useEffect, useState } from 'react';
 import { useOnlineStore } from '../store/onlineStore';
+import { useGlobalJobSocket } from '../hooks/useGlobalJobSocket';
 
-setupIonicReact({});
+
+setupIonicReact({
+  mode: 'md',
+  animated: typeof window === 'undefined' || window.location.protocol !== 'capacitor-electron:',
+});
 
 const AppShell = () => {
   const [authChecked, setAuthChecked] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const setOnline = useOnlineStore((state) => state.setOnline);
+  
+  // Initialize global job socket listener
+  useGlobalJobSocket();
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem('auth'));
