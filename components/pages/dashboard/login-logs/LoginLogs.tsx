@@ -166,10 +166,11 @@ const LoginLogs = () => {
                 <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
               )}
+              
+            <div className=' w-full h-[300px]'></div>
 
 
             </div>
-            <div className=' w-full h-[300px]'></div>
         </div>
       </IonContent>
     </IonPage>
