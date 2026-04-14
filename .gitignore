@@ -33,11 +33,3 @@ tsconfig.tsbuildinfo
 
 # vercel
 .vercel
-
-# electron
-electrons/node_modules/
-electron/dist/
-electron/**/*.exe
-electron/**/*.asar
-
-# android

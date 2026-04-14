@@ -1,4 +1,0 @@
-"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[1396],{9504:function(t,e,n){n.r(e),n.d(e,{createSwipeBackGesture:function(){return a}});var r=n(8262),i=n(5181),u=n(1452);n(9245);/*!
- * (C) Ionic http://ionicframework.com - MIT License
- */var a=function(t,e,n,a,c){var o=t.ownerDocument.defaultView,s=(0,i.i)(t),f=function(t){var e=t.startX;return s?e>=o.innerWidth-50:e<=50},h=function(t){return s?-t.deltaX:t.deltaX};return(0,u.createGesture)({el:t,gestureName:"goback-swipe",gesturePriority:101,threshold:10,canStart:function(n){return s=(0,i.i)(t),f(n)&&e()},onStart:n,onMove:function(t){a(h(t)/o.innerWidth)},onEnd:function(t){var e=h(t),n=o.innerWidth,i=e/n,u=s?-t.velocityX:t.velocityX,a=u>=0&&(u>.2||e>n/2),f=(a?1-i:i)*n,l=0;f>5&&(l=Math.min(f/Math.abs(u),540)),c(a,i<=0?.01:(0,r.l)(0,i,.9999),l)}})}}}]);
-//# sourceMappingURL=1396.29fd30fb2e55aad9.js.map
