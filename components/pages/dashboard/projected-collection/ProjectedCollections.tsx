@@ -292,7 +292,7 @@ const ProjectedCollections = () => {
                                 className=" !p-2 rounded-md !text-[0.7rem]"
                                 labelClassName="truncate min-w-20 !text-[0.7rem] !text-slate-600 text-end"
                             />
-                            <CenterSelection centerLabel="centerLabel" centerValue="center" clearErrors={form.clearErrors} setValue={form.setValue} className="text-xs" />
+                            <CenterSelection centerLabel="centerLabel" centerValue="center" clearErrors={form.clearErrors} setValue={form.setValue} className="text-xs" accountOfficer='accountOfficer' />
                     </div>
 
                     <p className=' text-sm !font-semibold'>Account Officer</p>

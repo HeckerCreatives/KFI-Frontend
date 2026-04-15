@@ -194,7 +194,9 @@ const LoanRelease = () => {
                     <div>{canDoAction(token.role, permissions, 'loan release', 'create') && <CreateLoanRelease getTransactions={getTransactions} />}</div>
                     <div>{canDoAction(token.role, permissions, 'loan release', 'print') && <PrintAllLoanRelease />}</div>
                     <div>{canDoAction(token.role, permissions, 'loan release', 'export') && <ExportAllLoanRelease />}</div>
-                    <div><Reports /></div>
+                    <div>
+                    {(canDoAction(token.role, permissions, 'loan release', 'export') || (canDoAction(token.role, permissions, 'loan release', 'print'))) && <Reports />}
+                    </div>
                     
                   </div>
 

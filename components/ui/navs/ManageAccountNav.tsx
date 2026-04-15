@@ -1,18 +1,17 @@
-import { IonButton, IonIcon } from '@ionic/react';
+import { IonButton } from '@ionic/react';
 import classNames from 'classnames';
 import { jwtDecode } from 'jwt-decode';
-import { usePathname } from 'next/navigation';
+import { useLocation } from 'react-router-dom'; // ← fix
 import React from 'react';
 import { AccessToken, Permission } from '../../../types/types';
 import { isVisible } from '../../utils/permissions';
 import { manageAccountResource } from '../../utils/constants';
-import { key, people } from 'ionicons/icons';
 import { UserShield01Icon, UserGroupIcon } from 'hugeicons-react';
 
 const ManageAccountNav = () => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
-  const pathname = usePathname();
-  const permissions: Permission[] = JSON.parse(localStorage.getItem('permissions') || '[]')
+  const location = useLocation(); // ← fix
+  const permissions: Permission[] = JSON.parse(localStorage.getItem('permissions') || '[]');
 
   return (
     isVisible(token.role, permissions, manageAccountResource) && (
@@ -22,8 +21,10 @@ const ManageAccountNav = () => {
             routerLink="/dashboard/admin"
             fill="clear"
             className={classNames(
-              'h-10 text-sm capitalize font-medium rounded-xl ',
-              pathname === '/dashboard/admin' ? 'bg-[#FA6C2F] !border-orange-900 text-white hover:bg-[#FA6C2F] hover:border-[#FA6C2F]' : ' bg-orange-50 text-black',
+              'h-10 text-sm capitalize font-medium rounded-xl',
+              location.pathname === '/dashboard/admin' // ← fix
+                ? 'bg-[#FA6C2F] !border-orange-900 text-white'
+                : 'bg-orange-50 text-black',
             )}
             strong
           >
@@ -38,7 +39,9 @@ const ManageAccountNav = () => {
             fill="clear"
             className={classNames(
               'h-10 text-sm capitalize font-medium rounded-xl',
-              pathname === '/dashboard/client' ? 'bg-[#FA6C2F] !border-orange-900 text-white hover:bg-[#FA6C2F] hover:border-[#FA6C2F]' : ' bg-orange-50 text-black',
+              location.pathname === '/dashboard/client' // ← fix
+                ? 'bg-[#FA6C2F] !border-orange-900 text-white'
+                : 'bg-orange-50 text-black',
             )}
             strong
           >

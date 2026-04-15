@@ -12,13 +12,16 @@ import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../../utils/permissions';
 import { MoreHorizontalIcon } from 'hugeicons-react';
 import { Ellipsis } from 'lucide-react';
+import DeleteAdmin from '../modal/DeleteAdmin';
 
 type UserActionsProps = {
   user: User;
   setData: React.Dispatch<React.SetStateAction<TUser>>;
+  getList: (page: number, keyword?: string, sort?: string) => void;
+
 };
 
-const UserActions = ({ user, setData }: UserActionsProps) => {
+const UserActions = ({ user, setData, getList }: UserActionsProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
    const triggerId = `admin-action-trigger-${user._id}`;
@@ -57,6 +60,9 @@ const UserActions = ({ user, setData }: UserActionsProps) => {
                       )}
                       {canDoAction(token.role, permissions,'admin', 'visible') && (
                         <LoginLogs user={user}/>
+                      )}
+                       {canDoAction(token.role, permissions,'admin', 'delete') && (
+                        <DeleteAdmin admin={user} getList={getList}/>
                       )}
                   </div>
                         

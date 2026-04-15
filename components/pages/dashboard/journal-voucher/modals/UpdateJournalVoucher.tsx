@@ -70,7 +70,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData, getList, currentPage }:
         acctMonth: `${journalVoucher.acctMonth}`,
         acctYear: `${journalVoucher.acctYear}`,
         checkNo: `${journalVoucher.checkNo}`,
-        checkDate: formatDateInput(journalVoucher.checkDate),
+        checkDate: formatDateInput(journalVoucher.checkDate || journalVoucher.date),
         bank: journalVoucher.bank?._id,
         bankLabel: `${journalVoucher.bank?.code}`,
         amount: `${formatAmount(journalVoucher.amount)}`,

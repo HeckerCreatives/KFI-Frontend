@@ -340,7 +340,7 @@ const Admin = () => {
                           <TableCell className=' !text-sm'>{formatDateTable(user.createdAt)}</TableCell>
                           <TableCell>
 
-                            <UserActions key={user._id} user={user} setData={setData} />
+                            <UserActions key={user._id} user={user} setData={setData} getList={getUsers} />
                           </TableCell>
                         </TableRow>
                       ))}

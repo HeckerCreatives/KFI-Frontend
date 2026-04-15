@@ -253,7 +253,7 @@ const Reports = () => {
           if (!existing) {
             addJob({
               jobId,
-              label: `Loan Release ${type}`,
+              label: `Loan Release ${type === 'aging-of-loans' ? 'aging loans': type}`,
               type: `${options === 'print' ? 'print' : 'export'}`,
               progress: 0,
               status: 'processing',

@@ -29,6 +29,7 @@ type CenterSelectionProps<T extends FieldValues> = {
   centerLabel: Path<T>;
   centerValue: Path<T>;
   acctOfficer?: Path<T>;
+  accountOfficer?: Path<T>;
   centerDescription?: Path<T>;
   className?: string;
 };
@@ -41,7 +42,7 @@ export type TData = {
   loading: boolean;
 };
 
-const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, centerDescription, setValue, clearErrors, className = '' , acctOfficer}: CenterSelectionProps<T>) => {
+const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, centerDescription, setValue, clearErrors, className = '' , acctOfficer, accountOfficer}: CenterSelectionProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const ionInputRef = useRef<HTMLIonInputElement>(null);
@@ -156,6 +157,7 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
     setValue(centerLabel as Path<T>, codeValue as any);
     setValue(centerValue as Path<T>, idValue as any);
     acctOfficer && setValue(acctOfficer as Path<T>, officer as any);
+    accountOfficer && setValue(accountOfficer as Path<T>, officer as any);
 
 
     clearErrors(centerLabel);

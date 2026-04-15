@@ -111,11 +111,11 @@ interface TabsProps {
 
 
 export const navLinks: NavLink[] = [
-  { path: "/dashboard/home", label: "Dashboard", resource: "home", icon: <DashboardSquare01Icon size={20} /> },
-  { path: "/dashboard/admin", label: "Manage Account", resource: "manage account", icon: <UserMultiple02Icon size={20} /> },
+  { path: "/dashboard/home", label: "Dashboard", resource: ["dashboard"], icon: <DashboardSquare01Icon size={20} /> },
+  { path: "/dashboard/admin", label: "Manage Account", resource: ["manage account", "admin", "clients"], icon: <UserMultiple02Icon size={20} /> },
   {
     label: "Transaction",
-    resource: ["loan release", "expense voucher", "journal voucher", "acknowledgement", "release"],
+    resource: ['loan release', 'expense voucher', 'journal voucher', 'acknowledgement', 'release', 'damayan fund', 'emergency loan'],
     icon: <Task02Icon size={20} />,
     children: [
      { path: '/dashboard/loan-release', label: 'Loan Release', resource: 'loan release' },
@@ -143,7 +143,7 @@ export const navLinks: NavLink[] = [
   },
   {
     label: "General Ledgers",
-    resource: ["audit trail","activity", "financial statement", "trial balance"],
+    resource: ['audit trail', 'financial statement', 'trial balance', 'activity','beginning balance', 'projected collection', 'portfolio at risk'],
     icon: < CollectionsBookmarkIcon size={20} />,
     children: [
       { path: "/dashboard/audit-trail", label: "Audit Trail", resource: "audit trail" },
@@ -152,12 +152,13 @@ export const navLinks: NavLink[] = [
       { path: "/dashboard/trial-balance", label: "Trial Balance", resource: "trial balance" },
       { path: "/dashboard/beginning-balance", label: "Beginning Balance", resource: "beginning balance" },
       { path: "/dashboard/projected-collection", label: "Projected Collection", resource: "projected collection" },
+      { path: "/dashboard/portfolio-at-risk", label: "Portfolio At Risk", resource: "portfolio at risk" },
     ],
   },
 
    {
     label: "System",
-    resource: ["loan product", "center", "bank", "weekly savings", "business"],
+    resource: ['group of account', 'chart of account', 'product', 'center', 'bank', 'weekly savings', 'business type', 'business supplier', 'nature', 'system parameters'],
     icon: <Settings02Icon size={20} />,
     children: [
       {
@@ -189,7 +190,7 @@ export const navLinks: NavLink[] = [
 
   {
     label: "Diagnostic",
-    resource: ["unbalance entries", "login logs", "action logs"],
+    resource: ['unbalance entries', 'login logs', 'action logs'],
     icon: <ToolsIcon size={20} />,
     children: [
       // { path: "/dashboard/unbalance-entries", label: "Unbalance Entries", resource: "unbalance entries" },
@@ -382,142 +383,7 @@ const logout = () => {
             location={location}
           />
 
-          {/* <div className='min-h-screen w-[320px] hidden xl:flex flex-col p-6'>
-            <div className=' px-4'>
-               <div className='flex items-center'>
-              <Image alt="logo" src={logoNoBg} className="h-16 w-auto" />
-            </div>
-
-            <p className=' text-sm text-zinc-400 mt-8 mb-2'>Menu</p>
-            </div>
-
-            <div className=' w-full overflow-y-auto'>
-               <IonAccordionGroup multiple={true} className=' !px-0 '>
-              {navLinks.map((link, idx) =>
-                link.children ? (
-                  <IonAccordion key={idx} value={link.label}
-                 toggleIconSlot="end"
-                  className={isParentActive(link) ? "active-accordion" : ""}
-                  >
-                    <IonItem
-                      slot="header"
-                      style={{ 
-                        "--border-width": "0",
-                        "--inner-border-width": "0",
-                      "--background": isParentActive(link) ? "#f97316" : "transparent",
-                        "--color": isParentActive(link) ? "#ffffff" : "inherit",
-                      "--border-radius": "8px",
-                       } as any}
-                       
-                    >
-                      {link.icon && (
-                       <div className={`rounded-md mr-2 ${isParentActive(link) ? "text-white" : "text-orange-600"}`}>
-                        {link.icon}
-                      </div>
-                      )}
-                      <IonLabel
-                        className={`!text-[1rem] ${
-                          location.pathname === link.path ? "!text-orange-600" : ""
-                        }`}
-                      >
-                        {link.label}
-                      </IonLabel>
-
-                    </IonItem>
-
-                    <div slot="content">
-                      <IonAccordionGroup multiple={true}>
-                        {link.children.map((child, cIdx) =>
-                          child.children ? (
-                            <IonAccordion key={cIdx} value={child.label}>
-                              <IonItem
-                                slot="header"
-                                style={{ "--border-width": "0", "--inner-border-width": "0" }}
-                                className=' pl-2'
-                              >
-                                <IonLabel
-                                  className={`!ml-6 !text-[1rem] ${
-                                    location.pathname === child.path ? "!text-orange-600" : ""
-                                  }`}
-                                >
-                                  {child.label}
-                                </IonLabel>
-                              </IonItem>
-
-                              <div slot="content">
-                                {child.children.map((grandChild, gIdx) => (
-                                  <IonItem
-                                    key={gIdx}
-                                    button
-                                    routerLink={grandChild.path}
-                                    onClick={() => menuController.close("main-menu")}
-                                    detail={false}
-                                    style={{ "--border-width": "0", "--inner-border-width": "0" }}
-                                  >
-                                    <IonLabel
-                                      className={`!ml-12 !text-[1rem] ${
-                                        location.pathname === grandChild.path ? "!text-orange-600" : ""
-                                      }`}
-                                    >
-                                      {grandChild.label}
-                                    </IonLabel>
-                                  </IonItem>
-                                ))}
-                              </div>
-                            </IonAccordion>
-                          ) : (
-                            <IonItem
-                              key={cIdx}
-                              button
-                              routerLink={child.path}
-                              onClick={() => menuController.close("main-menu")}
-                              detail={false}
-                              style={{ "--border-width": "0", "--inner-border-width": "0" }}
-                            >
-                              <IonLabel
-                                className={`!pl-8 !text-[1rem] ${
-                                  location.pathname === child.path ? "!text-orange-600" : ""
-                                }`}
-                              >
-                                {child.label}
-                              </IonLabel>
-                            </IonItem>
-                          )
-                        )}
-                      </IonAccordionGroup>
-                    </div>
-                  </IonAccordion>
-                ) : (
-                  <IonItem
-                    key={idx}
-                    button
-                    routerLink={link.path}
-                    onClick={() => menuController.close("main-menu")}
-                    detail={false}
-                    style={{
-                      "--border-width": "0",
-                      "--inner-border-width": "0",
-                      "--background": location.pathname === link.path ? "#f97316" : "ffffff",
-                      "--color": location.pathname === link.path ? "#ffffff" : "inherit",
-                      "--border-radius": "8px",
-                    } as any}
-                  >
-                    {link.icon && (
-                      <div className={`rounded-md mr-2 ${location.pathname === link.path ? "text-white" : "text-orange-600"}`}>
-                        {link.icon}
-                      </div>
-                    )}
-                    <IonLabel className={`!text-[1rem] ${location.pathname === link.path ? "!text-white" : ""}`}>
-                      {link.label}
-                    </IonLabel>
-                  </IonItem>
-                )
-              )}
-            </IonAccordionGroup>
-            </div>
-
-         
-          </div> */}
+          
           <main className=' w-full'>
              <IonHeader class=" ion-header ion-no-border border-b flex items-center justify-center"
         >

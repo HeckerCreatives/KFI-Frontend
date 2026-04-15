@@ -33,6 +33,7 @@ const Response = (response: AxiosResponse): AxiosResponse => {
 const ResponseError = async (error: AxiosError): Promise<never> => {
   if (error.response?.data === 'Unauthorized' && error.response?.status === 401) {
     localStorage.removeItem('auth');
+    window.dispatchEvent(new Event('unauthorized'));
     window.location.reload();
   }
   return Promise.reject(error);

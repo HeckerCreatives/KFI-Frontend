@@ -7,6 +7,8 @@ import Tabs from './pages/Tabs';
 import { useEffect, useState } from 'react';
 import { useOnlineStore } from '../store/onlineStore';
 import { useGlobalJobSocket } from '../hooks/useGlobalJobSocket';
+import { Permission } from '../types/types';
+
 
 
 setupIonicReact({
@@ -25,6 +27,15 @@ const AppShell = () => {
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem('auth'));
     setAuthChecked(true);
+  }, []);
+
+  // ✅ Listen for 401 unauthorized event
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      setIsLoggedIn(false);
+    };
+    window.addEventListener('unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('unauthorized', handleUnauthorized);
   }, []);
 
   useEffect(() => {
@@ -53,9 +64,21 @@ const AppShell = () => {
           <Route
             path="/"
             exact
-            render={() =>
-              isLoggedIn ? <Redirect to="/dashboard/home" /> : <Login onLoginSuccess={() => setIsLoggedIn(true)} />
+           render={() => {
+            if (isLoggedIn) {
+              const permissions: Permission[] = JSON.parse(
+                localStorage.getItem('permissions') || '[]'
+              );
+              const hasDashboard = permissions.find(
+                (item) => item.resource === 'dashboard'
+              )?.actions?.visible;
+
+              return hasDashboard 
+                ? <Redirect to="/dashboard/home" /> 
+                : <Redirect to="/dashboard/kfi" />;
             }
+            return <Login onLoginSuccess={() => setIsLoggedIn(true)} />;
+          }}
           />
           <Route
             path="/dashboard"

@@ -93,7 +93,7 @@ const UpdateEmergencyLoan = ({ emergencyLoan, setData, currentPage, getEmergency
         acctMonth: `${emergencyLoan.acctMonth}`,
         acctYear: `${emergencyLoan.acctYear}`,
         checkNo: emergencyLoan.checkNo,
-        checkDate: formatDateInput(emergencyLoan.checkDate),
+        checkDate: formatDateInput(emergencyLoan.checkDate || emergencyLoan.date),
         bankCode: emergencyLoan.bank._id,
         bankCodeLabel: `${emergencyLoan.bank.code}`,
         amount: `${formatAmount(emergencyLoan.amount)}`,
