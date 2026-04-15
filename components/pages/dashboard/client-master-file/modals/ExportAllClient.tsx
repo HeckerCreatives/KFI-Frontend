@@ -31,6 +31,8 @@ const TestPrintAllClient = ({ sort, search }: Props) => {
   const [fileUrl, setFileUrl] = useState<string | null>(null)
   const [jobId, setJobId] = useState('')
   const {addJob, updateJob} = useJobStore()
+   const [sessionRoom, setSessionRoom] = useState('')
+    const [name, setName] = useState<string>('')
 
   function dismiss() {
     modal.current?.dismiss()
@@ -50,98 +52,83 @@ const TestPrintAllClient = ({ sort, search }: Props) => {
      }
    }, [])
  
-   useEffect(() => {
-   const socket = socketRef.current
-   if (!socket || !jobId) return
-   console.log('Joining job:', jobId)
-   socket.emit('join:report', jobId)
-   socket.off('report:progress')
-   socket.off('report:complete')
- 
-    const existing = useJobStore
-       .getState()
-       .jobs.find((j) => j.jobId === jobId)
- 
-     if (!existing) {
-       addJob({
-         jobId,
-         label: 'Client List (Excel)',
-         type: 'export',
-         progress: 0,
-         status: 'processing',
-         fileType: 'excel',
-         file: '',
-         filename: '',
-       })
-     }
- 
- 
-     const handleProgress = (data: any) => {
-       if (data.jobId !== jobId) return
-       console.log('Progress event:', data)
- 
-       const percent = data.percent ?? data.progress ?? 0
- 
-       setProgress(percent)
- 
-       updateJob(jobId, {
-         progress: percent,
-         status: 'processing',
-       })
- 
-     }
- 
-     const handleReady = (data: any) => {
-       if (data.jobId !== jobId) return;
- 
-       console.log('Ready:', data);
- 
-       setProgress(100);
- 
-       let url: string;
-       if (typeof data.file === 'string') {
-         const binary = atob(data.file);
-         const bytes = new Uint8Array(binary.length);
-         for (let i = 0; i < binary.length; i++) {
-           bytes[i] = binary.charCodeAt(i);
-         }
-         const blob = new Blob([bytes], { type: 'application/pdf' });
-         url = URL.createObjectURL(blob);
-       } else {
-         console.error('Expected base64 string, got:', typeof data.file);
-         return;
-       }
- 
-       updateJob(jobId, {
-         progress: 100,
-         status: 'done',
-         file: url,
-         filename: data.filename,
-         fileUrl: url,
-       });
-     };
- 
-      const handleError = (data: any) => {
-       if (data.jobId !== jobId) return
-       console.log('Error:', data)
+useEffect(() => {
+  const socket = socketRef.current
+  if (!socket || !jobId) return
 
-      updateJob(jobId, {
-        status: 'error',
-      });
- 
-     }
- 
- 
-   socket.on('report:progress', handleProgress)
-   socket.on('report:ready', handleReady)
-   socket.on('report:error', handleError)
- 
-   return () => {
-     socket.off('report:progress', handleProgress)
-     socket.off('report:ready', handleReady)
-     socket.off('report:error', handleError)
-   }
- }, [jobId])
+  // Join first batch room and session room
+  socket.emit('join:report', jobId)
+  socket.emit('join:report', sessionRoom)
+
+  // Add only the first job here
+  addJob({
+    jobId,
+    label: name || 'Client List (Excel)',
+    type: 'export',
+    progress: 0,
+    status: 'processing',
+    fileType: 'excel',
+    file: '',
+    filename: '',
+  })
+
+  const handleProgress = (data: any) => {
+    const percent = data.percent ?? data.progress ?? 0
+    updateJob(data.jobId, { progress: percent, status: 'processing' })
+  }
+
+  const handleReady = (data: any) => {
+    const binary = atob(data.file)
+    const bytes = new Uint8Array(binary.length)
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+    const blob = new Blob([bytes], { type: 'application/pdf' })
+    const url = URL.createObjectURL(blob)
+
+    updateJob(data.jobId, {
+      progress: 100,
+      status: 'done',
+      file: url,
+      filename: data.filename,
+      fileUrl: url,
+    })
+
+    setJobId('') 
+  }
+
+  const handleError = (data: any) => {
+    updateJob(data.jobId, { status: 'error' })
+    setJobId('')
+  }
+
+  const handleNext = ({ jobId: nextJobId, batchIndex, totalBatches, filename }: any) => {
+    console.log('Next batch:', { nextJobId, batchIndex, totalBatches })
+    socket.emit('join:report', nextJobId)
+
+    // Do NOT call setJobId — that would re-trigger this effect
+    addJob({
+      jobId: nextJobId,
+      label: filename,
+      type: 'export',
+      progress: 0,
+      status: 'processing',
+      fileType: 'excel',
+      file: '',
+      filename: '',
+    })
+  }
+
+  socket.on('report:progress', handleProgress)
+  socket.on('report:ready', handleReady)
+  socket.on('report:error', handleError)
+  socket.on('report:next', handleNext)
+
+  return () => {
+    socket.off('report:progress', handleProgress)
+    socket.off('report:ready', handleReady)
+    socket.off('report:error', handleError)
+    socket.off('report:next', handleNext)
+  }
+}, [jobId])
 
 
 async function handleDownload() {
@@ -170,8 +157,11 @@ async function handleDownload() {
 
     } else if (result.status === 202) {
       const text = new TextDecoder().decode(result.data);
-      const { jobId } = JSON.parse(text);
+     const { jobId, sessionRoom, filename } = JSON.parse(text);
       setJobId(jobId);
+      setSessionRoom(sessionRoom);
+      setName(filename);
+      setIsPrinting(true);
       dismiss();
     }
 

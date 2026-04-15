@@ -152,7 +152,7 @@ const ActionLogs = () => {
                 </TableHeader>
                 <TableBody>
                   {data.loading && <TableLoadingRow colspan={4} />}
-                  {!data.loading && data.actions.length < 1 && <TableNoRows label="No Action Record Found" colspan={4} />}
+                  {!data.loading && data.actions.length < 1 && <TableNoRows label="No Record Found" colspan={4} />}
                   {!data.loading &&
                     data.actions.length > 0 &&
                     data.actions.map((action: Activity) => (
@@ -172,9 +172,11 @@ const ActionLogs = () => {
 
               )}
 
+            <div className=' w-full h-[300px]'></div>
+
+
 
             </div>
-            <div className=' w-full h-[300px]'></div>
         </div>
       </IonContent>
     </IonPage>

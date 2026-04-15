@@ -247,7 +247,9 @@ export const FileQueue = () => {
 
                   ): (
                     <div className=' flex gap-2'>
-                        <svg
+                      {job.progress < 100 && (
+                        <>
+                          <svg
                         className="animate-spin text-zinc-500"
                         width={15}
                         height={15}
@@ -269,7 +271,13 @@ export const FileQueue = () => {
                           strokeDasharray="15 45"
                         />
                       </svg>
+
                     <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
+                        </>
+                        
+
+                      )}
+                      
 
                     </div>
                 

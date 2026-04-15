@@ -27,6 +27,7 @@ import TableLoadingRow from "../forms/TableLoadingRow";
 import TableNoRows from "../forms/TableNoRows";
 import TablePagination from "../forms/TablePagination";
 import { Search01Icon } from "hugeicons-react";
+import Paginations from "../common/PaginationsV2";
 
 type Option = {
   _id: string;
@@ -239,7 +240,7 @@ const PrintExportAccountSelection = <T extends FieldValues>({
             </Table>
           </div>
 
-          <TablePagination
+          <Paginations
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
