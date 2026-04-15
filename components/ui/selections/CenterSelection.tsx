@@ -148,22 +148,26 @@ const CenterSelection = <T extends FieldValues>({ centerLabel, centerValue, cent
 
 
   const handleSelectCenter = async (center: Option) => {
+
     
 
-    const codeValue = center.code as PathValue<T, Path<T>> || center.description as PathValue<T, Path<T>> || center.centerNo as PathValue<T, Path<T>>;
+    const codeValue = center.code as PathValue<T, Path<T>> || center.centerNo as PathValue<T, Path<T>>;
     const idValue = center._id as PathValue<T, Path<T>>;
     const officer = center.acctOfficer as PathValue<T, Path<T>>;
+    const descriptionValue = (center.description || ' No data') as PathValue<T, Path<T>>;
 
     setValue(centerLabel as Path<T>, codeValue as any);
     setValue(centerValue as Path<T>, idValue as any);
     acctOfficer && setValue(acctOfficer as Path<T>, officer as any);
     accountOfficer && setValue(accountOfficer as Path<T>, officer as any);
+    centerDescription && setValue(centerDescription as Path<T>, descriptionValue as any);
 
 
     clearErrors(centerLabel);
     clearErrors(centerValue);
 
     if (centerDescription) {
+      console.log('here')
       const description = center.description as PathValue<T, Path<T>>;
       setValue(centerDescription as Path<T>, description as any);
       clearErrors(centerDescription);

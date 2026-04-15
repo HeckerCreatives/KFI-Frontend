@@ -75,7 +75,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     />
               ) : (
                 <img
-                      src={`${process.env.NEXT_PUBLIC_API_URL}/${watchedImage}`}
+                      src={`${process.env.NEXT_PUBLIC_IMG_URL}/${watchedImage}`}
                       alt="Preview"
                       className="max-w-full h-48 object-cover rounded-md border"
                     />

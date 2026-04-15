@@ -245,7 +245,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                       className="text-xs p-2 rounded-md border border-zinc-400 bg-white w-[6rem]"
                     >
                       {Array.from(
-                        { length: new Date().getFullYear() - 2010 + 1 },
+                        { length: new Date().getFullYear() - 2000 + 1 },
                         (_, i) => {
                           const y = Number(new Date().getFullYear()) - i;
                           return (

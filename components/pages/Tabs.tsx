@@ -93,6 +93,7 @@ import { useJobStore } from '../../store/fileQueStore';
 import { FileQueue } from './QueWidget';
 import CollapsibleSidebar from './Sidebar';
 import { on } from 'node:process';
+import { isVisible } from '../utils/permissions';
 
 type NavLink = {
   path?: string;
@@ -200,23 +201,50 @@ export const navLinks: NavLink[] = [
   },
 ];
 
+const toResourceArray = (resource: string | string[]): string[] =>
+  Array.isArray(resource) ? resource : [resource];
+
+const isLinkVisible = (
+  role: string,
+  permissions: Permission[],
+  link: NavLink
+): boolean => {
+
+  if (isVisible(role, permissions, toResourceArray(link.resource))) return true;
+
+  if (link.children) {
+    return link.children.some((child) => isLinkVisible(role, permissions, child));
+  }
+
+  return false;
+};
+
 
 
 
 
 const Tabs = ({ onLogout }: TabsProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
-const history = useHistory();
-const location = useLocation();
+  const location = useLocation();
   const router = useRouter()
-
   const permissions: Permission[] = JSON.parse(localStorage.getItem('permissions') || '[]')
   const online = useOnlineStore((state) => state.online);
   const setOnline = useOnlineStore((state) => state.setOnline);
-  const {jobs} = useJobStore()
 
-  const [minimized, setMinimized] = useState(false);
-  const [showQueue, setShowQueue] = useState(true); 
+  
+    const visibleLinks = (links: NavLink[]): NavLink[] =>
+      links
+        .filter((link) => isLinkVisible(token.role, permissions, link))
+        .map((link) => ({
+          ...link,
+          children: link.children
+            ? visibleLinks(link.children)
+            : undefined,
+        }));
+  
+    const filteredNavLinks = visibleLinks(navLinks);
+
+
 
 
 const logout = () => {
@@ -242,7 +270,7 @@ const logout = () => {
             <Image alt="logo" src={logoNoBg} className="h-12 w-auto" />
           </div>
         <IonAccordionGroup multiple={false} className="border-collapse">
-          {navLinks.map((link, idx) =>
+          {filteredNavLinks.map((link, idx) =>
             link.children ? (
               <IonAccordion key={idx} value={link.label}>
                 <IonItem

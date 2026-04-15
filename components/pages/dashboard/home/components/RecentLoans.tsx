@@ -107,10 +107,22 @@ const RecentLoans = ({setSelected, selected} : Props) => {
     }
   }
 
+   const getTest = async () => {
+    setData((prev) => ({ ...prev, loading: true }))
+    try {
+      const result = await kfiAxios.get("/auth/test-401")
+     console.log(result)
+    
+    } catch (error) {
+    
+    } 
+  }
+
 
 
   useEffect(() => {
     getRecentLoans(currentPage)
+
   }, [])
 
   

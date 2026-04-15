@@ -48,7 +48,7 @@ const CreateClientMasterFile = ({ getClients, getClientsOffline }: CreateClientM
       dateRelease: '',
       business: '',
       businessLabel: '',
-      position: '',
+      position: 'member',
       acctNumber: '',
       dateResigned: '',
       reason: '',
