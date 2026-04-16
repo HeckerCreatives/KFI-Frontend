@@ -13,6 +13,7 @@ const GeneralLedgerPermission = ({ permissions, setPermissions }: { permissions:
           <TableHeader>
             <TableHeadRow className="border-b-0 bg-slate-100">
               <TableHead className="max-w-32">Page</TableHead>
+              <TableHead className="max-w-32"></TableHead>
               <TableHead className="text-center">Visible</TableHead>
               <TableHead className="text-center">Create</TableHead>
               <TableHead className="text-center">Read</TableHead>

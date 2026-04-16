@@ -90,7 +90,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
         trigger={`update-permissions-modal-${user._id}`}
         backdropDismiss={false}
         onDidDismiss={() => setPermissions(clonePermissions(user.permissions))}
-        className=" [--border-radius:0.7rem] auto-height [--max-width:58rem] [--width:95%]"
+        className=" [--border-radius:0.7rem] auto-height [--max-width:64rem] [--width:95%]"
       >
        
         <div className="inner-content space-y-4 !p-6">

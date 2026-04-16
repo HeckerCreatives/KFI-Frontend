@@ -46,7 +46,7 @@ const LoanActions = ({ loan, setData, currentPage, setCurrentPage, getLoans, sea
        <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem] !p-6 !rounded-xl">
        <div className=' w-full flex flex-col p-4'>
         <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
-        {canDoAction(token.role, permissions, 'product', 'visible') && <ViewLoanCodes loan={loan} />}
+        {canDoAction(token.role, permissions, 'product', 'view') && <ViewLoanCodes loan={loan} />}
         {canDoAction(token.role, permissions, 'product', 'update') && <UpdateLoan loan={loan} setData={setData} getLoans={getLoans} currentPage={currentPage} />}
         {canDoAction(token.role, permissions, 'product', 'delete') && (
           <DeleteLoan loan={loan} getLoans={getLoans} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />

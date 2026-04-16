@@ -171,7 +171,7 @@ const ViewMemberListInfo = ({year, month, openList, setOpenList, setIsOpen, view
                       
                     </div>
 
-                    <div className=' flex items-center gap-2'>
+                    <div className=' flex items-center flex-wrap gap-2'>
                          <div className=' flex flex-col gap-1'>
                          <p className=' text-xs'>Gender</p>
                           <IonSelect

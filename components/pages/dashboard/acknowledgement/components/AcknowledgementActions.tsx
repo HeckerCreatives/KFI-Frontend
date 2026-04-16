@@ -62,7 +62,7 @@ const AcknowledgementActions = ({
        <div className=' w-full flex flex-col p-4'>
          <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
 
-          {canDoAction(token.role, permissions, 'acknowledgement', 'visible') && <ViewAcknowledgement acknowledgement={acknowledgement} />}
+          {canDoAction(token.role, permissions, 'acknowledgement', 'view') && <ViewAcknowledgement acknowledgement={acknowledgement} />}
           {canDoAction(token.role, permissions, 'acknowledgement', 'update') && <UpdateAcknowledgement acknowledgement={acknowledgement} setData={setData} getAcknowledgement={getAcknowledgements} currentPage={currentPage} />}
           {canDoAction(token.role, permissions, 'acknowledgement', 'delete') && (
             <DeleteAcknowledgement

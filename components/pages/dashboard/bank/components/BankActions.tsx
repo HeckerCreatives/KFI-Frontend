@@ -46,7 +46,7 @@ const BankActions = ({ bank, setData, currentPage, setCurrentPage, getBanks, sea
            <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem] !p-6 !rounded-xl">
            <div className=' w-full flex flex-col p-4'>
             <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
-             {canDoAction(token.role, permissions, 'bank', 'visible') && <ViewBank bank={bank} />}
+             {canDoAction(token.role, permissions, 'bank', 'view') && <ViewBank bank={bank} />}
               {canDoAction(token.role, permissions, 'bank', 'update') && <UpdateBank bank={bank} setData={setData} />}
               {canDoAction(token.role, permissions, 'bank', 'delete') && (
                 <DeleteBank bank={bank} getBanks={getBanks} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />

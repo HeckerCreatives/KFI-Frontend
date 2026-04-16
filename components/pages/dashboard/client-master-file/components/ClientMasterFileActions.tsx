@@ -54,7 +54,7 @@ const ClientMasterFileActions = ({ client, getClients, setData, currentPage, set
        <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem] !p-6 !rounded-xl">
          <div className=' w-full p-4 flex flex-col'>
            <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
-           {canDoAction(token.role, permissions, 'clients', 'visible') && <ViewClientMasterFile member={client} />}
+           {canDoAction(token.role, permissions, 'clients', 'view') && <ViewClientMasterFile member={client} />}
              {canDoAction(token.role, permissions, 'clients', 'update') && <UpdateClientMasterFile getClientsOffline={getClientsOffline} client={client} setData={setData} />}
              {canDoAction(token.role, permissions, 'clients', 'delete') && (
                <DeleteClientMasterFile getClientsOffline={getClientsOffline} client={client} getClients={getClients} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />

@@ -50,7 +50,7 @@ const EmergencyLoanActions = ({ emergencyLoan, setData, getEmergencyLoans, curre
            <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem] !p-6 !rounded-xl">
            <div className=' w-full flex flex-col p-4'>
              <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
-              {canDoAction(token.role, permissions, 'emergency loan', 'visible') && <ViewEmergencyLoan emergencyLoan={emergencyLoan} />}
+              {canDoAction(token.role, permissions, 'emergency loan', 'view') && <ViewEmergencyLoan emergencyLoan={emergencyLoan} />}
                 {canDoAction(token.role, permissions, 'emergency loan', 'update') && <UpdateEmergencyLoan emergencyLoan={emergencyLoan} setData={setData} currentPage={currentPage} getEmergencyLoans={getEmergencyLoans} />}
                 {canDoAction(token.role, permissions, 'emergency loan', 'delete') && (
                   <DeleteEmergencyLoan

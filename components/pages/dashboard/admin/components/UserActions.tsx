@@ -46,7 +46,7 @@ const UserActions = ({ user, setData, getList }: UserActionsProps) => {
       
                   <div className=' w-full p-4'>
                     <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
-                    {canDoAction(token.role, permissions,'admin', 'visible') && (
+                    {canDoAction(token.role, permissions,'admin', 'view') && (
                       <ViewAdmin user={user} setData={setData}/>
                       )}
                       {canDoAction(token.role, permissions,'admin', 'update') && (

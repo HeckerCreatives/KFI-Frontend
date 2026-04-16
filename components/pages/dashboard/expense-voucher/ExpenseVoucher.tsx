@@ -351,7 +351,7 @@ useEffect(() => {
                            )}
                          </div>
                       </TableHead>
-                      {haveActions(token.role, 'expense voucher', token.permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
+                     <TableHead>Actions</TableHead>
                     </TableHeadRow>
                   </TableHeader>
                   <TableBody>
@@ -399,7 +399,7 @@ useEffect(() => {
                           <TableCell>{expenseVoucher.checkNo}</TableCell>
                           <TableCell>{formatNumber(expenseVoucher.amount)}</TableCell>
                           <TableCell>{expenseVoucher.encodedBy.username}</TableCell>
-                          {haveActions(token.role, 'expense voucher', permissions, ['update', 'delete', 'visible', 'print', 'export']) && (
+                          {haveActions(token.role, 'expense voucher', permissions, ['update', 'delete', 'visible', 'print', 'export', 'view']) && (
                             <TableCell>
                               <ExpenseVoucherActions
                                 expenseVoucher={expenseVoucher}

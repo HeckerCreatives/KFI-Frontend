@@ -45,7 +45,7 @@ const BusinessTypeActions = ({ businessType, setData, currentPage, setCurrentPag
            <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem] !p-6 !rounded-xl">
            <div className=' w-full flex flex-col p-4'>
             <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
-              {canDoAction(token.role, permissions, 'business type', 'visible') && <ViewBusinessType businessType={businessType} />}
+              {canDoAction(token.role, permissions, 'business type', 'view') && <ViewBusinessType businessType={businessType} />}
               {canDoAction(token.role, permissions, 'business type', 'update') && <UpdateBusinessType businessType={businessType} setData={setData} />}
               {canDoAction(token.role, permissions, 'business type', 'delete') && (
                 <DeleteBusinessType

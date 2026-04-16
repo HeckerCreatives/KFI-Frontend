@@ -30,11 +30,60 @@ const UserTableRow = ({ permission, setPermissions, validPermission = ['create',
     });
   };
 
+  const isAllSelected = validPermission.every(p => permission.actions[p]);
+
+const handleSelectAll = (e: CustomEvent<{ checked: boolean }>) => {
+
+  const { checked } = e.detail;
+
+  setPermissions(prev => {
+    const clone = [...prev];
+    const index = clone.findIndex(p => p._id === permission._id && p.resource === permission.resource);
+    
+    if (checked) {
+      // ✅ Select all valid permissions
+      validPermission.forEach(p => {
+        clone[index].actions[p] = true;
+      });
+    } else {
+      // ✅ Deselect all
+      clone[index].actions = { 
+        visible: false, 
+        create: false, 
+        view: false, 
+        update: false, 
+        delete: false, 
+        print: false, 
+        export: false 
+      };
+    }
+    
+    return clone;
+  });
+};
+
   return (
     <TableRow>
       <TableCell className="capitalize max-w-32">
         {permission.resource === 'acknowledgement' ? 'Official Receipt' : permission.resource === 'release' ? 'Acknowledgement' : permission.resource}
       </TableCell>
+
+        {permission.resource !== 'dashboard' && (
+          <>
+          <TableCell className="text-center flex gap-1">
+            <IonCheckbox
+              checked={isAllSelected}
+              onIonChange={handleSelectAll}
+              className="[--size:14px]"
+            />
+            <p>{isAllSelected ? 'Deselect' : 'Select'} All</p>
+            
+          </TableCell>
+
+          </>
+        )}
+        
+
       {validPermission.includes('visible') && (
         <TableCell className="text-center">
           <IonCheckbox checked={permission.actions.visible} value="visible" onIonChange={handleChecked} className=' [--size:14px]' />

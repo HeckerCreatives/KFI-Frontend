@@ -63,7 +63,7 @@ const ExpenseVoucherActions = ({
        <div className=' w-full flex flex-col p-4'>
          <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
 
-          {canDoAction(token.role, permissions, 'expense voucher', 'visible') && <ViewExpenseVoucher expenseVoucher={expenseVoucher} />}
+          {canDoAction(token.role, permissions, 'expense voucher', 'view') && <ViewExpenseVoucher expenseVoucher={expenseVoucher} />}
           {canDoAction(token.role, permissions, 'expense voucher', 'update') && <UpdateExpenseVoucher expenseVoucher={expenseVoucher} setData={setData} getExpenseVouchers={getExpenseVouchers} currentPage={currentPage} />}
           {canDoAction(token.role, permissions, 'expense voucher', 'delete') && (
             <DeleteExpenseVoucher

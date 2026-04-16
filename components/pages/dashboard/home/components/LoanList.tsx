@@ -205,7 +205,7 @@ const Loanlist = ({year, month, totalLoans, setOpen, setOpenList, setView, view,
                    </div>
                 </div>
 
-                 <div className=' w-full !overflow-visible'>
+                 <div className=' w-full !overflow-x-auto'>
                   <Table className=" w-full border-collapse mt-4 !overflow-visible">
                     <TableHeader className=" bg-white backdrop-blur-sm shadow-sm">
                     <TableHeadRow>

@@ -50,7 +50,7 @@ const ReleaseActions = ({ release, setData, getReleases, currentPage, setCurrent
        <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem] !p-6 !rounded-xl">
        <div className=' w-full flex flex-col p-4'>
          <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
-           {canDoAction(token.role, permissions, 'release', 'visible') && <ViewRelease release={release} />}
+           {canDoAction(token.role, permissions, 'release', 'view') && <ViewRelease release={release} />}
             {canDoAction(token.role, permissions, 'release', 'update') && <UpdateRelease release={release} setData={setData} getReleases={getReleases} currentPage={currentPage} />}
             {canDoAction(token.role, permissions, 'release', 'delete') && (
               <DeleteRelease release={release} getRelease={getReleases} searchkey={searchKey} sortKey={sortKey} currentPage={currentPage} rowLength={rowLength} />

@@ -61,7 +61,7 @@ const JournalVoucherActions = ({
        <div className=' w-full flex flex-col p-4'>
          <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
 
-          {canDoAction(token.role, permissions, 'journal voucher', 'visible') && <ViewJournalVoucher journalVoucher={journalVoucher} />}
+          {canDoAction(token.role, permissions, 'journal voucher', 'view') && <ViewJournalVoucher journalVoucher={journalVoucher} />}
           {canDoAction(token.role, permissions, 'journal voucher', 'update') && <UpdateJournalVoucher journalVoucher={journalVoucher} setData={setData} getList={getJournalVouchers} currentPage={currentPage} />}
           {canDoAction(token.role, permissions, 'journal voucher', 'delete') && (
             <DeleteJournalVoucher

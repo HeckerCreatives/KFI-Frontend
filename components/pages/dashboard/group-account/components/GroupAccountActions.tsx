@@ -46,7 +46,7 @@ const GroupAccountActions = ({ groupAccount, setData, currentPage, setCurrentPag
        <IonContent class="[--padding-top:0.25rem] [--padding-bottom:0.25rem] !p-6 !rounded-xl">
        <div className=' w-full flex flex-col p-4'>
         <p className=' text-sm text-zinc-400 mb-2'>Actions</p>
-        {canDoAction(token.role, permissions, 'group of account', 'visible') && <ViewGroupAccount groupAccount={groupAccount} />}
+        {canDoAction(token.role, permissions, 'group of account', 'view') && <ViewGroupAccount groupAccount={groupAccount} />}
           {canDoAction(token.role, permissions, 'group of account', 'update') && <UpdateGroupAccount groupAccount={groupAccount} setData={setData} getGroupAccounts={getGroupAccounts} currentPage={currentPage} />}
           {canDoAction(token.role, permissions, 'group of account', 'delete') && (
             <DeleteGroupAccount
