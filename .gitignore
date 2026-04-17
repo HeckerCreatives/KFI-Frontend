@@ -34,10 +34,7 @@ tsconfig.tsbuildinfo
 # vercel
 .vercel
 
-# electron
-electrons/node_modules/
-electron/dist/
-electron/**/*.exe
-electron/**/*.asar
-
-# android
+# electron build artifacts (too large for GitHub)
+/electron/dist
+/electron/node_modules
+/electron/out
