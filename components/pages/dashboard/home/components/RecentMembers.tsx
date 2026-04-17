@@ -132,7 +132,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
 
   return (
       <div className=" flex flex-col space-y-2 bg-white rounded-xl shadow-lg">
-                           <div className="flex items-center justify-between bg-orange-50 p-4 rounded-t-xl">
+                           <div className="flex items-center justify-between bg-orange-50 p-5 rounded-t-xl">
                           <div className="min-w-44">
                             <IonSelect
                               aria-label={'no label'}
@@ -172,54 +172,20 @@ const RecentMembers = ({setSelected, selected} : Props) => {
     
                           
                         </div>
-                             <div className="relative max-h-[500px] h-full flex flex-col !rounded-xl">
-       <div className=' w-full absolute top-0 z-[9]'>
-        <Table>
-          <TableHeader>
-            <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
-              <TableHead className="  !font-[600] bg-zinc-100">Name</TableHead>
-              <TableHead className="  !font-[600] bg-zinc-100">Center</TableHead>
-              <TableHead className="  !font-[600] bg-zinc-100">Date</TableHead>
-              <TableHead className="   !font-[600] bg-zinc-100">Actions</TableHead>
-            </TableHeadRow>
-           
-          </TableHeader>
-           <TableBody
-                style={{ visibility: 'collapse' }}
+              <div className="relative max-h-[800px] h-full flex flex-col !rounded-xl overflow-auto p-2">
             
-            >
-            {data.loading && <TableLoadingRow colspan={8} />}
-            {!data.loading && data.clients.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
-            {!data.loading &&
-              data.clients.length > 0 &&
-              data.clients.map((client: Member, i: number) => (
-                <TableRow key={`${client.name}-${i}`} className="!border-0  [&>td]:text-[0.8rem]">
-                  <TableCell className="">{client.name}</TableCell>
-                  <TableCell className="">
-                    {client.center?.centerNo} - {client.center?.description}
-                  </TableCell>
-                  <TableCell>{client.createdAt?.split('T')[0] || ''}</TableCell>
-                  <TableCell className="">
-                    <ViewRecentMember member={client} />
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-         
-        </Table>
-      </div>
-     <div className="relative max-h-[500px] overflow-auto flex-1 !rounded-xl ">
+     <div className="relative  flex-1 !rounded-xl ">
      
       <Table className=''>
-          <TableHeader>
-            <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
-              <TableHead className=" text-orange-700 !font-[600]">Name</TableHead>
-              <TableHead className="text-center  text-orange-700 !font-[600]">Center</TableHead>
-              <TableHead className="  !font-[600] bg-zinc-100">Date</TableHead>
-
-              <TableHead className="text-center  text-orange-700 !font-[600]">Actions</TableHead>
-            </TableHeadRow>
-          </TableHeader>
+         <TableHeader>
+          <TableHeadRow className="bg-white !border-0 [&>th]:uppercase">
+            <TableHead className="  !font-[600] bg-zinc-100">Name</TableHead>
+            <TableHead className="  !font-[600] bg-zinc-100">Center</TableHead>
+            <TableHead className="  !font-[600] bg-zinc-100">Date</TableHead>
+            <TableHead className="   !font-[600] bg-zinc-100">Actions</TableHead>
+          </TableHeadRow>
+        
+        </TableHeader>
           <TableBody>
           {data.loading && <TableLoadingRow colspan={8} />}
             {!data.loading && data.clients.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}

@@ -241,7 +241,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   name="parent"
                   control={form.control}
                   clearErrors={form.clearErrors}
-                  label="Parent"
+                  label="Parent Name"
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"

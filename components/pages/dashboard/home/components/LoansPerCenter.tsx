@@ -191,7 +191,7 @@ useEffect(() => {
 
 
   return (
-    <div className=" relative h-fit flex-1 flex flex-col bg-white shadow-lg rounded-xl">
+    <div className=" relative h-full flex-1 flex flex-col bg-white shadow-lg rounded-xl max-h-[900px]">
       <div className=" pb-2 flex-1 flex flex-col">
         <div className="flex flex-wrap items-center justify-between w-full h-fit bg-orange-50 p-4 px-8 rounded-t-xl">
           <h3 className="text-[0.9rem] pb-2 text-black !font-medium">Loans per Account Officer</h3>
@@ -209,7 +209,9 @@ useEffect(() => {
                 >
                   {center || 'Centers'}
 
-                    <ChevronDownIcon size={14} className="text-gray-400" />
+                  {!center && <ChevronDownIcon size={14} className="text-gray-400" />}
+
+                    
 
                 </button>
 
@@ -332,113 +334,13 @@ useEffect(() => {
        
           
           <div className=" flex-1 p-4 ">
-            <div className='relative overflow-auto max-h-[500px] '>
-               <div className=' w-full sticky top-0 z-[9] bg-white'>
-              <Table>
-              <TableHeader>
-                <TableHeadRow className="!bg-white !border-0">
-                  <TableHead className=" !font-[600]">Account Officer</TableHead>
-                  <TableHead className=" !font-[400] text-start">
-                     <div className="flex items-center gap-6">
-                           Center
-                           {sortKey === SORTS.CENTER_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.CENTER_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.CENTER_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.CENTER_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.CENTER_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
-                  </TableHead>
-                  <TableHead className=" !font-[400]">
-                     <div className="flex items-center gap-6">
-                           Total Members
-                           {sortKey === SORTS.MEMBERS_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.MEMBERS_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.MEMBERS_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.MEMBERS_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.MEMBERS_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
-                  </TableHead>
-                  <TableHead className=" !font-[400]">
-                    <div className="flex items-center gap-6">
-                           Total Loan Amount
-                           {sortKey === SORTS.AMOUNT_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.AMOUNT_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.AMOUNT_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.AMOUNT_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.AMOUNT_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
-                  </TableHead>
-                  
-                </TableHeadRow>
-              </TableHeader>
-              {/* <TableBody
-                style={{ visibility: 'collapse' }}
-              
-              >
-                {data.loading && <TableLoadingRow colspan={8} />}
-                {!data.loading && data.loans.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
-                {!data.loading &&
-                  data.loans.length > 0 &&
-                  data.loans.map((loan: Loan, i: number) => (
-                    <TableRow key={`${loan._id}-${i}`} className="!border-1 [&>td]:text-[0.7rem] py-2">
-                      <TableCell className="">{loan.acctOfficer} ({loan.acctOfficerName || ''})</TableCell>
-                      <TableCell className="">{loan.description}</TableCell>
-                      <TableCell className="">{loan.members}</TableCell>
-                      <TableCell className="">{formatNumber(loan.loans)}</TableCell>
-
-                    </TableRow>
-                  ))}
-              </TableBody> */}
-              
-            </Table>
-            </div>
+            <div className='relative overflow-auto  '>
+           
             <Table>
               <TableHeader
               >
                 <TableHeadRow className="!bg-white !border-0"
-                style={{ visibility: 'collapse' }}
+                
                 
                 >
                    <TableHead className=" !font-[600]">Account Officer</TableHead>
@@ -538,13 +440,13 @@ useEffect(() => {
               </TableBody>
             </Table>
             </div>
-           
+            <div>
+            <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+          </div>
           </div>
         
       </div>
-      <div>
-        <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
-      </div>
+     
     </div>
   );
 };

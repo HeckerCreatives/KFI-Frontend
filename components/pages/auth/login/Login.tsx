@@ -126,10 +126,13 @@ const onSubmit = async (data: LoginFormData) => {
     }
 
   } else {
+    const list = await db.users.toArray();
     const user = await db.users
       .where('username')
       .equals(data.username)
       .first();
+
+      console.log(list)
 
     if (!user) {
       present({ message: 'User does not exist.', duration: 1000 });

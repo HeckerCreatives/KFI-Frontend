@@ -28,7 +28,7 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "fs", label: "Syncing financial statements", status: "pending" },
    { id: "begbalance", label: "Syncing beginning balance", status: "pending" },
    { id: "trialbal", label: "Syncing trial balance", status: "pending" },
-  // { id: "users", label: "Syncing users", status: "pending" },
+   { id: "users", label: "Syncing users", status: "pending" },
 
    //transactions
    { id: "loanrelease", label: "Syncing loan release", status: "pending" },
@@ -164,7 +164,7 @@ export function BackupEntriesModalContent({
 
 
      await syncStep("users", async () => {
-       const res = await kfiAxios.get(`/sync/users?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+       const res = await kfiAxios.get(`/sync/user?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
        await syncUsers(res.data?.users|| [])
      })
 

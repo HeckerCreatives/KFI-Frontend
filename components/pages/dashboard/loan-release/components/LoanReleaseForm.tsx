@@ -68,7 +68,6 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
           <FormIonItem className="[--min-height:0]">
             <InputText
               disabled={loading}
-              readOnly
               name="name"
               control={form.control}
               clearErrors={form.clearErrors}

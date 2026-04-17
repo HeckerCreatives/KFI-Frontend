@@ -152,7 +152,7 @@ const RecentLoans = ({setSelected, selected} : Props) => {
 
   return (
      <div className=" flex flex-col space-y-2 bg-white rounded-xl shadow-lg">
-                        <div className="flex flex-wrap items-center justify-between bg-orange-50 p-4 rounded-t-xl">
+                        <div className="flex flex-wrap items-center justify-between bg-orange-50 p-5 rounded-t-xl">
                           <div className="min-w-44">
                             <IonSelect
                               aria-label={'no label'}
@@ -193,45 +193,26 @@ const RecentLoans = ({setSelected, selected} : Props) => {
                           
                         </div>
                         <div className="bg-white w-full flex-1 p-2 rpunded rounded-xl">
-                          <div className="relative max-h-[500px] h-full flex flex-col rounded-xl">
+                          <div className="relative max-h-[800px] h-full flex flex-col rounded-xl">
 
       
-       <div className=' w-full absolute top-0 z-[9]'>
-        <Table className=" w-full border-collapse ">
-          {/* Make the entire TableHeader sticky */}
-          <TableHeader className="sticky top-0 z-10  backdrop-blur-sm shadow-sm">
+      
+     <div className="relative overflow-auto flex-1 ">
+       
+     
+      <Table className=" w-full border-collapse">
+        {/* Make the entire TableHeader sticky */}
+       <TableHeader className="sticky top-0 z-10  backdrop-blur-sm shadow-sm">
             <TableHeadRow className=" "
             
             >
-              <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">COde</TableHead>
+              <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">Code</TableHead>
               <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">Amount</TableHead>
               <TableHead className="  !font-[600] bg-zinc-100">Date</TableHead>
               <TableHead className="!font-[400] border-b border-gray-200 bg-zinc-100">Actions</TableHead>
             </TableHeadRow>
            
           </TableHeader>
-
-           <TableBody>
-           {data.loading && <TableLoadingRow colspan={8} />}
-            {!data.loading && data.transactions.length < 1 && <TableNoRows label="No Record Found" colspan={8} />}
-      
-
-        </TableBody>
-         
-        </Table>
-      </div>
-     <div className="relative max-h-[500px] overflow-auto flex-1 ">
-     
-      <Table className=" w-full border-collapse mt-12">
-        {/* Make the entire TableHeader sticky */}
-        {/* <TableHeader className="sticky top-0 z-10 bg-white backdrop-blur-sm shadow-sm">
-          <TableHeadRow>
-            <TableHead className="!font-[400] border-b border-gray-200">Name</TableHead>
-            <TableHead className="!font-[400] border-b border-gray-200">Amount</TableHead>
-            <TableHead className="  !font-[600] bg-zinc-100">Date</TableHead>
-            <TableHead className="!font-[400] border-b border-gray-200">Actions</TableHead>
-          </TableHeadRow>
-        </TableHeader> */}
 
         <TableBody>
            {data.loading && <TableLoadingRow colspan={8} />}

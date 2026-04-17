@@ -46,7 +46,7 @@ const Breadcrumb = () => {
   }
 
   return (
-    <div className="flex items-center gap-1">
+    <div className=" hidden md:flex flex-wrap items-center gap-1">
       {crumbs.map((crumb, idx) => {
         const isLast = idx === crumbs.length - 1;
         return (

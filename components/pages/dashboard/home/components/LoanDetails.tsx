@@ -124,7 +124,7 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
                  
                 </div>
 
-                <div className=' w-full flex items-end justify-end'>
+                <div className=' w-full flex items-end justify-end mt-4'>
                   <div className="flex flex-col gap-1">
                     <p className="text-xs">Year</p>
 
