@@ -376,7 +376,7 @@ const EmergencyLoan = () => {
                                                                   >
                                                                     See all
                                                                   </p>
-                                                                  {(showTooltip && hover === emergencyLoan._id || emergencyLoan.id) &&  (
+                                                                  {(showTooltip && hover === (emergencyLoan._id || emergencyLoan.id)) &&  (
                                                                     <div className='absolute top-full mb-2 bg-gray-800 text-white text-xs rounded-md p-4 whitespace-nowrap z-50 shadow-lg flex flex-col gap-1'>
                                                                       {uniqueNames.slice(0, 10).map((item) => (
                                                                         <p key={item}>{item}</p>

@@ -65,6 +65,7 @@ const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setV
   };
 
   const handleSearch = async (page: number) => {
+    console.log(online, 'Here cs')
    if(online){
      const value = ionInputRef.current?.value || '';
       setLoading(true);
@@ -96,10 +97,10 @@ const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setV
            _id: item._id,
             name: item.name,
             acctNumber: item.acctNumber,
-            center: { centerNo: item.center.centerNo },
+            center: { centerNo: item.center?.centerNo },
         }));
 
-        console.log(allData)
+
         
        const totalItems = allOptions.length;
         const totalPages = Math.ceil(totalItems / limit);

@@ -39,14 +39,13 @@ const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, 
 
 
   const onSubmit = (data: TSearch) => {
-    if (data.code !== '' || data.sort !== '' || data.dateFrom !== '' || data.dateTo !== '') {
-      getTransactions(1, data.code, data.sort, data.dateTo, data.dateFrom);
-    } else {
-      getTransactions(1);
-    }
+    // if (data.code !== '' || data.sort !== '' || data.dateFrom !== '' || data.dateTo !== '') {
+    //   getTransactions(1, data.code, data.sort, data.dateTo, data.dateFrom);
+    // } else {
+    //   getTransactions(1);
+    // }
   };
 
-  const online = useOnlineStore((state) => state.online);
   
   const code = form.watch('code');
   const sort = form.watch('sort');
