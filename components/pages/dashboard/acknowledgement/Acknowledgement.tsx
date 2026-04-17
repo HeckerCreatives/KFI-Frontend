@@ -21,8 +21,9 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
 import { formatELList } from '../../../ui/utils/fomatData';
-import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import Paginations from '../../../ui/common/PaginationsV2';
+import SortableTableHeader from '../../../ui/table/SortableTableHeader';
 
 export type TData = {
   acknowledgements: AcknowledgementType[];
@@ -200,149 +201,65 @@ const Acknowledgement = () => {
                   <TableHeader>
                     <TableHeadRow>
                        <TableHead className="min-w-44 max-w-44 sticky left-0">
-                          <div className="flex items-center gap-6">
-                         Code
-                           {sortKey === SORTS.CVNO_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.CVNO_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.CVNO_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.CVNO_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.CVNO_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
+                          <SortableTableHeader 
+                            label="Code"
+                            sortKey="code"
+                            currentSort={sortKey}
+                            ascValue={SORTS.CVNO_ASC}
+                            descValue={SORTS.CVNO_DESC}
+                            onSort={setSortKey}
+                          />
                       </TableHead>
                        <TableHead className=' text-zinc-600'>Clients</TableHead>
                       <TableHead>
-                         <div className="flex items-center gap-6">
-                           Date
-                           {sortKey === SORTS.DATE_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.DATE_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.DATE_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.DATE_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.DATE_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
+                          <SortableTableHeader 
+                            label="Date"
+                            sortKey="date"
+                            currentSort={sortKey}
+                            ascValue={SORTS.DATE_ASC}
+                            descValue={SORTS.DATE_DESC}
+                            onSort={setSortKey}
+                          />
                       </TableHead>
                       <TableHead>
-                         <div className="flex items-center gap-6">
-                           Bank
-                           {sortKey === SORTS.BANK_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.BANK_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.BANK_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.BANK_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.BANK_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
+                          <SortableTableHeader 
+                            label="Bank"
+                            sortKey="bank"
+                            currentSort={sortKey}
+                            ascValue={SORTS.BANK_ASC}
+                            descValue={SORTS.BANK_DESC}
+                            onSort={setSortKey}
+                          />
                       </TableHead>
                       <TableHead>
-                         <div className="flex items-center gap-6">
-                           Check No.
-                           {sortKey === SORTS.CHECKNO_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.CHECKNO_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.CHECKNO_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.CHECKNO_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.CHECKNO_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
+                          <SortableTableHeader 
+                            label="Check No."
+                            sortKey="checkno"
+                            currentSort={sortKey}
+                            ascValue={SORTS.CHECKNO_ASC}
+                            descValue={SORTS.CHECKNO_DESC}
+                            onSort={setSortKey}
+                          />
                       </TableHead>
                       <TableHead>
-                         <div className="flex items-center gap-6">
-                           Amount
-                           {sortKey === SORTS.AMOUNT_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.AMOUNT_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.AMOUNT_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.AMOUNT_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.AMOUNT_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
+                          <SortableTableHeader 
+                            label="Amount"
+                            sortKey="amount"
+                            currentSort={sortKey}
+                            ascValue={SORTS.AMOUNT_ASC}
+                            descValue={SORTS.AMOUNT_DESC}
+                            onSort={setSortKey}
+                          />
                       </TableHead>
                       <TableHead>
-                         <div className="flex items-center gap-6">
-                           Encoded By
-                           {sortKey === SORTS.ENCODEDBY_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.ENCODEDBY_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.ENCODEDBY_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.ENCODEDBY_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.ENCODEDBY_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
+                          <SortableTableHeader 
+                            label="Encoded By"
+                            sortKey="encodedby"
+                            currentSort={sortKey}
+                            ascValue={SORTS.ENCODEDBY_ASC}
+                            descValue={SORTS.ENCODEDBY_DESC}
+                            onSort={setSortKey}
+                          />
                       </TableHead>
                       {haveActions(token.role, 'acknowledgement', permissions, ['update', 'delete', 'visible', 'print', 'export']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>

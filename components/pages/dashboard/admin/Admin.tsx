@@ -21,8 +21,9 @@ import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
-import { ArrowDown, ArrowUp, Circle, Dot } from 'lucide-react';
+import { Circle, Dot } from 'lucide-react';
 import Paginations from '../../../ui/common/PaginationsV2';
+import { SortableTableHeader } from '../../../ui/table/SortableTableHeader';
 
 export type TUser = {
   users: User[];
@@ -234,77 +235,35 @@ const Admin = () => {
                     <TableHeadRow>
                       <TableHead className="!min-w-5 !max-w-5" />
                       <TableHead>
-                        <div className="flex items-center gap-6">
-                          Name
-                          {sortKey === SORTS.NAME_ASC ? (
-                            <ArrowUp
-                              size={15}
-                              onClick={() => setSortKey(SORTS.NAME_DESC)}
-                              className="cursor-pointer"
-                            />
-                          ) : sortKey === SORTS.NAME_DESC ? (
-                            <ArrowDown
-                              size={15}
-                              onClick={() => setSortKey(SORTS.NAME_ASC)}
-                              className="cursor-pointer"
-                            />
-                          ) : (
-                            <ArrowUp
-                              size={15}
-                              onClick={() => setSortKey(SORTS.NAME_ASC)}
-                              className="cursor-pointer opacity-30"
-                            />
-                          )}
-                        </div>
+                        <SortableTableHeader 
+                          label="Name"
+                          sortKey="name"
+                          currentSort={sortKey}
+                          ascValue={SORTS.NAME_ASC}
+                          descValue={SORTS.NAME_DESC}
+                          onSort={setSortKey}
+                        />
                       </TableHead>
                       <TableHead>
-                       <div className="flex items-center gap-6">
-                          Username
-                          {sortKey === SORTS.USER_ASC ? (
-                            <ArrowUp
-                              size={15}
-                              onClick={() => setSortKey(SORTS.USER_DESC)}
-                              className="cursor-pointer"
-                            />
-                          ) : sortKey === SORTS.USER_DESC ? (
-                            <ArrowDown
-                              size={15}
-                              onClick={() => setSortKey(SORTS.USER_ASC)}
-                              className="cursor-pointer"
-                            />
-                          ) : (
-                            <ArrowUp
-                              size={15}
-                              onClick={() => setSortKey(SORTS.USER_ASC)}
-                              className="cursor-pointer opacity-30"
-                            />
-                          )}
-                        </div>
+                        <SortableTableHeader 
+                          label="Username"
+                          sortKey="user"
+                          currentSort={sortKey}
+                          ascValue={SORTS.USER_ASC}
+                          descValue={SORTS.USER_DESC}
+                          onSort={setSortKey}
+                        />
                       </TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>
-                        <div className="flex items-center gap-6">
-                          Created At
-                          {sortKey === SORTS.CREATED_ASC ? (
-                            <ArrowUp
-                              size={15}
-                              onClick={() => setSortKey(SORTS.CREATED_DESC)}
-                              className="cursor-pointer"
-                            />
-                          ) : sortKey === SORTS.CREATED_DESC ? (
-                            <ArrowDown
-                              size={15}
-                              onClick={() => setSortKey(SORTS.CREATED_ASC)}
-                              className="cursor-pointer"
-                            />
-                          ) : (
-                            <ArrowUp
-                              size={15}
-                              onClick={() => setSortKey(SORTS.CREATED_ASC)}
-                              className="cursor-pointer opacity-30"
-                            />
-                          )}
-                        </div>
+                        <SortableTableHeader 
+                          label="Created At"
+                          sortKey="created"
+                          currentSort={sortKey}
+                          ascValue={SORTS.CREATED_ASC}
+                          descValue={SORTS.CREATED_DESC}
+                          onSort={setSortKey}
+                        />
                       </TableHead>
                       <TableHead>Actions</TableHead>
                     </TableHeadRow>

@@ -16,8 +16,9 @@ import { canDoAction, haveActions } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortProducts } from '../../../ui/utils/sort';
-import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import Paginations from '../../../ui/common/PaginationsV2';
+import SortableTableHeader from '../../../ui/table/SortableTableHeader';
 
 export type TLoan = {
   loans: Loan[];
@@ -166,28 +167,14 @@ const Loans = () => {
                   <TableHeader>
                     <TableHeadRow>
                       <TableHead>
-                         <div className="flex items-center gap-6">
-                         Code
-                          {sortKey === SORTS.CODE_ASC ? (
-                            <ArrowUp
-                              size={15}
-                              onClick={() => setSortKey(SORTS.CODE_DESC)}
-                              className="cursor-pointer"
-                            />
-                          ) : sortKey === SORTS.CODE_DESC ? (
-                            <ArrowDown
-                              size={15}
-                              onClick={() => setSortKey(SORTS.CODE_ASC)}
-                              className="cursor-pointer"
-                            />
-                          ) : (
-                            <ArrowUp
-                              size={15}
-                              onClick={() => setSortKey(SORTS.CODE_ASC)}
-                              className="cursor-pointer opacity-30"
-                            />
-                          )}
-                        </div>
+                        <SortableTableHeader 
+                          label="Code"
+                          sortKey="code"
+                          currentSort={sortKey}
+                          ascValue={SORTS.CODE_ASC}
+                          descValue={SORTS.CODE_DESC}
+                          onSort={setSortKey}
+                        />
                       </TableHead>
                       <TableHead>Description</TableHead>
                       {haveActions(token.role, 'product', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}

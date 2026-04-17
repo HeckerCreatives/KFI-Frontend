@@ -16,10 +16,10 @@ import { canDoAction, haveActions } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortBusinessTypes } from '../../../ui/utils/sort';
-import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 import { AxiosError } from 'axios';
 import { search } from 'ionicons/icons';
 import Paginations from '../../../ui/common/PaginationsV2';
+import { SortableTableHeader } from '../../../ui/table/SortableTableHeader';
 
 export type TBusinessType = {
   businessTypes: BusinessTypeInt[];
@@ -172,29 +172,14 @@ const BusinessType = () => {
                   <TableHeader>
                     <TableHeadRow>
                       <TableHead>
-                         <div className="flex items-center gap-6">
-                            Business Type
-                             {sortKey === SORTS.TYPE_ASC ? (
-                               <ArrowUp
-                                 size={15}
-                                 onClick={() => setSortKey(SORTS.TYPE_DESC)}
-                                 className="cursor-pointer"
-                               />
-                             ) : sortKey === SORTS.TYPE_DESC ? (
-                               <ArrowDown
-                                 size={15}
-                                 onClick={() => setSortKey(SORTS.TYPE_ASC)}
-                                 className="cursor-pointer"
-                               />
-                             ) : (
-                               <ArrowUp
-                                 size={15}
-                                 onClick={() => setSortKey(SORTS.TYPE_ASC)}
-                                 className="cursor-pointer opacity-30"
-                               />
-                             )}
-                           </div>
-
+                        <SortableTableHeader 
+                          label="Business Type"
+                          sortKey="type"
+                          currentSort={sortKey}
+                          ascValue={SORTS.TYPE_ASC}
+                          descValue={SORTS.TYPE_DESC}
+                          onSort={setSortKey}
+                        />
                       </TableHead>
                       {haveActions(token.role, 'business type', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>

@@ -1,6 +1,6 @@
 {
-  "appId": "com.example.app",
-  "appName": "nextjs-tailwind-capacitor",
+  "appId": "com.axcela.kfi",
+  "appName": "KFI",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "out",

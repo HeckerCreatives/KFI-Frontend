@@ -11,7 +11,7 @@ import TableNoRows from '../../../ui/forms/TableNoRows';
 import { formatDateTable } from '../../../utils/date-utils';
 import ActionLogFilter from './components/ActionLogFilter';
 import Paginations from '../../../ui/common/PaginationsV2';
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { SortableTableHeader } from '../../../ui/table/SortableTableHeader';
 
 export type TActivity = {
   actions: Activity[];
@@ -125,28 +125,14 @@ const ActionLogs = () => {
                     <TableHead>Activity</TableHead>
                     <TableHead>Resource</TableHead>
                     <TableHead>
-                      <div className="flex items-center gap-6">
-                          Date
-                           {sortKey === SORTS.DATE_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.DATE_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.DATE_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.DATE_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.DATE_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
+                      <SortableTableHeader 
+                        label="Date"
+                        sortKey="date"
+                        currentSort={sortKey}
+                        ascValue={SORTS.DATE_ASC}
+                        descValue={SORTS.DATE_DESC}
+                        onSort={setSortKey}
+                      />
                     </TableHead>
                   </TableHeadRow>
                 </TableHeader>

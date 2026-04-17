@@ -23,11 +23,12 @@ import { db } from '../../../../database/db';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { get } from 'http';
 import { filterAndSortClients } from '../../../ui/utils/sort';
-import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import ReportProgress from '../../../ui/common/report-progress';
 import TestPrintAllClient from './modals/Test';
 import Paginations from '../../../ui/common/PaginationsV2';
 import { set } from 'zod';
+import { SortableTableHeader } from '../../../ui/table/SortableTableHeader';
 
 export type TClientMasterFile = {
   clients: ClientMasterFileType[];
@@ -354,52 +355,24 @@ const ClientMasterFile = () => {
                   <TableHeader className=''>
                     <TableHeadRow className=''>
                       <TableHead className=" hidden lg:table-cell min-w-[12rem] max-w-[12rem] py-4">
-                        <div className="flex items-center gap-6">
-                           Acct. No
-                           {sortKey === SORTS.ACCTNO_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.ACCTNO_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.ACCTNO_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.ACCTNO_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.ACCTNO_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
+                        <SortableTableHeader 
+                          label="Acct. No"
+                          sortKey="acctno"
+                          currentSort={sortKey}
+                          ascValue={SORTS.ACCTNO_ASC}
+                          descValue={SORTS.ACCTNO_DESC}
+                          onSort={setSortKey}
+                        />
                       </TableHead>
                       <TableHead className=" hidden lg:table-cell min-w-[10rem] max-w-[10rem] py-4">
-                          <div className="flex items-center gap-6">
-                           Name
-                           {sortKey === SORTS.NAME_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.NAME_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.NAME_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.NAME_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.NAME_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
+                        <SortableTableHeader 
+                          label="Name"
+                          sortKey="name"
+                          currentSort={sortKey}
+                          ascValue={SORTS.NAME_ASC}
+                          descValue={SORTS.NAME_DESC}
+                          onSort={setSortKey}
+                        />
                       </TableHead>
                       <TableHead className="hidden lg:table-cell min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
                       <TableHead className="hidden lg:table-cell min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
@@ -426,8 +399,26 @@ const ClientMasterFile = () => {
                 <Table className=' '>
                   <TableHeader>
                     <TableHeadRow>
-                      <TableHead className=" lg:hidden min-w-[12rem] max-w-[12rem]">Account No.</TableHead>
-                      <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">Name</TableHead>
+                      <TableHead className=" lg:hidden min-w-[12rem] max-w-[12rem]">
+                        <SortableTableHeader 
+                          label="Account No."
+                          sortKey="acctno"
+                          currentSort={sortKey}
+                          ascValue={SORTS.ACCTNO_ASC}
+                          descValue={SORTS.ACCTNO_DESC}
+                          onSort={setSortKey}
+                        />
+                      </TableHead>
+                      <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">
+                        <SortableTableHeader 
+                          label="Name"
+                          sortKey="name"
+                          currentSort={sortKey}
+                          ascValue={SORTS.NAME_ASC}
+                          descValue={SORTS.NAME_DESC}
+                          onSort={setSortKey}
+                        />
+                      </TableHead>
                       <TableHead className=" lg:hidden min-w-[10rem] max-w-[10rem]">Center No.</TableHead>
                       <TableHead className=" lg:hidden min-w-[12rem] max-w-[12rem]">Account Officer</TableHead>
                       <TableHead className=" min-w-[10rem] max-w-[10rem]">Member Status</TableHead>

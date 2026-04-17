@@ -16,8 +16,8 @@ import { canDoAction, haveActions } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortBanks } from '../../../ui/utils/sort';
-import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 import Paginations from '../../../ui/common/PaginationsV2';
+import { SortableTableHeader } from '../../../ui/table/SortableTableHeader';
 
 export type TBank = {
   banks: BankType[];
@@ -172,53 +172,25 @@ const Bank = () => {
                   <TableHeader>
                     <TableHeadRow>
                       <TableHead>
-                        <div className="flex items-center gap-6">
-                        Code
-                         {sortKey === SORTS.CODE_ASC ? (
-                           <ArrowUp
-                             size={15}
-                             onClick={() => setSortKey(SORTS.CODE_DESC)}
-                             className="cursor-pointer"
-                           />
-                         ) : sortKey === SORTS.CODE_DESC ? (
-                           <ArrowDown
-                             size={15}
-                             onClick={() => setSortKey(SORTS.CODE_ASC)}
-                             className="cursor-pointer"
-                           />
-                         ) : (
-                           <ArrowUp
-                             size={15}
-                             onClick={() => setSortKey(SORTS.CODE_ASC)}
-                             className="cursor-pointer opacity-30"
-                           />
-                         )}
-                       </div>
+                        <SortableTableHeader 
+                          label="Code"
+                          sortKey="code"
+                          currentSort={sortKey}
+                          ascValue={SORTS.CODE_ASC}
+                          descValue={SORTS.CODE_DESC}
+                          onSort={setSortKey}
+                        />
                       </TableHead>
                        
                       <TableHead>
-                         <div className="flex items-center gap-6">
-                          Description
-                           {sortKey === SORTS.DESCRIPTION_ASC ? (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.DESCRIPTION_DESC)}
-                               className="cursor-pointer"
-                             />
-                           ) : sortKey === SORTS.DESCRIPTION_DESC ? (
-                             <ArrowDown
-                               size={15}
-                               onClick={() => setSortKey(SORTS.DESCRIPTION_ASC)}
-                               className="cursor-pointer"
-                             />
-                           ) : (
-                             <ArrowUp
-                               size={15}
-                               onClick={() => setSortKey(SORTS.DESCRIPTION_ASC)}
-                               className="cursor-pointer opacity-30"
-                             />
-                           )}
-                         </div>
+                        <SortableTableHeader 
+                          label="Description"
+                          sortKey="description"
+                          currentSort={sortKey}
+                          ascValue={SORTS.DESCRIPTION_ASC}
+                          descValue={SORTS.DESCRIPTION_DESC}
+                          onSort={setSortKey}
+                        />
                       </TableHead>
                       {haveActions(token.role, 'bank', permissions, ['update', 'delete', 'visible']) && <TableHead>Actions</TableHead>}
                     </TableHeadRow>
