@@ -92,7 +92,7 @@ export function BackupEntriesModalContent({
     setSteps(SYNC_STEPS)
 
     await syncStep("clientMasterFile", async () => {
-      const res = await kfiAxios.get(`/sync/customers?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+      const res = await kfiAxios.get(`/sync/customers?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=10`)
       await syncClientMasterFile(res.data?.customers || [])
     })
 
@@ -163,39 +163,39 @@ export function BackupEntriesModalContent({
 
 
 
-    // await syncStep("users", async () => {
-    //   const res = await kfiAxios.get(`/sync/users?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
-    //   await syncUsers(res.data?.users|| [])
-    // })
+     await syncStep("users", async () => {
+       const res = await kfiAxios.get(`/sync/users?dateFrom=${dateFrom}&dateTo=${dateTo}&limit=999999`)
+       await syncUsers(res.data?.users|| [])
+     })
 
 
     await syncStep("expenseVouchers", async () => {
-      const res = await kfiAxios.get(`/sync/expense-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      const res = await kfiAxios.get(`/sync/expense-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
       await syncExpenseVoucher(res.data?.expenseVouchers || [])
     })
 
      await syncStep("loanrelease", async () => {
-      const res = await kfiAxios.get(`/sync/loan-releases?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      const res = await kfiAxios.get(`/sync/loan-releases?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
       await syncLoanRelease(res.data?.transactions || [])
     })
 
     await syncStep("journalVouchers", async () => {
-      const res = await kfiAxios.get(`/sync/journal-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      const res = await kfiAxios.get(`/sync/journal-vouchers?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
       await syncJournalVoucher(res.data?.journalVouchers || [])
     })
 
     await syncStep("emergencyLoans", async () => {
-      const res = await kfiAxios.get(`/sync/emergency-loans?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      const res = await kfiAxios.get(`/sync/emergency-loans?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
       await syncEmergencyLoan(res.data?.emergencyLoans || [])
     })
 
     await syncStep("damayanFunds", async () => {
-      const res = await kfiAxios.get(`/sync/damayan-funds?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      const res = await kfiAxios.get(`/sync/damayan-funds?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
       await syncDamayanFund(res.data?.damayanFunds || [])
     })
 
     await syncStep("or", async () => {
-      const res = await kfiAxios.get(`/sync/acknowledgement-receipts?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=999999`)
+      const res = await kfiAxios.get(`/sync/acknowledgement-receipts?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
       await syncOR(res.data?.acknowledgements || [])
     })
 

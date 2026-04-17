@@ -62,11 +62,12 @@ const LoanRelease = () => {
   const [sortKey, setSortKey] = useState<string>('code-desc');
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
-  const online = useOnlineStore((state) => state.online);
   const [uploading, setUploading] = useState<boolean>(false)
   const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState<string | undefined>(undefined);
   const [hasMore, setasMore] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TData>({
     transactions: [],
@@ -76,7 +77,10 @@ const LoanRelease = () => {
     prevPage: false,
   });
 
+  console.log(online)
+
   const getTransactions = async (page: number, keyword: string = '', sort: string = 'code-desc', to: string = '', from: string = '') => {
+    console.log(online, 'Here lr')
     if(online){
       setData(prev => ({ ...prev, loading: true }));
       try {
@@ -116,6 +120,8 @@ const LoanRelease = () => {
        try {
          const limit = TABLE_LIMIT;
          let data = await db.loanReleases.toArray();
+
+         console.log('Loan Release Data:', data)
 
          const filteredData = data.filter(e => e.action !== 'delete');
          let allData = filterAndSortLoanRelease(filteredData, keyword, sort, from, to);
@@ -169,6 +175,9 @@ const LoanRelease = () => {
   useEffect(() => {
     getTransactions(currentPage, searchKey, sortKey, to, from);
   }, [currentPage]);
+
+  console.log(showTooltip, hover)
+
 
 
 
@@ -383,7 +392,7 @@ const LoanRelease = () => {
                                       >
                                         See all
                                       </p>
-                                      {(showTooltip && hover === transaction._id || transaction.id) &&  (
+                                      {(showTooltip && hover === (transaction._id || transaction.id)) &&  (
                                         <div className='absolute top-full mb-2 bg-gray-800 text-white text-xs rounded-md p-4 whitespace-nowrap z-50 shadow-lg flex flex-col gap-1'>
                                           {uniqueNames.slice(0, 10).map((item) => (
                                             <p key={item}>{item}</p>

@@ -244,7 +244,7 @@ const UpdateLoanRelease = ({ transaction, setData, currentPage, getTransactions 
               </div>
               <div className="space-y-1">
                 <LoanReleaseViewCard label="Check Number" value={transaction.checkNo} labelClassName="" />
-                <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate)} labelClassName="" />
+                <LoanReleaseViewCard label="Check Date" value={formatDateTable(transaction.checkDate || transaction.date)} labelClassName="" />
                 <LoanReleaseViewCard label="Bank Code" value={transaction.bank?.code} labelClassName="" />
                 <FormIonItem className=" [--min-height:0]">
                   <InputText

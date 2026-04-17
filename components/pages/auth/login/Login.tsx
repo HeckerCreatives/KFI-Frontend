@@ -155,7 +155,7 @@ const onSubmit = async (data: LoginFormData) => {
           (item: any) => item.resource === 'dashboard'
         )?.actions?.visible;
 
-          onLoginSuccess();
+        onLoginSuccess();
       }
     }
   }
