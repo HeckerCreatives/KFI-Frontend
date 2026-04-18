@@ -497,6 +497,26 @@ export async function syncOR(apiData: any) {
   console.log('Data syncOR', apiData)
   if (!apiData) return;
 
+ await db.releaseReceipts.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+  await db.table("releaseReceipts").bulkPut(data);
+
+  console.log('Sync syncOR', data)
+
+  return true;
+}
+
+export async function syncAR(apiData: any) {
+  console.log('Data syncAR', apiData)
+  if (!apiData) return;
+
  await db.acknowledgementReceipts.clear();
 
   const data: any[] = apiData?.map((c: any) => ({
@@ -508,7 +528,7 @@ export async function syncOR(apiData: any) {
 
    await db.table("acknowledgementReceipts").bulkPut(data);
 
-  console.log('Sync syncOR', data)
+  console.log('Sync syncAR', data)
 
   return true;
 }
@@ -567,16 +587,7 @@ export async function syncLoanReleaseDueDates(apiData: any) {
 }
 
 
-export async function syncAR(apiData: any) {
-  console.log('Data ar', apiData)
-  if (!apiData) return;
 
-  await db.acknowledgementReceipts.clear();
-  await db.table("acknowledgementReceipts").bulkAdd(apiData);
-  console.log('Sync sucess ar', apiData)
-
-  return true;
-}
 
 
 export async function syncDmayanFund(apiData: any) {

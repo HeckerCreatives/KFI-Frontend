@@ -36,7 +36,8 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "journalVouchers", label: "Syncing Journal Vouchers", status: "pending" },
    { id: "emergencyLoans", label: "Syncing Emergency Loans", status: "pending" },
    { id: "damayanFunds", label: "Syncing Damayan Funds", status: "pending" },
-   { id: "or", label: "Syncing acknowledgements", status: "pending" },
+   { id: "ar", label: "Syncing acknowledgements", status: "pending" },
+  { id: "or", label: "Syncing official receipts", status: "pending" },
 
 
 
@@ -176,7 +177,7 @@ export function BackupEntriesModalContent({
 
      await syncStep("loanrelease", async () => {
       const res = await kfiAxios.get(`/sync/loan-releases?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
-      await syncLoanRelease(res.data?.transactions || [])
+      await syncLoanRelease(res.data?.loanReleases || [])
     })
 
     await syncStep("journalVouchers", async () => {
@@ -194,8 +195,13 @@ export function BackupEntriesModalContent({
       await syncDamayanFund(res.data?.damayanFunds || [])
     })
 
-    await syncStep("or", async () => {
+    await syncStep("ar", async () => {
       const res = await kfiAxios.get(`/sync/acknowledgement-receipts?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
+      await syncAR(res.data?.releases || [])
+    })
+
+     await syncStep("or", async () => {
+      const res = await kfiAxios.get(`/sync/release?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
       await syncOR(res.data?.acknowledgements || [])
     })
 

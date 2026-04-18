@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { useOnlineStore } from '../store/onlineStore';
 import { useGlobalJobSocket } from '../hooks/useGlobalJobSocket';
 import { Permission } from '../types/types';
+import { Network } from '@capacitor/network';
+
 
 
 
@@ -38,16 +40,37 @@ const AppShell = () => {
     return () => window.removeEventListener('unauthorized', handleUnauthorized);
   }, []);
 
-  useEffect(() => {
-    const handleOnline = () => setOnline(true);
-    const handleOffline = () => setOnline(false);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+  // useEffect(() => {
+  //   setOnline(navigator.onLine);
+
+  //   const handleOnline = () => setOnline(true);
+  //   const handleOffline = () => setOnline(false);
+
+  //   window.addEventListener('online', handleOnline);
+  //   window.addEventListener('offline', handleOffline);
+
+  //   return () => {
+  //     window.removeEventListener('online', handleOnline);
+  //     window.removeEventListener('offline', handleOffline);
+  //   };
+  // }, []);
+
+    useEffect(() => {
+    const check = async () => {
+      const status = await Network.getStatus();
+      setOnline(status.connected);
     };
-  }, [setOnline]);
+
+    check();
+
+    const listener = Network.addListener('networkStatusChange', status => {
+      setOnline(status.connected);
+    });
+
+    return () => {
+      listener.remove();
+    };
+  }, []);
 
   if (!authChecked) {
     return (

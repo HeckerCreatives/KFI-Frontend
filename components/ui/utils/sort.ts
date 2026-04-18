@@ -1,6 +1,24 @@
-export function filterAndSortClients(clients: any, search: string, sort: any) {
+export function filterAndSortClients(
+  clients: any[],
+  search: string,
+  sort: string,
+  status: string = '',
+  dateReleased: string = '',
+  dateResigned: string = ''
+) {
   let result = [...clients].filter(c => c.action !== 'delete');
 
+  if (status) {
+    result = result.filter(c => c.memberStatus === status);
+  }
+
+  if (dateReleased) {
+    result = result.filter(c => c.dateRelease?.startsWith(dateReleased));
+  }
+
+  if (dateResigned) {
+    result = result.filter(c => c.dateResigned?.startsWith(dateResigned));
+  }
 
   if (search) {
     const term = search.toLowerCase();
@@ -10,20 +28,31 @@ export function filterAndSortClients(clients: any, search: string, sort: any) {
     );
   }
 
-  // --- SORT ---
   switch (sort) {
-    case "acctno-asc":
-      result.sort((a, b) => a.acctNumber.localeCompare(b.acctno));
+    case 'acctno-asc':
+      result.sort((a, b) =>
+        (a.acctNumber || '').localeCompare(b.acctNumber || '', 'en', { sensitivity: 'base' })
+      );
       break;
-    case "acctno-desc":
-      result.sort((a, b) => b.acctNumber.localeCompare(a.acctno));
+    case 'acctno-desc':
+      result.sort((a, b) =>
+        (b.acctNumber || '').localeCompare(a.acctNumber || '', 'en', { sensitivity: 'base' })
+      );
       break;
-    case "name-asc":
-      result.sort((a, b) => a.name.localeCompare(b.name));
+    case 'name-asc':
+      result.sort((a, b) =>
+        (a.name || '').localeCompare(b.name || '', 'en', { sensitivity: 'base' })
+      );
       break;
-    case "name-desc":
-      result.sort((a, b) => b.name.localeCompare(a.name));
+    case 'name-desc':
+      result.sort((a, b) =>
+        (b.name || '').localeCompare(a.name || '', 'en', { sensitivity: 'base' })
+      );
       break;
+    default:
+      result.sort((a, b) =>
+        (a.name || '').localeCompare(b.name || '', 'en', { sensitivity: 'base' })
+      );
   }
 
   return result;

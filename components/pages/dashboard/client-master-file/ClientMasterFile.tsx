@@ -119,9 +119,7 @@ const ClientMasterFile = () => {
   });
 
   const getClientsOffline = async (
-    page: number,
-    keyword: string = '',
-    sort: string = ''
+   page: number, keyword: string = '', sort: string = 'name-asc', status: string = '', dateReleased: string = '', dateResigned: string = ''
   ) => {
     setData(prev => ({ ...prev, loading: true }));
 
@@ -129,7 +127,7 @@ const ClientMasterFile = () => {
       const limit = TABLE_LIMIT;
 
       let data = await db.clientMasterFile.toArray();
-      let allData = filterAndSortClients(data, keyword, sort);
+      let allData = filterAndSortClients(data, keyword, sort, status, dateReleased, dateResigned);
 
       const totalItems = allData.length;
       const totalPages = Math.ceil(totalItems / limit);
@@ -178,6 +176,8 @@ const ClientMasterFile = () => {
 
   const getOfflineStatistics = async() =>{
     const clients = await db.clientMasterFile.toArray();
+
+    console.log('here')
 
     let totalClient = clients.length;
     let resigned = 0;
@@ -282,8 +282,10 @@ const ClientMasterFile = () => {
   useIonViewWillEnter(() => {
     if(online){
        getClients(currentPage)
-      getStatisticsData()
     }
+
+    getStatisticsData()
+
    
   });
 
@@ -297,7 +299,7 @@ const ClientMasterFile = () => {
         if (online){
           getClients(currentPage, searchKey, sortKey, status, dateReleased, dateResigned);
         } else {
-          getClientsOffline(currentPage, searchKey, sortKey);
+          getClientsOffline(currentPage, searchKey, sortKey,status, dateReleased, dateResigned);
         }
 
       }, 500);

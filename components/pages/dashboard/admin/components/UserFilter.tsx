@@ -7,6 +7,7 @@ import FormIonItem from '../../../../ui/utils/FormIonItem';
 import SearchInput from '../../../../ui/forms/InputSearch';
 import kfiAxios from '../../../../utils/axios';
 import { useOnlineStore } from '../../../../../store/onlineStore';
+import { set } from 'zod';
 
 type TSearch = {
   code: string;
@@ -17,9 +18,10 @@ type TSearch = {
 type UserFilterProps = {
   getUsers: (page: number, keyword?: string, sort?: string, status?: string) => void;
   setStatus: React.Dispatch<React.SetStateAction<string>>
+  setSearchKey: React.Dispatch<React.SetStateAction<string>>
 };
 
-const UserFilter = ({ getUsers, setStatus }: UserFilterProps) => {
+const UserFilter = ({ getUsers, setStatus, setSearchKey }: UserFilterProps) => {
   const online = useOnlineStore((state) => state.online);
   
   const form = useForm<TSearch>({
@@ -45,6 +47,7 @@ const UserFilter = ({ getUsers, setStatus }: UserFilterProps) => {
 
      useEffect(() => {
       setStatus(status)
+      setSearchKey(code)
       if(online){
          const getData = async () => {
     

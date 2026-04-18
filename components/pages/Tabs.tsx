@@ -232,18 +232,33 @@ const Tabs = ({ onLogout }: TabsProps) => {
   const online = useOnlineStore((state) => state.online);
   const setOnline = useOnlineStore((state) => state.setOnline);
 
-  
-    const visibleLinks = (links: NavLink[]): NavLink[] =>
-      links
-        .filter((link) => isLinkVisible(token.role, permissions, link))
-        .map((link) => ({
+  const getManageAccountPath = (permissions: Permission[], role: string): string => {
+  const hasAdmin = isVisible(role, permissions, ['admin']);
+  return hasAdmin ? '/dashboard/admin' : '/dashboard/client';
+};
+
+const visibleLinks = (links: NavLink[]): NavLink[] =>
+  links
+    .filter((link) => isLinkVisible(token.role, permissions, link))
+    .map((link) => {
+      // ✅ FIX: Override path for "Manage Account" based on permissions
+      if (link.label === 'Manage Account') {
+        return {
           ...link,
-          children: link.children
-            ? visibleLinks(link.children)
-            : undefined,
-        }));
-  
-    const filteredNavLinks = visibleLinks(navLinks);
+          path: getManageAccountPath(permissions, token.role),
+          children: link.children ? visibleLinks(link.children) : undefined,
+        };
+      }
+
+      return {
+        ...link,
+        children: link.children ? visibleLinks(link.children) : undefined,
+      };
+    });
+
+  const filteredNavLinks = visibleLinks(navLinks);
+
+
 
 
 
@@ -483,10 +498,10 @@ const closeMenu = async () => {
                       <IonIcon icon={logOut} /> Logout
                     </div>
 
-                    <div className=' flex items-center w-full'>
+                    {/* <div className=' flex items-center w-full'>
                       <button onClick={() => setOnline(false)} className={`py-2 text-sm w-full rounded-md ${!online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Offline</button>
                       <button onClick={() => setOnline(true)} className={`py-2 text-sm w-full rounded-md ${online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Online</button>
-                    </div>
+                    </div> */}
                   </div>
                   
                   

@@ -113,7 +113,8 @@ const Acknowledgement = () => {
     setData(prev => ({ ...prev, loading: true }));
      try {
        const limit = TABLE_LIMIT;
-       let data = await db.acknowledgementReceipts.toArray();
+       let data = await db.releaseReceipts.toArray();
+
        const filteredData = data.filter(e => e.action !== 'delete');
       let allData = filterAndSortLoanRelease(filteredData, keyword, sort, from, to);
        console.log(data)

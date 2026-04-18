@@ -206,6 +206,10 @@ const onSubmit = async (data: LoginFormData) => {
               </div>
 
               <div className=' bg-orange-50  w-full h-full flex items-center justify-center relative'>
+               
+                <div className={`${online ? ' bg-green-400' : ' bg-red-600'} h-4 w-4 rounded-full absolute top-4 right-4 z-[9999]`}>
+
+                  </div>
                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className=' absolute w-full top-0 left-0  '>
                  <path fill="#ffffff" fill-opacity="1" d="M0,64L0,192L180,192L180,64L360,64L360,192L540,192L540,64L720,64L720,320L900,320L900,160L1080,160L1080,256L1260,256L1260,64L1440,64L1440,0L1260,0L1260,0L1080,0L1080,0L900,0L900,0L720,0L720,0L540,0L540,0L360,0L360,0L180,0L180,0L0,0L0,0Z"></path>
                 </svg>

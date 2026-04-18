@@ -1,7 +1,7 @@
 {
   "name": "KFIDekstopApp",
   "description": "KFI Desktop App",
-"author": "Your Name <your@email.com>",
+  "author": "Your Name <your@email.com>",
   "version": "5.0.0",
   "private": true,
   "main": "electron.js",
@@ -58,6 +58,7 @@
     "@capacitor/device": "5.0.2",
     "@capacitor/filesystem": "5.0.0",
     "@capacitor/ios": "5.7.2",
+    "@capacitor/network": "5.0.8",
     "@capacitor/share": "5.0.8",
     "@capacitor/status-bar": "5.0.7",
     "@hookform/resolvers": "5.0.1",

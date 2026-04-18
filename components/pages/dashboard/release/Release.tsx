@@ -111,41 +111,41 @@ const Release = () => {
         setData(prev => ({ ...prev, loading: false }));
       }
     } else {
-      setData(prev => ({ ...prev, loading: true }));
-           try {
-             const limit = TABLE_LIMIT;
-            let data = await db.releaseReceipts.toArray();
-            const filteredData = data.filter(e => !e.deletedAt);
-            let allData = filterAndSortLoanRelease(filteredData, keyword, sort, from, to);
-             console.log(data)
-             const totalItems = allData.length;
-             const totalPages = Math.ceil(totalItems / limit);
-             const start = (page - 1) * limit;
-             const end = start + limit;
-             const finalData = allData.slice(start, end);
-             const hasPrevPage = page > 1;
-             const hasNextPage = page < totalPages;
-              setData(prev => ({
-                ...prev,
-                releases: finalData,
-                totalPages,
-                prevPage: hasPrevPage,
-                nextPage: hasNextPage,
-              }));
-             setCurrentPage(page);
-             setSearchKey(keyword);
-             setSortKey(sort);
-             setFrom(from);
-             setTo(to);
-           } catch (error) {
-             console.log(error)
-             present({
-               message: 'Failed to load records.',
-               duration: 1000,
-             });
-           } finally {
-             setData(prev => ({ ...prev, loading: false }));
-           }
+     setData(prev => ({ ...prev, loading: true }));
+          try {
+            const limit = TABLE_LIMIT;
+            let data = await db.acknowledgementReceipts.toArray();
+            const filteredData = data.filter(e => e.action !== 'delete');
+           let allData = filterAndSortLoanRelease(filteredData, keyword, sort, from, to);
+            console.log(data)
+            const totalItems = allData.length;
+            const totalPages = Math.ceil(totalItems / limit);
+            const start = (page - 1) * limit;
+            const end = start + limit;
+            const finalData = allData.slice(start, end);
+            const hasPrevPage = page > 1;
+            const hasNextPage = page < totalPages;
+             setData(prev => ({
+               ...prev,
+               releases: finalData,
+               totalPages,
+               prevPage: hasPrevPage,
+               nextPage: hasNextPage,
+             }));
+            setCurrentPage(page);
+            setSearchKey(keyword);
+            setSortKey(sort);
+            setFrom(from);
+            setTo(to);
+          } catch (error) {
+            console.log(error)
+            present({
+              message: 'Failed to load records.',
+              duration: 1000,
+            });
+          } finally {
+            setData(prev => ({ ...prev, loading: false }));
+          }
     }
   };
 

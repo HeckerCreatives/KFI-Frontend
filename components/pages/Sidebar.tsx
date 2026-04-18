@@ -64,17 +64,31 @@ export default function CollapsibleSidebar({
     );
   };
 
+  const getManageAccountPath = (permissions: Permission[], role: string): string => {
+    const hasAdmin = isVisible(role, permissions, ['admin']);
+    return hasAdmin ? '/dashboard/admin' : '/dashboard/client';
+  };
+  
   const visibleLinks = (links: NavLink[]): NavLink[] =>
     links
       .filter((link) => isLinkVisible(token.role, permissions, link))
-      .map((link) => ({
-        ...link,
-        children: link.children
-          ? visibleLinks(link.children)
-          : undefined,
-      }));
-
-  const filteredNavLinks = visibleLinks(navLinks);
+      .map((link) => {
+        // ✅ FIX: Override path for "Manage Account" based on permissions
+        if (link.label === 'Manage Account') {
+          return {
+            ...link,
+            path: getManageAccountPath(permissions, token.role),
+            children: link.children ? visibleLinks(link.children) : undefined,
+          };
+        }
+  
+        return {
+          ...link,
+          children: link.children ? visibleLinks(link.children) : undefined,
+        };
+      });
+  
+    const filteredNavLinks = visibleLinks(navLinks);
 
   return (
     <div

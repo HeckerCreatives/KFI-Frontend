@@ -108,45 +108,66 @@ const Admin = () => {
    } else {
      setData(prev => ({ ...prev, loading: true }));
               
-                  try {
-                    const limit = TABLE_LIMIT;
-              
-                    let data = await db.users.toArray();
-                    console.log(data)
-                    const filteredData = data.filter(e => !e.deletedAt);
-                    let allData =  filteredData
-              
-                    const totalItems = allData.length;
-                    const totalPages = Math.ceil(totalItems / limit);
-              
-                    const start = (page - 1) * limit;
-                    const end = start + limit;
-              
-                    const finalData = allData.slice(start, end);
-              
-                    const hasPrevPage = page > 1;
-                    const hasNextPage = page < totalPages;
-              
-                    setData(prev => ({
-                      ...prev,
-                      users: finalData,
-                      totalPages,
-                      prevPage: hasPrevPage,
-                      nextPage: hasNextPage,
-                    }));
-      
-              
-                    setCurrentPage(page);
-                    setSearchKey(keyword);
-                    setSortKey(sort);
-                  } catch (error) {
-                    present({
-                      message: 'Failed to load records.',
-                      duration: 1000,
-                    });
-                  } finally {
-                    setData(prev => ({ ...prev, loading: false }));
-                  }
+                 try {
+            const limit = TABLE_LIMIT;
+            let allData = await db.users.toArray();
+
+            allData = allData.filter(e => !e.deletedAt);
+
+            if (status) {
+                allData = allData.filter(e => e.status === status);
+            }
+
+            if (keyword) {
+                const kw = keyword.toLowerCase();
+                allData = allData.filter(e =>
+                    e.name?.toLowerCase().includes(kw) ||
+                    e.username?.toLowerCase().includes(kw)
+                );
+            }
+
+            allData = allData.sort((a, b) => {
+                switch (sort) {
+                    case SORTS.NAME_ASC:
+                        return (a.name || '').localeCompare(b.name || '', 'en', { sensitivity: 'base' });
+                    case SORTS.NAME_DESC:
+                        return (b.name || '').localeCompare(a.name || '', 'en', { sensitivity: 'base' });
+                    case SORTS.USER_ASC:
+                        return (a.username || '').localeCompare(b.username || '', 'en', { sensitivity: 'base' });
+                    case SORTS.USER_DESC:
+                        return (b.username || '').localeCompare(a.username || '', 'en', { sensitivity: 'base' });
+                    case SORTS.CREATED_ASC:
+                        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+                    case SORTS.CREATED_DESC:
+                        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+                    default:
+                        return (a.name || '').localeCompare(b.name || '', 'en', { sensitivity: 'base' });
+                }
+            });
+
+            const totalItems = allData.length;
+            const totalPages = Math.ceil(totalItems / limit);
+            const start = (page - 1) * limit;
+            const finalData = allData.slice(start, start + limit);
+            const hasPrevPage = page > 1;
+            const hasNextPage = page < totalPages;
+
+            setData(prev => ({
+                ...prev,
+                users: finalData,
+                totalPages,
+                prevPage: hasPrevPage,
+                nextPage: hasNextPage,
+            }));
+
+            setCurrentPage(page);
+            setSearchKey(keyword);
+            setSortKey(sort);
+        } catch (error) {
+            present({ message: 'Failed to load records.', duration: 1000 });
+        } finally {
+            setData(prev => ({ ...prev, loading: false }));
+        }
    }
   };
 
@@ -189,7 +210,7 @@ const Admin = () => {
 
   useEffect(() => {
     refetch()
-  },[sortKey])
+  },[sortKey, searchKey, status])
 
 
   return (
@@ -226,7 +247,7 @@ const Admin = () => {
                   <BanUser selected={selected} setSelected={setSelected} refetch={refetch} banned={statistics.banned} active={statistics.active} />
                 )}
               </div>
-              <UserFilter getUsers={getUsers} setStatus={setStatus} />
+              <UserFilter getUsers={getUsers} setStatus={setStatus} setSearchKey={setSearchKey} />
             </div>
 
 
