@@ -46,7 +46,7 @@ const InputSelect = <T extends FieldValues>({
         <div className={classNames('w-full flex items-start gap-1', containerClassnames)}>
          {label && (
              <div className="">
-               <IonLabel class="custom" className={classNames('!text-xs !text-black !font-medium text-end w-24')}>
+               <IonLabel class="custom" className={classNames('!text-xs !text-black !font-medium text-end w-16')}>
                  {label}
                </IonLabel>
              </div>

@@ -14,6 +14,7 @@ import FormIonItem from '../../../../ui/utils/FormIonItem';
 import SearchInput from '../../../../ui/forms/InputSearch';
 import { ArrowDown, ArrowUp, ChevronDownIcon, X } from 'lucide-react';
 import Paginations from '../../../../ui/common/PaginationsV2';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 type TSearch = {
   keyword: string;
@@ -52,6 +53,8 @@ const LoansPerCenter = () => {
   const arrDummy: string[] = Array.from(Array(10)).fill('');
   const ionInputRef = useRef<HTMLIonInputElement>(null);
   const [sortKey, setSortKey] = useState<string>('name-asc');
+  const online = useOnlineStore((state) => state.online);
+  
   
 
   const [present] = useIonToast();
@@ -118,13 +121,17 @@ const LoansPerCenter = () => {
   };
 
   useIonViewWillEnter(() => {
+    if(online){
     getRecentLoans(currentPage, center);
+
+    }
   });
 
 
     useEffect(() => {
+      if (online){
 
-       const getData = async () => {
+         const getData = async () => {
 
       try {
         const result = await kfiAxios.get('/statistics/loans-per-center', { params: { limit: 5, keyword: code, page: 1, center: center, sort: sortKey } });
@@ -147,6 +154,8 @@ const LoansPerCenter = () => {
     }, 500);
 
     return () => clearTimeout(timer);
+      }
+
    
   }, [code, center, sortKey]);
 
@@ -161,7 +170,8 @@ const centerTriggerRef = useRef<HTMLButtonElement>(null);
 
 // separate center fetcher
 const fetchCenters = async (page: number, keyword: string, append = false) => {
-  try {
+  if(online){
+    try {
     setLoadingCenters(true);
     const centers = await kfiAxios.get('/center/selection', {
       params: { limit: 10, page, keyword },
@@ -174,13 +184,18 @@ const fetchCenters = async (page: number, keyword: string, append = false) => {
   } finally {
     setLoadingCenters(false);
   }
+  }
+  
 };
 
 
 // on search change — reset to page 1
 useEffect(() => {
-  setCenterPage(1);
-  fetchCenters(1, centerSearch, false);
+  if(online){
+     setCenterPage(1);
+    fetchCenters(1, centerSearch, false);
+  }
+ 
 }, [centerSearch]);
 
 // on page increment — append

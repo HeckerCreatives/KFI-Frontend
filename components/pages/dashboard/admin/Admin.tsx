@@ -151,19 +151,22 @@ const Admin = () => {
   };
 
   const getStatistics = async () => {
-    try {
-      setStatistics(prev => ({ ...prev, loading: true }));
-      const result = await kfiAxios.get('/user/statistics');
-      const { banned, active, inactive } = result.data;
-      setStatistics(prev => ({ ...prev, banned, active, inactive }));
-    } catch (error) {
-      present({
-        message: 'Failed to get user statistics. Please try again',
-        duration: 1000,
-      });
-    } finally {
-      setStatistics(prev => ({ ...prev, loading: false }));
+    if (online){
+       try {
+        setStatistics(prev => ({ ...prev, loading: true }));
+        const result = await kfiAxios.get('/user/statistics');
+        const { banned, active, inactive } = result.data;
+        setStatistics(prev => ({ ...prev, banned, active, inactive }));
+      } catch (error) {
+        present({
+          message: 'Failed to get user statistics. Please try again',
+          duration: 1000,
+        });
+      } finally {
+        setStatistics(prev => ({ ...prev, loading: false }));
+      }
     }
+   
   };
 
   const handlePagination = (page: number) => getUsers(page, searchKey, sortKey, status);

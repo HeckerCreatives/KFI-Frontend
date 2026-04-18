@@ -6,9 +6,12 @@ import { useIonViewWillEnter } from '@ionic/react';
 import { formatNumber } from '../../../../ui/utils/formatNumber';
 import { UserMultiple02Icon, Wallet03Icon, UserMinus01Icon, UserCheck01Icon, UserBlock02Icon} from 'hugeicons-react';
 import { UserCheck } from 'lucide-react';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 const CardStatistics = () => {
   const [loading, setLoading] = useState(false);
+  const online = useOnlineStore((state) => state.online);
+  
   const [data, setData] = useState({
     totalActiveMembers: 0,
     totalInactiveMembers: 0,
@@ -29,7 +32,9 @@ const CardStatistics = () => {
   };
 
   useIonViewWillEnter(() => {
-    getCardStats();
+    if(online){
+       getCardStats()
+    }
   });
 
   return (

@@ -275,21 +275,16 @@ const ClientMasterFile = () => {
     }
   };
 
-  const getCLientsData = async (page: number, keyword = '', sort = '') => {
-    if (online){
-      getClients(page, keyword, sort);  
-    } else {
-      getClientsOffline(page, keyword, sort);
-    }
-  };
-
   const handlePagination = (page: number) => setCurrentPage(page);
   const [uploading, setUploading] = useState<boolean>(false)
   
 
   useIonViewWillEnter(() => {
-    getClients(currentPage)
-    getStatisticsData()
+    if(online){
+       getClients(currentPage)
+      getStatisticsData()
+    }
+   
   });
 
   // useEffect(() => {
@@ -299,7 +294,11 @@ const ClientMasterFile = () => {
       useEffect(() => {
         setCurrentPage(1)
       const timer = setTimeout(() => {
-      getClients(currentPage, searchKey, sortKey, status, dateReleased, dateResigned);
+        if (online){
+          getClients(currentPage, searchKey, sortKey, status, dateReleased, dateResigned);
+        } else {
+          getClientsOffline(currentPage, searchKey, sortKey);
+        }
 
       }, 500);
 
@@ -314,7 +313,11 @@ const ClientMasterFile = () => {
 
     useEffect(() => {
        const timer = setTimeout(() => {
-           getClients(currentPage, searchKey, sortKey, status, dateReleased, dateResigned);
+           if (online){
+            getClients(currentPage, searchKey, sortKey, status, dateReleased, dateResigned);
+          } else {
+            getClientsOffline(currentPage, searchKey, sortKey);
+          }
 
       }, 500);
 

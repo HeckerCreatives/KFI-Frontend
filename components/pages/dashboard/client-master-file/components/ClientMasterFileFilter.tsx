@@ -93,7 +93,6 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
 
   }, [sort, online, code, status, released, resigned]);
 
-  console.log('status', status, released, resigned) 
 
 
 

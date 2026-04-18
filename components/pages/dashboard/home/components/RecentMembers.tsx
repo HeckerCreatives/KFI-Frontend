@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import SearchInput from '../../../../ui/forms/InputSearch';
 import { search } from 'ionicons/icons';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 type TSearch = {
   code: string;
@@ -59,6 +60,8 @@ const RecentMembers = ({setSelected, selected} : Props) => {
   const [present] = useIonToast();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [data, setData] = useState<TRecentMember>({
     clients: [],
@@ -99,34 +102,35 @@ const RecentMembers = ({setSelected, selected} : Props) => {
   };
 
   useEffect(() => {
+    if(online){
     getRecentMembers(currentPage);
+
+    }
   }, []);
 
-  const onSubmit = (data: TSearch) => {
-      getRecentMembers(currentPage)
-  };
+
       useEffect(() => {
-         const getData = async () => {
-  
-        try {
-          const result = await kfiAxios.get('/statistics/recent-members', {params: {search: code}});
-           const { success, customers } = result.data;
-          if (success) {
-            setItems(customers.map((item: any) => item.name));
+        if(online){
+          const getData = async () => {
+          try {
+            const result = await kfiAxios.get('/statistics/recent-members', {params: {search: code}});
+            const { success, customers } = result.data;
+            if (success) {
+              setItems(customers.map((item: any) => item.name));
+            }
+          } catch (error) {
+            // handle error
+          } finally {
           }
-        } catch (error) {
-          // handle error
-        } finally {
-        }
       };
   
       const timer = setTimeout(() => {
         getData();
         getRecentMembers(currentPage)
       }, 500);
-  
       return () => clearTimeout(timer);
-     
+      }
+      
     }, [code]);
   
 

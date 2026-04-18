@@ -370,14 +370,14 @@ export default function UploadChanges() {
         <p className=' text-red-500'>Warning, do not sync data if there is an offline changes, data will be lost</p>
       </div> */}
 
-      <div className=" w-full grid grid-cols-2 gap-1 mt-4 max-h-[30rem] overflow-y-auto">
+      <div className=" w-full grid grid-cols-1 md:grid-cols-2 gap-1 mt-4 max-h-[30rem] overflow-y-auto">
         {tables.map((table) => {
           const count = changes[table.key];
 
           return (
             <div
               key={table.key}
-              className="flex items-center justify-between bg-zinc-50 hover:bg-zinc-100 transition rounded-md p-4 border border-zinc-200"
+              className="flex flex-wrap items-center justify-between bg-zinc-50 hover:bg-zinc-100 transition rounded-md p-4 border border-zinc-200"
             >
               <div className="flex flex-col">
                 <span className="font-medium text-sm">

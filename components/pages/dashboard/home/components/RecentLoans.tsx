@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form"
 import { search } from "ionicons/icons"
 import ViewLoanRelease from "../modals/ViewLoanRelease"
 import { Transaction } from "../../../../../types/types"
+import { useOnlineStore } from "../../../../../store/onlineStore"
 
 type TSearch = {
   code: string;
@@ -58,14 +59,17 @@ const RecentLoans = ({setSelected, selected} : Props) => {
   const [present] = useIonToast()
 
   const [currentPage, setCurrentPage] = useState<number>(1)
+  const online = useOnlineStore((state) => state.online);
 
-   const [data, setData] = useState<TData>({
+
+  const [data, setData] = useState<TData>({
       transactions: [],
       loading: false,
       totalPages: 0,
       nextPage: false,
       prevPage: false,
-    });
+  });
+
   const [items, setItems] = useState<string[]>([])
   
 
@@ -121,17 +125,16 @@ const RecentLoans = ({setSelected, selected} : Props) => {
 
 
   useEffect(() => {
+    if(online){
     getRecentLoans(currentPage)
+
+    }
 
   }, [])
 
-  
-
-  const onSubmit = (data: TSearch) => {
-      getRecentLoans(currentPage)
-  };
      useEffect(() => {
-        const getData = async () => {
+     if (online){
+       const getData = async () => {
        try {
          const result = await kfiAxios.get('/transaction/loan-release', {params: {search: code, page: 1}});
            const { success, transactions, hasPrevPage, hasNextPage, totalPages } = result.data;
@@ -147,6 +150,8 @@ const RecentLoans = ({setSelected, selected} : Props) => {
        getRecentLoans(currentPage)
      }, 500);
      return () => clearTimeout(timer);
+     }
+       
    }, [code]);
   
 

@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import FormIonItem from '../../../../ui/utils/FormIonItem';
 import SearchInput from '../../../../ui/forms/InputSearch';
 import kfiAxios from '../../../../utils/axios';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 type TSearch = {
   code: string;
@@ -19,6 +20,8 @@ type UserFilterProps = {
 };
 
 const UserFilter = ({ getUsers, setStatus }: UserFilterProps) => {
+  const online = useOnlineStore((state) => state.online);
+  
   const form = useForm<TSearch>({
     defaultValues: {
       code: '',
@@ -28,11 +31,11 @@ const UserFilter = ({ getUsers, setStatus }: UserFilterProps) => {
   });
 
   const onSubmit = (data: TSearch) => {
-    if (data.code !== '' || data.sort !== '') {
-      getUsers(1, data.code, data.sort);
-    } else {
-      getUsers(1);
-    }
+    // if (data.code !== '' || data.sort !== '') {
+    //   getUsers(1, data.code, data.sort);
+    // } else {
+    //   getUsers(1);
+    // }
   };
 
     const [items, setItems] = useState<string[]>([])
@@ -42,7 +45,8 @@ const UserFilter = ({ getUsers, setStatus }: UserFilterProps) => {
 
      useEffect(() => {
       setStatus(status)
-           const getData = async () => {
+      if(online){
+         const getData = async () => {
     
           try {
             const result = await kfiAxios.get('/user', {params: {search: code, status: status}});
@@ -62,6 +66,8 @@ const UserFilter = ({ getUsers, setStatus }: UserFilterProps) => {
         }, 500);
     
         return () => clearTimeout(timer);
+      }
+          
        
       }, [code, status]);
     

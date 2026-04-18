@@ -18,7 +18,7 @@ import { db } from '../../../../database/db';
 import { filterAndSortSuppliers } from '../../../ui/utils/sort';
 import Paginations from '../../../ui/common/PaginationsV2';
 import SortableTableHeader from '../../../ui/table/SortableTableHeader';
-import { Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
 
 export type TSupplier = {
   suppliers: SupplierType[];
