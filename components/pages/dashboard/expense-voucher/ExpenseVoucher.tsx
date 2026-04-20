@@ -82,8 +82,8 @@ const ExpenseVoucher = () => {
         const filter: TTableFilter & { to?: string; from?: string } = { limit: TABLE_LIMIT, page };
         if (keyword) filter.search = keyword;
         if (sort) filter.sort = sort;
-         if (to) filter.dateTo = to;
-        if (from) filter.dateFrom = from;
+         if (to) filter.to = to;
+        if (from) filter.from = from;
 
         const result = await kfiAxios.get('/expense-voucher', { params: filter });
         const { success, expenseVouchers, hasPrevPage, hasNextPage, totalPages } = result.data;
@@ -369,7 +369,7 @@ useEffect(() => {
                                 <div className=' flex items-center gap-1'>
                                   {displayNames.join(', ')}
                                   {hasMore ? (
-                                    <div className={`relative z-[99 + ${i}] group`}>
+                                    <div className={`relative z-[99 + ${i}] group group lg:block hidden`}>
                                       <p 
                                         className=' text-xs text-orange-400 cursor-pointer hover:underline'
                                         onMouseEnter={() => {setShowTooltip(true), setHover(expenseVoucher?._id || expenseVoucher?.id), setasMore(true)}}

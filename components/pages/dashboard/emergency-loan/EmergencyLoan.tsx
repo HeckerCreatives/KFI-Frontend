@@ -83,6 +83,8 @@ const EmergencyLoan = () => {
         if (sort) filter.sort = sort;
         if (to) filter.dateTo = to;
         if (from) filter.dateFrom = from;
+        if (to) filter.to = to;
+        if (from) filter.from = from;
 
         const result = await kfiAxios.get('/emergency-loan', { params: filter });
         const { success, emergencyLoans, hasPrevPage, hasNextPage, totalPages } = result.data;
@@ -367,7 +369,7 @@ const EmergencyLoan = () => {
                                                             <div className=' flex items-center gap-1'>
                                                               {displayNames.join(', ')}
                                                               {hasMore ? (
-                                                                <div className={`relative z-[99 + ${i}] group`}>
+                                                                <div className={`relative z-[99 + ${i}] group group lg:block hidden`}>
                                                                   <p 
                                                                     className=' text-xs text-orange-400 cursor-pointer hover:underline'
                                                                     onMouseEnter={() => {setShowTooltip(true), setHover(emergencyLoan?._id || emergencyLoan?.id), setasMore(true)}}

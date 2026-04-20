@@ -82,6 +82,8 @@ const DamayanFund = () => {
         if (sort) filter.sort = sort;
         if (to) filter.dateTo = to;
         if (from) filter.dateFrom = from;
+        if (to) filter.to = to;
+        if (from) filter.from = from;
 
         const result = await kfiAxios.get('/damayan-fund', { params: filter });
         const { success, damayanFunds, hasPrevPage, hasNextPage, totalPages } = result.data;
@@ -154,20 +156,19 @@ const DamayanFund = () => {
     getDamayanFunds(currentPage);
   });
 
+   useEffect(() => {
+         setCurrentPage(1);
+         const timer = setTimeout(() => {
+         getDamayanFunds(currentPage, searchKey, sortKey, to, from);
+         }, 500)
+         return () => clearTimeout(timer);
+       }, [searchKey, sortKey, to, from]);
+     
+       useEffect(() => {
+         getDamayanFunds(currentPage, searchKey, sortKey, to, from);
+       }, [currentPage]);
 
-  useEffect(() => {
-       setCurrentPage(1);
-       const timer = setTimeout(() => {
-       getDamayanFunds(1, searchKey, sortKey, to, from);
-       }, 500);
-     return () => clearTimeout(timer);
 
-     }, [searchKey, sortKey, to, from]);
-   
-     useEffect(() => {
-       getDamayanFunds(currentPage, searchKey, sortKey, to, from);
-     }, [currentPage]);
-  
 
   return (
     <IonPage className="  w-full flex items-center justify-center h-full bg-zinc-100">

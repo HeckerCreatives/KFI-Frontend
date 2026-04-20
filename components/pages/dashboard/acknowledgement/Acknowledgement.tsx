@@ -281,7 +281,7 @@ const Acknowledgement = () => {
                                     <div className=' flex items-center gap-1'>
                                       {displayNames.join(', ')}
                                       {hasMore ? (
-                                        <div className={`relative z-[99 + ${i}] group`}>
+                                        <div className={`relative z-[99 + ${i}] group group lg:block hidden`}>
                                           <p 
                                             className=' text-xs text-orange-400 cursor-pointer hover:underline'
                                             onMouseEnter={() => {setShowTooltip(true), setHover(acknowledgement?._id || acknowledgement?.id), setasMore(true)}}

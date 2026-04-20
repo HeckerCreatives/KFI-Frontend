@@ -167,7 +167,7 @@ const PrintAllEmergencyLoan = () => {
           result = await kfiAxios.post(
             `/emergency-loan/print/by-accounts/${data.option}`,
             {
-              accounts: data.chartOfAccountsIds,
+              chartOfAccountsIds: data.chartOfAccountsIds,
               dateFrom: data.dateFrom,
               dateTo: data.dateTo,
             },

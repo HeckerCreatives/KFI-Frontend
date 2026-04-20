@@ -5,6 +5,7 @@ import { systemResource } from '../../../../../utils/constants';
 import UserTableRow from '../UserTableRow';
 
 const SystemPermission = ({ permissions, setPermissions }: { permissions: Permission[]; setPermissions: React.Dispatch<React.SetStateAction<Permission[]>> }) => {
+  console.log(permissions);
   return (
     <div>
       <h6 className="!font-medium m-0 mt-2">System</h6>

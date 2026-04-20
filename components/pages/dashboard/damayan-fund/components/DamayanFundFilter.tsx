@@ -37,11 +37,11 @@ const DamayanFundFilter = ({ getDamayanFunds, setSearchKey, setTo, setFrom, sugg
   });
 
   const onSubmit = (data: TSearch) => {
-    if (data.code !== '' || data.sort !== '' || data.dateFrom !== '' || data.dateTo !== '') {
-      getDamayanFunds(1, data.code, data.sort, data.dateTo, data.dateFrom);
-    } else {
-      getDamayanFunds(1);
-    }
+    // if (data.code !== '' || data.sort !== '' || data.dateFrom !== '' || data.dateTo !== '') {
+    //   getDamayanFunds(1, data.code, data.sort, data.dateTo, data.dateFrom);
+    // } else {
+    //   getDamayanFunds(1);
+    // }
   };
 
 
@@ -52,9 +52,9 @@ const DamayanFundFilter = ({ getDamayanFunds, setSearchKey, setTo, setFrom, sugg
       const dateTo = form.watch('dateTo');
       const dateFrom = form.watch('dateFrom');
   useEffect(() => {
-          setSearchKey(code);
-          setTo(dateTo);
-          setFrom(dateFrom);
+  setSearchKey(code);
+  setTo(dateTo);
+  setFrom(dateFrom);
   },[code, dateTo, dateFrom])
 
   return (

@@ -8,7 +8,7 @@ export const transactionResource: string[] = ['loan release', 'expense voucher',
 
 export const generalLedgerResource: string[] = ['audit trail', 'financial statement', 'trial balance', 'activity','beginning balance', 'projected collection', 'portfolio at risk'];
 
-export const systemResource: string[] = ['group of account', 'chart of account', 'product', 'center', 'bank', 'weekly savings', 'business type', 'business supplier', 'nature', 'system parameters'];
+export const systemResource: string[] = ['group of account', 'chart of account', 'product', 'center', 'bank', 'weekly savings', 'business type', 'business supplier', 'nature', 'system parameters', 'databases'];
 
 export const diagnosticsResource: string[] = ['unbalance entries', 'login logs', 'action logs'];
 

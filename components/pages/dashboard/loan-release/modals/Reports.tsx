@@ -125,14 +125,13 @@ const Reports = () => {
           }
 
 
-    } catch (error) {
-        console.error(error);
-        present({
-        message:
-            "Failed to export the loan release records. Please try again.",
-        duration: 1000,
-        });
-    } finally {
+    } catch (error: any) {
+            console.error(error);
+            present({
+            message: error.response.data.msg || error.response.data.message,
+            duration: 1000,
+            });
+        }  finally {
         setLoading(false);
     }
     }
@@ -208,10 +207,10 @@ const Reports = () => {
 
 
             // form.reset();
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             present({
-            message: "Failed to export the loan release records. Please try again.",
+            message: error.response.data.msg || error.response.data.message,
             duration: 1000,
             });
         } finally {

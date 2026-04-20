@@ -383,7 +383,7 @@ const LoanRelease = () => {
                                 <div className=' flex items-center gap-1'>
                                   {displayNames.join(', ')}
                                   {hasMore ? (
-                                    <div className={`relative z-[99 + ${i}] group`}>
+                                    <div className={`relative z-[99 + ${i}] group lg:block hidden`}>
                                       <p 
                                         className=' text-xs text-orange-400 cursor-pointer hover:underline'
                                         onMouseEnter={() => {setShowTooltip(true), setHover(transaction?._id || transaction?.id), setasMore(true)}}

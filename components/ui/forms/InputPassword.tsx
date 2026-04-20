@@ -51,7 +51,7 @@ const InputPassword = <T extends FieldValues>({
           <div className={classNames('w-full flex items-start gap-1', containerClassNames)}>
             {label && (
               <div className="flex justify-between">
-                <IonLabel class="custom" className={classNames('!text-xs !text-black !font-medium w-24 text-end ')}>
+                <IonLabel class="custom" className={classNames('!text-xs !text-black !font-medium w-16 text-end ')}>
                   {label}
                 </IonLabel>
               </div>
