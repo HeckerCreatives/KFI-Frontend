@@ -107,6 +107,7 @@ const UpdateLoanRelease = ({ transaction, setData, currentPage, getTransactions 
         debit: Number(removeAmountComma(item.debit || '0')) ?? '0' ,
         credit: Number(removeAmountComma(item.credit || '0')) ?? '0' ,
         interest: Number(removeAmountComma(item.interest || '0')) ?? '0',
+        cycle: Number(removeAmountComma(item.cycle || '0')) ?? '0',
         action: item._id ? 'update' : 'create',
         _synced: false,
       }))
@@ -176,7 +177,9 @@ const UpdateLoanRelease = ({ transaction, setData, currentPage, getTransactions 
             client:{
               name: item.client,
               _id: item.clientId
-            }
+            },
+            action: 'update',
+            _synced: 'false'
           })),
           bank:{
             code: transaction.bank.code,

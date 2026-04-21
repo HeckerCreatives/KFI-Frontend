@@ -59,12 +59,12 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
                 control={form.control}
                 clearErrors={form.clearErrors}
                 label="Nature"
-                placeholder="Click find to search for nature"
+                placeholder="Type here"
                 className="!p-2 rounded-md !text-[0.7rem] "
                 labelClassName="truncate min-w-[7.6rem] !text-[0.7rem] lg:min-w-20 !text-slate-600 text-end"
               />
             </FormIonItem>
-            <NatureSelection nature='nature' clearErrors={form.clearErrors} setValue={form.setValue} className=" text-xs" />
+            {/* <NatureSelection nature='nature' clearErrors={form.clearErrors} setValue={form.setValue} className=" text-xs" /> */}
           </div>
         </div>
         <div className="space-y-1">

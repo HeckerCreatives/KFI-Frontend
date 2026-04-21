@@ -53,7 +53,7 @@ const ViewDamayanFund = ({ damayanFund }: { damayanFund: DamayanFund }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 space-y-1">
                 <div className="space-y-1">
                   <DamayanFundViewCard label="JV#" value={`${damayanFund?.code}`} labelClassName="min-w-24 text-end" />
-                  <DamayanFundViewCard label="Center Code" value={damayanFund?.center?.description} labelClassName="min-w-24 text-end" />
+                  <DamayanFundViewCard label="Center Code" value={damayanFund?.center?.description || damayanFund?.center.centerNo} labelClassName="min-w-24 text-end" />
                 </div>
                 <div className="space-y-1">
                   <DamayanFundViewCard label="Date" value={formatDateTable(damayanFund?.date)} labelClassName="min-w-24 text-end" />

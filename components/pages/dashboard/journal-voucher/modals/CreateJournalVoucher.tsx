@@ -99,6 +99,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
         console.log('Form Data',data)
         await db.journalVouchers.add({
           ...data,
+          amount: Number(removeAmountComma(data.amount)),
            entries: data.entries.map((item, index) => ({
             ...item,
             line: index + 1,
@@ -123,7 +124,6 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
           encodedBy:{
             username: user
           },
-          amount:Number(removeAmountComma(data.amount)),
         _synced: false,  
         action: "create",
         isOldData: false

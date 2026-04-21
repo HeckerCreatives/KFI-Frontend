@@ -154,36 +154,36 @@ const watchedEntries = form.watch('entries');
 
 const fetchedClientIds = useRef<Map<string, { interestRate: any; latestCycle: any }>>(new Map());
 
-const fetchClientData = async (clientId: string, indexes: number[]) => {
-  try {
-    let data;
+// const fetchClientData = async (clientId: string, indexes: number[]) => {
+//   try {
+//     let data;
 
-    if (fetchedClientIds.current.has(clientId)) {
-      data = fetchedClientIds.current.get(clientId);
-    } else {
-      const result = await kfiAxios.get(`/customer/${clientId}/loan-cycle-and-amount`);
-      data = result.data.data;
-      fetchedClientIds.current.set(clientId, data);
-    }
+//     if (fetchedClientIds.current.has(clientId)) {
+//       data = fetchedClientIds.current.get(clientId);
+//     } else {
+//       const result = await kfiAxios.get(`/customer/${clientId}/loan-cycle-and-amount`);
+//       data = result.data.data;
+//       fetchedClientIds.current.set(clientId, data);
+//     }
 
-    indexes.forEach((i) => {
-      const currentCycle = form.getValues(`entries.${i}.cycle`);
-      const currentInterest = form.getValues(`entries.${i}.interest`);
+//     indexes.forEach((i) => {
+//       const currentCycle = form.getValues(`entries.${i}.cycle`);
+//       const currentInterest = form.getValues(`entries.${i}.interest`);
 
-      // ✅ ONLY set if empty (prevent overwrite)
-      if (currentInterest === '' || currentInterest === undefined) {
-        form.setValue(`entries.${i}.interest`, data.interestRate);
-      }
+//       // ✅ ONLY set if empty (prevent overwrite)
+//       if (currentInterest === '' || currentInterest === undefined) {
+//         form.setValue(`entries.${i}.interest`, data.interestRate);
+//       }
 
-      if (currentCycle === '' || currentCycle === undefined) {
-        form.setValue(`entries.${i}.cycle`, data.latestCycle);
-      }
-    });
+//       if (currentCycle === '' || currentCycle === undefined) {
+//         form.setValue(`entries.${i}.cycle`, data.latestCycle);
+//       }
+//     });
 
-  } catch (error) {
-    console.error(error);
-  }
-};
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 useEffect(() => {
   if (!watchedEntries) return;
@@ -201,10 +201,10 @@ useEffect(() => {
     clientIdMap.get(entry.clientId)!.push(i);
   });
 
-  // Fetch once per unique clientId, apply to all matching indexes
-  clientIdMap.forEach((indexes, clientId) => {
-    fetchClientData(clientId, indexes);
-  });
+
+  // clientIdMap.forEach((indexes, clientId) => {
+  //   fetchClientData(clientId, indexes);
+  // });
 
 
 

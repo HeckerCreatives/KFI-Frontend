@@ -54,25 +54,25 @@ const LoanReleaseFormTableDoc = ({ entry, index, remove, form, setPage, currentL
 
 const watchedEntries = form.watch('entries');
 
-useEffect(() => {
-  if (!watchedEntries?.length) return;
+// useEffect(() => {
+//   if (!watchedEntries?.length) return;
 
-  const validCycles = watchedEntries
-    .map(e => e?.cycle)
-    .filter(c => c !== undefined && c !== null)
-    .map(c => String(c));
+//   const validCycles = watchedEntries
+//     .map(e => e?.cycle)
+//     .filter(c => c !== undefined && c !== null)
+//     .map(c => String(c));
 
-  if (!validCycles.length) return;
+//   if (!validCycles.length) return;
 
-  const uniqueCycles = Array.from(new Set(validCycles));
+//   const uniqueCycles = Array.from(new Set(validCycles));
 
-  const cycles =
-    uniqueCycles.length === 1
-      ? uniqueCycles[0]
-      : uniqueCycles.join(', ');
+//   const cycles =
+//     uniqueCycles.length === 1
+//       ? uniqueCycles[0]
+//       : uniqueCycles.join(', ');
 
-  form.setValue('cycle', cycles);
-}, [JSON.stringify(watchedEntries.map(e => e?.cycle))]);
+//   form.setValue('cycle', cycles);
+// }, [JSON.stringify(watchedEntries.map(e => e?.cycle))]);
 
 
 

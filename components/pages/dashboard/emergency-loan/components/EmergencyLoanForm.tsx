@@ -36,6 +36,36 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
               labelClassName="truncate min-w-[7.5rem] !text-[0.7rem] lg:min-w-16 !text-slate-600 text-end"
             />
           </FormIonItem>
+
+           <div className="flex items-center gap-2 flex-nowrap">
+            <FormIonItem className="flex-1">
+              <InputText
+                disabled={loading}
+                readOnly
+                name="centerLabel"
+                control={form.control}
+                clearErrors={form.clearErrors}
+                label="Center Code"
+                placeholder="Click find to search for center code"
+                className=" !p-2 rounded-md !text-[0.7rem]"
+                labelClassName="truncate min-w-20 !text-[0.7rem] !text-slate-600 text-end"
+              />
+            </FormIonItem>
+            <CenterSelection centerLabel="centerLabel" centerValue="center" centerDescription='centerDescription' clearErrors={form.clearErrors} setValue={form.setValue} className="text-xs" />
+          </div>
+
+          <FormIonItem className="[--min-height:0]">
+                      <InputText
+                        disabled={loading}
+                        name="centerDescription"
+                        control={form.control}
+                        clearErrors={form.clearErrors}
+                        label="Name"
+                        placeholder={`${'Type here'}`}
+                        className="!p-2 rounded-md !text-[0.7rem]"
+                        labelClassName="truncate min-w-20 !text-[0.7rem] !text-slate-600 text-end"
+                      />
+                    </FormIonItem>
          
 
 

@@ -50,6 +50,8 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
       amount: '0',
       entries: [],
       mode: 'create',
+      name:  user || '',
+    
     },
   });
 
@@ -130,6 +132,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
            encodedBy: {
             username: user
            },
+           amount: Number(removeAmountComma(data.amount)),
            _synced: false,  
            action: "create",
          });

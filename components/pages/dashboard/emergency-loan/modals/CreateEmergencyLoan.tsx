@@ -17,6 +17,7 @@ import Signatures from '../../../../ui/common/Signatures';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
 import { formatEVEntries } from '../../../../ui/utils/fomatData';
+import { AmpouleIcon } from 'hugeicons-react';
 
 type CreateEmergencyLoanProps = {
   getEmergencyLoans: (page: number, keyword?: string, sort?: string) => void;
@@ -37,8 +38,8 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
     resolver: zodResolver(emergencyLoanSchema),
     defaultValues: {
       code: '',
-      // centerValue: '',
-      // centerLabel: '',
+      center: '',
+      centerLabel: '',
       // clientValue: '',
       // clientLabel: '',
       refNo: '',
@@ -53,6 +54,7 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
       amount: '0',
       entries: [],
       // mode: 'create',
+      user: user || '',
     },
   });
 
@@ -75,7 +77,7 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
       try {
         data.amount = removeAmountComma(data.amount);
         data.entries = data.entries ? data.entries.map((entry, index) => ({ ...entry, debit: removeAmountComma(entry.debit), credit: removeAmountComma(entry.credit), line: index + 1 })) : [];
-        const result = await kfiAxios.post('/emergency-loan', data);
+        const result = await kfiAxios.post('/emergency-loan', {...data, type: 'Emergency Loan', remarks: data.remarks});
         const { success } = result.data;
         if (success) {
           getEmergencyLoans(1);
@@ -123,12 +125,17 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
              action: 'create',
           _synced: false,
           })), 
-           bank:{
+            bank:{
               code: data.bankCodeLabel,
               description: data.bankCodeLabel,
               _id: data.bankCode
             },
-           
+           center:{
+              centerNo: data.centerLabel,
+              description: data.centerLabel,
+              _id: data.center,
+            },
+            amount: Number(removeAmountComma(data.amount)),
           action: "create",
           _synced: false
         });

@@ -25,7 +25,7 @@ type CenterActionsProps = {
 const CenterActions = ({ center, setData, getCenters, currentPage, setCurrentPage, searchKey, sortKey, rowLength }: CenterActionsProps) => {
   const token: AccessToken = jwtDecode(localStorage.getItem('auth') as string);
   const permissions = JSON.parse(localStorage.getItem('permissions') || '[]')
-  const triggerId = `loanrelease-action-trigger-${center._id}`;
+  const triggerId = `loanrelease-action-trigger-${center._id || center.id}`;
 
 
   return (

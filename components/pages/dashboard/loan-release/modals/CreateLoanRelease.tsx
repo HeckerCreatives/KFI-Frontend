@@ -79,11 +79,12 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
     data.entries = data.entries.map((entry, index) => {
       const debit = removeAmountComma(entry.debit as string);
       const credit = removeAmountComma(entry.credit as string);
+      const cycle = removeAmountComma(entry.cycle as string);
 
       totalDebit += Number(debit);
       totalCredit += Number(credit);
 
-      return {...entry, debit, credit, line: index + 1};
+      return {...entry, debit, credit, cycle, line: index + 1};
     });
     data.amount = removeAmountComma(data.amount);
     data.root = '';
@@ -131,6 +132,9 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
             action: 'create',
             _synced: false,
           })), 
+          code: data.cvNo,
+          interest: data.interestRate,
+          remarks: data.remarks,
            bank:{
             code: data.bankCodeLabel,
             description: data.bankCodeLabel,
@@ -138,7 +142,8 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
           },
           center: {
             _id: data.center,
-            description: data.centerLabel
+            description: data.centerLabel,
+            centerNo: data.centerLabel,
           },
           loan: {
             code: data.typeOfLoanLabel,

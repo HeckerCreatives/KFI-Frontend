@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { Minus, X, Download, File } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Minus, X, Download, File, Trash, XIcon } from 'lucide-react';
 import { Job, useJobStore } from '../../store/fileQueStore';
-import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Browser } from '@capacitor/browser';
+import { isPlatform, useIonToast } from '@ionic/react';
 import { Share } from '@capacitor/share';
 
 
@@ -10,117 +11,80 @@ import { Share } from '@capacitor/share';
 
 export const FileQueue = () => {
   const { jobs, deleteJob} = useJobStore()
-  const [minimized, setMinimized] = useState(false);
-  const [showQueue, setShowQueue] = useState(true);
-  const autoDownloadedRef = useRef<Set<string>>(new Set());
-
-  const handleDownload = useCallback(async (fileUrl: string, label: string, fileType: string, jobId?: string, filename?: string) => {
-    if (!fileUrl) return;
-
-    const extensions: Record<string, string> = {
-        pdf: '.pdf',
-        excel: '.xlsx',
-        zip: '.zip',
-    };
+   const [minimized, setMinimized] = useState(false);
+    const [showQueue, setShowQueue] = useState(true); 
+      const [present] = useIonToast();
     
-    // Check if filename already has an extension
-    let fullFilename: string;
-    if (filename && /\.(pdf|xlsx|zip)$/i.test(filename)) {
-        // Filename already has an extension, use as-is
-        fullFilename = filename;
+
+const handleDownload = async (
+  fileUrl: string,
+  label: string,
+  fileType: string,
+  jobId?: string,
+  filename?: string
+) => {
+  if (!fileUrl) return;
+
+  const extensions: Record<string, string> = {
+    pdf: '.pdf',
+    excel: '.xlsx',
+    zip: '.zip',
+  };
+
+  const ext = extensions[fileType.toLowerCase()] ?? '';
+  const fullFilename = (filename || label);
+
+  try {
+    if (isPlatform('android')) {
+      // ✅ Android — fetch the file and save via Capacitor Filesystem
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+
+      // Convert blob to base64
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          resolve(result.split(',')[1]); // strip data:...;base64,
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+
+      // Save to device
+      const savedFile = await Filesystem.writeFile({
+        path: fullFilename,
+        data: base64,
+        directory: Directory.Documents,
+        recursive: true,
+      });
+
+      // Share/open the file so user can see it
+      await Share.share({
+        title: fullFilename,
+        url: savedFile.uri,
+        dialogTitle: 'Open or Save File',
+      });
+
     } else {
-        // Append extension based on fileType
-        const ext = extensions[fileType.toLowerCase()] ?? '';
-        fullFilename = (filename || label) + ext;
+      // ✅ Windows/Web — use anchor download
+      const a = document.createElement('a');
+      a.href = fileUrl;
+      a.download = fullFilename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
     }
-    
-    const mimeTypes: Record<string, string> = {
-        pdf: 'application/pdf',
-        excel: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        zip: 'application/zip',
-    };
-    const mimeType = mimeTypes[fileType.toLowerCase()] ?? 'application/octet-stream';
-
-    if (Capacitor.isNativePlatform()) {
-        try {
-            // 1. Fetch blob and convert to base64
-            const response = await fetch(fileUrl);
-            const blob = await response.blob();
-            const base64 = await new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve((reader.result as string).split(',')[1]);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
-
-            // 2. Write to app cache (no storage permission needed)
-            await Filesystem.writeFile({
-                path: fullFilename,
-                data: base64,
-                directory: Directory.Cache,
-            });
-
-            // 3. Get the native file URI
-            const { uri } = await Filesystem.getUri({
-                path: fullFilename,
-                directory: Directory.Cache,
-            });
-
-            // 4. Open Android native share sheet with the file
-            await Share.share({
-                title: fullFilename,
-                files: [uri],
-                dialogTitle: 'Save or share file',
-            });
-        } catch (err: any) {
-            if (err?.message?.includes('Share canceled') || err?.errorMessage?.includes('canceled')) {
-                return; // user dismissed, keep job
-            }
-            console.error('[FileQueue] Download error:', err);
-            // Last resort: open in new tab
-            window.open(fileUrl, '_blank');
-        }
-    } else {
-        downloadViaLink(fileUrl, fullFilename);
-    }
-
+  } catch (error) {
+    console.error('Download error:', error);
+  } finally {
     if (jobId) {
-        deleteJob(jobId);
+      deleteJob(jobId);
     }
-  }, [deleteJob]);
+  }
+};
 
-    useEffect(() => {
-        jobs.forEach(job => {
-            if (job.fileUrl && job.progress >= 100 && !autoDownloadedRef.current.has(job.jobId)) {
-                autoDownloadedRef.current.add(job.jobId);
-                handleDownload(job.fileUrl, job.label, job.fileType || '', job.jobId, job.filename);
-            }
-        });
-    }, [jobs, handleDownload]);
-
-
-    const downloadViaLink = (fileUrl: string, filename: string) => {
-        const link = document.createElement('a');
-        link.href = fileUrl;
-        link.download = filename;
-        link.style.display = 'none';
-        link.setAttribute('download', filename);
-        
-        document.body.appendChild(link);
-        link.click();
-        
-        setTimeout(() => {
-            document.body.removeChild(link);
-            if (fileUrl.startsWith('blob:')) {
-                setTimeout(() => {
-                    window.open(fileUrl, '_blank');
-                }, 500);
-            }
-        }, 100);
-    };
-
-
-  if (jobs.length === 0 || !showQueue) return null;
+  if (jobs.length === 0) return null;
 
  if (minimized) {
   const allDone = jobs.every(j => j.progress >= 100);
@@ -185,12 +149,12 @@ export const FileQueue = () => {
           >
             <Minus size={14} />
           </button>
-          <button
+          {/* <button
             onClick={() => setShowQueue(false)}
             className="w-7 h-7 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
           >
             <X size={14} />
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -202,7 +166,7 @@ export const FileQueue = () => {
             <div key={job.jobId} className="flex items-center gap-3 px-4 py-3">
               {/* file icon */}
               <div className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 ${
-                job.fileType === 'pdf' ? 'bg-red-50 text-red-600' : job.fileType === 'zip' ? 'bg-yellow-50 text-yellow-600' : 'bg-green-50 text-green-600'
+                job.fileType === 'pdf' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
               }`}>
 
                
@@ -229,52 +193,59 @@ export const FileQueue = () => {
                 </div>
               </div>
 
-              <div className="shrink-0 flex items-center gap-2">
-                {(job.fileUrl || job.progress >= 100) ? (
+              <div className="shrink-0">
+                {job.progress === 100 ? (
                   <button
-                    onClick={() => job.fileUrl && handleDownload(job.fileUrl!, job.label, job.fileType || '', job.jobId, job.filename)}
-                    disabled={!job.fileUrl}
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-[#1a73e8] hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => handleDownload(job.fileUrl!, job.label, job.fileType || '', job.jobId, job.filename)}
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-[#1a73e8] hover:bg-blue-50 transition-colors"
                   >
                     <Download size={15} />
                   </button>
                 ) : (
                   <>
                   {job.status === 'error' ? (
-                    <span className="text-xs text-red-500 font-medium">Error</span>
+                  <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><Trash size={15}/></button>
+
                   ): (
-                    <svg
-                      className="animate-spin text-zinc-500"
-                      width={15}
-                      height={15}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        d="M12 2a10 10 0 0 1 10 10"
-                        stroke=" #71717a"
-                        strokeOpacity={0.4}
-                      />
-                      <path
-                        strokeLinecap="round"
-                        d="M12 2a10 10 0 0 1 10 10"
-                        stroke=" #71717a"
-                        strokeDasharray="15 45"
-                      />
-                    </svg>
+                    <div className=' flex gap-2'>
+                      {job.progress < 100 && (
+                        <>
+                          <svg
+                        className="animate-spin text-zinc-500"
+                        width={15}
+                        height={15}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          d="M12 2a10 10 0 0 1 10 10"
+                          stroke=" #71717a"
+                          strokeOpacity={0.4}
+                        />
+                        <path
+                          strokeLinecap="round"
+                          d="M12 2a10 10 0 0 1 10 10"
+                          stroke=" #71717a"
+                          strokeDasharray="15 45"
+                        />
+                      </svg>
+
+                    <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
+                        </>
+                        
+
+                      )}
+                      
+
+
+                    </div>
+                
                   )}
                   </>
                 )}
-                <button 
-                  onClick={() => deleteJob(job.jobId)}
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                  title="Remove from queue"
-                >
-                  <X size={15} />
-                </button>
               </div>
             </div>
           );

@@ -13,6 +13,7 @@ import { Search01Icon } from 'hugeicons-react';
 import { useOnlineStore } from '../../../store/onlineStore';
 import { TABLE_LIMIT } from '../../utils/constants';
 import { db } from '../../../database/db';
+import Paginations from '../common/PaginationsV2';
 
 type Option = {
   _id: string;
@@ -65,65 +66,73 @@ const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setV
   };
 
   const handleSearch = async (page: number) => {
-    console.log(online, 'Here cs')
-   if(online){
-     const value = ionInputRef.current?.value || '';
-      setLoading(true);
-      try {
-        const filter: any = { keyword: value, page, limit: 10 };
-        if (center) filter.center = center;
-        const result = await kfiAxios.get('customer/selection', { params: filter });
-        const { success, clients, hasPrevPage, hasNextPage, totalPages } = result.data;
-        if (success) {
-          setData(prev => ({
-            ...prev,
-            clients: clients,
-            totalPages: totalPages,
-            nextPage: hasNextPage,
-            prevPage: hasPrevPage,
-          }));
-          setCurrentPage(page);
-          return;
-        }
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
-   } else {
+  if (online) {
+    const value = ionInputRef.current?.value || '';
+    setLoading(true);
     try {
-        const limit = TABLE_LIMIT;
-        let allData = await db.clientMasterFile.toArray();
-        let allOptions: Option[] = allData.map(item => ({
-           _id: item._id,
-            name: item.name,
-            acctNumber: item.acctNumber,
-            center: { centerNo: item.center?.centerNo },
-        }));
-
-
-        
-       const totalItems = allOptions.length;
-        const totalPages = Math.ceil(totalItems / limit);
-        const start = (page - 1) * limit;
-        const end = start + limit;
-        const finalData = allOptions.slice(start, end);
-        const hasPrevPage = page > 1;
-        const hasNextPage = page < totalPages;
+      const filter: any = { keyword: value, page, limit: 10 };
+      if (center) filter.center = center;
+      const result = await kfiAxios.get('customer/selection', { params: filter });
+      const { success, clients, hasPrevPage, hasNextPage, totalPages } = result.data;
+      if (success) {
         setData(prev => ({
-           ...prev,
-          clients: finalData,
-          totalPages: totalPages,
+          ...prev,
+          clients,
+          totalPages,
           nextPage: hasNextPage,
           prevPage: hasPrevPage,
         }));
         setCurrentPage(page);
-      } catch (error) {
-        console.error("Erro while fetching data.", error);
-      } finally {
-        setData(prev => ({ ...prev, loading: false }));
       }
-   }
-  };
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  } else {
+    try {
+      const value = ionInputRef.current?.value?.toString().toLowerCase() || ''; // ✅ get search keyword
+      const limit = TABLE_LIMIT;
+
+      let allData = await db.clientMasterFile.toArray();
+
+      let allOptions: Option[] = allData.map(item => ({
+        _id: item._id,
+        name: item.name,
+        acctNumber: item.acctNumber,
+        center: { centerNo: item.center?.centerNo },
+      }));
+
+
+      // Filter: by search keyword (name or acctNumber)
+      if (value) {
+        allOptions = allOptions.filter(item =>
+          item.name?.toLowerCase().includes(value)
+        );
+      }
+
+      const totalItems = allOptions.length;
+      const totalPages = Math.ceil(totalItems / limit);
+      const start = (page - 1) * limit;
+      const finalData = allOptions.slice(start, start + limit);
+      const hasPrevPage = page > 1;
+      const hasNextPage = page < totalPages;
+
+      setData(prev => ({
+        ...prev,
+        clients: finalData,
+        totalPages,
+        nextPage: hasNextPage,
+        prevPage: hasPrevPage,
+      }));
+
+      setCurrentPage(page);
+    } catch (error) {
+      console.error('Error while fetching data.', error);
+    } finally {
+      setData(prev => ({ ...prev, loading: false }));
+    }
+  }
+};
 
   const handleSelectClient = (client: Option) => {
     const clientName = client.name as PathValue<T, Path<T>>;
@@ -229,7 +238,7 @@ const ClientSelection = <T extends FieldValues>({ clientLabel, clientValue, setV
               </TableBody>
             </Table>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+          <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonModal>
     </>

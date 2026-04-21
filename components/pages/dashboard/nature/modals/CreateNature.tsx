@@ -18,12 +18,12 @@ type CreateNatureProps = {
 
 const CreateNature = ({ getNatures }: CreateNatureProps) => {
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // ✅ FIX: control modal with state
 
   const modal = useRef<HTMLIonModalElement>(null);
   const online = useOnlineStore((state) => state.online);
   const [present] = useIonToast();
-  
-  
+
   const form = useForm<NatureFormData>({
     resolver: zodResolver(natureSchema),
     defaultValues: {
@@ -34,11 +34,11 @@ const CreateNature = ({ getNatures }: CreateNatureProps) => {
 
   function dismiss() {
     form.reset();
-    modal.current?.dismiss();
+    setIsOpen(false); // ✅ FIX: close via state
   }
 
   async function onSubmit(data: NatureFormData) {
-    if(online){
+    if (online) {
       setLoading(true);
       try {
         const result = await kfiAxios.post('/nature', data);
@@ -58,47 +58,42 @@ const CreateNature = ({ getNatures }: CreateNatureProps) => {
       }
     } else {
       try {
-       await db.natures.add({
-         ...data,
-         _synced: false,  
-         action: "create",
-         isOldData: false,
-       });
-       getNatures(1);
-       dismiss();
-       present({
-         message: "Nature successfully created!",
-         duration: 1000,
-       });
-     } catch (error) {
-       present({
-         message: "Failed to save record. Please try again.",
-         duration: 1200,
-       });
-     }
+        await db.natures.add({
+          ...data,
+          _synced: false,
+          action: 'create',
+          isOldData: false,
+        });
+        getNatures(1);
+        dismiss();
+        present({ message: 'Nature successfully created!', duration: 1000 });
+      } catch (error) {
+        present({ message: 'Failed to save record. Please try again.', duration: 1200 });
+      }
     }
   }
 
   return (
     <>
       <div className="text-end">
-        <IonButton fill="clear" id="create-nature-modal" className="h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl" strong>
+        <IonButton
+          fill="clear"
+          className="h-10 bg-[#FA6C2F] text-white capitalize font-semibold rounded-xl"
+          strong
+          onClick={() => setIsOpen(true)} // ✅ FIX: open via state
+        >
           + Add
         </IonButton>
       </div>
       <IonModal
         ref={modal}
-        trigger="create-nature-modal"
+        isOpen={isOpen}             // ✅ FIX: use isOpen instead of trigger
         backdropDismiss={false}
-        className=" [--border-radius:0.35rem] auto-height [--width:95%] [--max-width:32rem]"
+        className="[--border-radius:0.35rem] auto-height [--width:95%] [--max-width:32rem]"
+        onDidDismiss={dismiss}      // ✅ FIX: sync state if modal is dismissed externally
       >
-        {/* <IonHeader>
-          <IonToolbar className=" text-white [--min-height:1rem] h-20">
-            <ModalHeader disabled={loading} title="Nature - Add Record" sub="System" dismiss={dismiss} />
-          </IonToolbar>
-        </IonHeader> */}
         <div className="p-6 flex flex-col gap-6">
-           <ModalHeader disabled={loading} title="Nature - Add Record" sub="Manage nature data." dismiss={dismiss} />
+          <ModalHeader disabled={loading} title="Nature - Add Record" sub="Manage nature data." dismiss={dismiss} />
           <div>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <NatureForm form={form} loading={loading} />

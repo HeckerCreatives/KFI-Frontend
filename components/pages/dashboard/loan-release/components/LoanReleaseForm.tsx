@@ -283,7 +283,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
               control={form.control}
               clearErrors={form.clearErrors}
               label="Cycle"
-              readOnly={true}
+              // readOnly={true}
               placeholder="Type here"
               className="!p-2 rounded-md !text-[0.7rem]"
               labelClassName="truncate min-w-24 !text-[0.7rem] !text-slate-600 text-end"

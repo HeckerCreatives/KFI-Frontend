@@ -209,6 +209,13 @@ export function BackupEntriesModalContent({
     setIsComplete(true)
   }
 
+  const syncTest = async () => {
+      const res = await kfiAxios.get(`/sync/damayan-funds?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
+      await syncDamayanFund(res.data?.damayanFunds || [])
+      console.log("Test sync completed", res.data)
+ 
+  }
+
   const getStatusIcon = (status: SyncStep["status"]) => {
     switch (status) {
       case "complete":
@@ -310,6 +317,10 @@ export function BackupEntriesModalContent({
             )}
           </IonButton>
         )}
+
+        {/* <IonButton className="flex-1" onClick={syncTest}>
+            Sync test
+          </IonButton> */}
 
         
       </div>

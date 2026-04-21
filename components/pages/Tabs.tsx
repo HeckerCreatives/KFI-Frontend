@@ -498,10 +498,10 @@ const closeMenu = async () => {
                       <IonIcon icon={logOut} /> Logout
                     </div>
 
-                    {/* <div className=' flex items-center w-full'>
+                    <div className=' flex items-center w-full'>
                       <button onClick={() => setOnline(false)} className={`py-2 text-sm w-full rounded-md ${!online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Offline</button>
                       <button onClick={() => setOnline(true)} className={`py-2 text-sm w-full rounded-md ${online ? 'bg-orange-500 text-white' : 'bg-zinc-200 text-black'}`}>Online</button>
-                    </div> */}
+                    </div>
                   </div>
                   
                   

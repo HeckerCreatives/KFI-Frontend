@@ -143,7 +143,7 @@ const UpdateFSEntries = ({ getList, item, currentPage, key }: UpdateProps) => {
                action: item.action === "delete" ? item.action : item._id ? "update" : "create",
                 _synced: false,
               })),
-              action: existing.isOldData ? 'update' : 'create',
+              action: existing.action === 'create' ? 'create' : 'update',
               _synced: false,
            };
     

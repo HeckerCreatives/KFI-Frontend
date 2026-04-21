@@ -101,7 +101,7 @@ const UpdateDamayanFund = ({ damayanFund, setData, getDamayanFunds, currentPage 
         mode: 'update',
         nature: damayanFund?.nature,
         entries: fomattedEntries,
-        name: damayanFund?.name
+        name: damayanFund?.encodedBy.username || '',
       });
     }
   }, [damayanFund, form]);

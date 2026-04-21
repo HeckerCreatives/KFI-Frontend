@@ -240,6 +240,8 @@ export default function UploadChanges() {
 
     if (!offlineChanges.length) return;
 
+    let payloadTest: any[] = [];
+
     const payload = offlineChanges.map((item: any) => {
       const {
         isOldData,
@@ -329,8 +331,51 @@ export default function UploadChanges() {
       };
     });
 
+    if (key === 'loanReleases' || key === 'expenseVouchers' || key === 'journalVouchers' || key === 'emergencyLoans' || key === 'damayanFunds') {
+    payloadTest = offlineChanges.map((item: any) => ({
+      code: item.code.toUpperCase(),
+      type: item.type,
+      date: item.date.split('T')[0],
+      center: typeof item.center === 'object' && item.center?._id ? item.center._id : item.center,
+      bank: typeof item.bank === 'object' && item.bank?._id ? item.bank._id : item.bank,
+      refNo: item.refNo,
+      remarks: item.remarks,
+      checkNo: item.checkNo || '',
+      checkDate: item.checkDate?.split('T')[0],
+      acctMonth: Number(item.acctMonth),
+      acctYear: Number(item.acctYear),
+      acctOfficer: item.center?.acctOfficer || '',
+      amount: Number(removeAmountComma(item.amount)),
+      noOfWeeks: Number(removeAmountComma(item.noOfWeeks)),
+      loan: typeof item.loan === 'object' && item.loan?._id ? item.loan._id : item.loan,
+      cycle: item.cycle || 0,
+      interest: item.interest,
+      isEduc: item.isEduc ?? false,
+      action: item.action,
+      _synced: item._synced,
+      _id: item._id,
+      entries: item.entries?.map((entry: any) => ({
+        _id: entry._id,
+        line: Number(entry.line),
+        client: entry.clientId || entry.client?._id || null,
+        product: entry.product || null,
+        acctCode: entry.acctCodeId || entry.acctCode?._id || entry.acctCode,
+        particular: entry.particular || '',
+        debit: Number(removeAmountComma(entry.debit)) || 0,
+        credit: Number(removeAmountComma(entry.credit)) || 0,
+        interest: entry.interest ?? 0,
+        cycle: entry.cycle ?? 0,
+        checkNo: entry.checkNo ?? '',
+        action: item.action,
+        _synced: item._synced,
+      })),
+    }))} else {
+      payloadTest = payload
+    }
+
+
     const result = await kfiAxios.post(endpoint, {
-      [field || "data"]: payload,
+      [field || "data"]: payloadTest,
     });
 
     if (result.data.success) {

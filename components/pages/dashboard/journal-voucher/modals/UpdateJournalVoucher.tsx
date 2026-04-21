@@ -102,7 +102,7 @@ const UpdateJournalVoucher = ({ journalVoucher, setData, getList, currentPage }:
       return {
         _id: isExisting ? entry._id : undefined,
         client: entry.client?._id ?? "",
-        clientLabel: entry.client.name ?? "",
+        clientLabel: entry.client?.name ?? "",
         particular: entry.particular,
         acctCodeId: entry.acctCode?._id ?? "",
         acctCode: entry.acctCode?.code ?? "",

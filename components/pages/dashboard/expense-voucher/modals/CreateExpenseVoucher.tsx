@@ -98,6 +98,7 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
     try {
       await db.expenseVouchers.add({
         ...data,
+        amount: Number(removeAmountComma(data.amount)),
          entries: data.entries.map((item, index) => ({
             ...item,
             line: index + 1,
