@@ -350,7 +350,7 @@ const ExportAllJournalVoucher = () => {
         <div className="inner-content !p-6">
             <ModalHeader disabled={loading} title="Journal Voucher - Export" sub="Manage journal voucher documents." dismiss={dismiss} />
 
-             <div className=' flex items-center w-fit mt-2 bg-zinc-50 !rounded-sm'>
+             <div className=' flex items-center w-full overflow-x-auto whitespace-nowrap mt-2 bg-zinc-50 !rounded-sm'>
               {printExportTab.map((item,index) => (
               <button onClick={() => setTabActive(item.value)} key={item.value} className={` ${tabActive === item.value && 'bg-[#FA6C2F] text-white'} p-2 text-sm !rounded-md`}>{item.name}</button>
               ))}

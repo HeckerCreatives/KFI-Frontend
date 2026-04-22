@@ -210,8 +210,8 @@ export function BackupEntriesModalContent({
   }
 
   const syncTest = async () => {
-      const res = await kfiAxios.get(`/sync/damayan-funds?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
-      await syncDamayanFund(res.data?.damayanFunds || [])
+      const res = await kfiAxios.get(`/sync/release?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
+      await syncOR(res.data?.acknowledgements || [])
       console.log("Test sync completed", res.data)
  
   }
@@ -318,9 +318,9 @@ export function BackupEntriesModalContent({
           </IonButton>
         )}
 
-        {/* <IonButton className="flex-1" onClick={syncTest}>
+        <IonButton className="flex-1" onClick={syncTest}>
             Sync test
-          </IonButton> */}
+          </IonButton>
 
         
       </div>

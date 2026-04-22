@@ -34,8 +34,10 @@ const handleDownload = async (
   const ext = extensions[fileType.toLowerCase()] ?? '';
   const fullFilename = (filename || label);
 
+  console.log(isPlatform('android'), 'isAndroid');
+
   try {
-    if (isPlatform('android')) {
+    if (isPlatform('capacitor')) {
       // ✅ Android — fetch the file and save via Capacitor Filesystem
       const response = await fetch(fileUrl);
       const blob = await response.blob();

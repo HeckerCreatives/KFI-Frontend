@@ -11,6 +11,7 @@ import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } fro
 import TablePagination from '../forms/TablePagination';
 import { formatDateTable } from '../../utils/date-utils';
 import { Search01Icon } from 'hugeicons-react';
+import Paginations from '../common/PaginationsV2';
 
 type Option = {
   _id: string,
@@ -208,7 +209,7 @@ const LoanReleaseDueDatesSelections = <T extends FieldValues>({
               </TableBody>
             </Table>
           </div>
-          <TablePagination
+          <Paginations
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePagination}

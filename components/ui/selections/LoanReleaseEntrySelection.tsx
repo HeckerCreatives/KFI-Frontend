@@ -11,6 +11,7 @@ import { FieldValues, Path, PathValue, UseFormClearErrors, UseFormSetValue } fro
 import TablePagination from '../forms/TablePagination';
 import { formatDateTable } from '../../utils/date-utils';
 import { Search01Icon } from 'hugeicons-react';
+import Paginations from '../common/PaginationsV2';
 
 type Option = {
   _id: string;
@@ -223,7 +224,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
               </TableBody>
             </Table>
           </div>
-          <TablePagination currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
+          <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
         </div>
       </IonModal>
     </>

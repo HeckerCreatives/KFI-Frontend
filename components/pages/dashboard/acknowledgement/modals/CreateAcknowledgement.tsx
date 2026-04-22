@@ -51,6 +51,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
       cashCollection: '',
       entries: [],
       mode: 'create',
+      user: user || '',
     },
   });
 
