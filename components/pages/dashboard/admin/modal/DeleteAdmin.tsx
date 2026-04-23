@@ -35,10 +35,16 @@ const DeleteAdmin = ({ admin, getList }: DeleteCenterProps) => {
         const result = await kfiAxios.delete(`/user/${admin._id}`);
         const { success } = result.data;
         if (success) {
+          
          getList(1);
           dismiss();
           return;
         }
+
+         present({
+          message: 'Deleted successfully',
+          duration: 1000,
+        });
       } catch (error: any) {
         present({
           message: 'Failed to delete the client record. Please try again',

@@ -18,7 +18,7 @@ import ExportAllCenter from './modals/ExportAllCenter';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortCenter } from '../../../ui/utils/sort';
-import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, RefreshCcw, Upload } from 'lucide-react';
 import Paginations from '../../../ui/common/PaginationsV2';
 
 export type TCenter = {
@@ -174,6 +174,10 @@ const Center = () => {
                  
                 </div>
                 <CenterFilter getCenters={getCenters} setSearchKey={setSearchKey} suggestion={data.centers.map((item) => item.centerNo)} />
+
+                   <IonButton fill="clear" onClick={() => getCenters(currentPage, searchKey)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                                   <RefreshCcw size={15}/>
+                                 </IonButton>
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>

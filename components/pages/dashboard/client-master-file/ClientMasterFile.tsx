@@ -23,7 +23,7 @@ import { db } from '../../../../database/db';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { get } from 'http';
 import { filterAndSortClients } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { RefreshCcw, Upload } from 'lucide-react';
 import ReportProgress from '../../../ui/common/report-progress';
 import TestPrintAllClient from './modals/Test';
 import Paginations from '../../../ui/common/PaginationsV2';
@@ -354,6 +354,10 @@ const ClientMasterFile = () => {
                   {canDoAction(token.role, permissions, 'clients', 'export') && <ExportAllClient search={searchKey} sort={sortKey} />} 
                 </div>
                 <ClientMasterFileFilter setDateResigned={setDateResigned} setDateReleased={setDateReleased} setStatus={setStatus} setSearchKey={setSearchKey} setSorthKey={setSortKey} getClientsOffline={getClientsOffline} getClients={getClients} clients={data.clients.map(item => item.name)} />
+                  
+                <IonButton fill="clear" onClick={() => online ? getClients(currentPage, searchKey, sortKey, status, dateReleased, dateResigned) : getClientsOffline(currentPage, searchKey, sortKey, status, dateReleased, dateResigned)} className=" !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                <RefreshCcw size={15}/>
+              </IonButton>
               </div>
               <div className="relative flex overflow-auto rounded-xl">
                 <Table className=' sticky z-50 top-0 left-0 md:table hidden'>

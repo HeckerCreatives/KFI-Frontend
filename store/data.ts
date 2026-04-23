@@ -17,6 +17,6 @@ export const loanReleaseReportTab = [
 
 export const loanReleaseReports = [
   {label: 'Summary of Past Due', value: 'past-dues'},
-  {label: 'Schedule of Releases', value: 'aging-of-loans'},
+  {label: ' Aging Loan Receivable', value: 'aging-of-loans'},
   {label: 'Weekly Collections', value: 'weekly-collections'},
 ]

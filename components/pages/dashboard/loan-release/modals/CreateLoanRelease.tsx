@@ -110,9 +110,9 @@ const CreateLoanRelease = ({ getTransactions }: CreateLoanReleaseProps) => {
           return;
         }
         present({
-          message: 'Failed to add a new loan release. Please try again.',
-          duration: 1000,
-        });
+            message: 'Loan release successfully added.',
+            duration: 1000,
+          });
       } catch (error: any) {
         const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
         const errors: TFormError[] | string = checkError(errs);

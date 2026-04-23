@@ -21,7 +21,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
 import { formatLoanReleaseForUpload, formatLoanReleaseList } from '../../../ui/utils/fomatData';
-import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, RefreshCcw, Upload } from 'lucide-react';
 import Reports from './modals/Reports';
 import Paginations from '../../../ui/common/PaginationsV2';
 import { set } from 'react-hook-form';
@@ -176,8 +176,6 @@ const LoanRelease = () => {
     getTransactions(currentPage, searchKey, sortKey, to, from);
   }, [currentPage]);
 
-  console.log(showTooltip, hover)
-
 
 
 
@@ -209,8 +207,12 @@ const LoanRelease = () => {
                     
                   </div>
 
-                   <div className="w-full flex-1 flex">
+                   <div className="w-full flex-1 flex items-end flex-wrap ">
                     <LoanReleaseFilter getTransactions={getTransactions} setSearchKey={setSearchKey} suggestions={data.transactions.map((item) => item.code)} setTo={setTo} setFrom={setFrom} />
+
+                       <IonButton fill="clear" onClick={() => getTransactions(currentPage, searchKey, sortKey, to, from)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                        <RefreshCcw size={15}/>
+                      </IonButton>
                   </div>
                 </div>
               <div className={`relative ${hasMore ? ' !overflow-visible' : ' overflow-auto'} rounded-xl mt-4`}>

@@ -20,6 +20,7 @@ import { AxiosError } from 'axios';
 import { search } from 'ionicons/icons';
 import Paginations from '../../../ui/common/PaginationsV2';
 import { SortableTableHeader } from '../../../ui/table/SortableTableHeader';
+import { RefreshCcw } from 'lucide-react';
 
 export type TBusinessType = {
   businessTypes: BusinessTypeInt[];
@@ -166,6 +167,10 @@ const BusinessType = () => {
                 
                 </div>
                 <BusinessTypeFilter getBusinessTypes={getBusinessTypes} setSearchKey={setSearchKey} suggestion={data.businessTypes.map((item) => item.type)} />
+
+                   <IonButton fill="clear" onClick={() => getBusinessTypes(currentPage, searchKey)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                                   <RefreshCcw size={15}/>
+                                 </IonButton>
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>

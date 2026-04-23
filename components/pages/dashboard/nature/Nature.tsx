@@ -14,7 +14,7 @@ import TablePagination from '../../../ui/forms/TablePagination';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortNatures } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { RefreshCcw, Upload } from 'lucide-react';
 import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../utils/permissions';
 import Paginations from '../../../ui/common/PaginationsV2';
@@ -150,6 +150,10 @@ const Nature = () => {
                 )}
               
               <NatureFilter getNatures={getNatures} setSearchKey={setSearchKey} suggestions={data.natures.map((item) => item.nature)} />
+
+                 <IonButton fill="clear" onClick={() => getNatures(currentPage, searchKey)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                                   <RefreshCcw size={15}/>
+                                 </IonButton>
             </div>
               <Table>
                 <TableHeader>

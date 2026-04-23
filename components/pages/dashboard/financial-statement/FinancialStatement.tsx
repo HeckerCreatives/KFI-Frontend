@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import TableNoRows from '../../../ui/forms/TableNoRows';
@@ -20,6 +20,7 @@ import { db } from '../../../../database/db';
 import { filterAndSortGOA } from '../../../ui/utils/sort';
 import FSActions from './components/actions';
 import Paginations from '../../../ui/common/PaginationsV2';
+import { RefreshCcw } from 'lucide-react';
 
 export type TFS = {
   financialStatements: FinancialStatements[];
@@ -126,6 +127,10 @@ const FinancialStatement = () => {
               )}
 
               <GenerateReport/>
+
+                 <IonButton fill="clear" onClick={() => getList(currentPage)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                 <RefreshCcw size={15}/>
+               </IonButton>
               
             </div>
            

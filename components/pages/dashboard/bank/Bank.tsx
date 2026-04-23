@@ -18,6 +18,7 @@ import { db } from '../../../../database/db';
 import { filterAndSortBanks } from '../../../ui/utils/sort';
 import Paginations from '../../../ui/common/PaginationsV2';
 import { SortableTableHeader } from '../../../ui/table/SortableTableHeader';
+import { RefreshCcw } from 'lucide-react';
 
 export type TBank = {
   banks: BankType[];
@@ -166,6 +167,10 @@ const Bank = () => {
                
                 </div>
                 <BankFilter getBanks={getBanks} setSearchKey={setSearchKey} suggestion={data.banks.map((item) => item.code)} />
+
+                   <IonButton fill="clear" onClick={() => getBanks(currentPage, searchKey)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                                   <RefreshCcw size={15}/>
+                                 </IonButton>
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>

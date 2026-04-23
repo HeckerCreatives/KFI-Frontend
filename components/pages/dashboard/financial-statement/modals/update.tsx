@@ -15,6 +15,7 @@ import { fschema, FSFormData } from '../../../../../validations/financialstateme
 import { TFS } from '../FinancialStatement';
 import { createSharp } from 'ionicons/icons';
 import { Edit, Trash } from 'lucide-react';
+import { entries } from '../../../../../validations/beginningbalance.schema';
 
 type UpdateProps = {
     item: FinancialStatements
@@ -82,7 +83,12 @@ const UpdateFS = ({ getList, item, currentPage }: UpdateProps) => {
                      }
                      const updated = {
                        ...existing,
-                       ...data, 
+                       ...data,
+                       entries: existing.entries.map((entry: any) => ({
+                        ...entry,
+                        _synced: false,
+                        action: existing.isOldData ? 'update' : 'create',
+                       })),
                        primary: {
                           month: data.primaryMonth,
                           year: data.primaryYear,

@@ -21,7 +21,7 @@ import { jwtDecode } from 'jwt-decode';
 import { canDoAction } from '../../../utils/permissions';
 import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
-import { Circle, Dot } from 'lucide-react';
+import { Circle, Dot, RefreshCcw } from 'lucide-react';
 import Paginations from '../../../ui/common/PaginationsV2';
 import { SortableTableHeader } from '../../../ui/table/SortableTableHeader';
 
@@ -238,7 +238,7 @@ const Admin = () => {
             
             <div className="relative px-3 pt-3 pb-16 bg-white rounded-xl flex-1 shadow-lg">
 
-               <div className="flex md:flex-row flex-col items-center justify-center gap-3">
+               <div className="flex md:flex-row flex-col items-start gap-3">
               <div className=' w-fit flex items-center flex-wrap gap-1'>
                 {canDoAction(token.role, permissions,'admin', 'create') && (
                 <CreateUser getUsers={getUsers} />
@@ -248,6 +248,9 @@ const Admin = () => {
                 )}
               </div>
               <UserFilter getUsers={getUsers} setStatus={setStatus} setSearchKey={setSearchKey} />
+              <IonButton fill="clear" onClick={() => getUsers(currentPage, searchKey, sortKey, status)} className=" !text-white bg-[#FA6C2F] !rounded-lg !w-fit">
+                <RefreshCcw size={15}/>
+              </IonButton>
             </div>
 
 

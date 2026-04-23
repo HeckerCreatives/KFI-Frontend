@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonContent, IonPage, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import PageTitle from '../../../ui/page/PageTitle';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableHeadRow, TableRow } from '../../../ui/table/Table';
@@ -24,6 +24,7 @@ import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
 import { formatELList } from '../../../ui/utils/fomatData';
 import Paginations from '../../../ui/common/PaginationsV2';
 import SortableTableHeader from '../../../ui/table/SortableTableHeader';
+import { RefreshCcw } from 'lucide-react';
 
 export type TData = {
   releases: ReleaseType[];
@@ -84,6 +85,8 @@ const Release = () => {
         if (sort) filter.sort = sort;
         if (to) filter.dateTo = to;
         if (from) filter.dateFrom = from;
+        if (to) filter.to = to;
+        if (from) filter.from = from;
 
         const result = await kfiAxios.get('/release', { params: filter });
         const { success, releases, hasPrevPage, hasNextPage, totalPages } = result.data;
@@ -192,8 +195,12 @@ const Release = () => {
                   <div>{canDoAction(token.role, permissions, 'release', 'export') && <ExportAllRelease />}</div>
                 </div>
 
-                 <div className="w-full flex-1 flex ">
+                 <div className="w-full flex-1 flex items-end flex-wrap ">
                   <ReleaseFilter getReleases={getReleases} setSearchKey={setSearchKey} setTo={setTo} setFrom={setFrom} suggestions={data.releases.map((item) => item.code)} />
+                     <IonButton fill="clear" onClick={() => getReleases(currentPage, searchKey, sortKey, to, from)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                                            <RefreshCcw size={15}/>
+                                          </IonButton>
+                    
                 </div>
               </div>
               <div className={`relative ${hasMore ? ' !overflow-visible' : ' overflow-auto'} rounded-xl mt-4`}>

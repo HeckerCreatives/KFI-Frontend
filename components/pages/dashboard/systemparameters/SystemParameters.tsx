@@ -67,8 +67,8 @@ const SystemParameters = () => {
               <p className=' text-xl text-gray-700 !font-medium'>System Parameters</p>
               <p className=' text-sm text-gray-500 '>Manage system parameters records.</p>
             </div>
-           
-           
+
+            <div className=' w-full overflow-x-auto'>
               <Table>
                 <TableHeader>
                   <TableHeadRow>
@@ -99,6 +99,10 @@ const SystemParameters = () => {
                     ))}
                 </TableBody>
               </Table>
+            </div>
+           
+           
+              
 
 
           </div>

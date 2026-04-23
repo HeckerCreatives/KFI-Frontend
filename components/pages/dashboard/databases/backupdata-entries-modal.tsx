@@ -318,9 +318,9 @@ export function BackupEntriesModalContent({
           </IonButton>
         )}
 
-        <IonButton className="flex-1" onClick={syncTest}>
+        {/* <IonButton className="flex-1" onClick={syncTest}>
             Sync test
-          </IonButton>
+          </IonButton> */}
 
         
       </div>

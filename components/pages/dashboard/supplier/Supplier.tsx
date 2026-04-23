@@ -18,7 +18,7 @@ import { db } from '../../../../database/db';
 import { filterAndSortSuppliers } from '../../../ui/utils/sort';
 import Paginations from '../../../ui/common/PaginationsV2';
 import SortableTableHeader from '../../../ui/table/SortableTableHeader';
-import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, RefreshCcw, Upload } from 'lucide-react';
 
 export type TSupplier = {
   suppliers: SupplierType[];
@@ -155,6 +155,10 @@ const Supplier = () => {
                  
                 </div>
                 <SupplierFilter getSuppliers={getSuppliers} setSearchKey={setSearchKey} suggestion={data.suppliers.map((item) => item.code)} />
+
+                   <IonButton fill="clear" onClick={() => getSuppliers(currentPage, searchKey)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                     <RefreshCcw size={15}/>
+                   </IonButton>
               </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>

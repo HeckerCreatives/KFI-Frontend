@@ -84,7 +84,7 @@ const RecentMembers = ({setSelected, selected} : Props) => {
   const getRecentMembers = async (page: number, ) => {
     setData(prev => ({ ...prev, loading: true }));
     try {
-      const result = await kfiAxios.get('/statistics/recent-members', {params: {search: code}});
+      const result = await kfiAxios.get('/statistics/recent-members', {params: {search: code, page: 0, limit: 10}});
       const { success, customers } = result.data;
       if (success) {
         setData(prev => ({ ...prev, clients: customers }));

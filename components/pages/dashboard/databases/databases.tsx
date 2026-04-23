@@ -81,7 +81,7 @@ const Databases = () => {
             <IonButton 
             //disabled={from === '' && to === ''} 
             
-            onClick={() => setDataEntries(true)} fill="clear" id="export_all_client" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
+            onClick={() => setDataEntries(true)} fill="clear" id="sync_offline_database" className="max-h-10 min-h-6 bg-[#FA6C2F] text-white capitalize font-semibold rounded-md" strong>
               <RefreshIcon stroke='.8' size={15} className=' mr-2'/>
               Sync
             </IonButton>

@@ -21,7 +21,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
 import { formatELList } from '../../../ui/utils/fomatData';
-import { Upload } from 'lucide-react';
+import { RefreshCcw, Upload } from 'lucide-react';
 import Paginations from '../../../ui/common/PaginationsV2';
 import SortableTableHeader from '../../../ui/table/SortableTableHeader';
 
@@ -83,6 +83,8 @@ const Acknowledgement = () => {
         if (sort) filter.sort = sort;
         if (to) filter.dateTo = to;
         if (from) filter.dateFrom = from;
+        if (to) filter.to = to;
+        if (from) filter.from = from;
 
         const result = await kfiAxios.get('/acknowledgement', { params: filter });
         const { success, acknowledgements, hasPrevPage, hasNextPage, totalPages } = result.data;
@@ -193,8 +195,14 @@ const Acknowledgement = () => {
                   
                 </div>
 
-                 <div className="w-full flex-1 flex">
+                 <div className="w-full flex-1 flex items-end flex-wrap ">
                   <AcknowledgementFilter getAcknowledgements={getAcknowledgements} setSearchKey={setSearchKey} setFrom={setFrom} setTo={setTo} suggestions={data.acknowledgements.map((item) => item.code)} setSortKey={setSortKey}   />
+
+                     <IonButton fill="clear" onClick={() => getAcknowledgements(currentPage, searchKey, sortKey, to, from)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                                            <RefreshCcw size={15}/>
+                                          </IonButton>
+
+                    
                 </div>
               </div>
               <div className={`relative ${hasMore ? ' !overflow-visible' : ' overflow-auto'} rounded-xl mt-4`}>

@@ -18,7 +18,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { on } from 'events';
 import { db } from '../../../../database/db';
 import { filterAndSortCOA } from '../../../ui/utils/sort';
-import { Upload } from 'lucide-react';
+import { RefreshCcw, Upload } from 'lucide-react';
 import Paginations from '../../../ui/common/PaginationsV2';
 import SortableTableHeader from '../../../ui/table/SortableTableHeader';
 
@@ -182,6 +182,10 @@ useEffect(() => {
                     )} */}
                   </div>
                   <ChartOfAccountFilter getChartOfAccounts={getChartOfAccounts} setSearchKey={setSearchKey} setSortKey={setSortKey} suggestions={data.chartOfAccounts.map((item) => item.code)} />
+
+                    <IonButton fill="clear" onClick={() => getChartOfAccounts(currentPage)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                                     <RefreshCcw size={15}/>
+                                   </IonButton>
                 </div>
               <div className="relative overflow-auto rounded-xl mt-4">
                 <Table>

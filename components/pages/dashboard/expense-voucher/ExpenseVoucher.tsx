@@ -21,7 +21,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import { filterAndSortLoanRelease } from '../../../ui/utils/sort';
 import { formatEVList, formatJV, formatJVForUpload } from '../../../ui/utils/fomatData';
-import { ArrowDown, ArrowUp, Upload } from 'lucide-react';
+import { ArrowDown, ArrowUp, RefreshCcw, Upload } from 'lucide-react';
 import { search } from 'ionicons/icons';
 import Paginations from '../../../ui/common/PaginationsV2';
 
@@ -197,8 +197,12 @@ useEffect(() => {
                   
                 </div>
 
-                  <div className="w-full flex-1 flex">
+                  <div className="w-full flex-1 flex items-end flex-wrap ">
                   <ExpenseVoucherFilter getExpenseVouchers={getExpenseVouchers} setSortKey={setSortKey} setSearchKey={setSearchKey} suggestions={data.expenseVouchers.map((item) => item.code)} setTo={setTo} setFrom={setFrom} />
+
+                     <IonButton fill="clear" onClick={() => getExpenseVouchers(currentPage, searchKey, sortKey, to, from)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
+                        <RefreshCcw size={15}/>
+                      </IonButton>
                 </div>
               </div>
               <div className={`relative ${hasMore ? ' !overflow-visible' : ' overflow-auto'} rounded-xl mt-4`}>
