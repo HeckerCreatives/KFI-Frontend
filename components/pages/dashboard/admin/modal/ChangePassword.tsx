@@ -95,13 +95,14 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
             <p className="!font-medium my-4">
               Change Password for <span className="text-orange-600">{user.username}</span>
             </p>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
+              <p className='text-sm'>New Password</p>
               <FormIonItem>
                 <InputPassword
                   name="password"
                   control={form.control}
                   clearErrors={form.clearErrors}
-                  label="New Password"
+                  // label="New Password"
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
                   disabled={loading}
@@ -109,12 +110,14 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
                   topClass="-top-[0.1rem]"
                 />
               </FormIonItem>
+              <p className='text-sm'>Confirm Password</p>
+
               <FormIonItem>
                 <InputPassword
                   name="confirm_password"
                   control={form.control}
                   clearErrors={form.clearErrors}
-                  label="Confirm New Password"
+                  // label="Confirm New Password"
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
                   disabled={loading}

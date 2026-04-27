@@ -11,6 +11,7 @@ import checkError from '../../../../utils/check-error';
 import formErrorHandler from '../../../../utils/form-error-handler';
 import { useOnlineStore } from '../../../../../store/onlineStore';
 import { db } from '../../../../../database/db';
+import toast from "react-hot-toast"
 
 interface Props{
   setQAClient: React.Dispatch<React.SetStateAction<boolean>>,
@@ -77,7 +78,7 @@ const CreateClientMasterFileQuickActions = ({setQAClient, qaClient}:Props) => {
 
       const { success } = result.data;
       if (success) {
-     
+        toast.success('Data create successfully')
         dismiss();
         return;
       }

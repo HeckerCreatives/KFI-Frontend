@@ -40,7 +40,7 @@ const Reports = () => {
   });
 
   function dismiss() {
-    // form.reset();
+    form.reset();
     modal.current?.dismiss();
   }
 

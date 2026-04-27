@@ -24,12 +24,15 @@ import { db } from '../../../../database/db';
 import { Circle, Dot, RefreshCcw } from 'lucide-react';
 import Paginations from '../../../ui/common/PaginationsV2';
 import { SortableTableHeader } from '../../../ui/table/SortableTableHeader';
+import { useGetUserList } from '../../../services/admin';
 
 export type TUser = {
   users: User[];
   totalPages: number;
   nextPage: boolean;
   prevPage: boolean;
+  hasNextPage?: boolean;
+  hasPrevPage?: boolean;
   loading: boolean;
 };
 
@@ -52,11 +55,10 @@ const Admin = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKey, setSearchKey] = useState<string>('');
   const [sortKey, setSortKey] = useState<string>('name-asc');
-  const [usernameSort, setUsernameSort] = useState<string>('asc');
-  const [statusSort, setStatusSort] = useState<string>('asc');
-  const [createdSort, setCreatedSort] = useState<string>('asc');
   const [status, setStatus] = useState<string>('');
   const [selected, setSelected] = useState<string[]>([]);
+  const [filter, setFilter] = useState<TTableFilter>({ limit: TABLE_LIMIT, page: currentPage });
+  const {data: userList, isLoading} = useGetUserList(filter, online)
 
   const [data, setData] = useState<TUser>({
     users: [],
@@ -64,6 +66,7 @@ const Admin = () => {
     totalPages: 0,
     nextPage: false,
     prevPage: false,
+   
   });
 
   const [statistics, setStatistics] = useState({
@@ -73,30 +76,31 @@ const Admin = () => {
     inactive: 0,
   });
 
+  useEffect(() => {
+    if (userList) {
+      console.log('Here', userList)
+      setData(prev => ({
+        ...prev,
+        users: userList.users,
+        totalPages: userList.totalPages,
+        nextPage: userList.nextPage,
+        prevPage: userList.prevPage,
+        loading: false,
+      }));
+      // getStatistics();
+    }
+  }, [userList]);
+
+
   const getUsers = async (page: number, keyword: string = '', sort: string = 'name-asc', status: string = '') => {
     setData(prev => ({ ...prev, loading: true }));
    if(online){
      try {
-      const filter: TTableFilter = { limit: TABLE_LIMIT, page };
-      if (keyword) filter.search = keyword;
-      if (sort) filter.sort = sort;
-      if (status) filter.status = status
-      const result = await kfiAxios.get('/user', { params: filter });
-      const { success, users, hasPrevPage, hasNextPage, totalPages } = result.data;
-      if (success) {
-        setData(prev => ({
-          ...prev,
-          users: users,
-          totalPages: totalPages,
-          nextPage: hasNextPage,
-          prevPage: hasPrevPage,
-        }));
-        getStatistics();
-        setCurrentPage(page);
-        setSearchKey(keyword);
-        setSortKey(sort);
-        return;
-      }
+     const newFilter: TTableFilter = { limit: TABLE_LIMIT, page };
+    if (keyword) newFilter.search = keyword;
+    if (sort) newFilter.sort = sort;
+    if (status) newFilter.status = status;
+    setFilter(newFilter);
     } catch (error) {
       present({
         message: 'Failed to get user records. Please try again',
@@ -190,7 +194,10 @@ const Admin = () => {
    
   };
 
-  const handlePagination = (page: number) => getUsers(page, searchKey, sortKey, status);
+const handlePagination = (page: number) => {
+  setCurrentPage(page);
+  setFilter(prev => ({ ...prev, page }));
+};
 
   useIonViewWillEnter(() => {
     getUsers(currentPage);
@@ -211,6 +218,9 @@ const Admin = () => {
   useEffect(() => {
     refetch()
   },[sortKey, searchKey, status])
+
+console.log(currentPage, filter)
+
 
 
   return (
@@ -326,7 +336,7 @@ const Admin = () => {
                           <TableCell className=' !text-sm'>{formatDateTable(user.createdAt)}</TableCell>
                           <TableCell>
 
-                            <UserActions key={user._id} user={user} setData={setData} getList={getUsers} />
+                            <UserActions key={user._id} user={user} setData={setData} getList={getUsers} search={searchKey} sort={sortKey} status={''} />
                           </TableCell>
                         </TableRow>
                       ))}
@@ -334,7 +344,7 @@ const Admin = () => {
                 </Table>
               </div>
 
-             {data.users.length !==0 && (
+             {data?.users.length !==0 && (
                 <Paginations currentPage={currentPage} totalPages={data.totalPages} onPageChange={handlePagination} disabled={data.loading} />
 
              )}

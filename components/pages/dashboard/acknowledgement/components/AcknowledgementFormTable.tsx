@@ -90,31 +90,6 @@ const AcknowledgementFormTable = ({ form }: AcknowledgementFormTableProps) => {
     }
   };
 
-  // const handleLoadEntries = async () => {
-  //   if (center === '') {
-  //     form.setError('centerLabel', { message: 'Center is required' });
-  //     return;
-  //   }
-
-  //   try {
-  //     setLoading(true);
-  //     const result = await kfiAxios.post(`transaction/load/entries`, { center, clients: selectedIds });
-  //     const { success, entries } = result.data;
-  //     if (success) {
-  //        replace(entries);
-  //        setDidLoad(true);
-  //        setIsOpen(false)
-  //       return;
-  //     }
-  //   } catch (error) {
-  //      present({
-  //       message: 'Failed to load entries',
-  //       duration: 1000,
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleLoadEntries = async () => {
     if (center === '') {

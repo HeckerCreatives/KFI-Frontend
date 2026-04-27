@@ -17,6 +17,7 @@ type TSearch = {
   sort: string;
   dateTo: string;
   dateFrom: string;
+  type: string
 };
 
 type LoanReleaseFilterProps = {
@@ -25,15 +26,17 @@ type LoanReleaseFilterProps = {
   setSearchKey: React.Dispatch<React.SetStateAction<string>>
   setFrom: React.Dispatch<React.SetStateAction<string>>
   setTo: React.Dispatch<React.SetStateAction<string>>
+  setType: React.Dispatch<React.SetStateAction<string>>
 };
 
-const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, setFrom }: LoanReleaseFilterProps) => {
+const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, setFrom, setType }: LoanReleaseFilterProps) => {
   const form = useForm<TSearch>({
     defaultValues: {
       code: '',
       sort: 'name-asc',
       dateTo: '',
       dateFrom: '',
+      type: ''
     },
   });
 
@@ -51,6 +54,7 @@ const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, 
   const sort = form.watch('sort');
   const dateTo = form.watch('dateTo');
   const dateFrom = form.watch('dateFrom');
+  const type = form.watch('type');
 
 
     useEffect(() => {
@@ -58,11 +62,12 @@ const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, 
         setSearchKey(code)
         setFrom(dateFrom)
         setTo(dateTo)
+        setType(type)
       }, 800);
 
       return () => clearTimeout(timer);
    
-  }, [code, dateFrom, dateTo]);
+  }, [code, dateFrom, dateTo, type]);
 
 
 
@@ -70,6 +75,26 @@ const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit">
       <div className="flex flex-wrap items-end gap-2">
+        <FormIonItem className="w-fit pb-1">
+          <div className=' flex flex-col gap-1'>
+            <label htmlFor="dateFrom" className=' text-xs'>Type</label>
+             <InputSelect
+            // label="Ban/Activate"
+            placeholder="Type"
+            name="type"
+            control={form.control}
+            clearErrors={form.clearErrors}
+            options={[
+              { label: 'All', value: 'all' },
+              { label: 'Solo', value: 'alite' },
+              { label: 'Group', value: 'socialized' },
+            ]}
+            className=" !rounded-xl !w-[8rem] !py-1.5"
+            disabled={false}
+          />
+          </div>
+          
+        </FormIonItem>
         <FormIonItem className="min-w-32 ![--min-height:1rem] pb-1">
           <div className=' flex flex-col gap-1'>
             <label htmlFor="dateFrom" className=' text-xs'>Date From</label>

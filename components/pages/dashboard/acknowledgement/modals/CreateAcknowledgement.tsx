@@ -87,17 +87,11 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
          const { success } = result.data;
          if (success) {
            getAcknowledgements(1);
-           present({
-             message: 'Official Receipt successfully added.',
-             duration: 1000,
-           });
+          
            dismiss();
            return;
          }
-         present({
-           message: 'Failed to add a new official receipt. Please try again.',
-           duration: 1000,
-         });
+       
       } catch (error: any) {
          const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
          const errors: TFormError[] | string = checkError(errs);
@@ -149,20 +143,16 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
          });
          getAcknowledgements(1);
          dismiss();
-         present({
-           message: "Data successfully created!",
-           duration: 1000,
-         });
+       
        } catch (error) {
-         present({
-           message: "Failed to save record. Please try again.",
-           duration: 1200,
-         });
+       
        }
     }
   }
 
   const amount = form.watch('amount')
+
+  console.log(form.watch('entries'))
 
   return (
     <>

@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import toast from 'react-hot-toast'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5005/api/v1';
 
@@ -23,19 +24,31 @@ const Request = async (request: InternalAxiosRequestConfig): Promise<InternalAxi
 };
 
 const RequestError = async (error: AxiosError): Promise<never> => {
+ 
   return Promise.reject(error);
 };
 
 const Response = (response: AxiosResponse): AxiosResponse => {
+  if (response.config.method?.toLowerCase() !== 'get') {
+    const data = response?.data as { msg?: string; message?: string } | undefined;
+    const successMsg = data?.msg || data?.message || 'Success';
+    const toastId = response.config.url || 'default';
+
+    toast.success(successMsg, { id: toastId }); 
+  }
+
   return response;
 };
 
 const ResponseError = async (error: AxiosError): Promise<never> => {
-  console.log('Response error:', error);
+  const data = error.response?.data as { msg?: string } | undefined;
+  const errMsg = data?.msg || 'An error occurred';
   if (error.response?.status === 401) {
     localStorage.removeItem('auth');
     window.dispatchEvent(new Event('unauthorized'));
     // window.location.reload();
+  } else {
+    toast.error(errMsg)
   }
   return Promise.reject(error);
 };

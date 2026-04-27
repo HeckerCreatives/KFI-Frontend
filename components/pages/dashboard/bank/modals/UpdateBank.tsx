@@ -51,16 +51,7 @@ const UpdateBank = ({ bank, setData }: { bank: Bank; setData: React.Dispatch<Rea
       const result = await kfiAxios.put(`/bank/${bank._id}`, data);
       const { success } = result.data;
       if (success) {
-        setData(prev => {
-          let clone = [...prev.banks];
-          let index = clone.findIndex(e => e._id === result.data.bank._id);
-          clone[index] = { ...result.data.bank };
-          present({
-            message: 'Successfully updated!.',
-            duration: 1000,
-          });
-          return { ...prev, banks: clone };
-        });
+       
         dismiss();
         return;
       }

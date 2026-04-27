@@ -22,6 +22,7 @@ import { useOnlineStore } from '../../../../store/onlineStore';
 import { db } from '../../../../database/db';
 import bcrypt from "bcryptjs";
 import { useHistory } from 'react-router-dom';
+import toast from "react-hot-toast"
 
 
 interface LoginProps {
@@ -120,7 +121,6 @@ const onSubmit = async (data: LoginFormData) => {
         error?.response?.data?.error ||
         error?.response?.data?.msg ||
         error.message;
-      present({ message: errs, duration: 1000 });
     } finally {
       setLoading(false);
     }
@@ -135,14 +135,14 @@ const onSubmit = async (data: LoginFormData) => {
       console.log(list)
 
     if (!user) {
-      present({ message: 'User does not exist.', duration: 1000 });
+      toast.error( 'User does not exist.')
       return;
     }
 
     const isMatch = await bcrypt.compare(data.password, user.password);
 
     if (!isMatch) {
-      present({ message: 'Incorrect password.', duration: 1000 });
+      toast.error('Incorrect password.');
       return;
     }
 
@@ -159,6 +159,7 @@ const onSubmit = async (data: LoginFormData) => {
         )?.actions?.visible;
 
         onLoginSuccess();
+        toast.success('Success')
       }
     }
   }

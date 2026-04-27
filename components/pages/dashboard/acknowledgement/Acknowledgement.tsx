@@ -104,10 +104,7 @@ const Acknowledgement = () => {
           return;
         }
       } catch (error) {
-        present({
-          message: 'Failed to get official receipt records. Please try again',
-          duration: 1000,
-        });
+      
       } finally {
         setData(prev => ({ ...prev, loading: false }));
       }
@@ -141,10 +138,7 @@ const Acknowledgement = () => {
        setTo(to);
      } catch (error) {
        console.log(error)
-       present({
-         message: 'Failed to load records.',
-         duration: 1000,
-       });
+     
      } finally {
        setData(prev => ({ ...prev, loading: false }));
      }

@@ -196,21 +196,26 @@ const handleDownload = async (
               </div>
 
               <div className="shrink-0">
-                {job.progress === 100 ? (
-                  <button
+                {(job.progress === 100 && job.fileUrl) ? (
+                  <div className=' flex items-center'>
+                   <button
                     onClick={() => handleDownload(job.fileUrl!, job.label, job.fileType || '', job.jobId, job.filename)}
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-[#1a73e8] hover:bg-blue-50 transition-colors"
+                    className="w-7 h-7 mr-1 rounded-full flex items-center justify-center text-[#1a73e8] hover:bg-blue-50 transition-colors"
                   >
                     <Download size={15} />
                   </button>
+                  <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
+                  
+                  </div>
+                 
                 ) : (
                   <>
                   {job.status === 'error' ? (
-                  <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><Trash size={15}/></button>
+                  <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
 
                   ): (
                     <div className=' flex gap-2'>
-                      {job.progress < 100 && (
+                      {(job.progress < 100) && (
                         <>
                           <svg
                         className="animate-spin text-zinc-500"
@@ -236,16 +241,21 @@ const handleDownload = async (
                       </svg>
 
                     <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
+
+
                         </>
                         
 
                       )}
+
+
                       
 
 
                     </div>
                 
                   )}
+
                   </>
                 )}
               </div>

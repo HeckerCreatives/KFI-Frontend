@@ -37,19 +37,13 @@ const DeleteAcknowledgement = ({ acknowledgement, getAcknowledgements, searchkey
         if (success) {
           const page = rowLength - 1 === 0 && currentPage > 1 ? currentPage - 1 : currentPage;
           getAcknowledgements(page, searchkey, sortKey);
-          present({
-            message: 'Official Receipt successfully deleted',
-            duration: 1000,
-          });
+        
           dismiss();
           return;
         }
       } catch (error: any) {
         const message = error.response.data.error.message || error?.response?.data?.msg;
-        present({
-          message: message || 'Failed to delete the official receipt record. Please try again',
-          duration: 1000,
-        });
+       
       } finally {
         setLoading(false);
       }
@@ -66,15 +60,9 @@ const DeleteAcknowledgement = ({ acknowledgement, getAcknowledgements, searchkey
         }
       getAcknowledgements(currentPage);
       dismiss()
-       present({
-            message: 'Data successfully deleted!.',
-            duration: 1000,
-          });
+      
         } catch (error: any) {
-          present({
-            message: `${error.response.data.error.message}`,
-            duration: 1000,
-          });
+        
         }
         
     }

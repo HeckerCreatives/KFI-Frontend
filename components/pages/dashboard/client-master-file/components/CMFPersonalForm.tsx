@@ -440,7 +440,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
               />
             </FormIonItem>
             {children.fields.map((field, index) => (
-              <div key={field.id} className="flex items-center gap-2">
+              <div key={field.id} className="flex whitespace-nowrap items-center gap-2">
                 <FormIonItem className="flex-1">
                   <InputText
                     disabled={loading}
@@ -449,8 +449,8 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     clearErrors={form.clearErrors}
                     label={`${index + 1}. Children`}
                     placeholder="Type here"
-                    className="!px-2 !py-2 rounded-md"
-                    labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
+                    className="!px-2 !py-2 rounded-md "
+                    labelClassName=" !whitespace-nowarp !-w-[12rem] !text-slate-600 !text-xl text-end"
                   />
                 </FormIonItem>
                 <IonButton
@@ -469,7 +469,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
               </div>
             ))}
             {beneficiary.fields.map((field, index) => (
-              <div key={field.id} className="flex items-center flex-wrap gap-2">
+              <div key={field.id} className="flex whitespace-nowrap items-center flex-wrap gap-2">
                 <FormIonItem className="flex-1">
                   <InputText
                     disabled={loading}

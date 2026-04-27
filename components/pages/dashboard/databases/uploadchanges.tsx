@@ -73,16 +73,16 @@ export default function UploadChanges() {
 
     },
      {
-      key: "acknowledgementReceipts",
+      key: "releaseReceipts",
       label: "Official Receipts",
       endpoint: "/sync/official-receipts",
-      field:'acknowledgementReceipts'
+      field:'releaseReceipts'
     },
      {
-      key: "releaseReceipts",
+      key: "acknowledgementReceipts",
       label: "Acknowledgement Receipts",
       endpoint: "/sync/release",
-      field:'officialReceipts'
+      field:'acknowledgementReceipts'
     },
     {
       key: "damayanFunds",

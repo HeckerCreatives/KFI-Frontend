@@ -152,17 +152,11 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
             prev.acknowledgements[index] = { ...updatedAcknowledgement };
             return { ...prev };
           });
-          present({
-            message: 'Official Receipt successfully updated.',
-            duration: 1000,
-          });
+         
           dismiss()
           return;
         }
-        present({
-          message: 'Failed to update the official receipt',
-          duration: 1000,
-        });
+      
       } catch (error: any) {
         const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
         const errors: TFormError[] | string = checkError(errs);
@@ -173,7 +167,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
       }
     } else {
       try {
-       const existing = await db.acknowledgementReceipts.get(acknowledgement.id);
+       const existing = await db.releaseReceipts.get(acknowledgement.id);
         if (!existing) {
           console.log("Data not found");
           return;
@@ -240,6 +234,8 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
       }
     }
   }
+
+  console.log(form.formState.errors)
 
 
   return (

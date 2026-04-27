@@ -62,6 +62,7 @@ const LoanRelease = () => {
   const [sortKey, setSortKey] = useState<string>('code-desc');
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
+  const [type, setType] = useState<string>('all');
   const [uploading, setUploading] = useState<boolean>(false)
   const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState<string | undefined>(undefined);
@@ -77,7 +78,6 @@ const LoanRelease = () => {
     prevPage: false,
   });
 
-  console.log(online)
 
   const getTransactions = async (page: number, keyword: string = '', sort: string = 'code-desc', to: string = '', from: string = '') => {
     console.log(online, 'Here lr')
@@ -89,6 +89,7 @@ const LoanRelease = () => {
         if (sort) filter.sort = sort;
         if (to) filter.to = to;
         if (from) filter.from = from;
+        if (type) filter.type = type === 'all' ? '' : type;
 
         const result = await kfiAxios.get('/transaction/loan-release', { params: filter });
         const { success, transactions, hasPrevPage, hasNextPage, totalPages } = result.data;
@@ -121,7 +122,6 @@ const LoanRelease = () => {
          const limit = TABLE_LIMIT;
          let data = await db.loanReleases.toArray();
 
-         console.log('Loan Release Data:', data)
 
          const filteredData = data.filter(e => e.action !== 'delete');
          let allData = filterAndSortLoanRelease(filteredData, keyword, sort, from, to);
@@ -170,7 +170,7 @@ const LoanRelease = () => {
     getTransactions(currentPage, searchKey, sortKey, to, from);
     })
     return () => clearTimeout(timer);
-  }, [searchKey, sortKey, to, from]);
+  }, [searchKey, sortKey, to, from, type]);
 
   useEffect(() => {
     getTransactions(currentPage, searchKey, sortKey, to, from);
@@ -208,7 +208,7 @@ const LoanRelease = () => {
                   </div>
 
                    <div className="w-full flex-1 flex items-end flex-wrap ">
-                    <LoanReleaseFilter getTransactions={getTransactions} setSearchKey={setSearchKey} suggestions={data.transactions.map((item) => item.code)} setTo={setTo} setFrom={setFrom} />
+                    <LoanReleaseFilter getTransactions={getTransactions} setSearchKey={setSearchKey} suggestions={data.transactions.map((item) => item.code)} setTo={setTo} setFrom={setFrom} setType={setType}/>
 
                        <IonButton fill="clear" onClick={() => getTransactions(currentPage, searchKey, sortKey, to, from)} className="!h-10 !text-white w-fit bg-[#FA6C2F] !rounded-lg">
                         <RefreshCcw size={15}/>

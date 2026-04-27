@@ -10,6 +10,8 @@ import formErrorHandler from '../../../../utils/form-error-handler';
 import UserForm from '../components/UserForm';
 import { UserFormData, userSchema } from '../../../../../validations/user.schema';
 import { personAdd } from 'ionicons/icons';
+import toast from 'react-hot-toast'
+import { useQueryClient } from "@tanstack/react-query";
 
 type CreateUserProps = {
   getUsers: (page: number, keyword?: string, sort?: string) => void;
@@ -20,6 +22,7 @@ const CreateUser = ({ getUsers }: CreateUserProps) => {
   const [present] = useIonToast();
 
   const modal = useRef<HTMLIonModalElement>(null);
+  const queryClient = useQueryClient()
 
   const form = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
@@ -41,13 +44,11 @@ const CreateUser = ({ getUsers }: CreateUserProps) => {
     try {
       const result = await kfiAxios.post('/user', data);
       const { success } = result.data;
+     queryClient.invalidateQueries({ queryKey: ["user-list"] });
       if (success) {
-        getUsers(1);
+        // getUsers(1);
         dismiss();
-        present({
-          message: 'Account successfully created!.',
-          duration: 1000,
-        });
+       
         return;
       }
     } catch (error: any) {

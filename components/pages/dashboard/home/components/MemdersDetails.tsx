@@ -138,7 +138,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
 
          <div className=' w-full flex flex-col gap-4'>
 
-          <div className=' w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 '>
+          <div className=' w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 '>
              <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full rounded-xl flex items-start justify-between overflow-hidden">
                   <div className=" relative z-10 space-y-2">
                     <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">{title}</div>
@@ -157,7 +157,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                  
               </div>
 
-               <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full  rounded-xl flex items-start justify-between overflow-hidden">
+               {/* <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full  rounded-xl flex items-start justify-between overflow-hidden">
                   <div className=" relative z-10 space-y-2">
                     <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total Inactive</div>
                     <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : Number(resignedTotal || 0).toLocaleString()}</div>
@@ -173,7 +173,7 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                   
             
                  
-                </div>
+                </div> */}
 
                 <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full rounded-xl flex items-start justify-between overflow-hidden">
                   <div className=" relative z-10 space-y-2">
@@ -205,6 +205,33 @@ const ViewMemberDetails = ({ title, icon, value, loading = false, details = fals
                     </div>
                   </div>
                 </div>
+
+                 <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full rounded-xl flex items-start justify-between overflow-hidden">
+                  <div className=" relative z-10 space-y-2">
+                    <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total Active Existing</div>
+                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : Number(totalStatusCounts['Active-Existing'] ?? 0).toLocaleString()}</div>
+                  </div>
+                 
+                  <div className=' flex flex-col items-end justify-between'>
+                    <div className=" relative z-10 bg-orange-50 w-10 h-10 rounded-full flex items-center justify-center text-orange-500">
+                    {icon}
+                    </div>
+                  </div>
+                </div>
+
+                  <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full rounded-xl flex items-start justify-between overflow-hidden">
+                  <div className=" relative z-10 space-y-2">
+                    <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">Total Active New</div>
+                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : Number(totalStatusCounts['Active-New'] ?? 0).toLocaleString()}</div>
+                  </div>
+                 
+                  <div className=' flex flex-col items-end justify-between'>
+                    <div className=" relative z-10 bg-orange-50 w-10 h-10 rounded-full flex items-center justify-center text-orange-500">
+                    {icon}
+                    </div>
+                  </div>
+                </div>
+
 
                  <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full rounded-xl flex items-start justify-between overflow-hidden">
                   <div className=" relative z-10 space-y-2">

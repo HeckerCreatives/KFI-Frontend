@@ -20,6 +20,7 @@ import '@ionic/react/css/display.css';
 
 import '../styles/global.css';
 import '../styles/variables.css';
+import Providers from '../components/pages/QueryProvider';
 
 export const metadata: Metadata = {
   title: 'KFI',
@@ -39,7 +40,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers>
+          {children}
+        </Providers>
+      </body>
       <Script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js" strategy="lazyOnload" />
       <Script noModule src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js" strategy="lazyOnload" />
     </html>

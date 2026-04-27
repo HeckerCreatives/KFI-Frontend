@@ -576,7 +576,8 @@ export type TTableFilter = {
   dateFrom?: string
   dateTo?: string
   year?: number,
-  month?: number
+  month?: number,
+  type?: string
 };
 
 

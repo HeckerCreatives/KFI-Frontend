@@ -58,10 +58,7 @@ const ViewAcknowledgementEntries = ({ isOpen, acknowledgement }: ViewEntriesProp
           return;
         }
       } catch (error) {
-        present({
-          message: 'Failed to get entry records. Please try again',
-          duration: 1000,
-        });
+      
       } finally {
         setData(prev => ({ ...prev, loading: false }));
       }
@@ -85,10 +82,7 @@ const ViewAcknowledgementEntries = ({ isOpen, acknowledgement }: ViewEntriesProp
          setCurrentPage(page);
        } catch (error) {
          console.log(error)
-         present({
-           message: 'Failed to load records.',
-           duration: 1000,
-         });
+        
        } finally {
          setData(prev => ({ ...prev, loading: false }));
        }

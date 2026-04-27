@@ -12,6 +12,7 @@ import SystemPermission from '../components/permissions/SystemPermission';
 import DiagnosticsPermission from '../components/permissions/DiagnosticsPermission';
 import DashboardPermission from '../components/permissions/DashboardPermission';
 import { Key } from 'lucide-react';
+import { useQueryClient } from "@tanstack/react-query";
 
 type AddPermissionProps = {
   user: User;
@@ -31,6 +32,7 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
     clonePermissions(user.permissions)
   );
   const modal = useRef<HTMLIonModalElement>(null);
+  const queryClient = useQueryClient()
 
 
   useEffect(() => {
@@ -47,18 +49,11 @@ const AddPermission = ({ user, setData }: AddPermissionProps) => {
     try {
       const result = await kfiAxios.put(`/user/permissions/${user._id}`, { permissions: permissions,platform:"desktop" });
       const { success } = result.data;
+      queryClient.invalidateQueries({ queryKey: ["user-list"] });
       if (success) {
-        setData(prev => {
-          let clone = [...prev.users];
-          let index = clone.findIndex(e => e._id === result.data.user._id);
-          clone[index] = { ...result.data.user };
-          return { ...prev, users: clone };
-        });
+       
         dismiss();
-        present({
-          message: 'Permissions successfully updated!.',
-          duration: 1000,
-        });
+       
         return;
       }
     } catch (error: any) {

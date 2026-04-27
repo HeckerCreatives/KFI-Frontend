@@ -8,6 +8,7 @@ import FormIonItem from '../../../../ui/utils/FormIonItem';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import kfiAxios from '../../../../utils/axios';
 import { ban } from 'ionicons/icons';
+import { useQueryClient } from "@tanstack/react-query";
 
 type BanUserProps = {
   selected: string[];
@@ -21,6 +22,7 @@ const BanUser = ({ selected, setSelected, refetch, banned, active }: BanUserProp
   const [present] = useIonToast();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const form = useForm<BanFormData>({
     resolver: zodResolver(banSchema),
@@ -48,18 +50,17 @@ const BanUser = ({ selected, setSelected, refetch, banned, active }: BanUserProp
       const result = await kfiAxios.put(url, { ids: selected });
       const { success } = result.data;
       if (success) {
-        present({
-          message: `Successfully ${data.status === 'ban' ? 'banned' : 'activated'}!.`,
-          duration: 1000,
-        });
-        refetch();
-        setSelected([]);
+        // present({
+        //   message: `Successfully ${data.status === 'ban' ? 'banned' : 'activated'}!.`,
+        //   duration: 1000,
+        // });
+        // setSelected([]);
+        console.log('here')
+      queryClient.invalidateQueries({ queryKey: ["user-list"] });
+
         setIsOpen(false);
         form.reset();
-        present({
-          message: 'Status successfully changed!.',
-          duration: 1000,
-        });
+       
         return;
       }
     } catch (error: any) {
@@ -104,9 +105,11 @@ const BanUser = ({ selected, setSelected, refetch, banned, active }: BanUserProp
             <p className="text-sm">Are you sure, you want to ban/active this user?</p>
             <p className="text-xs text-zinc-500">This action cannot be undone. This will permanently ban the user account.</p>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <FormIonItem className="w-full max-w-72 min-w-20 mt-3">
+                <p className=' text-xs mt-4'>Ban / Activate</p>
+
+              <FormIonItem className="w-full max-w-72 min-w-20 !flex !flex-col">
                 <InputSelect
-                  label="Ban/Activate"
+                  // label="Ban/Activate"
                   placeholder="Ban/Activate"
                   name="status"
                   control={form.control}
@@ -114,7 +117,6 @@ const BanUser = ({ selected, setSelected, refetch, banned, active }: BanUserProp
                   options={[
                     { label: 'Ban Users', value: 'ban' },
                     { label: 'Activate Users', value: 'unban' },
-                    // { label: 'Inactivate Users', value: 'inactive' },
                   ]}
                   className="!border-orange-500 rounded-md !w-full !py-1.5"
                   disabled={loading}

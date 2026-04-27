@@ -91,10 +91,7 @@ const UpdateAcknowledgementEntries = ({ isOpen, acknowledgement, setEntries, del
           return;
         }
       } catch (error) {
-        present({
-          message: 'Failed to get entry records. Please try again',
-          duration: 1000,
-        });
+       
       } finally {
         setData(prev => ({ ...prev, loading: false }));
       }
@@ -117,11 +114,7 @@ const UpdateAcknowledgementEntries = ({ isOpen, acknowledgement, setEntries, del
        }));
        setCurrentPage(page);
      } catch (error) {
-       console.log(error)
-       present({
-         message: 'Failed to load records.',
-         duration: 1000,
-       });
+     
      } finally {
        setData(prev => ({ ...prev, loading: false }));
      }

@@ -17,7 +17,8 @@ import DeleteAdmin from '../modal/DeleteAdmin';
 type UserActionsProps = {
   user: User;
   setData: React.Dispatch<React.SetStateAction<TUser>>;
-  getList: (page: number, keyword?: string, sort?: string) => void;
+  search?: string, sort?: string, status?: string
+  getList: (page: number, keyword?: string, sort?: string, status?: string) => void;
 
 };
 

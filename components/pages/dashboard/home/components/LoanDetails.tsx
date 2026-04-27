@@ -85,6 +85,8 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
 
   const handlePagination = (page: number) => (page);
 
+  const totalAmount = data.data.reduce((sum: number, item: any) => sum + item.totalAmount, 0);
+
 
   return (
     <>
@@ -109,7 +111,7 @@ const LoanDetails = ({ title, icon, value, loading = false, details = false }: D
             <div className=" relative shadow-sm h-full! bg-orange-50 p-6 flex-1 w-full max-w-64 rounded-xl flex items-start justify-between overflow-hidden">
                   <div className=" relative z-10 space-y-2">
                     <div className="text-[0.8rem] truncate text-zinc-700 !font-medium ">{title}</div>
-                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : value}</div>
+                    <div className="text-xl text-orange-600 !font-bold">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : Number(totalAmount).toLocaleString()}</div>
                   </div>
                  
                   <div className=' flex flex-col items-end justify-between'>
