@@ -78,7 +78,6 @@ const Admin = () => {
 
   useEffect(() => {
     if (userList) {
-      console.log('Here', userList)
       setData(prev => ({
         ...prev,
         users: userList.users,
@@ -87,7 +86,7 @@ const Admin = () => {
         prevPage: userList.prevPage,
         loading: false,
       }));
-      // getStatistics();
+      getStatistics();
     }
   }, [userList]);
 
@@ -201,6 +200,7 @@ const handlePagination = (page: number) => {
 
   useIonViewWillEnter(() => {
     getUsers(currentPage);
+    getStatistics()
   });
 
   const handleSelected = (e: CustomEvent) => {
@@ -219,7 +219,6 @@ const handlePagination = (page: number) => {
     refetch()
   },[sortKey, searchKey, status])
 
-console.log(currentPage, filter)
 
 
 
