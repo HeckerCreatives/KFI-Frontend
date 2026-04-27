@@ -6,6 +6,7 @@ import BankSelection from '../../../../ui/selections/BankSelection';
 import { DamayanFundFormData } from '../../../../../validations/damayan-fund.schema';
 import CenterSelection from '../../../../ui/selections/CenterSelection';
 import NatureSelection from '../../../../ui/selections/NatureSelection';
+import kfiAxios from '../../../../utils/axios';
 
 type TForm = {
   form: UseFormReturn<DamayanFundFormData>;
@@ -20,6 +21,38 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
         form.setValue('checkDate', watchDate)
       }
     },[watchDate])
+
+    const code = form.watch('code')
+      const checkCode = async () => {
+           try {
+          
+              const result = await kfiAxios.get('/transaction/check-code', { params: {code: code, type: 'Damayan Fund'} });
+              const { data } = result.data;
+    
+    
+              if(data.exists){
+              form.setError('code', { message: 'JV No. already exist' })
+    
+              } else {
+                form.clearErrors('code')
+              }
+    
+    
+             
+            } catch (error) {
+            }
+        };
+    
+      useEffect(() => {
+      const upper = code.toUpperCase();
+      if (upper.startsWith('JV#')) { 
+        const timer = setTimeout(() => {
+          checkCode();
+        }, 500);
+        return () => clearTimeout(timer);
+      }
+    }, [code]);
+    
   return (
     <div className="space-y-1 px-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         <div className="space-y-1">

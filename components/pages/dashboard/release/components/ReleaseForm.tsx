@@ -6,6 +6,7 @@ import CenterSelection from '../../../../ui/selections/CenterSelection';
 import BankSelection from '../../../../ui/selections/BankSelection';
 import InputSelect from '../../../../ui/forms/InputSelect';
 import { ReleaseFormData } from '../../../../../validations/release.schema';
+import kfiAxios from '../../../../utils/axios';
 
 type TForm = {
   form: UseFormReturn<ReleaseFormData>;
@@ -20,6 +21,37 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
           form.setValue('checkDate', watchDate)
         }
       },[watchDate])
+
+        const code = form.watch('code')
+            const checkCode = async () => {
+                 try {
+                
+                    const result = await kfiAxios.get('/receipt/check-code', { params: {code: code, type: 'AR'} });
+                    const { data } = result.data;
+          
+          
+                    if(data.exists){
+                    form.setError('code', { message: 'AR No. already exist' })
+          
+                    } else {
+                      form.clearErrors('code')
+                    }
+          
+          
+                   
+                  } catch (error) {
+                  }
+              };
+          
+            useEffect(() => {
+            const upper = code?.toUpperCase() || '';
+            if (upper.startsWith('OR#')) { 
+              const timer = setTimeout(() => {
+                checkCode();
+              }, 500);
+              return () => clearTimeout(timer);
+            }
+          }, [code]);
   return (
     <div className="space-y-1 px-2">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">

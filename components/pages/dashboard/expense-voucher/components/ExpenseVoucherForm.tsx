@@ -8,6 +8,7 @@ import BankSelection from '../../../../ui/selections/BankSelection';
 import SupplierSelection from '../../../../ui/selections/SupplierSelection';
 import InputTextarea from '../../../../ui/forms/InputTextarea';
 import classNames from 'classnames';
+import kfiAxios from '../../../../utils/axios';
 
 type TForm = {
   form: UseFormReturn<ExpenseVoucherFormData>;
@@ -22,6 +23,40 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
       form.setValue('checkDate', watchDate)
     }
   },[watchDate])
+
+  const code = form.watch('code')
+  const checkCode = async () => {
+       try {
+      
+          const result = await kfiAxios.get('/transaction/check-code', { params: {code: code, type: 'Expense Voucher'} });
+          const { data } = result.data;
+
+
+          if(data.exists){
+          form.setError('code', { message: 'Cv No. already exist' })
+
+          } else {
+            form.clearErrors('code')
+          }
+
+
+         
+        } catch (error) {
+        }
+    };
+
+  useEffect(() => {
+  const upper = code.toUpperCase();
+  if (upper.startsWith('CV#')) { 
+    const timer = setTimeout(() => {
+      checkCode();
+    }, 500);
+    return () => clearTimeout(timer);
+  }
+}, [code]);
+
+
+
   return (
     <div className="space-y-1 px-2">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ">

@@ -6,6 +6,7 @@ import BankSelection from '../../../../ui/selections/BankSelection';
 import { EmergencyLoanFormData } from '../../../../../validations/emergency-loan.schema';
 import CenterSelection from '../../../../ui/selections/CenterSelection';
 import CenterClientSelection from '../../../../ui/selections/ClientCenterSeclection';
+import kfiAxios from '../../../../utils/axios';
 
 type TForm = {
   form: UseFormReturn<EmergencyLoanFormData>;
@@ -20,6 +21,38 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
         form.setValue('checkDate', watchDate)
       }
     },[watchDate])
+
+    const code = form.watch('code')
+      const checkCode = async () => {
+           try {
+          
+              const result = await kfiAxios.get('/transaction/check-code', { params: {code: code, type: 'Emergency Loan'} });
+              const { data } = result.data;
+    
+    
+              if(data.exists){
+              form.setError('code', { message: 'Cv No. already exist' })
+    
+              } else {
+                form.clearErrors('code')
+              }
+    
+    
+             
+            } catch (error) {
+            }
+        };
+    
+      useEffect(() => {
+      const upper = code.toUpperCase();
+      if (upper.startsWith('CV#')) { 
+        const timer = setTimeout(() => {
+          checkCode();
+        }, 500);
+        return () => clearTimeout(timer);
+      }
+    }, [code]);
+    
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 px-3 gap-2">

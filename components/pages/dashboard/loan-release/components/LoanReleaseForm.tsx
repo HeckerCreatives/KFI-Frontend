@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import InputText from '../../../../ui/forms/InputText';
@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import BankSelection from '../../../../ui/selections/BankSelection';
 import LoanSelection from '../../../../ui/selections/LoanSelection';
 import InputCheckbox from '../../../../ui/forms/InputCheckbox';
+import kfiAxios from '../../../../utils/axios';
 
 type TForm = {
   form: UseFormReturn<LoanReleaseFormData>;
@@ -21,6 +22,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
   const centerId = form.watch('center');
   const { center, loading: centerLoads } = useGetCenterDescription({ id: centerId });
   const watchDate = form.watch('date')
+  const code = form.watch('cvNo')
 
   useEffect(() => {
     if (center) {
@@ -29,6 +31,36 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
     }
     form.setValue('checkDate',watchDate )
   }, [center, form, watchDate]);
+
+    const checkCode = async () => {
+       try {
+      
+          const result = await kfiAxios.get('/transaction/check-code', { params: {code: code, type: 'Loan Release'} });
+          const { data } = result.data;
+
+
+          if(data.exists){
+          form.setError('cvNo', { message: 'Cv No. already exist' })
+
+          } else {
+            form.clearErrors('cvNo')
+          }
+
+
+         
+        } catch (error) {
+        }
+    };
+
+  useEffect(() => {
+  const upper = code.toUpperCase();
+  if (upper.startsWith('CV#')) { 
+    const timer = setTimeout(() => {
+      checkCode();
+    }, 500);
+    return () => clearTimeout(timer);
+  }
+}, [code]);
 
   return (
     <div className=" space-y-1 mt-4">

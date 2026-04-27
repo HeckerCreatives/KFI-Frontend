@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import BankSelection from '../../../../ui/selections/BankSelection';
 import { AcknowledgementFormData } from '../../../../../validations/acknowledgement.schema';
 import InputSelect from '../../../../ui/forms/InputSelect';
+import kfiAxios from '../../../../utils/axios';
 
 type TForm = {
   form: UseFormReturn<AcknowledgementFormData>;
@@ -22,6 +23,37 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
         form.setValue('checkDate', watchDate)
       }
     },[watchDate])
+
+      const code = form.watch('code')
+      const checkCode = async () => {
+           try {
+          
+              const result = await kfiAxios.get('/receipt/check-code', { params: {code: code, type: 'OR'} });
+              const { data } = result.data;
+    
+    
+              if(data.exists){
+              form.setError('code', { message: 'OR No. already exist' })
+    
+              } else {
+                form.clearErrors('code')
+              }
+    
+    
+             
+            } catch (error) {
+            }
+        };
+    
+      useEffect(() => {
+      const upper = code?.toUpperCase() || '';
+      if (upper.startsWith('OR#')) { 
+        const timer = setTimeout(() => {
+          checkCode();
+        }, 500);
+        return () => clearTimeout(timer);
+      }
+    }, [code]);
   return (
     <div className="space-y-1 px-2">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
