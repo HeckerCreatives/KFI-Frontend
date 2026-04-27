@@ -108,14 +108,36 @@ const Reports = () => {
         }
 
         if (response.status === 200) {
-              // Immediate blob response — open and print
-              const file = new Blob([response.data], { type: 'application/pdf' });
-              const fileURL = URL.createObjectURL(file);
-              const printWindow = window.open(fileURL);
-              printWindow?.addEventListener('load', () => {
-                printWindow.print();
-              });
-              dismiss();
+           const contentType = response.headers?.['content-type'];
+            const blob = new Blob([response.data]) 
+            if(contentType.includes('pdf')){
+              const fileURL = URL.createObjectURL(blob);
+                addJob({
+                  jobId: crypto.randomUUID(),
+                  label: `Loan Release (PDF)`,
+                  type: 'print',
+                  progress: 100,
+                  status: 'processing',
+                  fileType: 'pdf',
+                  file: 'zip',
+                  filename: `loan-release-${type}.pdf`,
+                  fileUrl: fileURL
+                })
+            } else {
+              const fileURL = URL.createObjectURL(blob);
+                addJob({
+                jobId: crypto.randomUUID(),
+                label: `Loan Release (PDF)`,
+                type: 'print',
+                progress: 100,
+                status: 'processing',
+                fileType: 'pdf',
+                file: 'zip',
+                filename: `loan-release-${type}.zip`,
+                fileUrl: fileURL
+              })
+            }
+            dismiss();
 
             } else if (response.status === 202) {
               // Async job — wait for socket event
@@ -189,14 +211,38 @@ const Reports = () => {
 
 
              if (response.status === 200) {
-              // Immediate blob response — open and print
-              const file = new Blob([response.data], { type: 'application/pdf' });
-              const fileURL = URL.createObjectURL(file);
-              const printWindow = window.open(fileURL);
-              printWindow?.addEventListener('load', () => {
-                printWindow.print();
-              });
-              dismiss();
+              const contentType = response.headers?.['content-type'];
+            const blob = new Blob([response.data])  
+
+            if(contentType.includes('vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
+              const fileURL = URL.createObjectURL(blob);
+               addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Loan Release (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `loan-release-${type}.xlsx`,
+                 fileUrl: fileURL
+               })
+            } else {
+             const fileURL = URL.createObjectURL(blob);
+               addJob({
+               jobId: crypto.randomUUID(),
+               label: `Loan Release (Excel)`,
+               type: 'export',
+               progress: 100,
+               status: 'processing',
+               fileType: 'excel',
+               file: '',
+               filename: `loan-release-${type}.zip`,
+               fileUrl: fileURL
+             })
+            }
+
+            dismiss()
 
             } else if (response.status === 202) {
               // Async job — wait for socket event

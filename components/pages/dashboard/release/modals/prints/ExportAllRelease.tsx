@@ -46,62 +46,6 @@ const ExportAllRelease = () => {
     modal.current?.dismiss();
   }
 
-
-    async function handlePrint(data: PrintExportFilterFormData) {
-      setLoading(true);
-
-      try {
-        const params = {
-          docNoFrom: data.docNoFromLabel,
-          docNoTo: data.docNoToLabel,
-          dateFrom: data.dateFrom,
-          dateTo: data.dateTo,
-          bankIds: data.bankIds,
-        };
-
-        const downloadFile = (blobData: BlobPart, fileName: string) => {
-          const blob = new Blob([blobData], {
-            type:
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = fileName;
-          a.click();
-          window.URL.revokeObjectURL(url);
-        };
-
-        let response;
-        let fileName = "";
-
-        switch (tabActive) {
-          case "by-document":
-            response = await kfiAxios.get(
-              `/release/export/by-document/${data.option}`,
-              { responseType: "blob", params }
-            );
-            fileName = "journal-voucher-by-document.xlsx";
-            break;
-
-          default:
-            throw new Error("Invalid tab selected");
-        }
-
-        downloadFile(response.data, fileName);
-
-        form.reset();
-      } catch (error) {
-        console.error(error);
-        present({
-          message: "Failed to export the loan release records. Please try again.",
-          duration: 1000,
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-
         async function handleDownload(data: PrintExportFilterFormData) {
           setLoading(true);
         
@@ -135,17 +79,36 @@ const ExportAllRelease = () => {
             }
         
             if (result.status === 200) {
-              const blob = new Blob([result.data], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-              });
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = 'acknowledgementreceipt.xlsx';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              window.URL.revokeObjectURL(url);
+              const contentType = result.headers?.['content-type'];
+              const blob = new Blob([result.data])  
+
+              if(contentType.includes('vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
+              const fileURL = URL.createObjectURL(blob);
+               addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Acknowledgement Receipt (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `acknowledgement-receipt-${tabActive}.xlsx`,
+                 fileUrl: fileURL
+               })
+            } else {
+             const fileURL = URL.createObjectURL(blob);
+               addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Acknowledgement Receipt (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `acknowledgement-receipt-${tabActive}.zip`,
+                 fileUrl: fileURL
+               })
+            }
               dismiss?.();
         
             } else if (result.status === 202) {

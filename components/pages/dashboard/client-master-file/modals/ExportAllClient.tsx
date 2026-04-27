@@ -142,17 +142,36 @@ async function handleDownload() {
     });
 
     if (result.status === 200) {
-      const blob = new Blob([result.data], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'customers.xlsx';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+     const contentType = result.headers?.['content-type'];
+      const blob = new Blob([result.data])  
+
+      if(contentType.includes('vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
+              const fileURL = URL.createObjectURL(blob);
+               addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Clients (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `clients.xlsx`,
+                 fileUrl: fileURL
+               })
+            } else {
+             const fileURL = URL.createObjectURL(blob);
+                addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Clients (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `clients.zip`,
+                 fileUrl: fileURL
+               })
+            }
       dismiss();
 
     } else if (result.status === 202) {

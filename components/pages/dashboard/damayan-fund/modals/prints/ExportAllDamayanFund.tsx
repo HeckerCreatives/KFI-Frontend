@@ -45,91 +45,6 @@ const ExportAllDamayanFund = () => {
   });
 
 
-  async function handlePrint(data: PrintExportFilterFormData) {
-  setLoading(true);
-
-  try {
-    const params = {
-      docNoFrom: data.docNoFromLabel,
-      docNoTo: data.docNoToLabel,
-      dateFrom: data.dateFrom,
-      dateTo: data.dateTo,
-      bankIds: data.bankIds,
-    };
-
-    const downloadFile = (blobData: BlobPart, fileName: string) => {
-      const blob = new Blob([blobData], {
-        type:
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    };
-
-    let response;
-    let fileName = "";
-
-    switch (tabActive) {
-      case "by-document":
-        response = await kfiAxios.get(
-          `/damayan-fund/export/by-document/${data.option}`,
-          { responseType: "blob", params }
-        );
-        fileName = "damayan-fund-by-document.xlsx";
-        break;
-
-      case "by-date":
-        response = await kfiAxios.get(
-          `/damayan-fund/export/by-date/${data.option}`,
-          { responseType: "blob", params }
-        );
-        fileName = "damayan-fund-by-date.xlsx";
-        break;
-
-      case "by-bank":
-        response = await kfiAxios.post(
-          `/damayan-fund/export/by-bank`,
-          { bankIds: data.bankIds },
-          { responseType: "blob" }
-        );
-        fileName = "damayan-fund-by-banks.xlsx";
-        break;
-
-      case "by-accounts":
-        response = await kfiAxios.post(
-          `/damayan-fund/export/by-accounts/${data.option}`,
-          {
-            chartOfAccountsIds: data.chartOfAccountsIds,
-            dateFrom: data.dateFrom,
-            dateTo: data.dateTo,
-          },
-          { responseType: "blob" }
-        );
-        fileName = "damayan-fund-by-accounts.xlsx";
-        break;
-
-      default:
-        throw new Error("Invalid tab selected");
-    }
-
-    downloadFile(response.data, fileName);
-
-    form.reset();
-  } catch (error) {
-    console.error(error);
-    present({
-      message: "Failed to export the loan release records. Please try again.",
-      duration: 1000,
-    });
-  } finally {
-    setLoading(false);
-  }
-}
-
  async function handleDownload(data: PrintExportFilterFormData) {
   setLoading(true);
 
@@ -189,18 +104,37 @@ const ExportAllDamayanFund = () => {
     }
 
     if (result.status === 200) {
-      const blob = new Blob([result.data], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'expense-voucher.xlsx';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-      dismiss?.();
+     const contentType = result.headers?.['content-type'];
+      const blob = new Blob([result.data])  
+
+      if(contentType.includes('vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
+              const fileURL = URL.createObjectURL(blob);
+               addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Damayan Fund (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `damayan-fund-${tabActive}.xlsx`,
+                 fileUrl: fileURL
+               })
+            } else {
+             const fileURL = URL.createObjectURL(blob);
+                addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Damayan Fund (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `damayan-fund-${tabActive}.zip`,
+                 fileUrl: fileURL
+               })
+            }
+
 
     } else if (result.status === 202) {
       const text = new TextDecoder().decode(result.data);

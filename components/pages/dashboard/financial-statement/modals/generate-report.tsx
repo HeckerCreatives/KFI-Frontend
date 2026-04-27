@@ -48,13 +48,36 @@ const GenerateReport = () => {
       });
 
       if (result.status === 200) {
-        const blob = new Blob([result.data], { type: 'application/pdf' });
-        const pdfUrl = URL.createObjectURL(blob);
-        const printWindow = window.open(pdfUrl, '_blank');
-        printWindow?.addEventListener('load', () => {
-          printWindow?.print();
-          URL.revokeObjectURL(pdfUrl);
-        });
+       const contentType = result.headers?.['content-type'];
+        const blob = new Blob([result.data]) 
+
+        if(contentType.includes('pdf')){
+         const fileURL = URL.createObjectURL(blob);
+          addJob({
+            jobId: crypto.randomUUID(),
+            label: `Financial Statement (PDF)`,
+            type: 'print',
+            progress: 100,
+            status: 'processing',
+            fileType: 'pdf',
+            file: 'zip',
+            filename: `financial-statement.pdf`,
+            fileUrl: fileURL
+          })
+       } else {
+        const fileURL = URL.createObjectURL(blob);
+           addJob({
+            jobId: crypto.randomUUID(),
+            label: `Financial Statement (PDF)`,
+            type: 'print',
+            progress: 100,
+            status: 'processing',
+            fileType: 'pdf',
+            file: 'zip',
+            filename: `financial-statement.zip`,
+            fileUrl: fileURL
+          })
+       }
 
       } else if (result.status === 202) {
         const text = new TextDecoder().decode(result.data);
@@ -71,17 +94,36 @@ const GenerateReport = () => {
       });
 
       if (result.status === 200) {
-        const blob = new Blob([result.data], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'financial-statement.xlsx';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+        const contentType = result.headers?.['content-type'];
+        const blob = new Blob([result.data])  
+
+        if(contentType.includes('vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
+              const fileURL = URL.createObjectURL(blob);
+               addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Financial Statement (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `financial-statement.xlsx`,
+                 fileUrl: fileURL
+               })
+            } else {
+             const fileURL = URL.createObjectURL(blob);
+                addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Financial Statement (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `financial-statement.zip`,
+                 fileUrl: fileURL
+               })
+            }
 
       } else if (result.status === 202) {
         const text = new TextDecoder().decode(result.data);

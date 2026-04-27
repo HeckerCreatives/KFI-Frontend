@@ -190,18 +190,38 @@ const ExportAllExpenseVoucher = () => {
     }
 
     if (result.status === 200) {
-      const blob = new Blob([result.data], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'expense-voucher.xlsx';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-      dismiss?.();
+      const contentType = result.headers?.['content-type'];
+           const blob = new Blob([result.data])
+
+           console.log(contentType)
+            if(contentType.includes('vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
+              const fileURL = URL.createObjectURL(blob);
+               addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Expense Voucher (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `expense-voucher-${tabActive}.xlsx`,
+                 fileUrl: fileURL
+               })
+            } else {
+             const fileURL = URL.createObjectURL(blob);
+               addJob({
+               jobId: crypto.randomUUID(),
+               label: `Expense Voucher (Excel)`,
+               type: 'export',
+               progress: 100,
+               status: 'processing',
+               fileType: 'excel',
+               file: '',
+               filename: `expense-voucher-${tabActive}.zip`,
+               fileUrl: fileURL
+             })
+            }
+           dismiss();
 
     } else if (result.status === 202) {
       const text = new TextDecoder().decode(result.data);

@@ -44,83 +44,6 @@ const PrintAllDamayanFund = () => {
     modal.current?.dismiss();
   }
 
- async function handlePrint(data: PrintExportFilterFormData) {
-  setLoading(true);
-
-  try {
-    const openAndPrintPDF = (blobData: BlobPart) => {
-      const file = new Blob([blobData], { type: "application/pdf" });
-      const fileURL = URL.createObjectURL(file);
-      const printWindow = window.open(fileURL);
-      printWindow?.addEventListener("load", () => {
-        printWindow.print();
-      });
-    };
-
-    const params = {
-      docNoFrom: data.docNoFromLabel,
-      docNoTo: data.docNoToLabel,
-      dateFrom: data.dateFrom,
-      dateTo: data.dateTo,
-      bankIds: data.bankIds,
-    };
-
-    let response;
-
-    switch (tabActive) {
-      case "by-document":
-        response = await kfiAxios.get(
-          `/damayan-fund/print/by-document/${data.option}`,
-          { responseType: "blob", params }
-        );
-        break;
-
-      case "by-date":
-        response = await kfiAxios.get(
-          `/damayan-fund/print/by-date/${data.option}`,
-          { responseType: "blob", params }
-        );
-        break;
-
-      case "by-bank":
-        response = await kfiAxios.post(
-          `/damayan-fund/print/by-bank`,
-          { bankIds: data.bankIds },
-          { responseType: "blob" }
-        );
-        break;
-
-      case "by-accounts":
-        response = await kfiAxios.post(
-          `/damayan-fund/print/by-accounts/${data.option}`,
-          {
-            chartOfAccountsIds: data.chartOfAccountsIds,
-            dateFrom: data.dateFrom,
-            dateTo: data.dateTo,
-          },
-          { responseType: "blob" }
-        );
-        break;
-
-      default:
-        throw new Error("Invalid tab selected");
-    }
-
-    openAndPrintPDF(response.data);
-
-    form.reset();
-  } catch (error) {
-    console.error(error);
-    present({
-      message:
-        "Failed to export the loan release records. Please try again.",
-      duration: 1000,
-    });
-  } finally {
-    setLoading(false);
-  }
-}
-
 async function handleDownload(data: PrintExportFilterFormData) {
   setLoading(true);
 
@@ -182,13 +105,36 @@ async function handleDownload(data: PrintExportFilterFormData) {
 
 
     if (result.status === 200) {
-      const blob = new Blob([result.data], { type: 'application/pdf' });
-      const fileURL = URL.createObjectURL(blob);
-      const printWindow = window.open(fileURL);
-      printWindow?.addEventListener('load', () => {
-        printWindow?.print();
-        URL.revokeObjectURL(fileURL);
-      });
+      const contentType = result.headers?.['content-type'];
+      const blob = new Blob([result.data]) 
+
+      if(contentType.includes('pdf')){
+         const fileURL = URL.createObjectURL(blob);
+          addJob({
+            jobId: crypto.randomUUID(),
+            label: `Damayan Fund (PDF)`,
+            type: 'print',
+            progress: 100,
+            status: 'processing',
+            fileType: 'pdf',
+            file: 'zip',
+            filename: `damayan-fund-${tabActive}.pdf`,
+            fileUrl: fileURL
+          })
+       } else {
+        const fileURL = URL.createObjectURL(blob);
+           addJob({
+            jobId: crypto.randomUUID(),
+            label: `Damayan Fund (PDF)`,
+            type: 'print',
+            progress: 100,
+            status: 'processing',
+            fileType: 'pdf',
+            file: 'zip',
+            filename: `damayan-fund-${tabActive}.zip`,
+            fileUrl: fileURL
+          })
+       }
       dismiss();
 
     } else if (result.status === 202) {

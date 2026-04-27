@@ -144,13 +144,36 @@ useEffect(() => {
     });
 
     if (result.status === 200) {
-      const blob = new Blob([result.data], { type: 'application/pdf' });
-      const fileURL = URL.createObjectURL(blob);
-      const printWindow = window.open(fileURL);
-      printWindow?.addEventListener('load', () => {
-        printWindow?.print();
-        URL.revokeObjectURL(fileURL);
-      });
+     const contentType = result.headers?.['content-type'];
+      const blob = new Blob([result.data]) 
+
+      if(contentType.includes('pdf')){
+         const fileURL = URL.createObjectURL(blob);
+          addJob({
+            jobId: crypto.randomUUID(),
+            label: `Clients (PDF)`,
+            type: 'print',
+            progress: 100,
+            status: 'processing',
+            fileType: 'pdf',
+            file: 'zip',
+            filename: `clients-list.pdf`,
+            fileUrl: fileURL
+          })
+       } else {
+        const fileURL = URL.createObjectURL(blob);
+           addJob({
+            jobId: crypto.randomUUID(),
+            label: `Clients (PDF)`,
+            type: 'print',
+            progress: 100,
+            status: 'processing',
+            fileType: 'pdf',
+            file: 'zip',
+            filename: `clients-list.zip`,
+            fileUrl: fileURL
+          })
+       }
       dismiss();
 
     } else if (result.status === 202) {

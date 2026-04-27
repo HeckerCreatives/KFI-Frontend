@@ -46,130 +46,6 @@ const ExportAllLoanRelease = () => {
 
   const type = form.watch('reportType')
 
-
-  async function handlePrint(data: PrintExportFilterFormData) {
-  setLoading(true);
-
-  try {
-    const params = {
-      docNoFrom: data.docNoFromLabel,
-      docNoTo: data.docNoToLabel,
-      dateFrom: data.dateFrom,
-      dateTo: data.dateTo,
-      bankIds: data.bankIds,
-    };
-
-    const downloadFile = (blobData: BlobPart, fileName: string) => {
-      const blob = new Blob([blobData], {
-        type:
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    };
-
-    let response;
-    let fileName = "";
-
-    switch (type) {
-      case "by-document":
-        response = await kfiAxios.get(
-          `/transaction/export/by-document/${data.option}`,
-          { responseType: "blob", params }
-        );
-        fileName = "loan-releases-by-document.xlsx";
-        break;
-
-      case "by-date":
-        response = await kfiAxios.get(
-          `/transaction/export/by-date/${data.option}`,
-          { responseType: "blob", params }
-        );
-        fileName = "loan-releases-by-date.xlsx";
-        break;
-
-      case "by-bank":
-        response = await kfiAxios.post(
-          `/transaction/export/by-bank`,
-          { bankIds: data.bankIds },
-          { responseType: "blob" }
-        );
-        fileName = "loan-releases-by-banks.xlsx";
-        break;
-
-      case "by-accounts":
-        response = await kfiAxios.post(
-          `/transaction/export/by-accounts/${data.option}`,
-          {
-            chartOfAccountsIds: data.chartOfAccountsIds,
-            dateFrom: data.dateFrom,
-            dateTo: data.dateTo,
-          },
-          { responseType: "blob" }
-        );
-        fileName = "loan-releases-by-accounts.xlsx";
-        break;
-
-        case "past-dues":
-        response = await kfiAxios.post(
-          `/transaction/export/past-dues`,
-          {
-            loanReleaseDateFrom: data.loanReleaseDateFrom,
-            loanReleaseDateTo: data.loanReleaseDateTo,
-          },
-          { responseType: "blob" }
-        );
-        fileName = "loan-releases-past-dues.xlsx";
-        break;
-
-        case "aging-of-loans":
-        response = await kfiAxios.post(
-          `/transaction/export/aging-of-loans`,
-          {
-            loanReleaseDateFrom: data.loanReleaseDateFrom,
-            loanReleaseDateTo: data.loanReleaseDateTo,
-          },
-          { responseType: "blob" }
-        );
-        fileName = "loan-releases-aging-of-loans.xlsx";
-        break;
-
-        case "weekly-collections":
-        response = await kfiAxios.post(
-          `/transaction/export/weekly-collections`,
-          {
-            loanReleaseDateFrom: data.loanReleaseDateFrom,
-            loanReleaseDateTo: data.loanReleaseDateTo,
-          },
-          { responseType: "blob" }
-        );
-        fileName = "loan-releases-weekly-collections.xlsx";
-        break;
-
-
-
-      default:
-        throw new Error("Invalid tab selected");
-    }
-
-    downloadFile(response.data, fileName);
-
-    // form.reset();
-  } catch (error) {
-    console.error(error);
-    present({
-      message: "Failed to export the loan release records. Please try again.",
-      duration: 1000,
-    });
-  } finally {
-    setLoading(false);
-  }
-}
-
 async function handleDownload(data: PrintExportFilterFormData) {
   setLoading(true);
 
@@ -262,18 +138,38 @@ async function handleDownload(data: PrintExportFilterFormData) {
     }
 
     if (result.status === 200) {
-      const blob = new Blob([result.data], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'loan-release.xlsx';
-      document.body.appendChild(a);
-      a.click();
-      document.body.appendChild(a);
-      window.URL.revokeObjectURL(url);
-      dismiss();
+     const contentType = result.headers?.['content-type'];
+      const blob = new Blob([result.data])  
+
+      if(contentType.includes('vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
+              const fileURL = URL.createObjectURL(blob);
+               addJob({
+                 jobId: crypto.randomUUID(),
+                 label: `Loan Release (Excel)`,
+                 type: 'export',
+                 progress: 100,
+                 status: 'processing',
+                 fileType: 'excel',
+                 file: '',
+                 filename: `loan-release-${type}.xlsx`,
+                 fileUrl: fileURL
+               })
+            } else {
+             const fileURL = URL.createObjectURL(blob);
+               addJob({
+               jobId: crypto.randomUUID(),
+               label: `Loan Release (Excel)`,
+               type: 'export',
+               progress: 100,
+               status: 'processing',
+               fileType: 'excel',
+               file: '',
+               filename: `loan-release-${type}.zip`,
+               fileUrl: fileURL
+             })
+            }
+
+            dismiss()
 
     } else if (result.status === 202) {
       // Decode arraybuffer → JSON for async job response
