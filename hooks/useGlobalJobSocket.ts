@@ -18,14 +18,6 @@ export const useGlobalJobSocket = () => {
 
     socketRef.current = socket;
 
-    socket.on('connect', () => {
-      console.log('[GlobalJobSocket] Connected:', socket.id);
-    });
-
-    socket.on('disconnect', () => {
-      console.log('[GlobalJobSocket] Disconnected');
-    });
-
     // Helper to detect file type from contentType or filename
     const detectFileType = (data: any): 'pdf' | 'excel' | 'zip' => {
       if (data.fileType) return data.fileType;
@@ -136,18 +128,56 @@ export const useGlobalJobSocket = () => {
       });
     };
 
-    // Register global listeners
-    socket.on('report:progress', handleProgress);
-    socket.on('report:ready', handleReady);
-    socket.on('report:error', handleError);
+    // Setup event listeners
+    const setupListeners = () => {
+      socket.off('report:progress', handleProgress);
+      socket.off('report:ready', handleReady);
+      socket.off('report:error', handleError);
+      
+      socket.on('report:progress', handleProgress);
+      socket.on('report:ready', handleReady);
+      socket.on('report:error', handleError);
+    };
+
+    // Rejoin all pending jobs on reconnection
+    const rejoinPendingJobs = () => {
+      const pendingJobs = useJobStore.getState().jobs.filter(
+        (job) => job.status === 'processing' && job.progress < 100
+      );
+      
+      if (pendingJobs.length > 0) {
+        console.log('[GlobalJobSocket] Rejoining', pendingJobs.length, 'pending job(s)');
+        pendingJobs.forEach((job) => {
+          socket.emit('join:report', job.jobId);
+          console.log('[GlobalJobSocket] Rejoined job:', job.jobId);
+        });
+      }
+    };
+
+    socket.on('connect', () => {
+      console.log('[GlobalJobSocket] Connected:', socket.id);
+      setupListeners();
+      rejoinPendingJobs();
+    });
+
+    socket.on('disconnect', () => {
+      console.log('[GlobalJobSocket] Disconnected');
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('[GlobalJobSocket] Connection error:', error);
+    });
 
     return () => {
       socket.off('report:progress', handleProgress);
       socket.off('report:ready', handleReady);
       socket.off('report:error', handleError);
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('connect_error');
       socket.disconnect();
     };
-  }, [updateJob, addJob]);
+  }, [updateJob, addJob, socketRef]);
 
   return socketRef.current;
 };

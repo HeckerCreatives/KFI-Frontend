@@ -6,16 +6,20 @@ import { Browser } from '@capacitor/browser';
 import { isPlatform, useIonToast } from '@ionic/react';
 import { Share } from '@capacitor/share';
 import { cancelFileDownload } from '../services/reportDownload';
+import { Socket, io } from 'socket.io-client';
+import { useGlobalJobSocket } from '../../hooks/useGlobalJobSocket';
 
 
 
 
 export const FileQueue = () => {
   const { jobs, deleteJob} = useJobStore()
-   const [minimized, setMinimized] = useState(false);
-    const [showQueue, setShowQueue] = useState(true); 
-      const [present] = useIonToast();
-    
+  const [minimized, setMinimized] = useState(false);
+  const [showQueue, setShowQueue] = useState(true); 
+  const [present] = useIonToast();
+
+    useGlobalJobSocket();
+  
 
 const handleDownload = async (
   fileUrl: string,
@@ -35,15 +39,13 @@ const handleDownload = async (
   const ext = extensions[fileType.toLowerCase()] ?? '';
   const fullFilename = (filename || label);
 
-  console.log(isPlatform('android'), 'isAndroid');
 
   try {
     if (isPlatform('capacitor')) {
-      // ✅ Android — fetch the file and save via Capacitor Filesystem
       const response = await fetch(fileUrl);
       const blob = await response.blob();
 
-      // Convert blob to base64
+
       const base64 = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => {
@@ -54,7 +56,7 @@ const handleDownload = async (
         reader.readAsDataURL(blob);
       });
 
-      // Save to device
+
       const savedFile = await Filesystem.writeFile({
         path: fullFilename,
         data: base64,
@@ -62,7 +64,7 @@ const handleDownload = async (
         recursive: true,
       });
 
-      // Share/open the file so user can see it
+
       await Share.share({
         title: fullFilename,
         url: savedFile.uri,
@@ -70,7 +72,6 @@ const handleDownload = async (
       });
 
     } else {
-      // ✅ Windows/Web — use anchor download
       const a = document.createElement('a');
       a.href = fileUrl;
       a.download = fullFilename;
@@ -93,7 +94,6 @@ const handleCancel = async (jobId: string) => {
     deleteJob(jobId);
   } catch (error) {
     console.error('Error canceling download:', error);
-    // Still delete from local store even if API call fails
     deleteJob(jobId);
   }
 };

@@ -20,10 +20,11 @@ build:exe
 https://developer.android.com/studio#command-tools
 
 //add path
-put downloaded cli tool here
+put downloaded cli tool here on c
 \Android\Sdk\cmdline-tools\latest\bin
 
 //cd to the path created
+\Android\Sdk\cmdline-tools\latest\bin
 
 //run to download other tools
 .\sdkmanager.bat "platform-tools" "platforms;android-33" "build-tools;33.0.2"
