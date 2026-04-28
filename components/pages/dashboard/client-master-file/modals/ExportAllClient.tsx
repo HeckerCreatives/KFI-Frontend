@@ -63,7 +63,7 @@ useEffect(() => {
   // Add only the first job here
   addJob({
     jobId,
-    label: name || 'Client List (Excel)',
+    label: name || 'Client List',
     type: 'export',
     progress: 0,
     status: 'processing',
@@ -74,7 +74,20 @@ useEffect(() => {
 
   const handleProgress = (data: any) => {
     const percent = data.percent ?? data.progress ?? 0
-    updateJob(data.jobId, { progress: percent, status: 'processing' })
+      const message = data.message.toLowerCase();
+
+       if (percent >= 80) return;
+
+        const fileType: 'pdf' | 'excel' | 'zip' =
+          message.includes('batch') ? 'zip' : 'excel';
+
+
+        updateJob(jobId, {
+          progress: percent,
+          status: 'processing',
+          fileType: fileType,
+          label: `Clients`
+        })
   }
 
   const handleReady = (data: any) => {
@@ -149,7 +162,7 @@ async function handleDownload() {
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Clients (Excel)`,
+                 label: `Clients`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
@@ -162,11 +175,11 @@ async function handleDownload() {
              const fileURL = URL.createObjectURL(blob);
                 addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Clients (Excel)`,
+                 label: `Clients`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
-                 fileType: 'excel',
+                 fileType: 'zip',
                  file: '',
                  filename: `clients.zip`,
                  fileUrl: fileURL

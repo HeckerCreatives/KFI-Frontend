@@ -188,7 +188,7 @@ const PrintAllJournalVoucher = () => {
          const fileURL = URL.createObjectURL(blob);
           addJob({
             jobId: crypto.randomUUID(),
-            label: `Journal Voucher (PDF)`,
+            label: `Journal Voucher ${tabActive}`,
             type: 'print',
             progress: 100,
             status: 'processing',
@@ -201,11 +201,11 @@ const PrintAllJournalVoucher = () => {
         const fileURL = URL.createObjectURL(blob);
           addJob({
           jobId: crypto.randomUUID(),
-          label: `Journal Voucher (PDF)`,
+          label: `Journal Voucher ${tabActive}`,
           type: 'print',
           progress: 100,
           status: 'processing',
-          fileType: 'pdf',
+          fileType: 'zip',
           file: 'zip',
           filename: `journal-voucher-${tabActive}.zip`,
           fileUrl: fileURL
@@ -256,7 +256,7 @@ const PrintAllJournalVoucher = () => {
         if (!existing) {
          addJob({
             jobId,
-            label: `Journal Voucher (PDF)`,
+            label: `Journal Voucher ${tabActive}`,
             type: 'print',
             progress: 0,
             status: 'processing',
@@ -272,12 +272,20 @@ const PrintAllJournalVoucher = () => {
           console.log('Progress event:', data)
   
           const percent = data.percent ?? data.progress ?? 0
-  
-  
-          updateJob(jobId, {
-            progress: percent,
-            status: 'processing',
-          })
+   const message = data.message.toLowerCase();
+
+       if (percent >= 50) return;
+
+        const fileType: 'pdf' | 'excel' | 'zip' =
+          message.includes('batch') ? 'zip' : 'pdf';
+
+
+        updateJob(jobId, {
+          progress: percent,
+          status: 'processing',
+          fileType: fileType,
+          label: `Journal Voucher ${tabActive}`
+        })
   
         }
   

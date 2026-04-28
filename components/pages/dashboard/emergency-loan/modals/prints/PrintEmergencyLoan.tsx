@@ -100,7 +100,7 @@ const PrintEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan })
           if (!existing) {
            addJob({
               jobId,
-              label: `Emergency Loan (PDF)`,
+              label: `Emergency Loan`,
               type: 'print',
               progress: 0,
               status: 'processing',

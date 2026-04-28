@@ -109,7 +109,7 @@ const ExportAllEmergencyLoan = () => {
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Emergency Loan (Excel)`,
+                 label: `Emergency Loan ${tabActive}`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
@@ -122,11 +122,11 @@ const ExportAllEmergencyLoan = () => {
              const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Emergency Loan (Excel)`,
+                 label: `Emergency Loan ${tabActive}`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
-                 fileType: 'excel',
+                 fileType: 'zip',
                  file: '',
                  filename: `emergency-loan-${tabActive}.zip`,
                  fileUrl: fileURL
@@ -177,7 +177,7 @@ const ExportAllEmergencyLoan = () => {
           if (!existing) {
             addJob({
               jobId,
-              label: `Emergency Loan (Excel)`,
+              label: `Emergency Loan ${tabActive}`,
               type: 'export',
               progress: 0,
               status: 'processing',
@@ -193,12 +193,24 @@ const ExportAllEmergencyLoan = () => {
             console.log('Progress event:', data)
     
             const percent = data.percent ?? data.progress ?? 0
+
+             const message = data.message.toLowerCase();
+
+            if (percent >= 50) return;
+
+              const fileType: 'pdf' | 'excel' | 'zip' =
+                message.includes('batch') ? 'zip' : 'excel';
+
+
+              updateJob(jobId, {
+                progress: percent,
+                status: 'processing',
+                fileType: fileType,
+                label: `Emergency Loan ${tabActive}`
+              })
+  
     
     
-            updateJob(jobId, {
-              progress: percent,
-              status: 'processing',
-            })
     
           }
     

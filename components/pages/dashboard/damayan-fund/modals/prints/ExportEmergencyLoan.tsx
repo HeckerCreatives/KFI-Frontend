@@ -104,7 +104,7 @@ const ExportDamayanFund = ({ damayanFund }: { damayanFund: DamayanFund }) => {
         if (!existing) {
           addJob({
             jobId,
-            label: `Damayan Fund (Excel)`,
+            label: `Damayan Fund`,
             type: 'export',
             progress: 0,
             status: 'processing',

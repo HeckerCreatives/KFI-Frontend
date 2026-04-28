@@ -67,7 +67,7 @@ const ExportLoanRelease = ({ transaction }: { transaction: Transaction }) => {
             if (!existing) {
              addJob({
                 jobId,
-                label: `Loan Release (Excel)`,
+                label: `Loan Release`,
                 type: 'export',
                 progress: 0,
                 status: 'processing',

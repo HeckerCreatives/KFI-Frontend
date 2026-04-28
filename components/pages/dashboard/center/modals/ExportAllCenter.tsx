@@ -82,7 +82,7 @@ const ExportAllCenter = () => {
           if (!existing) {
             addJob({
               jobId,
-              label: `Centers (Excel)`,
+              label: `Centers `,
               type: 'export',
               progress: 0,
               status: 'processing',

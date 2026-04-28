@@ -99,7 +99,7 @@ const PrintExpenseVoucher = ({ expenseVoucher }: { expenseVoucher: ExpenseVouche
         if (!existing) {
          addJob({
             jobId,
-            label: `Expense Voucher (PDF)`,
+            label: `Expense Voucher`,
             type: 'print',
             progress: 0,
             status: 'processing',

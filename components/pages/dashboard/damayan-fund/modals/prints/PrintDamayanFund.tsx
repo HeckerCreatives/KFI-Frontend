@@ -99,7 +99,7 @@ const PrintDamayanFund = ({ damayanFund }: { damayanFund: DamayanFund }) => {
         if (!existing) {
          addJob({
             jobId,
-            label: `Damayan Fund (PDF)`,
+            label: `Damayan Fund`,
             type: 'print',
             progress: 0,
             status: 'processing',

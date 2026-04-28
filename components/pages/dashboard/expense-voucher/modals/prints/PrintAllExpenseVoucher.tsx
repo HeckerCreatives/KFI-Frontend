@@ -41,89 +41,13 @@ const PrintAllExpenseVoucher = () => {
     });
 
   function dismiss() {
-    form.reset();
+    // form.reset();
     modal.current?.dismiss();
   }
 
   const type = form.watch('reportType')
 
 
- async function handlePrint(data: PrintExportFilterFormData) {
-  setLoading(true);
-
-  try {
-    const openAndPrintPDF = (blobData: BlobPart) => {
-      const file = new Blob([blobData], { type: "application/pdf" });
-      const fileURL = URL.createObjectURL(file);
-      const printWindow = window.open(fileURL);
-      printWindow?.addEventListener("load", () => {
-        printWindow.print();
-      });
-    };
-
-    const params = {
-      docNoFrom: data.docNoFromLabel,
-      docNoTo: data.docNoToLabel,
-      dateFrom: data.dateFrom,
-      dateTo: data.dateTo,
-      bankIds: data.bankIds,
-    };
-
-    let response;
-
-    switch (tabActive) {
-      case "by-document":
-        response = await kfiAxios.get(
-          `/expense-voucher/print/by-document/${data.option}`,
-          { responseType: "blob", params }
-        );
-        break;
-
-      case "by-date":
-        response = await kfiAxios.get(
-          `/expense-voucher/print/by-date/${data.option}`,
-          { responseType: "blob", params }
-        );
-        break;
-
-      case "by-bank":
-        response = await kfiAxios.post(
-          `/expense-voucher/print/by-bank`,
-          { bankIds: data.bankIds },
-          { responseType: "blob" }
-        );
-        break;
-
-      case "by-accounts":
-        response = await kfiAxios.post(
-          `/expense-voucher/print/by-accounts/${data.option}`,
-          {
-            accounts: data.chartOfAccountsIds,
-            dateFrom: data.dateFrom,
-            dateTo: data.dateTo,
-          },
-          { responseType: "blob" }
-        );
-        break;
-
-      default:
-        throw new Error("Invalid tab selected");
-    }
-
-    openAndPrintPDF(response.data);
-
-    form.reset();
-  } catch (error) {
-    console.error(error);
-    present({
-      message:
-        "Failed to export the loan release records. Please try again.",
-      duration: 1000,
-    });
-  } finally {
-    setLoading(false);
-  }
-}
 
 async function handleDownload(data: PrintExportFilterFormData) {
   setLoading(true);
@@ -192,7 +116,7 @@ async function handleDownload(data: PrintExportFilterFormData) {
          const fileURL = URL.createObjectURL(blob);
           addJob({
             jobId: crypto.randomUUID(),
-            label: `Expense Voucher (PDF)`,
+            label: `Expense Voucher`,
             type: 'print',
             progress: 100,
             status: 'processing',
@@ -205,11 +129,11 @@ async function handleDownload(data: PrintExportFilterFormData) {
         const fileURL = URL.createObjectURL(blob);
           addJob({
           jobId: crypto.randomUUID(),
-          label: `Expense Voucher (PDF)`,
+          label: `Expense Voucher`,
           type: 'print',
           progress: 100,
           status: 'processing',
-          fileType: 'pdf',
+          fileType: 'zip',
           file: 'zip',
           filename: `expense-voucher-${tabActive}.zip`,
           fileUrl: fileURL
@@ -260,7 +184,7 @@ async function handleDownload(data: PrintExportFilterFormData) {
       if (!existing) {
        addJob({
           jobId,
-          label: `Expense Voucher (PDF)`,
+          label: `Expense Voucher`,
           type: 'print',
           progress: 0,
           status: 'processing',
@@ -276,12 +200,23 @@ async function handleDownload(data: PrintExportFilterFormData) {
         console.log('Progress event:', data)
 
         const percent = data.percent ?? data.progress ?? 0
+        const message = data.message.toLowerCase();
+
+       if (percent >= 50) return;
+
+        const fileType: 'pdf' | 'excel' | 'zip' =
+          message.includes('batch') ? 'zip' : 'pdf';
 
 
         updateJob(jobId, {
           progress: percent,
           status: 'processing',
+          fileType: fileType,
+          label: `Expense Voucher ${type}`
         })
+
+
+      
 
       }
 

@@ -77,7 +77,7 @@ const PrintAllWeeklySavingsTable = () => {
         if (!existing) {
           addJob({
             jobId,
-            label: `Weekly Savings (PDF)`,
+            label: `Weekly Savings`,
             type: 'print',
             progress: 0,
             status: 'processing',

@@ -112,7 +112,7 @@ async function handleDownload(data: PrintExportFilterFormData) {
          const fileURL = URL.createObjectURL(blob);
           addJob({
             jobId: crypto.randomUUID(),
-            label: `Damayan Fund (PDF)`,
+            label: `Damayan Fund ${tabActive}`,
             type: 'print',
             progress: 100,
             status: 'processing',
@@ -125,11 +125,11 @@ async function handleDownload(data: PrintExportFilterFormData) {
         const fileURL = URL.createObjectURL(blob);
            addJob({
             jobId: crypto.randomUUID(),
-            label: `Damayan Fund (PDF)`,
+            label: `Damayan Fund ${tabActive}`,
             type: 'print',
             progress: 100,
             status: 'processing',
-            fileType: 'pdf',
+            fileType: 'zip',
             file: 'zip',
             filename: `damayan-fund-${tabActive}.zip`,
             fileUrl: fileURL
@@ -180,7 +180,7 @@ async function handleDownload(data: PrintExportFilterFormData) {
       if (!existing) {
        addJob({
           jobId,
-          label: `Damayan Fund (PDF)`,
+          label: `Damayan Fund ${tabActive}`,
           type: 'print',
           progress: 0,
           status: 'processing',
@@ -196,12 +196,21 @@ async function handleDownload(data: PrintExportFilterFormData) {
         console.log('Progress event:', data)
 
         const percent = data.percent ?? data.progress ?? 0
+ const message = data.message.toLowerCase();
+
+       if (percent >= 50) return;
+
+        const fileType: 'pdf' | 'excel' | 'zip' =
+          message.includes('batch') ? 'zip' : 'pdf';
 
 
         updateJob(jobId, {
           progress: percent,
           status: 'processing',
+          fileType: fileType,
+          label: `Damayan Fund ${tabActive}`
         })
+  
 
       }
 

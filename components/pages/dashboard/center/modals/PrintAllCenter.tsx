@@ -78,7 +78,7 @@ const PrintAllCenter = () => {
         if (!existing) {
           addJob({
             jobId,
-            label: `Centers (PDF)`,
+            label: `Centers`,
             type: 'print',
             progress: 0,
             status: 'processing',

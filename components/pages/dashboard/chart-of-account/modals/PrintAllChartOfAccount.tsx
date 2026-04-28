@@ -81,7 +81,7 @@ const PrintAllChartOfAccount = () => {
       if (!existing) {
         addJob({
           jobId,
-          label: `Chart of Accounts (PDF)`,
+          label: `Chart of Accounts`,
           type: 'print',
           progress: 0,
           status: 'processing',

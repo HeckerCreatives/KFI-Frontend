@@ -70,12 +70,12 @@ const AuditTrail = () => {
          const fileURL = URL.createObjectURL(blob);
           addJob({
             jobId: crypto.randomUUID(),
-            label: `Audit Trail (PDF)`,
+            label: `Audit Trail`,
             type: 'print',
             progress: 100,
             status: 'processing',
             fileType: 'pdf',
-            file: 'zip',
+            file: 'pdf',
             filename: `audit-trail.pdf`,
             fileUrl: fileURL
           })
@@ -83,11 +83,11 @@ const AuditTrail = () => {
         const fileURL = URL.createObjectURL(blob);
            addJob({
             jobId: crypto.randomUUID(),
-            label: `Audit Trail (PDF)`,
+            label: `Audit Trail`,
             type: 'print',
             progress: 100,
             status: 'processing',
-            fileType: 'pdf',
+            fileType: 'zip',
             file: 'zip',
             filename: `audit-trail.zip`,
             fileUrl: fileURL
@@ -109,13 +109,13 @@ const AuditTrail = () => {
 
       if (result.status === 200) {
        const contentType = result.headers?.['content-type'];
-const blob = new Blob([result.data])  
+        const blob = new Blob([result.data])  
 
-if(contentType.includes('vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
+        if(contentType.includes('vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Audit Trail (Excel)`,
+                 label: `Audit Trail `,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
@@ -128,11 +128,11 @@ if(contentType.includes('vnd.openxmlformats-officedocument.spreadsheetml.sheet')
              const fileURL = URL.createObjectURL(blob);
                 addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Audit Trail (Excel)`,
+                 label: `Audit Trail `,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
-                 fileType: 'excel',
+                 fileType: 'zip',
                  file: '',
                  filename: `audit-trail.zip`,
                  fileUrl: fileURL

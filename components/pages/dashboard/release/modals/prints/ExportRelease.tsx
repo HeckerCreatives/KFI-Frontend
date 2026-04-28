@@ -103,7 +103,7 @@ async function handlePrint() {
         if (!existing) {
          addJob({
             jobId,
-            label: `Acknowledgement Receipt (Excel)`,
+            label: `Acknowledgement Receipt`,
             type: 'export',
             progress: 0,
             status: 'processing',

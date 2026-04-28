@@ -59,12 +59,12 @@ async function handlePrint(data: BegBalanceDocumemtFormData) {
                 const fileURL = URL.createObjectURL(blob);
                   addJob({
                     jobId: crypto.randomUUID(),
-                    label: `Beginning Balance (PDF)`,
+                    label: `Beginning Balance `,
                     type: 'print',
                     progress: 100,
                     status: 'processing',
                     fileType: 'pdf',
-                    file: 'zip',
+                    file: 'pdf',
                     filename: `beginning-balance.pdf`,
                     fileUrl: fileURL
                   })
@@ -72,11 +72,11 @@ async function handlePrint(data: BegBalanceDocumemtFormData) {
                 const fileURL = URL.createObjectURL(blob);
                     addJob({
                     jobId: crypto.randomUUID(),
-                    label: `Beginning Balance (PDF)`,
+                    label: `Beginning Balance `,
                     type: 'print',
                     progress: 100,
                     status: 'processing',
-                    fileType: 'pdf',
+                    fileType: 'zip',
                     file: 'zip',
                     filename: `beginning-balance.zip`,
                     fileUrl: fileURL
@@ -106,7 +106,7 @@ async function handlePrint(data: BegBalanceDocumemtFormData) {
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Beginning Balance (Excel)`,
+                 label: `Beginning Balance`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
@@ -119,11 +119,11 @@ async function handlePrint(data: BegBalanceDocumemtFormData) {
              const fileURL = URL.createObjectURL(blob);
                 addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Beginning Balance (Excel)`,
+                 label: `Beginning Balance`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
-                 fileType: 'excel',
+                 fileType: 'zip',
                  file: '',
                  filename: `beginning-balance.zip`,
                  fileUrl: fileURL

@@ -69,12 +69,12 @@ const Activity = () => {
          const fileURL = URL.createObjectURL(blob);
           addJob({
             jobId: crypto.randomUUID(),
-            label: `Activity (PDF)`,
+            label: `Activity`,
             type: 'print',
             progress: 100,
             status: 'processing',
             fileType: 'pdf',
-            file: 'zip',
+            file: 'pdf',
             filename: `acticity.pdf`,
             fileUrl: fileURL
           })
@@ -82,11 +82,11 @@ const Activity = () => {
         const fileURL = URL.createObjectURL(blob);
            addJob({
             jobId: crypto.randomUUID(),
-            label: `Audit Trail (PDF)`,
+            label: `Audit Trail`,
             type: 'print',
             progress: 100,
             status: 'processing',
-            fileType: 'pdf',
+            fileType: 'zip',
             file: 'zip',
             filename: `audit-trail.zip`,
             fileUrl: fileURL
@@ -114,7 +114,7 @@ const Activity = () => {
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Activity (Excel)`,
+                 label: `Activity`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
@@ -127,11 +127,11 @@ const Activity = () => {
              const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Activity (Excel)`,
+                 label: `Activity`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
-                 fileType: 'excel',
+                 fileType: 'zip',
                  file: '',
                  filename: `activity.zip`,
                  fileUrl: fileURL

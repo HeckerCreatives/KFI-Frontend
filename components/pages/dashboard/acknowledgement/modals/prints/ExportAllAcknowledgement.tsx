@@ -85,7 +85,7 @@ const ExportAllAcknowledgement = () => {
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Official Receipt (Excel)`,
+                 label: `Official Receipt ${tabActive}`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
@@ -98,11 +98,11 @@ const ExportAllAcknowledgement = () => {
              const fileURL = URL.createObjectURL(blob);
               addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Official Receipt (Excel)`,
+                 label: `Official Receipt ${tabActive}`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
-                 fileType: 'excel',
+                 fileType: 'zip',
                  file: '',
                  filename: `official-receipt-${tabActive}.zip`,
                  fileUrl: fileURL
@@ -153,7 +153,7 @@ const ExportAllAcknowledgement = () => {
               if (!existing) {
                 addJob({
                   jobId,
-                  label: `Official Receipt (Excel)`,
+                  label: `Official Receipt ${tabActive}`,
                   type: 'export',
                   progress: 0,
                   status: 'processing',
@@ -169,11 +169,19 @@ const ExportAllAcknowledgement = () => {
                 console.log('Progress event:', data)
         
                 const percent = data.percent ?? data.progress ?? 0
-        
-        
+                const message = data.message.toLowerCase();
+
+              if (percent >= 50) return;
+
+                const fileType: 'pdf' | 'excel' | 'zip' =
+                  message.includes('batch') ? 'zip' : 'excel';
+
+
                 updateJob(jobId, {
                   progress: percent,
                   status: 'processing',
+                  fileType: fileType,
+                  label: `Official Receipt ${tabActive}`
                 })
         
               }

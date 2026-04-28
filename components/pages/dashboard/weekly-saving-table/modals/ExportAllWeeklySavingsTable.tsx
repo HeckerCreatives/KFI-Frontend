@@ -81,7 +81,7 @@ const ExportAllWeeklySavingsTable = () => {
           if (!existing) {
             addJob({
               jobId,
-              label: `Weekly Savings (Excel)`,
+              label: `Weekly Savings`,
               type: 'export',
               progress: 0,
               status: 'processing',

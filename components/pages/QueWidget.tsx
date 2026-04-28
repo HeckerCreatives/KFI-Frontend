@@ -167,16 +167,20 @@ const handleDownload = async (
           return (
             <div key={job.jobId} className="flex items-center gap-3 px-4 py-3">
               {/* file icon */}
-              <div className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 ${
-                job.fileType === 'pdf' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
-              }`}>
+              <div className={`w-8 h-10 rounded-md flex flex-col items-center justify-center shrink-0 ${
+                job.fileType === 'pdf' && 'bg-red-50 text-red-600'
+              }
+              ${job.fileType === 'excel' && 'bg-green-50 text-green-600'}
+              ${job.fileType === 'zip' && 'bg-gray-50 text-gray-600'}
+              `}>
 
                
                 <File size={15} />
+                <p className=' text-[.5rem]'>.{job.fileType === 'excel' ? 'xlsx' : job.fileType}</p>
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-800 truncate">{job.label}</p>
+                <p className="text-xs font-medium text-gray-800 truncate">{job.label} .{job.fileType === 'excel' ? 'xlsx' : job.fileType}</p>
                 {job.status === 'error' ? (
                   <>
                   <p className=' text-xs text-red-500'>Failed to generate file.</p>

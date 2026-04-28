@@ -104,7 +104,7 @@ const ExportJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVouch
                     if (!existing) {
                       addJob({
                         jobId,
-                        label: `Journal Voucher (Excel)`,
+                        label: `Journal Voucher`,
                         type: 'export',
                         progress: 0,
                         status: 'processing',

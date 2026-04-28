@@ -111,7 +111,7 @@ const PrintAllEmergencyLoan = () => {
          const fileURL = URL.createObjectURL(blob);
           addJob({
             jobId: crypto.randomUUID(),
-            label: `Emergency Loan (PDF)`,
+            label: `Emergency Loan ${tabActive}`,
             type: 'print',
             progress: 100,
             status: 'processing',
@@ -124,11 +124,11 @@ const PrintAllEmergencyLoan = () => {
         const fileURL = URL.createObjectURL(blob);
           addJob({
             jobId: crypto.randomUUID(),
-            label: `Emergency Loan (PDF)`,
+            label: `Emergency Loan ${tabActive}`,
             type: 'print',
             progress: 100,
             status: 'processing',
-            fileType: 'pdf',
+            fileType: 'zip',
             file: 'zip',
             filename: `emergency-loan-${tabActive}.zip`,
             fileUrl: fileURL
@@ -179,7 +179,7 @@ const PrintAllEmergencyLoan = () => {
         if (!existing) {
          addJob({
             jobId,
-            label: `Emergency Loan (PDF)`,
+            label: `Emergency Loan ${tabActive}`,
             type: 'print',
             progress: 0,
             status: 'processing',
@@ -195,12 +195,21 @@ const PrintAllEmergencyLoan = () => {
           console.log('Progress event:', data)
   
           const percent = data.percent ?? data.progress ?? 0
+           const message = data.message.toLowerCase();
+
+       if (percent >= 50) return;
+
+        const fileType: 'pdf' | 'excel' | 'zip' =
+          message.includes('batch') ? 'zip' : 'pdf';
+
+
+        updateJob(jobId, {
+          progress: percent,
+          status: 'processing',
+          fileType: fileType,
+          label: `Emergency Loan ${tabActive}`
+        })
   
-  
-          updateJob(jobId, {
-            progress: percent,
-            status: 'processing',
-          })
   
         }
   

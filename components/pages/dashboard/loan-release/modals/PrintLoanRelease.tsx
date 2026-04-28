@@ -66,7 +66,7 @@ const PrintLoanRelease = ({ transaction }: { transaction: Transaction }) => {
           if (!existing) {
            addJob({
               jobId,
-              label: `Loan Release (PDF)`,
+              label: `Loan Release `,
               type: 'print',
               progress: 0,
               status: 'processing',

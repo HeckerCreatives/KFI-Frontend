@@ -231,6 +231,7 @@ const ClientMasterFile = () => {
 
   const getStatisticsData = async () => {
     if (online) {
+      console.log('here')
       getStatistics();  
     } else {
       getOfflineStatistics();

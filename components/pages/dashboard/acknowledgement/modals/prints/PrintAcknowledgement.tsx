@@ -101,7 +101,7 @@ async function handlePrint(data: AcknowledgementOptionFormData) {
             if (!existing) {
              addJob({
                 jobId,
-                label: `Official Receipt (PDF)`,
+                label: `Official Receipt`,
                 type: 'print',
                 progress: 0,
                 status: 'processing',

@@ -105,12 +105,12 @@ export default function TBReport({ trialBalances }: Props) {
                 const fileURL = URL.createObjectURL(blob);
                   addJob({
                     jobId: crypto.randomUUID(),
-                    label: `Trial Balance (PDF)`,
+                    label: `Trial Balance`,
                     type: 'print',
                     progress: 100,
                     status: 'processing',
                     fileType: 'pdf',
-                    file: 'zip',
+                    file: 'pdf',
                     filename: `trial-balance.pdf`,
                     fileUrl: fileURL
                   })
@@ -118,11 +118,11 @@ export default function TBReport({ trialBalances }: Props) {
                 const fileURL = URL.createObjectURL(blob);
                    addJob({
                     jobId: crypto.randomUUID(),
-                    label: `Trial Balance (PDF)`,
+                    label: `Trial Balance`,
                     type: 'print',
                     progress: 100,
                     status: 'processing',
-                    fileType: 'pdf',
+                    fileType: 'zip',
                     file: 'zip',
                     filename: `trial-balance.zip`,
                     fileUrl: fileURL
@@ -151,7 +151,7 @@ export default function TBReport({ trialBalances }: Props) {
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Trial Balance (Excel)`,
+                 label: `Trial Balance`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
@@ -164,11 +164,11 @@ export default function TBReport({ trialBalances }: Props) {
              const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Trial Balance (Excel)`,
+                 label: `Trial Balance`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
-                 fileType: 'excel',
+                 fileType: 'zip',
                  file: '',
                  filename: `trial-balance.zip`,
                  fileUrl: fileURL

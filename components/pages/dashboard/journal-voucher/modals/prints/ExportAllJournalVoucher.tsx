@@ -120,7 +120,7 @@ const ExportAllJournalVoucher = () => {
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Journal Voucher (Excel)`,
+                 label: `Journal Voucher ${tabActive}`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
@@ -133,11 +133,11 @@ const ExportAllJournalVoucher = () => {
              const fileURL = URL.createObjectURL(blob);
                addJob({
                jobId: crypto.randomUUID(),
-               label: `Journal Voucher (Excel)`,
+               label: `Journal Voucher ${tabActive}`,
                type: 'export',
                progress: 100,
                status: 'processing',
-               fileType: 'excel',
+               fileType: 'zip',
                file: '',
                filename: `journal-voucher-${tabActive}.zip`,
                fileUrl: fileURL
@@ -189,7 +189,7 @@ const ExportAllJournalVoucher = () => {
           if (!existing) {
             addJob({
               jobId,
-              label: `Journal Voucher (Excel)`,
+              label: `Journal Voucher ${tabActive}`,
               type: 'export',
               progress: 0,
               status: 'processing',
@@ -205,12 +205,20 @@ const ExportAllJournalVoucher = () => {
             console.log('Progress event:', data)
     
             const percent = data.percent ?? data.progress ?? 0
-    
-    
-            updateJob(jobId, {
-              progress: percent,
-              status: 'processing',
-            })
+          const message = data.message.toLowerCase();
+
+       if (percent >= 50) return;
+
+        const fileType: 'pdf' | 'excel' | 'zip' =
+          message.includes('batch') ? 'zip' : 'excel';
+
+
+        updateJob(jobId, {
+          progress: percent,
+          status: 'processing',
+          fileType: fileType,
+          label: `Journal Voucher ${tabActive}`
+        })
     
           }
     

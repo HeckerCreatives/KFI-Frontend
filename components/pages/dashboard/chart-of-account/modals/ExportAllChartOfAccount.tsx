@@ -84,7 +84,7 @@ const ExportAllChartOfAccount = () => {
         if (!existing) {
           addJob({
             jobId,
-            label: `Chart of Accounts (Excel)`,
+            label: `Chart of Accounts`,
             type: 'export',
             progress: 0,
             status: 'processing',

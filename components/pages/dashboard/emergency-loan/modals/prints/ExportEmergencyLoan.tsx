@@ -104,7 +104,7 @@ const ExportEmergencyLoan = ({ emergencyLoan }: { emergencyLoan: EmergencyLoan }
                   if (!existing) {
                     addJob({
                       jobId,
-                      label: `Emergency Loan (Excel)`,
+                      label: `Emergency Loan`,
                       type: 'export',
                       progress: 0,
                       status: 'processing',

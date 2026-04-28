@@ -98,7 +98,7 @@ const PrintJournalVoucher = ({ journalVoucher }: { journalVoucher: JournalVouche
           if (!existing) {
            addJob({
               jobId,
-              label: `Journal Voucher (PDF)`,
+              label: `Journal Voucher`,
               type: 'print',
               progress: 0,
               status: 'processing',

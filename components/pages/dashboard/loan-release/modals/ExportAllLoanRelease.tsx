@@ -145,26 +145,26 @@ async function handleDownload(data: PrintExportFilterFormData) {
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Loan Release (Excel)`,
+                 label: `Loan Release ${data.reportType}`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
                  fileType: 'excel',
                  file: '',
-                 filename: `loan-release-${type}.xlsx`,
+                 filename: `loan-release-${data.reportType}.xlsx`,
                  fileUrl: fileURL
                })
             } else {
              const fileURL = URL.createObjectURL(blob);
                addJob({
                jobId: crypto.randomUUID(),
-               label: `Loan Release (Excel)`,
+               label: `Loan Release`,
                type: 'export',
                progress: 100,
                status: 'processing',
-               fileType: 'excel',
+               fileType: 'zip',
                file: '',
-               filename: `loan-release-${type}.zip`,
+               filename: `loan-release-${data.reportType}.zip`,
                fileUrl: fileURL
              })
             }
@@ -217,7 +217,7 @@ async function handleDownload(data: PrintExportFilterFormData) {
       if (!existing) {
         addJob({
           jobId,
-          label: `Loan Release (Excel)`,
+          label: `Loan Release ${type}`,
           type: 'export',
           progress: 0,
           status: 'processing',
@@ -233,11 +233,27 @@ async function handleDownload(data: PrintExportFilterFormData) {
         console.log('Progress event:', data)
 
         const percent = data.percent ?? data.progress ?? 0
+         const message = data.message.toLowerCase();
+
+       if (percent >= 80) return;
+
+        const fileType: 'pdf' | 'excel' | 'zip' =
+          message.includes('batch') ? 'zip' : 'excel';
 
 
         updateJob(jobId, {
           progress: percent,
           status: 'processing',
+          fileType: fileType,
+          label: `Loan Release ${type}`
+
+        })
+
+
+        updateJob(jobId, {
+          progress: percent,
+          status: 'processing',
+          fileType: fileType
         })
 
       }

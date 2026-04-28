@@ -114,26 +114,26 @@ const Reports = () => {
               const fileURL = URL.createObjectURL(blob);
                 addJob({
                   jobId: crypto.randomUUID(),
-                  label: `Loan Release (PDF)`,
+                  label: `Loan Release`,
                   type: 'print',
                   progress: 100,
                   status: 'processing',
                   fileType: 'pdf',
-                  file: 'zip',
-                  filename: `loan-release-${type}.pdf`,
+                  file: 'pdf',
+                  filename: `loan-release-${data.reportType}.pdf`,
                   fileUrl: fileURL
                 })
             } else {
               const fileURL = URL.createObjectURL(blob);
                 addJob({
                 jobId: crypto.randomUUID(),
-                label: `Loan Release (PDF)`,
+                label: `Loan Release`,
                 type: 'print',
                 progress: 100,
                 status: 'processing',
-                fileType: 'pdf',
+                fileType: 'zip',
                 file: 'zip',
-                filename: `loan-release-${type}.zip`,
+                filename: `loan-release-${data.reportType}.zip`,
                 fileUrl: fileURL
               })
             }
@@ -218,26 +218,26 @@ const Reports = () => {
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Loan Release (Excel)`,
+                 label: `Loan Release`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
                  fileType: 'excel',
                  file: '',
-                 filename: `loan-release-${type}.xlsx`,
+                 filename: `loan-release-${data.reportType}.xlsx`,
                  fileUrl: fileURL
                })
             } else {
              const fileURL = URL.createObjectURL(blob);
                addJob({
                jobId: crypto.randomUUID(),
-               label: `Loan Release (Excel)`,
+               label: `Loan Release`,
                type: 'export',
                progress: 100,
                status: 'processing',
-               fileType: 'excel',
+               fileType: 'zip',
                file: '',
-               filename: `loan-release-${type}.zip`,
+               filename: `loan-release-${data.reportType}.zip`,
                fileUrl: fileURL
              })
             }
@@ -314,12 +314,20 @@ const Reports = () => {
             console.log('Progress event:', data)
     
             const percent = data.percent ?? data.progress ?? 0
-    
-    
-            updateJob(jobId, {
-              progress: percent,
-              status: 'processing',
-            })
+          const message = data.message.toLowerCase();
+
+            if (percent >= 80) return;
+
+              const fileType: 'pdf' | 'excel' | 'zip' =
+                message.includes('batch') ? 'zip' : options === 'print' ? 'pdf' : 'excel';
+
+
+              updateJob(jobId, {
+                progress: percent,
+                status: 'processing',
+                fileType: fileType,
+                label: `Loan Release ${type === 'aging-of-loans' ? 'aging loans': type}`
+              })
     
           }
     

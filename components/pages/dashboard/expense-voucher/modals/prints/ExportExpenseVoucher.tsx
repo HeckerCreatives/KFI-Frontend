@@ -107,7 +107,7 @@ const ExportExpenseVoucher = ({ expenseVoucher }: { expenseVoucher: ExpenseVouch
               if (!existing) {
                 addJob({
                   jobId,
-                  label: `Expense Voucher (Excel)`,
+                  label: `Expense Voucher`,
                   type: 'export',
                   progress: 0,
                   status: 'processing',

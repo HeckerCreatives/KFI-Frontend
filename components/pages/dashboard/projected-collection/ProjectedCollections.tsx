@@ -58,12 +58,12 @@ const ProjectedCollections = () => {
                 const fileURL = URL.createObjectURL(blob);
                   addJob({
                     jobId: crypto.randomUUID(),
-                    label: `Projected Collection (PDF)`,
+                    label: `Projected Collection`,
                     type: 'print',
                     progress: 100,
                     status: 'processing',
                     fileType: 'pdf',
-                    file: 'zip',
+                    file: 'pdf',
                     filename: `projected-collection.pdf`,
                     fileUrl: fileURL
                   })
@@ -71,11 +71,11 @@ const ProjectedCollections = () => {
                 const fileURL = URL.createObjectURL(blob);
                       addJob({
                     jobId: crypto.randomUUID(),
-                    label: `Projected Collection (PDF)`,
+                    label: `Projected Collection`,
                     type: 'print',
                     progress: 100,
                     status: 'processing',
-                    fileType: 'pdf',
+                    fileType: 'zip',
                     file: 'zip',
                     filename: `projected-collection.zip`,
                     fileUrl: fileURL
@@ -103,7 +103,7 @@ const ProjectedCollections = () => {
               const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Projected Collection (Excel)`,
+                 label: `Projected Collection`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
@@ -116,11 +116,11 @@ const ProjectedCollections = () => {
              const fileURL = URL.createObjectURL(blob);
                addJob({
                  jobId: crypto.randomUUID(),
-                 label: `Projected Collection (Excel)`,
+                 label: `Projected Collection`,
                  type: 'export',
                  progress: 100,
                  status: 'processing',
-                 fileType: 'excel',
+                 fileType: 'zip',
                  file: '',
                  filename: `projected-collection.zip`,
                  fileUrl: fileURL
