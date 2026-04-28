@@ -43,7 +43,7 @@ cmdline-tools
 //sync latest
 -npx cap sync android
 
-//add local.properties on android root
+//add local.properties on android root based on path of the tools
 sdk.dir=C:\\Android\\Sdk
 
 //if no assets generated works on both win & android
