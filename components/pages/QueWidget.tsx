@@ -5,6 +5,7 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Browser } from '@capacitor/browser';
 import { isPlatform, useIonToast } from '@ionic/react';
 import { Share } from '@capacitor/share';
+import { cancelFileDownload } from '../services/reportDownload';
 
 
 
@@ -83,6 +84,17 @@ const handleDownload = async (
     if (jobId) {
       deleteJob(jobId);
     }
+  }
+};
+
+const handleCancel = async (jobId: string) => {
+  try {
+    await cancelFileDownload(jobId);
+    deleteJob(jobId);
+  } catch (error) {
+    console.error('Error canceling download:', error);
+    // Still delete from local store even if API call fails
+    deleteJob(jobId);
   }
 };
 
@@ -200,67 +212,50 @@ const handleDownload = async (
               </div>
 
               <div className="shrink-0">
-                {(job.progress === 100 && job.fileUrl) ? (
+                {done && job.fileUrl ? (
+                  // Download complete with file URL - show download button
                   <div className=' flex items-center'>
-                   <button
-                    onClick={() => handleDownload(job.fileUrl!, job.label, job.fileType || '', job.jobId, job.filename)}
-                    className="w-7 h-7 mr-1 rounded-full flex items-center justify-center text-[#1a73e8] hover:bg-blue-50 transition-colors"
-                  >
-                    <Download size={15} />
-                  </button>
-                  <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
-                  
-                  </div>
-                 
-                ) : (
-                  <>
-                  {job.status === 'error' ? (
-                  <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
-
-                  ): (
-                    <div className=' flex gap-2'>
-                      {(job.progress < 100) && (
-                        <>
-                          <svg
-                        className="animate-spin text-zinc-500"
-                        width={15}
-                        height={15}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          d="M12 2a10 10 0 0 1 10 10"
-                          stroke=" #71717a"
-                          strokeOpacity={0.4}
-                        />
-                        <path
-                          strokeLinecap="round"
-                          d="M12 2a10 10 0 0 1 10 10"
-                          stroke=" #71717a"
-                          strokeDasharray="15 45"
-                        />
-                      </svg>
-
+                    <button
+                      onClick={() => handleDownload(job.fileUrl!, job.label, job.fileType || '', job.jobId, job.filename)}
+                      className="w-7 h-7 mr-1 rounded-full flex items-center justify-center text-[#1a73e8] hover:bg-blue-50 transition-colors"
+                    >
+                      <Download size={15} />
+                    </button>
                     <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
-
-
-                        </>
-                        
-
-                      )}
-
-
-                      
-
-
-                    </div>
-                
-                  )}
-
-                  </>
+                  </div>
+                ) : done && !job.fileUrl ? (
+                  // Download complete but no file URL - show delete button only
+                  <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
+                ) : job.status === 'error' ? (
+                  // Error state - show delete button only
+                  <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
+                ) : (
+                  // Processing state - show spinner and cancel button
+                  <div className=' flex gap-2'>
+                    <svg
+                      className="animate-spin text-zinc-500"
+                      width={15}
+                      height={15}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        d="M12 2a10 10 0 0 1 10 10"
+                        stroke=" #71717a"
+                        strokeOpacity={0.4}
+                      />
+                      <path
+                        strokeLinecap="round"
+                        d="M12 2a10 10 0 0 1 10 10"
+                        stroke=" #71717a"
+                        strokeDasharray="15 45"
+                      />
+                    </svg>
+                    <button className=' cursor-pointer text-red-600' onClick={() => handleCancel(job.jobId)}><XIcon size={15}/></button>
+                  </div>
                 )}
               </div>
             </div>

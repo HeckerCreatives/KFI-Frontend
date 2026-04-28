@@ -194,11 +194,19 @@ const ProjectedCollections = () => {
             console.log('Progress event:', data)
     
             const percent = data.percent ?? data.progress ?? 0
-    
-    
+     const message = data.message.toLowerCase();
+
+          if (percent >= 50) return;
+
+            const fileType: 'pdf' | 'excel' | 'zip' =
+              message.includes('batch') ? 'zip' : type === 'print' ? 'pdf' : 'excel';
+
+
             updateJob(jobId, {
               progress: percent,
               status: 'processing',
+              fileType: fileType,
+              label: `Projected Collection`
             })
     
           }

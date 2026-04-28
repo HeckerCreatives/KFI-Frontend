@@ -40,7 +40,7 @@ const Reports = () => {
   });
 
   function dismiss() {
-    form.reset();
+    // form.reset();
     modal.current?.dismiss();
   }
 
@@ -315,6 +315,12 @@ const Reports = () => {
     
             const percent = data.percent ?? data.progress ?? 0
           const message = data.message.toLowerCase();
+
+           updateJob(jobId, {
+                progress: percent,
+                status: 'processing',
+                label: `Loan Release ${type === 'aging-of-loans' ? 'aging loans': type}`
+              })
 
             if (percent >= 80) return;
 

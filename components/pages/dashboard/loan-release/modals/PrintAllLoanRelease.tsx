@@ -233,6 +233,12 @@ async function handleDownload(data: PrintExportFilterFormData) {
         const percent = data.percent ?? data.progress ?? 0
         const message = data.message.toLowerCase();
 
+        
+        updateJob(jobId, {
+          progress: percent,
+          status: 'processing',
+        })
+
        if (percent >= 80) return;
 
         const fileType: 'pdf' | 'excel' | 'zip' =

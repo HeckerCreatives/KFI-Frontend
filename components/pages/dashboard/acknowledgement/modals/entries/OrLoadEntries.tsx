@@ -313,7 +313,7 @@ const ORLoadEntries = ({ center, form }: Props) => {
 
   useEffect(() => {
     if (isOpen) {
-      handlePagination(1);
+      // handlePagination(1);
       handleDueDates();
     }
   }, [isOpen]);

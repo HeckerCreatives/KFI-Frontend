@@ -183,7 +183,7 @@ async function onSubmit(data: GeneratePortfolioFormData) {
                 if (!existing) {
                  addJob({
                     jobId,
-                    label: `Portfolio at Risk - ${form.watch('type') === 'print' ? 'Print' : 'Export'}`,
+                    label: `Portfolio at Risk`,
                     type: form.watch('type') === 'print' ? 'print' : 'export',
                     progress: 0,
                     status: 'processing',
@@ -199,13 +199,20 @@ async function onSubmit(data: GeneratePortfolioFormData) {
                   console.log('Progress event:', data)
           
                   const percent = data.percent ?? data.progress ?? 0
-          
-          
+                const message = data.message.toLowerCase();
+
+                if (percent >= 50) return;
+
+                  const fileType: 'pdf' | 'excel' | 'zip' =
+                    message.includes('batch') ? 'zip' : form.watch('type') === 'print' ? 'pdf' : 'excel';
+
+
                   updateJob(jobId, {
                     progress: percent,
                     status: 'processing',
+                    fileType: fileType,
+                    label: `Portfolio at Risk`
                   })
-          
                 }
           
                 const handleReady = (data: any) => {
