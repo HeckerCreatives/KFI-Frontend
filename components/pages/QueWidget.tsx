@@ -6,8 +6,6 @@ import { Browser } from '@capacitor/browser';
 import { isPlatform, useIonToast } from '@ionic/react';
 import { Share } from '@capacitor/share';
 import { cancelFileDownload, fileDownload } from '../services/reportDownload';
-import { Socket, io } from 'socket.io-client';
-import { useGlobalJobSocket } from '../../hooks/useGlobalJobSocket';
 import toast from 'react-hot-toast'
 
 
@@ -18,9 +16,6 @@ export const FileQueue = () => {
   const [minimized, setMinimized] = useState(false);
   const [showQueue, setShowQueue] = useState(true); 
   const [present] = useIonToast();
-
-    useGlobalJobSocket();
-  
 
 const handleDownload = async (
   fileUrl: string,

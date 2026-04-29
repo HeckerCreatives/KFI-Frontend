@@ -6,9 +6,6 @@ export const useGlobalJobSocket = () => {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    // ✅ Never destructure from hook — access store directly to avoid stale closures
-    const { updateJob, addJob } = useJobStore.getState();
-
     const socket = io(
       process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5005',
       {
@@ -20,6 +17,19 @@ export const useGlobalJobSocket = () => {
     );
 
     socketRef.current = socket;
+
+    // Join any job that is added after the socket is already connected
+    const knownJobIds = new Set(useJobStore.getState().jobs.map((j) => j.jobId));
+    const unsubscribeStore = useJobStore.subscribe((state) => {
+      state.jobs.forEach((job) => {
+        if (!knownJobIds.has(job.jobId)) {
+          knownJobIds.add(job.jobId);
+          if (socket.connected) {
+            socket.emit('join:report', job.jobId);
+          }
+        }
+      });
+    });
 
     const detectFileType = (data: any): 'pdf' | 'excel' | 'zip' => {
       if (data.fileType) return data.fileType;
@@ -126,21 +136,8 @@ export const useGlobalJobSocket = () => {
     socket.on('disconnect', () => console.log('[GlobalJobSocket] Disconnected'));
     socket.on('connect_error', (err) => console.error('[GlobalJobSocket] Connection error:', err));
 
-    const pollInterval = setInterval(() => {
-      if (!socket.connected) return;
-
-      const pendingJobs = useJobStore
-        .getState()
-        .jobs.filter((job) => job.status === 'processing' && job.progress < 100);
-
-      pendingJobs.forEach((job) => {
-        socket.emit('request:progress', job.jobId);
-        console.log('[GlobalJobSocket] Polling job:', job.jobId);
-      });
-    }, 2000);
-
     return () => {
-      clearInterval(pollInterval);
+      unsubscribeStore();
       socket.off('report:progress', handleProgress);
       socket.off('report:ready', handleReady);
       socket.off('report:error', handleError);
