@@ -11,3 +11,17 @@ export const cancelFileDownload = async (jobId: string): Promise<void> => {
     throw error;
   }
 };
+
+
+export const fileDownload = async (jobId: string): Promise<Blob> => {
+  try {
+    const response = await kfiAxios.get(`/report-download/${ jobId }`, {
+      responseType: 'blob',
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to download file:', error);
+    throw error;
+  }
+};
+

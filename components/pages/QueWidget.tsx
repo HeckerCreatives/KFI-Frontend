@@ -5,7 +5,7 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Browser } from '@capacitor/browser';
 import { isPlatform, useIonToast } from '@ionic/react';
 import { Share } from '@capacitor/share';
-import { cancelFileDownload } from '../services/reportDownload';
+import { cancelFileDownload, fileDownload } from '../services/reportDownload';
 import { Socket, io } from 'socket.io-client';
 import { useGlobalJobSocket } from '../../hooks/useGlobalJobSocket';
 
@@ -30,6 +30,8 @@ const handleDownload = async (
 ) => {
   // if (!fileUrl) return;
 
+  if (!jobId) return
+
   const extensions: Record<string, string> = {
     pdf: '.pdf',
     excel: '.xlsx',
@@ -39,14 +41,12 @@ const handleDownload = async (
   const ext = extensions[fileType.toLowerCase()] ?? '';
   const fullFilename = (filename || label);
 
+  const blob = await fileDownload(jobId);
+
+  console.log(blob)
 
   try {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5005'}/reports/${jobId}`;
-
     if (isPlatform('capacitor')) {
-      const response = await fetch(apiUrl);
-      const blob = await response.blob();
-
       const base64 = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => {
@@ -70,25 +70,20 @@ const handleDownload = async (
         dialogTitle: 'Open or Save File',
       });
     } else {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5005'}/report-download/${jobId}`;
-
-    const response = await fetch(apiUrl);
-      const blob = await response.blob();
-
-      console.log(response)
-
-      // const a = document.createElement('a');
-      // a.href = apiUrl;
-      // a.download = fullFilename;
-      // document.body.appendChild(a);
-      // a.click();
-      // a.remove();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fullFilename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
     }
   } catch (error) {
     console.error('Download error:', error);
   } finally {
     if (jobId) {
-      // deleteJob(jobId);
+      deleteJob(jobId);
     }
   }
 };
