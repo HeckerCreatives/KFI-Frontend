@@ -24,7 +24,13 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
   }
 
   useEffect(() => {
-         socketRef.current = io(`${process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5005'}`)
+         socketRef.current = io(`${process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5005'}`,
+          {
+      reconnection: true,
+      transports: ['websocket', 'polling'],
+      withCredentials: true
+    }
+         )
      
          const socket = socketRef.current
      

@@ -8,13 +8,13 @@ export const useGlobalJobSocket = () => {
 
   useEffect(() => {
     // Initialize socket connection
-    const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5005'}`, {
+    const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5005'}`, 
+      {
       reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      reconnectionAttempts: 5,
       transports: ['websocket', 'polling'],
-    });
+      withCredentials: true
+    }
+  );
 
     socketRef.current = socket;
 

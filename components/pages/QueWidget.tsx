@@ -224,13 +224,10 @@ const handleCancel = async (jobId: string) => {
                     <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
                   </div>
                 ) : done && !job.fileUrl ? (
-                  // Download complete but no file URL - show delete button only
                   <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
                 ) : job.status === 'error' ? (
-                  // Error state - show delete button only
                   <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
                 ) : (
-                  // Processing state - show spinner and cancel button
                   <div className=' flex gap-2'>
                     <svg
                       className="animate-spin text-zinc-500"
