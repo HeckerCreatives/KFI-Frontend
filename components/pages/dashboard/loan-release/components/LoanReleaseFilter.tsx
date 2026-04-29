@@ -75,7 +75,7 @@ const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit">
       <div className="flex flex-wrap items-end gap-2">
-        <FormIonItem className="w-fit pb-1">
+        {/* <FormIonItem className="w-fit pb-1">
           <div className=' flex flex-col gap-1'>
             <label htmlFor="dateFrom" className=' text-xs'>Type</label>
              <InputSelect
@@ -94,7 +94,7 @@ const LoanReleaseFilter = ({ getTransactions, setSearchKey, suggestions, setTo, 
           />
           </div>
           
-        </FormIonItem>
+        </FormIonItem> */}
         <FormIonItem className="min-w-32 ![--min-height:1rem] pb-1">
           <div className=' flex flex-col gap-1'>
             <label htmlFor="dateFrom" className=' text-xs'>Date From</label>

@@ -23,7 +23,9 @@ type Option = {
   centerNo: string;
   loanRelease: string;
   loanReleaseId?: string;
-  week: number
+  week: number,
+  acctCode: {code: string}
+  acctCodeId: string
 };
 
 export type TLoanReleaseEntries = {
@@ -45,6 +47,8 @@ type LoanReleaseEntrySelectionProps<T extends FieldValues> = {
   name: Path<T>;
   particular: Path<T>;
   loanReleaseId: Path<T>;
+  acctCode?: Path<T>;
+  acctCodeId?: Path<T>;
   className?: string;
   client?: string;
 };
@@ -57,6 +61,8 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
   noOfWeeks,
   name,
   particular,
+  acctCode,
+  acctCodeId,
   week,
   client,
   setValue,
@@ -114,10 +120,12 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
     setValue(loanReleaseEntryId as Path<T>, loanEntry._id as PathValue<T, Path<T>> as any);
     setValue(cvNo as Path<T>, `${loanEntry.cvNo}` as PathValue<T, Path<T>> as any);
     setValue(dueDate as Path<T>, formatDateTable(loanEntry.dueDate) as PathValue<T, Path<T>> as any);
-    setValue(noOfWeeks as Path<T>, `${loanEntry.noOfWeeks}` as PathValue<T, Path<T>> as any);
+    setValue(noOfWeeks as Path<T>, `${loanEntry.week}` as PathValue<T, Path<T>> as any);
     week && setValue(week as Path<T>, `${loanEntry.week}` as PathValue<T, Path<T>> as any);
     setValue(name as Path<T>, loanEntry.name as PathValue<T, Path<T>> as any);
-    setValue(client as Path<T>, loanEntry.clientId as PathValue<T, Path<T>> as any);
+    client && setValue(client as Path<T>, loanEntry.clientId as PathValue<T, Path<T>> as any);
+    acctCode && setValue(acctCode as Path<T>, loanEntry.acctCode.code as PathValue<T, Path<T>> as any);
+    acctCodeId && setValue(acctCodeId as Path<T>, loanEntry.acctCodeId as PathValue<T, Path<T>> as any);
     setValue(particular as Path<T>, `${loanEntry.centerNo} - ${loanEntry.name}` as PathValue<T, Path<T>> as any);
     setValue(
       loanReleaseId as Path<T>,
@@ -205,7 +213,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
                 <TableHeadRow className="border-b-0 bg-slate-100">
                   <TableHead className="!py-2">CV#</TableHead>
                   <TableHead className="!py-2">Due Date</TableHead>
-                  <TableHead className="!py-2">No. Of Weeks</TableHead>
+                  <TableHead className="!py-2">Week</TableHead>
                   <TableHead className="!py-2">Name</TableHead>
                 </TableHeadRow>
               </TableHeader>
@@ -217,7 +225,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
                     <TableRow onClick={() => handleSelectExpenseVoucher(data)} key={data._id} className="border-b-0 [&>td]:!py-1 cursor-pointer">
                       <TableCell className="">{data.cvNo}</TableCell>
                       <TableCell className="">{formatDateTable(data.dueDate)}</TableCell>
-                      <TableCell className="">{data.noOfWeeks}</TableCell>
+                      <TableCell className="">{data.week}</TableCell>
                       <TableCell className="">{data.name}</TableCell>
                     </TableRow>
                   ))}

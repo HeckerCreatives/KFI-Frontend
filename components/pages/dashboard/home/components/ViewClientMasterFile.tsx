@@ -16,15 +16,7 @@ const ViewClientMasterFile = ({ member }: { member: ClientMasterFile }) => {
 
   return (
     <>
-      <IonButton
-        onClick={() => setIsOpen(true)}
-        type="button"
-        fill="clear"
-       className=" capitalize text-sm !text-zinc-700 w-fit bg-orange-50"
-      >
-        <Eye size={20} className=' mr-1'/>
-        <span>View</span>
-      </IonButton>
+     
 
       <IonModal
         isOpen={isOpen}

@@ -222,12 +222,7 @@ const UpdateClientMasterFile = ({ client, view, setView, setOpenList }: UpdateCl
             <CMFPersonalForm form={form} loading={loading} />
             {form.formState.errors.root && <div className="text-sm text-red-600 italic text-center">{form.formState.errors.root.message}</div>}
             <div className="text-end mt-8 space-x-2 px-3">
-              <IonButton disabled={loading} type="submit" fill="clear" className="!text-sm capitalize !bg-[#FA6C2F] text-white rounded-[4px]" strong={true}>
-                {loading ? 'Saving...' : 'Save'}
-              </IonButton>
-              <IonButton disabled={loading} onClick={dismiss} color="danger" type="button" className="!text-sm capitalize" strong={true}>
-                Cancel
-              </IonButton>
+            
             </div>
           </form>
         </div>

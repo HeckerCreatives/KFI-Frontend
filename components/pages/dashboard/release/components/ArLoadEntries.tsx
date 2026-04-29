@@ -271,8 +271,10 @@ const ARLoadEntries = ({center, form}: Props) => {
     };
   
 
-  const mapEntryForForm = (entry: Option) => {
+  const mapEntryForForm = (entry: any) => {
     const particular = entry.particular ?? `${entry.centerNo ? `${entry.centerNo} - ` : ''}${entry.name ?? ''}`.trim();
+
+    console.log(entry.acctCode)
     return {
       loanReleaseEntryId: entry.loanReleaseEntryId ?? entry._id ?? '',
       loanReleaseId: entry.loanReleaseId ?? entry.loanRelease ?? '',
@@ -283,7 +285,7 @@ const ARLoadEntries = ({center, form}: Props) => {
       name: entry.name ?? '',
       particular,
       acctCodeId: entry.acctCodeId ?? '',
-      acctCode: entry.acctCode ?? '',
+      acctCode: entry.acctCode.code ?? '',
       description: entry.description ?? '',
       debit: `${entry.debit ?? '0'}`,
       credit: `${entry.credit ?? entry.debit ?? '0'}`,

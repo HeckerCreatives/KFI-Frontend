@@ -109,7 +109,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                 type="date"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                className="!px-3  w-[10rem] rounded-md !p-2 !bg-zinc-50 border-zinc-100 "
+                className="!px-3  w-[10rem] rounded-md !p-2 border-zinc-100 "
               />
               </div>
               
@@ -125,7 +125,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                 type="date"
                 control={form.control}
                 clearErrors={form.clearErrors}
-                className="!px-3  w-[10rem] rounded-md !p-2 !bg-zinc-50 border-zinc-100 "
+                className="!px-3  w-[10rem] rounded-md !p-2  border-zinc-100 "
               />
               </div>
               
@@ -151,7 +151,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                       { label: 'Active-Returnee', value: 'Active-Returnee' },
                       { label: 'Resigned', value: 'Resigned' },
                   ]}
-                  className="!px-3  w-[10rem] rounded-md !p-3 !bg-zinc-50 border-zinc-100"
+                  className="!px-3  w-[10rem] rounded-md !p-3 border-zinc-100"
                 />
             </div>
            
@@ -196,7 +196,7 @@ const ClientMasterFileFilter = ({ getClients, getClientsOffline, clients, setSea
                 clearErrors={form.clearErrors}
                 // label="Code"
                 placeholder="Search..."
-                 className="!px-3  w-[10rem] !mb-1 !h-9 rounded-md  !bg-zinc-50 border-zinc-100"
+                 className="!px-3  w-[10rem] !mb-1 !h-10 rounded-md  border-zinc-100 !overflow-hidden"
                 suggestions={clients}
               />
             </FormIonItem>

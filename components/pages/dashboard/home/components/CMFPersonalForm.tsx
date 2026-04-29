@@ -93,6 +93,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                       control={form.control}
                       clearErrors={form.clearErrors}
                       label="Image"
+                      
                       className="!px-2 !py-2 rounded-md shrink-0 w-full"
                       labelClassName="truncate min-w-24 !text-sm text-end"
                     />
@@ -106,6 +107,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     clearErrors={form.clearErrors}
                     label="Name"
                     placeholder="Type here"
+                    readOnly
                     className="!px-2 !py-2 rounded-md w-full"
                     labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                   />
@@ -133,6 +135,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   clearErrors={form.clearErrors}
                   label="City"
                   placeholder="Type here"
+                  readOnly
                   className="!px-2 !py-2 rounded-md"
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
@@ -145,6 +148,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   clearErrors={form.clearErrors}
                   label="Zip Code"
                   placeholder="Type here"
+                  readOnly
                   className="!px-2 !py-2 rounded-md"
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
@@ -159,6 +163,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   clearErrors={form.clearErrors}
                   label="Telephone No."
                   placeholder="Type here (523XXXX)"
+                  readOnly
                   className="!px-2 !py-2 rounded-md"
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
@@ -172,6 +177,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   label="Mobile"
                   placeholder="Type here (639XXXXXXXXX)"
                   className="!px-2 !py-2 rounded-md"
+                  readOnly
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
               </FormIonItem>
@@ -188,6 +194,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
                   max="9999-12-31"
+                  readOnly
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
               </FormIonItem>
@@ -200,6 +207,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   label="Birth Place"
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
+                  readOnly
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
               </FormIonItem>
@@ -214,6 +222,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   label="Age"
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
+                  readOnly
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
               </FormIonItem>
@@ -243,6 +252,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   clearErrors={form.clearErrors}
                   label="Parent"
                   placeholder="Type here"
+                  readOnly
                   className="!px-2 !py-2 rounded-md"
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
@@ -256,6 +266,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   label="Spouse"
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
+                  readOnly
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
               </FormIonItem>
@@ -291,6 +302,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   label="Position"
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
+                  readOnly
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
               </FormIonItem>
@@ -311,9 +323,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                       readOnly
                     />
                   </FormIonItem>
-                  <div className={classNames(form.formState.errors.memberStatusLabel ? 'mt-0' : '')}>
-                    <MemberStatusSelection memberStatusLabel="memberStatusLabel" memberStatusValue="memberStatus" setValue={form.setValue} clearErrors={form.clearErrors} />
-                  </div>
+                  
                 </div>
               </div>
 
@@ -332,9 +342,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                       labelClassName="truncate min-w-28 lg:min-w-28 !text-slate-600 !text-sm text-end"
                     />
                   </FormIonItem>
-                  <div className={classNames(form.formState.errors.centerLabel ? 'mt-0' : '')}>
-                    <CenterSelection centerLabel="centerLabel" centerValue="center" acctOfficer='acctOfficer' setValue={form.setValue} clearErrors={form.clearErrors} />
-                  </div>
+                
                 </div>
               </div>
             </div>
@@ -349,6 +357,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   label="Account Officer"
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
+                  readOnly
                   labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                 />
               </FormIonItem>
@@ -363,6 +372,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
                   max="9999-12-31"
+                  readOnly
                   labelClassName="truncate min-w-28 lg:min-w-28 !text-slate-600 !text-sm text-end"
                 />
               </FormIonItem>
@@ -382,9 +392,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     labelClassName="truncate min-w-28 lg:min-w-28 !text-slate-600 !text-sm text-end"
                   />
                 </FormIonItem>
-                <div className={classNames(form.formState.errors.businessLabel ? 'mt-0' : '')}>
-                  <BusinessTypeSelection businessTypeLabel="businessLabel" businessTypeValue="business" setValue={form.setValue} clearErrors={form.clearErrors} />
-                </div>
+              
               </div>
               <FormIonItem>
                 <InputText
@@ -395,6 +403,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                   label="Account Number"
                   placeholder="Type here"
                   className="!px-2 !py-2 rounded-md"
+                  readOnly
                   labelClassName="truncate !text-slate-600 !text-sm text-end"
                 />
               </FormIonItem>
@@ -410,6 +419,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
                 max="9999-12-31"
+                readOnly
                 labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
               />
             </FormIonItem>
@@ -424,6 +434,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
                 max="9999-12-31"
+                readOnly
                 labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
               />
             </FormIonItem>
@@ -436,6 +447,7 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                 label="Reason"
                 placeholder="Type here"
                 className="!px-2 !py-2 rounded-md"
+                readOnly
                 labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
               />
             </FormIonItem>
@@ -453,19 +465,8 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                   />
                 </FormIonItem>
-                <IonButton
-                  onClick={() => children.append({ name: '' })}
-                  fill="clear"
-                  className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0"
-                  strong
-                >
-                  <IonIcon icon={add} />
-                </IonButton>
-                {children.fields.length > 1 && (
-                  <IonButton onClick={() => children.remove(index)} fill="clear" className="max-h-9 min-h-9 bg-red-600 text-white capitalize font-semibold rounded-md m-0" strong>
-                    <IonIcon icon={trash} />
-                  </IonButton>
-                )}
+              
+                
               </div>
             ))}
             {beneficiary.fields.map((field, index) => (
@@ -482,24 +483,8 @@ const CMFPersonalForm = ({ form, loading }: TForm) => {
                     labelClassName="truncate min-w-28 !text-slate-600 !text-sm text-end"
                   />
                 </FormIonItem>
-                <IonButton
-                  onClick={() => beneficiary.append({ name: '' })}
-                  fill="clear"
-                  className="max-h-9 min-h-9 btn-color text-white capitalize font-semibold rounded-md m-0"
-                  strong
-                >
-                  <IonIcon icon={add} />
-                </IonButton>
-                {beneficiary.fields.length > 1 && (
-                  <IonButton
-                    onClick={() => beneficiary.remove(index)}
-                    fill="clear"
-                    className="max-h-9 min-h-9 bg-red-600 text-white capitalize font-semibold rounded-md m-0"
-                    strong
-                  >
-                    <IonIcon icon={trash} />
-                  </IonButton>
-                )}
+               
+               
               </div>
             ))}
           </IonCol>

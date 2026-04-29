@@ -6,6 +6,7 @@ import ViewMemberDetails from './MemdersDetails';
 import InactiveMembers from './InactiveMembers';
 import ActiveMembers from './ActiveMembers';
 import LoanDetails from './LoanDetails';
+import { useOnlineStore } from '../../../../../store/onlineStore';
 
 type DashboardCardProps = {
   title: string;
@@ -17,6 +18,8 @@ type DashboardCardProps = {
 
 
 const DashboardCard = ({ title, icon, value, loading = false, details = false }: DashboardCardProps) => {
+    const online = useOnlineStore((state) => state.online);
+  
   return (
     <div className=" relative max-w-[450px] h-[140px] shadow-md bg-white p-6 flex-1 min-w-56 rounded-xl flex items-start justify-between overflow-hidden">
       <svg className=' absolute bottom-0 right-0 w-full z-20' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280">
@@ -28,7 +31,7 @@ const DashboardCard = ({ title, icon, value, loading = false, details = false }:
       </svg>
       <div className=" relative z-10 space-y-2">
         <div className="text-[0.8rem] truncate ">{title}</div>
-        <div className=" text-2xl !font-semibold text-orange-500">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : value}</div>
+        <div className=" text-xl !font-semibold text-orange-500">{loading ? <div className=' h-6 bg-orange-100 w-full rounded-sm animate-pulse'></div> : (online ? value : 'Not available')}</div>
       </div>
       {/* <div className="bg-[#F76B2E] h-10 w-10 grid place-items-center rounded-lg bg-gradient-to-br via-[#fdae6e] from-[#F76B2E]  via-100% from-1% to-100%">
         <IonIcon icon={icon} className="text-slate-100 min-w-5 max-w-5 max-h-5 min-h-5" />
@@ -46,11 +49,17 @@ const DashboardCard = ({ title, icon, value, loading = false, details = false }:
 
       <div className=' absolute bottom-2 right-4 z-30'>
            {details ? (
+
           <>
-          {title === 'Total Members' && <ViewMemberDetails title={title} icon={icon} value={value}/>}
-          {title === 'Total Inactive Members' && <InactiveMembers title={title} icon={icon} value={value}/>}
-          {title === 'Total Active Members' && <ActiveMembers title={title} icon={icon} value={value}/>}
-          {title === 'Total Loan Amount' && <LoanDetails title={title} icon={icon} value={value}/>}
+          {online && (
+            <>
+            {title === 'Total Members' && <ViewMemberDetails title={title} icon={icon} value={value}/>}
+            {title === 'Total Inactive Members' && <InactiveMembers title={title} icon={icon} value={value}/>}
+            {title === 'Total Active Members' && <ActiveMembers title={title} icon={icon} value={value}/>}
+            {title === 'Total Loan Amount' && <LoanDetails title={title} icon={icon} value={value}/>}
+            </>
+          )}
+          
           </>
         ): (
           <IonButton

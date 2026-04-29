@@ -51,6 +51,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
       cashCollection: '',
       entries: [],
       mode: 'create',
+      user: user || ''
     },
   });
 
@@ -81,7 +82,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
                      credit: Number(removeAmountComma(entry.credit)),
                      dueDate: new Date(entry.dueDate || '').toISOString().split('T')[0] ,
                      line: index + 1,
-                     type: 'individual'
+                     type: 'SEA'
                    }))
                  : [];
        

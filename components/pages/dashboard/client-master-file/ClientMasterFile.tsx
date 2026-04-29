@@ -319,7 +319,7 @@ const ClientMasterFile = () => {
            if (online){
             getClients(currentPage, searchKey, sortKey, status, dateReleased, dateResigned);
           } else {
-            getClientsOffline(currentPage, searchKey, sortKey);
+            getClientsOffline(currentPage, searchKey, sortKey, status, dateReleased, dateResigned);
           }
 
       }, 500);
