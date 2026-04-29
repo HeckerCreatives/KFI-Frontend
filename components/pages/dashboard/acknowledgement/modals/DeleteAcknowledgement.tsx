@@ -50,13 +50,13 @@ const DeleteAcknowledgement = ({ acknowledgement, getAcknowledgements, searchkey
     } else {
       try{
       if (acknowledgement._id) {
-          await db.acknowledgementReceipts.update(acknowledgement.id, {
+          await db.releaseReceipts.update(acknowledgement.id, {
             deletedAt: new Date().toISOString(),
             _synced: false,
             action: "delete",
           });
         } else {
-          await db.acknowledgementReceipts.delete(acknowledgement.id);
+          await db.releaseReceipts.delete(acknowledgement.id);
         }
       getAcknowledgements(currentPage);
       dismiss()

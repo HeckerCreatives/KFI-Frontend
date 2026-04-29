@@ -218,7 +218,7 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
          className=" capitalize text-sm !text-zinc-700 w-fit"
       >
         <Printer size={20} className=' mr-1'/>
-        <span>Profiles</span>
+        <span>Summary</span>
       </IonButton>
       <IonModal
         ref={modal}
@@ -232,7 +232,7 @@ const PrintClient = ({ client }: { client: ClientMasterFile }) => {
           </IonToolbar>
         </IonHeader> */}
         <div className="inner-content !p-6">
-            <ModalHeader disabled={loading} title="Client Summary" sub="Manage client documents." dismiss={dismiss} />
+            <ModalHeader disabled={loading} title="Summary Per Client" sub="Manage client documents." dismiss={dismiss} />
 
           <div></div>
           <div className="text-end mt-4 flex flex-col gap-2">

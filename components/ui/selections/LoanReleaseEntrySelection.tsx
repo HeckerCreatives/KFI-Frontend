@@ -12,6 +12,9 @@ import TablePagination from '../forms/TablePagination';
 import { formatDateTable } from '../../utils/date-utils';
 import { Search01Icon } from 'hugeicons-react';
 import Paginations from '../common/PaginationsV2';
+import { useOnlineStore } from '../../../store/onlineStore';
+import { TABLE_LIMIT } from '../../utils/constants';
+import { db } from '../../../database/db';
 
 type Option = {
   _id: string;
@@ -24,7 +27,7 @@ type Option = {
   loanRelease: string;
   loanReleaseId?: string;
   week: number,
-  acctCode: {code: string}
+  acctCode: {code: string,description: string}
   acctCodeId: string
 };
 
@@ -48,6 +51,7 @@ type LoanReleaseEntrySelectionProps<T extends FieldValues> = {
   particular: Path<T>;
   loanReleaseId: Path<T>;
   acctCode?: Path<T>;
+  description?: Path<T>;
   acctCodeId?: Path<T>;
   className?: string;
   client?: string;
@@ -65,6 +69,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
   acctCodeId,
   week,
   client,
+  description,
   setValue,
   clearErrors,
   className = '',
@@ -72,6 +77,8 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const ionInputRef = useRef<HTMLIonInputElement>(null);
+  const online = useOnlineStore((state) => state.online);
+  
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -93,8 +100,8 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
 
   const handleSearch = async (page: number) => {
     const value = ionInputRef.current?.value || '';
-    setLoading(true);
-    try {
+    if(online){
+      try {
       const filter: any = { keyword: value, page, limit: 10 };
       const result = await kfiAxios.get('transaction/entries/selection', { params: filter });
       const { success, loanEntries, hasPrevPage, hasNextPage, totalPages } = result.data;
@@ -113,6 +120,41 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
     } finally {
       setLoading(false);
     }
+    } else {
+            try {
+    const limit = TABLE_LIMIT;
+    let allData = await db.dueDates.toArray();
+
+    console.log(allData)
+
+    if (value) {
+      const keyword = String(value).toLowerCase();
+      allData = allData.filter(
+        opt =>
+          opt.code.toLowerCase().includes(keyword) ||
+          opt.description.toLowerCase().includes(keyword) // ← was missing .toLowerCase()
+      );
+    }
+
+    const totalItems = allData.length;
+    const totalPages = Math.ceil(totalItems / limit);
+    const start = (page - 1) * limit;
+    const finalData = allData.slice(start, start + limit);
+
+    setData(prev => ({
+      ...prev,
+      loanEntries: finalData,
+      totalPages,
+      nextPage: page < totalPages,
+      prevPage: page > 1,
+    }));
+
+    setCurrentPage(page);
+          } catch (error) {
+            console.error('Offline due dates fetch error:', error);
+          }
+        }
+
   };
 
   const handleSelectExpenseVoucher = (loanEntry: Option) => {
@@ -125,6 +167,7 @@ const LoanReleaseEntrySelection = <T extends FieldValues>({
     setValue(name as Path<T>, loanEntry.name as PathValue<T, Path<T>> as any);
     client && setValue(client as Path<T>, loanEntry.clientId as PathValue<T, Path<T>> as any);
     acctCode && setValue(acctCode as Path<T>, loanEntry.acctCode.code as PathValue<T, Path<T>> as any);
+    description && setValue(description as Path<T>, loanEntry.acctCode.description as PathValue<T, Path<T>> as any);
     acctCodeId && setValue(acctCodeId as Path<T>, loanEntry.acctCodeId as PathValue<T, Path<T>> as any);
     setValue(particular as Path<T>, `${loanEntry.centerNo} - ${loanEntry.name}` as PathValue<T, Path<T>> as any);
     setValue(

@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import toast from 'react-hot-toast'
+import { useOnlineStore } from '../../store/onlineStore';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5005/api/v1';
 
@@ -43,6 +44,7 @@ const Response = (response: AxiosResponse): AxiosResponse => {
 const ResponseError = async (error: AxiosError): Promise<never> => {
   const data = error.response?.data as { msg?: string } | undefined;
   const errMsg = data?.msg || 'An error occurred';
+  
   if (error.response?.status === 401) {
     localStorage.removeItem('auth');
     window.dispatchEvent(new Event('unauthorized'));

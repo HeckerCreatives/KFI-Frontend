@@ -180,16 +180,18 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
                 name: item.clientName,
                 _id: item.client || item.clientId
               },
+              week: item.noOfWeeks,
+              noOfWeeks: item.noOfWeeks,
               acctCode: {
                 code: item.acctCode,
-                description: item.acctCodeDesc,
+                description: item.description,
                 _id: item.acctCodeId
               },
               loanRelease:{
                 code: item.cvNo,
                 _id: item.loanReleaseId || item.loanReleaseEntryId
               },
-               action: item._id ? 'update' : 'create',
+              action: "update",
               _synced: false
             })),
              center: {
@@ -211,7 +213,7 @@ const UpdateAcknowledgement = ({ acknowledgement, setData, currentPage, getAckno
 
         };
 
-        await db.acknowledgementReceipts.update(acknowledgement.id, updated);
+        await db.releaseReceipts.update(acknowledgement.id, updated);
         getAcknowledgement(currentPage)
        
 

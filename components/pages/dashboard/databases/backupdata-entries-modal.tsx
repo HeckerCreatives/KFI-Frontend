@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CheckCircle2, Circle, Loader2, XCircle, CloudUpload, TriangleAlert } from "lucide-react"
 import { IonButton, IonProgressBar, useIonToast } from "@ionic/react"
 import kfiAxios from "../../../utils/axios"
-import { syncAR, syncBanks, syncBeginningBalance, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDamayanFund, syncDmayanFund, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncTrialBalance, syncUsers, syncWeeklySavings } from "../../../../database/sync"
+import { syncAR, syncBanks, syncBeginningBalance, syncBusinessSuppliers, syncBusinessTypes, syncCenters, syncChartAccount, syncClientMasterFile, syncDamayanFund, syncDmayanFund, syncDueDates, syncEmergencyLoan, syncExpenseVoucher, syncFinancialStatements, syncGroupAccount, syncJournalVoucher, syncLoanProducts, syncLoanRelease, syncLoanReleaseDueDates, syncNatures, syncOR, syncProductLoans, syncSuppliers, syncSystemParameters, syncTrialBalance, syncUsers, syncWeeklySavings } from "../../../../database/sync"
 
 interface SyncStep {
   id: string
@@ -38,6 +38,7 @@ const SYNC_STEPS: SyncStep[] = [
    { id: "damayanFunds", label: "Syncing Damayan Funds", status: "pending" },
    { id: "ar", label: "Syncing acknowledgements", status: "pending" },
   { id: "or", label: "Syncing official receipts", status: "pending" },
+  { id: "lr-duedates", label: "Syncing loan due dates", status: "pending" },
 
 
 
@@ -203,6 +204,11 @@ export function BackupEntriesModalContent({
      await syncStep("or", async () => {
       const res = await kfiAxios.get(`/sync/release?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
       await syncOR(res.data?.acknowledgements || [])
+    })
+
+      await syncStep("lr-duedates", async () => {
+      const res = await kfiAxios.get(`/sync/entries/selection?dateFrom=${dateFrom}&dateTo=${dateTo}&startDate=${dateFrom}&endDate=${dateTo}&limit=10`)
+      await syncDueDates(res.data?.loanEntries || [])
     })
 
     setIsSyncing(false)

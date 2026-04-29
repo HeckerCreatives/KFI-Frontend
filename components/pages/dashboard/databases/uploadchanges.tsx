@@ -5,6 +5,7 @@ import { db } from "../../../../database/db";
 import { business, key } from "ionicons/icons";
 import { removeAmountComma } from "../../../ui/utils/formatNumber";
 import { TriangleAlert } from "lucide-react";
+import { off } from "node:process";
 
 type SyncKey = "clientMasterFile" | "loanReleases" | "expenseVouchers" | "journalVouchers" | "groupOfAccounts" | "chartOfAccounts" | "centers" | "banks" | "weeklySavings" | "businessTypes" | "suppliers" | "natures" | "systemParameters" | "productLoans" | "damayanFunds" | "emergencyLoans" | "financialStatements" | "trialBalance" | "beginningBalance" | "acknowledgementReceipts" | 'releaseReceipts';
 
@@ -75,13 +76,13 @@ export default function UploadChanges() {
      {
       key: "releaseReceipts",
       label: "Official Receipts",
-      endpoint: "/sync/official-receipts",
-      field:'releaseReceipts'
+      endpoint: "/sync/release ",
+      field:'officialReceipts'
     },
      {
       key: "acknowledgementReceipts",
       label: "Acknowledgement Receipts",
-      endpoint: "/sync/release",
+      endpoint: "/sync/official-receipts",
       field:'acknowledgementReceipts'
     },
     {
@@ -238,6 +239,8 @@ export default function UploadChanges() {
     const list = await (db as any)[key].toArray();
     const offlineChanges = list.filter((e: any) => e._synced === false);
 
+    console.log(offlineChanges)
+
     if (!offlineChanges.length) return;
 
     let payloadTest: any[] = [];
@@ -332,13 +335,14 @@ export default function UploadChanges() {
       };
     });
 
-    if (key === 'loanReleases' || key === 'expenseVouchers' || key === 'journalVouchers' || key === 'emergencyLoans' || key === 'damayanFunds') {
+    if (key === 'loanReleases' || key === 'expenseVouchers' || key === 'journalVouchers' || key === 'emergencyLoans' || key === 'damayanFunds' || key === 'acknowledgementReceipts' || key === 'releaseReceipts') {
     payloadTest = offlineChanges.map((item: any) => ({
       code: item.code.toUpperCase(),
       type: item.type,
       date: item.date.split('T')[0],
       center: typeof item.center === 'object' && item.center?._id ? item.center._id : item.center,
       bank: typeof item.bank === 'object' && item.bank?._id ? item.bank._id : item.bank,
+      bankCode: item.bankCode._id,
       refNo: item.refNo,
       remarks: item.remarks,
       checkNo: item.checkNo || '',
@@ -368,6 +372,8 @@ export default function UploadChanges() {
         cycle: entry.cycle ?? 0,
         checkNo: entry.checkNo ?? '',
         action: item.action,
+        // week: entry.noOfWeeks,
+        type: 'SEA',
         _synced: item._synced,
       })),
     }))} else {

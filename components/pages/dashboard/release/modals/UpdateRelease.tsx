@@ -49,8 +49,8 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
     loanReleaseEntryId: item.loanRelease?._id,
     cvNo: item.loanRelease?.code,
     dueDate: item.dueDate?.split('T')[0] || '',
-    noOfWeeks: '',
-    week: item.week || 0,
+    noOfWeeks: (item.week) || 0,
+    week: (item.week) || 0,
     name: item.client?.name,
     client: item.client?._id,
     particular: item.particular,
@@ -109,7 +109,8 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
         amount: `${formatAmount(release.amount)}`,
         cashCollection: `${formatAmount(release.cashCollectionAmount || 0)}`,
         mode: 'update',
-        entries: formattedEntries
+        entries: formattedEntries,
+        user: user || ''
       });
     }
   }, [release, form]);
@@ -132,6 +133,7 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
   }
 
   async function onSubmit(data: ReleaseFormData) {
+    console.log(data.entries)
      const finalDeletedIds = deletedIds.filter((id) =>
         preventries.some((e) => e._id === id)
         );
@@ -195,7 +197,7 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
       }
     } else {
        try {
-         const existing = await db.releaseReceipts.get(release.id);
+         const existing = await db.acknowledgementReceipts.get(release.id);
           if (!existing) {
             console.log("Data not found");
             return;
@@ -208,9 +210,11 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
                 name: item.clientName,
                 _id: item.client || item.clientId
               },
+              week: item.noOfWeeks,
+              noOfWeeks: item.noOfWeeks,
               acctCode: {
                 code: item.acctCode,
-                description: item.acctCodeDesc,
+                description: item.description,
                 _id: item.acctCodeId
               },
               loanRelease:{
@@ -239,7 +243,7 @@ const UpdateRelease = ({ release, setData, getReleases, currentPage}: UpdateRele
           };
   
           console.log('Form Data',updated)
-          await db.releaseReceipts.update(release.id, updated);
+          await db.acknowledgementReceipts.update(release.id, updated);
           getReleases(currentPage)
   
           dismiss();

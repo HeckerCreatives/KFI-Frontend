@@ -14,7 +14,7 @@ export const acknowledgementEntrySchema = z.object({
         
   loanReleaseEntryId: z.string().optional().or(z.literal('')),
   cvNo: z.string().optional().or(z.literal('')),
-  dueDate: z.string().optional().or(z.literal('')),
+  dueDate: z.any().optional().or(z.literal('')),
   noOfWeeks: z.string().optional().or(z.literal('')),
   name: z.string().optional().or(z.literal('')),
   client: z.string().optional().or(z.literal('')),

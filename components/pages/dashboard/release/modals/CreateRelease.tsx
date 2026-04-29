@@ -55,12 +55,15 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
     },
   });
 
+  console.log(form.formState.errors)
+
   function dismiss() {
     form.reset();
     setIsOpen(false);
   }
 
   async function onSubmit(data: ReleaseFormData) {
+
     if(online){
       setLoading(true);
       try {
@@ -80,7 +83,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
                      cctCodeDesc: entry.description,
                      debit: Number(removeAmountComma(entry.debit)),
                      credit: Number(removeAmountComma(entry.credit)),
-                     dueDate: new Date(entry.dueDate || '').toISOString().split('T')[0] ,
+                      dueDate: entry.dueDate ? new Date(entry.dueDate).toISOString().split('T')[0] : '',
                      line: index + 1,
                      type: 'SEA'
                    }))
@@ -109,7 +112,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
           duration: 1000,
         });
       } catch (error: any) {
-        const errs: TErrorData | string = error?.response?.data?.error || error?.response?.data?.msg || error.message;
+        const errs: TErrorData | string = error?.response?.data?.data;
         const errors: TFormError[] | string = checkError(errs);
         const fields: string[] = Object.keys(form.formState.defaultValues as Object);
         formErrorHandler(errors, form.setError, fields);
@@ -118,14 +121,15 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
       }
     } else {
       try {
-          await db.releaseReceipts.add({
+          await db.acknowledgementReceipts.add({
                    ...data,
                   entries: data.entries?.map((item) => ({
                       ...item,
                       client: {
-                        name: item.clientName,
+                        name: item.name,
                         _id: item.client || item.clientId
                       },
+                      type: 'SEA',
                       acctCode: {
                         code: item.acctCode,
                         description: item.acctCodeDesc,
@@ -138,7 +142,8 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
                       dueDate: new Date(item.dueDate || '').toLocaleString().split('T')[0] ,
                       action: 'create',
                       _synced: false,
-                      week: Number(item.week)
+                      week: Number(item.noOfWeeks),
+                      noOfWeeks: Number(item.noOfWeeks),
                     })),
                     center: {
                       _id: data.center,

@@ -105,41 +105,43 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
     } else {
        try {
          // const entries = data.entries
-         await db.acknowledgementReceipts.add({
+         await db.releaseReceipts.add({
            ...data,
           entries: data.entries?.map((item) => ({
-              ...item,
-              client: {
-                name: item.clientName,
-                _id: item.client || item.clientId
-              },
-              acctCode: {
-                code: item.acctCode,
-                description: item.acctCodeDesc,
-                _id: item.acctCodeId
-              },
-              loanRelease:{
-                code: item.cvNo,
-                _id: item.loanReleaseId || item.loanReleaseEntryId
-              },
-
-              action: 'create',
-              _synced: false,
-              week: item.week
-            })),
-            center: {
-              _id: data.center,
-              centerNo: data.centerName,
-              description: data.centerLabel
-            },
-            bankCode: {
-              _id: data.bankCode,
-              code: data.bankCodeLabel,
-              description: data.bankCodeLabel,
-            },
-            encodedBy:{
-              username: user
-            },
+                      ...item,
+                      client: {
+                        name: item.name,
+                        _id: item.client || item.clientId
+                      },
+                      type: 'SEA',
+                      acctCode: {
+                        code: item.acctCode,
+                        description: item.acctCodeDesc,
+                        _id: item.acctCodeId
+                      },
+                      loanRelease:{
+                        code: item.cvNo,
+                        _id: item.loanReleaseId || item.loanReleaseEntryId
+                      },
+                      dueDate: new Date(item.dueDate || '').toLocaleString().split('T')[0] ,
+                      action: 'create',
+                      _synced: false,
+                      week: Number(item.noOfWeeks),
+                      noOfWeeks: Number(item.noOfWeeks),
+                    })),
+                    center: {
+                      _id: data.center,
+                      centerNo: data.centerName,
+                      description: data.centerLabel
+                    },
+                    bankCode: {
+                      _id: data.bankCode,
+                      code: data.bankCodeLabel,
+                      description: data.bankCodeLabel,
+                    },
+                    encodedBy:{
+                      username: user
+                    },
            _synced: false,  
            action: "create",
          });
@@ -154,7 +156,6 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
 
   const amount = form.watch('amount')
 
-  console.log(form.watch('entries'))
 
   return (
     <>

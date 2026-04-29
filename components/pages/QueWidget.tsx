@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Minus, X, Download, File, Trash, XIcon } from 'lucide-react';
+import { Minus, X, Download, File, Trash, XIcon, InfoIcon } from 'lucide-react';
 import { Job, useJobStore } from '../../store/fileQueStore';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Browser } from '@capacitor/browser';
@@ -167,8 +167,13 @@ const handleCancel = async (jobId: string) => {
         </div>
       </div>
 
+      <div className=' flex items-start gap-1 bg-blue-100 p-2 rounded-md text-blue-600'>
+        <InfoIcon size={10}/>
+        <p className="text-[11px]">Please note that files will be downloaded sequentially, one at a time.</p>
+      </div>
+
       {/* list */}
-      <div className="max-h-[260px] overflow-y-auto divide-y divide-zinc-100">
+      <div className="max-h-[300px] overflow-y-auto divide-y divide-zinc-100">
         {jobs.map(job => {
           const done = job.progress >= 100;
           return (

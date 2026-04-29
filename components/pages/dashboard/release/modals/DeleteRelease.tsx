@@ -57,13 +57,13 @@ const DeleteRelease = ({ release, getRelease, searchkey, sortKey, rowLength, cur
       try{
       try{
            if (release._id) {
-               await db.releaseReceipts.update(release.id, {
+               await db.acknowledgementReceipts.update(release.id, {
                  deletedAt: new Date().toISOString(),
                  _synced: false,
                  action: "delete",
                });
              } else {
-               await db.releaseReceipts.delete(release.id);
+               await db.acknowledgementReceipts.delete(release.id);
              }
            getRelease(currentPage);
            dismiss()

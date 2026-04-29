@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import kfiAxios from '../../utils/axios'
 import { formatDateInput, formatDateMDY } from '../../utils/date-utils'
+import { useOnlineStore } from '../../../store/onlineStore'
 
 export type Signatures = {
   approvedBy: string
@@ -33,21 +34,12 @@ export default function Signatures({open, type, approvedBy, checkedBy, recordedB
     const visibleDate = type === 'official receipt'
     const user = localStorage.getItem('user')
     const currentDate = new Date
-
-    //  const getSignatures = async () => {
-    //       try {
-    //         const result = await kfiAxios.get('/system-params/signature');
-    //         const { signatureParams } = result.data;
+    const online = useOnlineStore((state) => state.online);
     
-    //         setSignatures(signatureParams)
-           
-    //       } catch (error) {
-    //       } finally {
-    //       }
-    //     };
 
         const getSignaturesByType = async () => {
-          try {
+          if(online){
+             try {
             const result = await kfiAxios.get(`/system-params/signature/by-type/${type}`);
             const { signatureParam } = result.data;
 
@@ -58,6 +50,8 @@ export default function Signatures({open, type, approvedBy, checkedBy, recordedB
           } catch (error) {
           } finally {
           }
+          }
+         
         };
 
         useEffect(() => {

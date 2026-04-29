@@ -272,6 +272,7 @@ const ARLoadEntries = ({center, form}: Props) => {
   
 
   const mapEntryForForm = (entry: any) => {
+    console.log('Entry', entry)
     const particular = entry.particular ?? `${entry.centerNo ? `${entry.centerNo} - ` : ''}${entry.name ?? ''}`.trim();
 
     console.log(entry.acctCode)
@@ -285,7 +286,7 @@ const ARLoadEntries = ({center, form}: Props) => {
       name: entry.name ?? '',
       particular,
       acctCodeId: entry.acctCodeId ?? '',
-      acctCode: entry.acctCode.code ?? '',
+      acctCode: entry.acctCode ?? '',
       description: entry.description ?? '',
       debit: `${entry.debit ?? '0'}`,
       credit: `${entry.credit ?? entry.debit ?? '0'}`,

@@ -513,6 +513,26 @@ export async function syncOR(apiData: any) {
   return true;
 }
 
+export async function syncDueDates(apiData: any) {
+  console.log('Data due dates', apiData)
+  if (!apiData) return;
+
+ await db.dueDates.clear();
+
+  const data: any[] = apiData?.map((c: any) => ({
+    ...c,
+     id: c._id,
+    _synced: true,
+    isOldData: true,
+  }));
+
+  await db.table("dueDates").bulkPut(data);
+
+  console.log('Sync due dates', data)
+
+  return true;
+}
+
 export async function syncAR(apiData: any) {
   console.log('Data syncAR', apiData)
   if (!apiData) return;

@@ -30,15 +30,15 @@ const AcknowledgementFormTableDoc = ({ entry, remove, form, index, sticky }: Ack
           </FormIonItem>
           <div className={classNames('mt-2.5', form?.formState.errors?.entries && form.formState.errors.entries[index]?.cvNo && '!mt-0.5')}>
             <LoanReleaseEntrySelection
-              loanReleaseEntryId={`entries.${index}.loanReleaseEntryId`}
+             loanReleaseEntryId={`entries.${index}.loanReleaseEntryId`}
               loanReleaseId={`entries.${index}.loanReleaseId`}
               cvNo={`entries.${index}.cvNo`}
               dueDate={`entries.${index}.dueDate`}
               noOfWeeks={`entries.${index}.noOfWeeks`}
-              week={`entries.${index}.week`}
               name={`entries.${index}.name`}
               particular={`entries.${index}.particular`}
-              client={`entries.${index}.clientId`}
+              client={`entries.${index}.client`}
+              description={`entries.${index}.description`}
               setValue={form.setValue}
               clearErrors={form.clearErrors}
               className="!min-h-3.5 text-[0.5rem]"
