@@ -4,7 +4,9 @@ import { useJobStore } from '../store/fileQueStore';
 
 export const useGlobalJobSocket = () => {
   const socketRef = useRef<Socket | null>(null);
-  const { updateJob, addJob } = useJobStore();
+  const { updateJob, addJob, jobs } = useJobStore();
+
+  console.log(jobs)
 
   useEffect(() => {
     // Initialize socket connection
@@ -34,6 +36,7 @@ export const useGlobalJobSocket = () => {
     };
 
     // Global progress handler - listens for all job progress updates
+   
     const handleProgress = (data: any) => {
       console.log('[GlobalJobSocket] Progress:', data);
       
@@ -44,24 +47,24 @@ export const useGlobalJobSocket = () => {
 
       // Check if job exists in store, if not create it
       const existingJob = useJobStore.getState().jobs.find((j) => j.jobId === data.jobId);
-      
-      if (!existingJob) {
-        addJob({
-          jobId: data.jobId,
-          label: data.label || 'Report',
-          type: data.type || 'report',
-          progress: percent,
-          status: 'processing',
-          fileType,
-          file: '',
-          filename: data.filename || '',
-        });
-      } else {
-        updateJob(data.jobId, {
-          progress: percent,
-          status: 'processing',
-        });
-      }
+
+       if (!existingJob) {
+         addJob({
+           jobId: data.jobId,
+           label: data.label || 'Report',
+           type: data.type || 'report',
+           progress: percent,
+           status: 'processing',
+           fileType,
+           file: '',
+           filename: data.filename || '',
+         });
+       } else {
+         updateJob(data.jobId, {
+           progress: percent,
+           status: 'processing',
+         });
+       }
     };
 
     // Global ready handler - listens for all job completion
@@ -134,14 +137,14 @@ export const useGlobalJobSocket = () => {
       socket.off('report:ready', handleReady);
       socket.off('report:error', handleError);
       
-      socket.on('report:progress', handleProgress);
+      socket.on('report:progress',handleProgress);
       socket.on('report:ready', handleReady);
       socket.on('report:error', handleError);
     };
 
     // Rejoin all pending jobs on reconnection
     const rejoinPendingJobs = () => {
-      const pendingJobs = useJobStore.getState().jobs.filter(
+      const pendingJobs = jobs.filter(
         (job) => job.status === 'processing' && job.progress < 100
       );
       

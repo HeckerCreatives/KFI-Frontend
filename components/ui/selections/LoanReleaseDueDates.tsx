@@ -151,7 +151,7 @@ const LoanReleaseDueDatesSelections = <T extends FieldValues>({
       >
        
         <div className="inner-content !p-6  border-2 !border-slate-200">
-            <SelectionHeader dismiss={dismiss} disabled={loading} title="Loan Release Selection" />
+            <SelectionHeader dismiss={dismiss} disabled={false} title="Loan Release Selection" />
 
           <div className="">
             <div className="flex items-center flex-wrap justify-start gap-2">

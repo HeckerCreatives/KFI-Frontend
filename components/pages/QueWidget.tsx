@@ -28,7 +28,7 @@ const handleDownload = async (
   jobId?: string,
   filename?: string
 ) => {
-  if (!fileUrl) return;
+  // if (!fileUrl) return;
 
   const extensions: Record<string, string> = {
     pdf: '.pdf',
@@ -41,10 +41,11 @@ const handleDownload = async (
 
 
   try {
-    if (isPlatform('capacitor')) {
-      const response = await fetch(fileUrl);
-      const blob = await response.blob();
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5005'}/reports/${jobId}`;
 
+    if (isPlatform('capacitor')) {
+      const response = await fetch(apiUrl);
+      const blob = await response.blob();
 
       const base64 = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
@@ -56,7 +57,6 @@ const handleDownload = async (
         reader.readAsDataURL(blob);
       });
 
-
       const savedFile = await Filesystem.writeFile({
         path: fullFilename,
         data: base64,
@@ -64,26 +64,31 @@ const handleDownload = async (
         recursive: true,
       });
 
-
       await Share.share({
         title: fullFilename,
         url: savedFile.uri,
         dialogTitle: 'Open or Save File',
       });
-
     } else {
-      const a = document.createElement('a');
-      a.href = fileUrl;
-      a.download = fullFilename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5005'}/report-download/${jobId}`;
+
+    const response = await fetch(apiUrl);
+      const blob = await response.blob();
+
+      console.log(response)
+
+      // const a = document.createElement('a');
+      // a.href = apiUrl;
+      // a.download = fullFilename;
+      // document.body.appendChild(a);
+      // a.click();
+      // a.remove();
     }
   } catch (error) {
     console.error('Download error:', error);
   } finally {
     if (jobId) {
-      deleteJob(jobId);
+      // deleteJob(jobId);
     }
   }
 };
@@ -146,6 +151,7 @@ const handleCancel = async (jobId: string) => {
   );
 }
 
+
   return (
     <div className="fixed bottom-6 right-6 z-[999] w-[320px] bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-lg">
       {/* header */}
@@ -199,7 +205,7 @@ const handleCancel = async (jobId: string) => {
                   </>
                 ): (
                   <p className="text-[11px] text-gray-400 mb-1.5">
-                  {done ? 'Complete' : `${job.progress}%`}
+                  {done ? (job.fileUrl ? 'Complete' : 'Generating file...') : `${job.progress}%`}
                   </p>
                 )}
                 
@@ -212,7 +218,7 @@ const handleCancel = async (jobId: string) => {
               </div>
 
               <div className="shrink-0">
-                {done && job.fileUrl ? (
+                {done ? (
                   // Download complete with file URL - show download button
                   <div className=' flex items-center'>
                     <button
@@ -224,7 +230,35 @@ const handleCancel = async (jobId: string) => {
                     <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
                   </div>
                 ) : done && !job.fileUrl ? (
-                  <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
+                  <>
+                  <div className=' flex gap-2'>
+                    <svg
+                      className="animate-spin text-zinc-500"
+                      width={15}
+                      height={15}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        d="M12 2a10 10 0 0 1 10 10"
+                        stroke=" #71717a"
+                        strokeOpacity={0.4}
+                      />
+                      <path
+                        strokeLinecap="round"
+                        d="M12 2a10 10 0 0 1 10 10"
+                        stroke=" #71717a"
+                        strokeDasharray="15 45"
+                      />
+                    </svg>
+                    <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
+                  </div>
+
+                  
+                  </>
                 ) : job.status === 'error' ? (
                   <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
                 ) : (
@@ -251,7 +285,7 @@ const handleCancel = async (jobId: string) => {
                         strokeDasharray="15 45"
                       />
                     </svg>
-                    <button className=' cursor-pointer text-red-600' onClick={() => handleCancel(job.jobId)}><XIcon size={15}/></button>
+                    <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
                   </div>
                 )}
               </div>
