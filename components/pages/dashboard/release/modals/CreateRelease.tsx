@@ -81,6 +81,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
                      credit: Number(removeAmountComma(entry.credit)),
                      dueDate: new Date(entry.dueDate || '').toISOString().split('T')[0] ,
                      line: index + 1,
+                     type: 'individual'
                    }))
                  : [];
        
@@ -199,7 +200,7 @@ const CreateRelease = ({ getReleases }: CreateReleaseProps) => {
 
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full mt-4">
             <div className="mb-3 flex-1">
-              <ReleaseForm form={form} loading={loading} />
+              <ReleaseForm form={form} loading={loading} action='create' />
               <ReleaseFormTable form={form} />
             </div>
 

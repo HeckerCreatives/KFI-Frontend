@@ -8,6 +8,7 @@ import { Share } from '@capacitor/share';
 import { cancelFileDownload, fileDownload } from '../services/reportDownload';
 import { Socket, io } from 'socket.io-client';
 import { useGlobalJobSocket } from '../../hooks/useGlobalJobSocket';
+import toast from 'react-hot-toast'
 
 
 
@@ -28,9 +29,7 @@ const handleDownload = async (
   jobId?: string,
   filename?: string
 ) => {
-  // if (!fileUrl) return;
-
-  if (!jobId) return
+  if (!jobId) return;
 
   const extensions: Record<string, string> = {
     pdf: '.pdf',
@@ -39,53 +38,53 @@ const handleDownload = async (
   };
 
   const ext = extensions[fileType.toLowerCase()] ?? '';
-  const fullFilename = (filename || label);
+  const fullFilename = filename || label;
 
-  const blob = await fileDownload(jobId);
 
-  console.log(blob)
+  await toast.promise(
+    (async () => {
+      const blob = await fileDownload(jobId); 
 
-  try {
-    if (isPlatform('capacitor')) {
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result as string;
-          resolve(result.split(',')[1]); // strip data:...;base64,
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
+      if (isPlatform('capacitor')) {
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve((reader.result as string).split(',')[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
 
-      const savedFile = await Filesystem.writeFile({
-        path: fullFilename,
-        data: base64,
-        directory: Directory.Documents,
-        recursive: true,
-      });
+        const savedFile = await Filesystem.writeFile({
+          path: fullFilename,
+          data: base64,
+          directory: Directory.Documents,
+          recursive: true,
+        });
 
-      await Share.share({
-        title: fullFilename,
-        url: savedFile.uri,
-        dialogTitle: 'Open or Save File',
-      });
-    } else {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fullFilename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+        await Share.share({
+          title: fullFilename,
+          url: savedFile.uri,
+          dialogTitle: 'Open or Save File',
+        });
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fullFilename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+    })(),
+    {
+      loading: `Downloading file ${label.toLowerCase()}, please wait...`, 
+      success: 'File downloaded successfully!', 
+      error: 'Failed to download file.',        
     }
-  } catch (error) {
-    console.error('Download error:', error);
-  } finally {
-    if (jobId) {
-      deleteJob(jobId);
-    }
-  }
+  );
+
+  // ✅ cleanup job after download (success or fail)
+  deleteJob(jobId);
 };
 
 const handleCancel = async (jobId: string) => {
@@ -280,7 +279,7 @@ const handleCancel = async (jobId: string) => {
                         strokeDasharray="15 45"
                       />
                     </svg>
-                    <button className=' cursor-pointer text-red-600' onClick={() => deleteJob(job.jobId)}><XIcon size={15}/></button>
+                    <button className=' cursor-pointer text-red-600' onClick={() => handleCancel(job.jobId)}><XIcon size={15}/></button>
                   </div>
                 )}
               </div>

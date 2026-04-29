@@ -170,7 +170,7 @@ const CreateExpenseVoucher = ({ getExpenseVouchers }: CreateExpenseVoucherProps)
 
           <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col mt-4">
             <div>
-              <ExpenseVoucherForm form={form} loading={loading} />
+              <ExpenseVoucherForm form={form} loading={loading} action='create' />
             </div>
             <div className="flex-1 mt-2">
               <ExpenseVoucherFormTable form={form} loading={loading} />

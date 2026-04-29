@@ -16,9 +16,11 @@ import kfiAxios from '../../../../utils/axios';
 type TForm = {
   form: UseFormReturn<LoanReleaseFormData>;
   loading?: boolean;
+  action?: string
+
 };
 
-const LoanReleaseForm = ({ form, loading = false }: TForm) => {
+const LoanReleaseForm = ({ form, loading = false, action }: TForm) => {
   const centerId = form.watch('center');
   const { center, loading: centerLoads } = useGetCenterDescription({ id: centerId });
   const watchDate = form.watch('date')
@@ -39,7 +41,7 @@ const LoanReleaseForm = ({ form, loading = false }: TForm) => {
           const { data } = result.data;
 
 
-          if(data.exists){
+          if(data.exists && action === 'create'){
           form.setError('cvNo', { message: 'Cv No. already exist' })
 
           } else {

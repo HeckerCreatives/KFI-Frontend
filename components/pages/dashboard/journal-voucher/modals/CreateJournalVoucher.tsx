@@ -163,7 +163,7 @@ const CreateJournalVoucher = ({ getJournalVouchers }: CreateJournalVoucherProps)
 
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col mt-4">
             <div>
-              <JournalVoucherForm form={form} loading={loading} />
+              <JournalVoucherForm form={form} loading={loading} action={'create'} />
             </div>
             <div className="flex-1 mt-4">
               <JournalVoucherFormTable form={form} loading={loading} />

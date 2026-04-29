@@ -10,9 +10,11 @@ import kfiAxios from '../../../../utils/axios';
 type TForm = {
   form: UseFormReturn<JournalVoucherFormData>;
   loading?: boolean;
+  action?: string
+
 };
 
-const JournalVoucherForm = ({ form, loading }: TForm) => {
+const JournalVoucherForm = ({ form, loading, action }: TForm) => {
   const watchDate = form.watch('date')
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const JournalVoucherForm = ({ form, loading }: TForm) => {
             const { data } = result.data;
   
   
-            if(data.exists){
+            if(data.exists && action === 'create'){
             form.setError('code', { message: 'JV No. already exist' })
   
             } else {

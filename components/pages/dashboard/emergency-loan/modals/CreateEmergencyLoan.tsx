@@ -184,7 +184,7 @@ const CreateEmergencyLoan = ({ getEmergencyLoans }: CreateEmergencyLoanProps) =>
           <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col mt-4">
             <div className="mb-3 flex-1">
               <div>
-                <EmergencyLoanForm form={form} loading={loading} />
+                <EmergencyLoanForm form={form} loading={loading} action='create' />
               </div>
               <div>
                 <EmergencyLoanFormTable form={form} />

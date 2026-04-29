@@ -11,9 +11,11 @@ import kfiAxios from '../../../../utils/axios';
 type TForm = {
   form: UseFormReturn<ReleaseFormData>;
   loading?: boolean;
+  action?: string
+
 };
 
-const ReleaseForm = ({ form, loading = false }: TForm) => {
+const ReleaseForm = ({ form, loading = false, action }: TForm) => {
    const watchDate = form.watch('date')
     
       useEffect(() => {
@@ -30,7 +32,7 @@ const ReleaseForm = ({ form, loading = false }: TForm) => {
                     const { data } = result.data;
           
           
-                    if(data.exists){
+                    if(data.exists && action === 'create'){
                     form.setError('code', { message: 'AR No. already exist' })
           
                     } else {

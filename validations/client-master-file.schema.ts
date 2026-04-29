@@ -28,9 +28,8 @@ clientImage: z
   .max(25, "City must not exceed 25 characters"),
   zipCode: z.string().min(1, 'Zip code is required')
   .max(6, "Zipcode must not exceed 6 characters"),
-  telNo: z.string().optional().or(z.literal('')),
-  mobileNo: z.string().min(1, 'Mobile No. is required')
-  .max(11, "Mobile no must not exceed 11 numbers"),
+  telNo: z.string().regex(/^\d*$/, 'Must be numbers only').optional(),
+ mobileNo: z.string().regex(/^\d+$/, 'Must be numbers only').min(1, 'Mobile No. is required').max(11, "Mobile no must not exceed 11 numbers"),
   birthdate: z.string().min(1, 'Birth Date is required'),
   birthplace: z.string().min(1, 'Birth Place is required')
   .max(250, "Birtplace must not exceed 250 numbers"),
@@ -53,7 +52,7 @@ clientImage: z
   dateResigned: z.string().min(1, 'Date resigned is required').optional().or(z.literal('')),
   reason: z.string().min(1, 'Reason is required').optional().or(z.literal('')),
   beneficiary: z.array(beneficiarySchema).optional(),
-  bankAccountNo: z.string().min(1, 'Bank account no is required'),
+  bankAccountNo: z.string().optional(),
   children: z.array(childrenSchema).optional(),
 });
 

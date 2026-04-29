@@ -13,9 +13,11 @@ import kfiAxios from '../../../../utils/axios';
 type TForm = {
   form: UseFormReturn<ExpenseVoucherFormData>;
   loading?: boolean;
+  action?: string
+
 };
 
-const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
+const ExpenseVoucherForm = ({ form, loading = false, action }: TForm) => {
   const watchDate = form.watch('date')
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const ExpenseVoucherForm = ({ form, loading = false }: TForm) => {
           const { data } = result.data;
 
 
-          if(data.exists){
+          if(data.exists && action === 'create'){
           form.setError('code', { message: 'Cv No. already exist' })
 
           } else {

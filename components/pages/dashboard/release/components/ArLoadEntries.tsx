@@ -233,7 +233,7 @@ const ARLoadEntries = ({center, form}: Props) => {
     setData(prev => ({ ...prev, loading: true }));
     try {
       const filter: any = { dueDateId: dueDateId, type: type};
-      const result = await kfiAxios.get('/acknowledgement/load-entries', { params: filter });
+      const result = await kfiAxios.get('/release/load-entries', { params: filter });
       const { success, acknowledgements, hasPrevPage, hasNextPage, totalPages } = result.data;
       if (success) {
         setData(prev => ({
@@ -279,6 +279,7 @@ const ARLoadEntries = ({center, form}: Props) => {
       cvNo: `${entry.cvNo ?? entry.code ?? ''}`,
       dueDate: entry.dueDate ? formatDateTable(entry.dueDate) : '',
       noOfWeeks: `${entry.week ?? ''}`,
+      week: `${entry.week ?? ''}`,
       name: entry.name ?? '',
       particular,
       acctCodeId: entry.acctCodeId ?? '',
@@ -320,7 +321,7 @@ const ARLoadEntries = ({center, form}: Props) => {
   };
 
   useEffect(() => {
-    if (isOpen) handlePagination(1), handleDueDates();
+    if (isOpen) handleDueDates();
   }, [isOpen]);
 
   return (
@@ -419,7 +420,7 @@ const ARLoadEntries = ({center, form}: Props) => {
               </TableHeader>
               <TableBody>
                 {data.loading && <TableLoadingRow colspan={1} />}
-                {!data.loading && data.acknowledgements.length < 1 && <TableNoRows colspan={4} label="No official receipt found" />}
+                {!data.loading && data.acknowledgements.length < 1 && <TableNoRows colspan={4} label="No data found" />}
                 {!data.loading &&
                   data.acknowledgements.map((entry: Option) => (
                     <TableRow key={entry._id} className="border-b-0 [&>td]:!py-1">

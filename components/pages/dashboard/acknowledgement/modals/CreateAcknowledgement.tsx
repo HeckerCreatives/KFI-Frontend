@@ -61,6 +61,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
   }
 
   async function onSubmit(data: AcknowledgementFormData) {
+    console.log(data.entries)
     if(online){
       setLoading(true);
       try {
@@ -74,11 +75,12 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
               loanReleaseEntryId: entry.loanReleaseEntryId || entry.loanReleaseId || '',
               loanReleaseId: entry.loanReleaseId || '',
               week: entry.week,
-              cctCodeDesc: entry.description,
+              acctCodeDesc: entry.description,
               debit: Number(removeAmountComma(entry.debit)),
               credit: Number(removeAmountComma(entry.credit)),
               dueDate: entry.dueDate.split("T")[0] || '',
               line: index + 1,
+              acctCode: entry.acctCode
             }))
           : [];
 
@@ -182,7 +184,7 @@ const CreateAcknowledgement = ({ getAcknowledgements }: CreateAcknowledgementPro
           <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col mt-6">
             <div className="mb-3 flex-1">
               <div>
-                <AcknowledgementForm form={form} loading={loading} />
+                <AcknowledgementForm form={form} loading={loading} action='create' />
               </div>
               <div>
                 <AcknowledgementFormTable form={form} />

@@ -11,9 +11,11 @@ import kfiAxios from '../../../../utils/axios';
 type TForm = {
   form: UseFormReturn<EmergencyLoanFormData>;
   loading?: boolean;
+  action?: string
+
 };
 
-const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
+const EmergencyLoanForm = ({ form, loading = false, action }: TForm) => {
    const watchDate = form.watch('date')
   
     useEffect(() => {
@@ -30,7 +32,7 @@ const EmergencyLoanForm = ({ form, loading = false }: TForm) => {
               const { data } = result.data;
     
     
-              if(data.exists){
+              if(data.exists && action === 'create'){
               form.setError('code', { message: 'Cv No. already exist' })
     
               } else {

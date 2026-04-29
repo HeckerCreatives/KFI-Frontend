@@ -11,9 +11,10 @@ import kfiAxios from '../../../../utils/axios';
 type TForm = {
   form: UseFormReturn<DamayanFundFormData>;
   loading?: boolean;
+  action?: string
 };
 
-const DamayanFundForm = ({ form, loading = false }: TForm) => {
+const DamayanFundForm = ({ form, loading = false, action }: TForm) => {
    const watchDate = form.watch('date')
   
     useEffect(() => {
@@ -30,7 +31,7 @@ const DamayanFundForm = ({ form, loading = false }: TForm) => {
               const { data } = result.data;
     
     
-              if(data.exists){
+              if(data.exists && action === 'create'){
               form.setError('code', { message: 'JV No. already exist' })
     
               } else {

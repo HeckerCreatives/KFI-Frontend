@@ -13,9 +13,10 @@ import kfiAxios from '../../../../utils/axios';
 type TForm = {
   form: UseFormReturn<AcknowledgementFormData>;
   loading?: boolean;
+  action?: string
 };
 
-const AcknowledgementForm = ({ form, loading = false }: TForm) => {
+const AcknowledgementForm = ({ form, loading = false, action }: TForm) => {
    const watchDate = form.watch('date')
   
     useEffect(() => {
@@ -32,7 +33,7 @@ const AcknowledgementForm = ({ form, loading = false }: TForm) => {
               const { data } = result.data;
     
     
-              if(data.exists){
+              if(data.exists && action === 'create'){
               form.setError('code', { message: 'OR No. already exist' })
     
               } else {

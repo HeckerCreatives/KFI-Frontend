@@ -181,7 +181,7 @@ const CreateDamayanFund = ({ getDamayanFunds }: CreateDamayanFundProps) => {
 
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full mt-4">
             <div className="mb-3 flex-1">
-              <DamayanFundForm form={form} loading={loading} />
+              <DamayanFundForm form={form} loading={loading} action='create' />
               <DamayanFundFormTable form={form} />
             </div>
 
